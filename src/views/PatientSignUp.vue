@@ -156,7 +156,8 @@ export default {
         gender: '',
         bloodGroup: '',
         address: '',
-        emergencyContact: ''
+        emergencyContact: '',
+        role: 'PATIENT'  // Set default role for patient
       }
     }
   },
@@ -164,7 +165,7 @@ export default {
     async handleSubmit() {
       this.isLoading = true;
       try {
-        const response = await fetch('http://localhost:8080/api/patients/register', {
+        const response = await fetch('http://localhost:8080/api/auth/patients/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

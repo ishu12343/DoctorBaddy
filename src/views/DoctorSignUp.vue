@@ -167,7 +167,7 @@
           </button>
           
           <p class="login-link">
-            Already have an account? <router-link to="/login">Login here</router-link>
+            Already have an account? <router-link to="/doctor-login">Login here</router-link>
           </p>
         </div>
       </form>
@@ -199,7 +199,8 @@ export default {
         idProofPath: '',
         licensePath: '',
         photoPath: '',
-        approved: false
+        approved: false,
+        role: 'DOCTOR'  // Set default role for doctor
       },
       error: ''
     }
