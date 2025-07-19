@@ -6,16 +6,27 @@
         <router-link to="/services">Our Services</router-link>
         <router-link to="/contact">Contact</router-link>
         <div class="dropdown" @mouseleave="hideLoginDropdown">
-        <button @mouseenter="showLoginDropdown" class="btn btn--primary btn--small">
-          LOG IN
-          <i class="fas fa-chevron-down"></i>
-        </button>
-        <div v-if="showDropdown" class="dropdown-menu">
-          <router-link to="/patient-login" class="dropdown-item">Patient Login</router-link>
-          <router-link to="/doctor-login" class="dropdown-item">Doctor Login</router-link>
+          <button @mouseenter="showLoginDropdown" class="btn btn--primary btn--small">
+            LOG IN
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div v-if="showDropdown" class="dropdown-menu">
+            <router-link to="/patient-login" class="dropdown-item">Patient Login</router-link>
+            <router-link to="/doctor-login" class="dropdown-item">Doctor Login</router-link>
+          </div>
         </div>
-      </div>
-        <router-link to="/signup" class="btn btn--primary btn--small">SIGN UP</router-link>
+        <div class="dropdown" @mouseleave="hideSignupDropdown">
+          <button @mouseenter="showSignupDropdown" class="btn btn--primary btn--small">
+            SIGN UP
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div v-if="showDropdown2" class="dropdown-menu">
+            <router-link to="/patient-signup" class="dropdown-item">Patient Sign Up</router-link>
+            <router-link to="/doctor-signup" class="dropdown-item">Doctor Sign Up</router-link>
+          </div>
+        </div>
+        <!-- <router-link to="/signup" class="btn btn--primary btn--small">SIGN UP</router-link> -->
+         
       </nav>
     </div>
   </header>
@@ -25,7 +36,8 @@ export default {
   name: 'AppHeader',
   data() {
     return {
-      showDropdown: false
+      showDropdown: false,
+      showDropdown2: false
     }
   },
   methods: {
@@ -34,6 +46,12 @@ export default {
     },
     hideLoginDropdown() {
       this.showDropdown = false
+    },
+    showSignupDropdown() {
+      this.showDropdown2 = true
+    },
+    hideSignupDropdown() {
+      this.showDropdown2 = false
     }
   },
 }

@@ -1,20 +1,31 @@
 <template>
-  <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded-lg shadow">
-    <h2 class="text-2xl font-bold mb-4">User Login</h2>
-    <form @submit.prevent="loginUser">
-      <input v-model="email" type="email" placeholder="Email" class="input" required />
-      <input v-model="password" type="password" placeholder="Password" class="input" required />
-
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
-        Login
-      </button>
-    </form>
-    <p class="text-red-600 mt-2" v-if="error">{{ error }}</p>
+  <AppHeader @login="goToLogin" />
+  <div class="login-container">
+    <div class="login-card">
+      <img src="@/assets/images/logo.png" alt="Logo" class="login-logo" />
+      <h2>Login to DoctorBuddy on p</h2>
+      <form @submit.prevent="loginUser">
+        <input v-model="email" type="email" placeholder="Email" required />
+        <input v-model="password" type="password" placeholder="Password" required />
+        <button type="submit" class="btn btn--primary btn--large">Log In</button>
+      </form>
+      <div class="login-footer">
+        <router-link to="/">Back to Home</router-link>
+      </div>
+      <div class="login-footer">
+        <router-link to="/patient-signup">Sign Up</router-link>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import AppHeader from '@/components/AppHeader.vue';
 export default {
+  name: 'LoginPage',
+  components: {
+    AppHeader
+  },
   data() {
     return {
       email: '',
@@ -61,16 +72,57 @@ export default {
       }
     }
   }
-};
+}
 </script>
 
 <style scoped>
-.input {
-  display: block;
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #5C9EF0 60%, #C8D67C 100%);
+}
+.login-card {
+  background: #fff;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 320px;
+}
+.login-logo {
+  height: 40px;
+  margin-bottom: 1rem;
+}
+h2 {
+  color: #275FD4;
+  margin-bottom: 2rem;
+}
+form {
   width: 100%;
-  margin-bottom: 10px;
-  padding: 8px;
-  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+input {
+  padding: 0.7rem 1rem;
   border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+.btn {
+  width: 100%;
+}
+.login-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+.login-footer a {
+  color: #275FD4;
+  text-decoration: underline;
+  font-size: 1rem;
 }
 </style>
