@@ -20,6 +20,9 @@ importers:
       vue-router:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.17)
+      vuex:
+        specifier: ^4.0.2
+        version: 4.0.2(vue@3.5.17)
     devDependencies:
       '@babel/core':
         specifier: ^7.12.16
@@ -3637,6 +3640,11 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  vuex@4.0.2:
+    resolution: {integrity: sha512-M6r8uxELjZIK8kTKDGgZTYX/ahzblnzC4isU1tpmEuOIIKmV+TRdc+H4s8ds2NuZ7wpUTdGRzJRtoj+lI+pc0Q==}
+    peerDependencies:
+      vue: ^3.0.2
 
   watchpack@2.4.4:
     resolution: {integrity: sha512-c5EGNOiyxxV5qmTtAB7rbiXxi1ooX1pQKMLX/MIabJjRA0SJBQOjKF+KSVfHkr9U1cADPon0mRiVe/riyaiDUA==}
@@ -7829,6 +7837,11 @@ snapshots:
       '@vue/runtime-dom': 3.5.17
       '@vue/server-renderer': 3.5.17(vue@3.5.17)
       '@vue/shared': 3.5.17
+
+  vuex@4.0.2(vue@3.5.17):
+    dependencies:
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.17
 
   watchpack@2.4.4:
     dependencies:

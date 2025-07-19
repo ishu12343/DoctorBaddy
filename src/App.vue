@@ -5,8 +5,15 @@
 </template>
 
 <script>
+import { onMounted } from 'vue';
+
 export default {
   name: 'App',
+  setup() {
+    onMounted(() => {
+      // Initialize anything you need on app mount
+    });
+  }
 }
 </script>
 
