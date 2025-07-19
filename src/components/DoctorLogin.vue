@@ -14,26 +14,68 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      error: ''
     };
   },
   methods: {
     async loginDoctor() {
+      this.error = '';
       try {
-        const response = await fetch('http://localhost:8080/api/doctors/login', {
+        const requestBody = {
+          email: this.email,
+          password: this.password
+        };
+        
+        const loginUrl = 'http://localhost:8080/api/doctors/login';
+        console.log('Sending login request:', {
+          url: loginUrl,
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: this.email, password: this.password })
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          credentials: 'include',
+          body: requestBody
+        });
+        
+        const response = await fetch(loginUrl, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(requestBody)
+        });
+        
+        console.log('Received response:', {
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries()),
+          body: await response.clone().text()
         });
 
-        if (!response.ok) throw new Error('Invalid credentials');
-        const data = await response.json();
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = errorData.error || 'Login failed. Please check your credentials.';
+          throw new Error(errorMessage);
+        }
 
-        localStorage.setItem('token', data.token); // Save JWT
-        alert('Login successful!');
-        this.$router.push('/doctor-dashboard'); // Navigate after login
+        const data = await response.json();
+        if (!data.token) {
+          throw new Error('No authentication token received');
+        }
+
+        // Store the token and user type in localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userType', 'doctor');
+        
+        // Redirect to doctor dashboard
+        this.$router.push('/doctor-dashboard');
       } catch (err) {
-        alert('Login failed: ' + err.message);
+        this.error = err.message || 'Login failed. Please try again.';
+        console.error('Login error:', err);
       }
     }
   }

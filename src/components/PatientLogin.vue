@@ -28,25 +28,36 @@ export default {
       try {
         const response = await fetch('http://localhost:8080/api/users/login', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          credentials: 'include',  // Important for sending/receiving cookies
           body: JSON.stringify({
             email: this.email,
             password: this.password
           })
         });
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
 
         if (!response.ok) {
-          const errorText = await response.text();
-          this.error = errorText;
-          return;
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = errorData.error || 'Login failed. Please check your credentials.';
+          throw new Error(errorMessage);
         }
 
-        const user = await response.json();
-        alert(`Welcome ${user.fullName}`);
+        const data = await response.json();
+        if (!data.token) {
+          throw new Error('No authentication token received');
+        }
+
+        // Store the token in localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userType', 'patient');
+        
+        // Redirect to patient dashboard
+        this.$router.push('/patient-dashboard');
       } catch (err) {
-        this.error = 'Login failed. Try again later.';
+        this.error = err.message || 'Login failed. Please try again.';
       }
     }
   }
