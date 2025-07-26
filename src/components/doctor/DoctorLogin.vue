@@ -4,11 +4,16 @@
     <div class="login-card">
       <img src="@/assets/images/logo.png" alt="Logo" class="login-logo" />
       <h2>Login to DoctorBuddy on doctor side</h2>
+
       <form @submit.prevent="loginDoctor">
         <input v-model="email" type="email" placeholder="Email" required />
         <input v-model="password" type="password" placeholder="Password" required />
         <button type="submit" class="btn btn--primary btn--large">Log In</button>
       </form>
+
+      <!-- 🛑 Show error if exists -->
+      <p v-if="error" class="error-message">{{ error }}</p>
+
       <div class="login-footer">
         <router-link to="/">Back to Home</router-link>
       </div>
@@ -21,6 +26,7 @@
 
 <script>
 import AppHeader from '@/views/AppHeader.vue';
+
 export default {
   name: 'LoginPage',
   components: {
@@ -36,57 +42,59 @@ export default {
   methods: {
     async loginDoctor() {
       this.error = '';
+
+      // ✅ Validate input
+      if (!this.email || !this.password) {
+        this.error = 'Email and password are required.';
+        return;
+      }
+
+      const requestBody = {
+        email: this.email,
+        password: this.password
+      };
+
+      console.log('Sending login payload:', requestBody); // Debug
+
+      const loginUrl = 'http://127.0.0.1:5000/api/doctor/login';
+
       try {
-        const requestBody = {
-          email: this.email,
-          password: this.password
-        };
-        
-        const loginUrl = 'http://127.0.0.1:5000/api/doctors/login';
-        console.log('Sending login request:', {
-          url: loginUrl,
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          credentials: 'include',
-          body: requestBody
-        });
-        
         const response = await fetch(loginUrl, {
           method: 'POST',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          credentials: 'include',
           body: JSON.stringify(requestBody)
         });
-        
-        console.log('Received response:', {
+
+        const responseText = await response.clone().text();
+        console.log('Login response:', {
           status: response.status,
           statusText: response.statusText,
-          headers: Object.fromEntries(response.headers.entries()),
-          body: await response.clone().text()
+          body: responseText
         });
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          const errorMessage = errorData.error || 'Login failed. Please check your credentials.';
+          let errorMessage = 'Login failed. Please check your credentials.';
+          try {
+            const errorData = JSON.parse(responseText);
+            if (errorData.error) errorMessage = errorData.error;
+          } catch (_) {
+            // Ignore parse error
+          }
           throw new Error(errorMessage);
         }
 
-        const data = await response.json();
+        const data = JSON.parse(responseText);
+
         if (!data.token) {
           throw new Error('No authentication token received');
         }
 
-        // Store the token and user type in localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('userType', 'doctor');
-        
-        // Redirect to doctor dashboard
+
         this.$router.push('/doctor-dashboard');
       } catch (err) {
         this.error = err.message || 'Login failed. Please try again.';
@@ -146,5 +154,10 @@ input {
   color: #275FD4;
   text-decoration: underline;
   font-size: 1rem;
+}
+.error-message {
+  margin-top: 1rem;
+  color: red;
+  font-weight: bold;
 }
 </style>

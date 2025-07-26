@@ -206,52 +206,51 @@ export default {
     }
   },
   methods: {
-    async handleSubmit() {
-      this.isLoading = true;
-      this.error = '';
-      
-      try {
-        // Map the form data to match the DTO
-        const requestData = {
-          ...this.formData,
-          // Convert empty strings to null for optional fields
-          degreeCertPath: this.formData.degreeCertPath || null,
-          idProofPath: this.formData.idProofPath || null,
-          licensePath: this.formData.licensePath || null,
-          photoPath: this.formData.photoPath || null
-        };
-        
-        const response = await fetch('http://127.0.0.1:5000/api/doctors/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestData),
-          credentials: 'include'
-        });
-  
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Registration failed. Please check your details and try again.');
-        }
-  
-        const data = await response.json();
-        
-        // Store the token and user type in localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userType', 'doctor');
-        
-        // Redirect to doctor dashboard or login page
-        this.$router.push('/doctor-dashboard');
-        
-      } catch (error) {
-        console.error('Registration error:', error);
-        this.error = error.message || 'Registration failed. Please try again.';
-        alert(this.error);
-      } finally {
-        this.isLoading = false;
-      }
+  async handleSubmit() {
+  this.isLoading = true;
+  this.error = '';
+
+  try {
+    const requestData = {
+      ...this.formData,
+      degreeCertPath: this.formData.degreeCertPath || null,
+      idProofPath: this.formData.idProofPath || null,
+      licensePath: this.formData.licensePath || null,
+      photoPath: this.formData.photoPath || null
+    };
+
+    const response = await fetch('http://127.0.0.1:5000/api/doctor/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+      // credentials: 'include' // Enable if using cookies
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Registration failed. Please check your details and try again.');
     }
+
+    const data = await response.json();
+
+    // Save auth token
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('userType', 'doctor');
+
+    // Redirect
+    this.$router.push('/doctor-dashboard');
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    this.error = error.message || 'Registration failed. Please try again.';
+    alert(this.error);
+  } finally {
+    this.isLoading = false;
+  }
+}
+
   }
 }
 </script>
