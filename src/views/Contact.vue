@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-import AppHeader from '@/components/AppHeader.vue';
+import AppHeader from '@/views/AppHeader.vue';
 
 export default {
   name: 'ContactPage',

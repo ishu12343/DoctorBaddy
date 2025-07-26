@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import AppHeader from '@/components/AppHeader.vue';
+import AppHeader from '@/views/AppHeader.vue';
 export default {
   name: 'LoginPage',
   components: {
@@ -37,13 +37,13 @@ export default {
     async loginUser() {
       this.error = '';
       try {
-        const response = await fetch('http://localhost:8080/api/users/login', {
+        const response = await fetch('http://127.0.0.1:5000/api/user/login', {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          credentials: 'include',  // Important for sending/receiving cookies
+          // credentials: 'include',  // Important for sending/receiving cookies
           body: JSON.stringify({
             email: this.email,
             password: this.password

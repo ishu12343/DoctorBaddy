@@ -63,8 +63,8 @@
 </template>
 
 <script>
-import AppHeader from '@/components/AppHeader.vue';
-import AppFooter from '@/components/AppFooter.vue';
+import AppHeader from '@/views/AppHeader.vue';
+import AppFooter from '@/views/AppFooter.vue';
 export default {
   name: 'OurServices',
   components: {

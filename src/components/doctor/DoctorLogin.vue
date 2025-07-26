@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import AppHeader from '@/components/AppHeader.vue';
+import AppHeader from '@/views/AppHeader.vue';
 export default {
   name: 'LoginPage',
   components: {
@@ -42,7 +42,7 @@ export default {
           password: this.password
         };
         
-        const loginUrl = 'http://localhost:8080/api/doctors/login';
+        const loginUrl = 'http://127.0.0.1:5000/api/doctors/login';
         console.log('Sending login request:', {
           url: loginUrl,
           method: 'POST',

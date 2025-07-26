@@ -221,7 +221,7 @@ export default {
           photoPath: this.formData.photoPath || null
         };
         
-        const response = await fetch('http://localhost:8080/api/auth/doctors/register', {
+        const response = await fetch('http://127.0.0.1:5000/api/doctors/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
