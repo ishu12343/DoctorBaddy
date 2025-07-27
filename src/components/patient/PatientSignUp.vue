@@ -171,7 +171,7 @@ export default {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(this.formData),
-          credentials: 'include' // Important for cookies/session
+          // credentials: 'include' // Important for cookies/session
         });
 
         if (!response.ok) {

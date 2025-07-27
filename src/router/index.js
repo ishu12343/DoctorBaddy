@@ -6,6 +6,8 @@ import DoctorLogin from '../components/doctor/DoctorLogin.vue'
 import PatientLogin from '../components/patient/PatientLogin.vue'
 import DoctorSignUp from '../components/doctor/DoctorSignUp.vue'
 import PatientSignUp from '../components/patient/PatientSignUp.vue'
+import PatientDashboard from '@/components/patient/PatientDashboard.vue'
+import DoctorDashboard from '@/components/doctor/DoctorDashboard.vue'
 
 const routes = [
   { path: '/patient-login', name: 'PatientLogin', component: PatientLogin },
@@ -19,7 +21,18 @@ const routes = [
     name: 'Services',
     component: OurServices
   },
-   // {
+  {
+    path: '/patient-dashboard',
+    name: 'PatientDashboard',
+    component: PatientDashboard
+  },
+  {
+    path: '/doctor-dashboard',
+    name: 'DoctorDashboard',
+    component: DoctorDashboard
+  }
+
+  // {
   //   path: '/doctor-dashboard/profile',
   //   name: 'DoctorProfilePage',
   //   component: DoctorProfilePage
