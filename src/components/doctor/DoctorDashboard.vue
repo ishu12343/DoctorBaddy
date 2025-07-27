@@ -1,31 +1,42 @@
 <template>
-  <div class="dashboard-container">
-    <h2>Welcome to doctor Dashboard!</h2>
-    <p>You have successfully logged in.</p>
+  <div class="p-6 max-w-6xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Doctor Dashboard</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <DoctorProfileCard />
+      <EarningsSummary />
+      <DoctorAvailability />
+      <UpcomingAppointments />
+      <PrescriptionUpload />
+      <DoctorNotifications />
+    </div>
+    <div class="mt-6">
+      <DoctorLogout />
+    </div>
   </div>
 </template>
 
 <script>
+import DoctorProfileCard from './DoctorProfileCard.vue';
+// import EarningsSummary from './EarningsSummary.vue';
+// import DoctorAvailability from './DoctorAvailability.vue';
+// import UpcomingAppointments from './UpcomingAppointments.vue';
+// import PrescriptionUpload from './PrescriptionUpload.vue';
+// import DoctorNotifications from './DoctorNotifications.vue';
+// import DoctorLogout from './DoctorLogout.vue';
+
 export default {
-  name: 'PatientDashboard'
-}
+  components: {
+    DoctorProfileCard
+    // EarningsSummary,
+    // DoctorAvailability,
+    // UpcomingAppointments,
+    // PrescriptionUpload,
+    // DoctorNotifications,
+    // DoctorLogout
+  }
+};
 </script>
 
 <style scoped>
-.dashboard-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  padding: 2rem;
-}
-h2 {
-  color: #275FD4;
-  margin-bottom: 1rem;
-}
-p {
-  font-size: 1.2rem;
-  color: #333;
-}
+/* Optional custom styles */
 </style>

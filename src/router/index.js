@@ -31,7 +31,7 @@ const routes = [
     name: 'DoctorDashboard',
     component: DoctorDashboard
   }
-
+  
   // {
   //   path: '/doctor-dashboard/profile',
   //   name: 'DoctorProfilePage',
