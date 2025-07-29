@@ -3,8 +3,8 @@
   <div class="login-container">
     <div class="login-card">
       <img src="@/assets/images/logo.png" alt="Logo" class="login-logo" />
-      <h2>Login to DoctorBuddy on p</h2>
-      <form @submit.prevent="loginUser">
+      <h2>DoctorBuddy on patient</h2>
+      <form @submit.prevent="loginPatient">
         <input v-model="email" type="email" placeholder="Email" required />
         <input v-model="password" type="password" placeholder="Password" required />
         <button type="submit" class="btn btn--primary btn--large">Log In</button>
@@ -34,10 +34,10 @@ export default {
     };
   },
   methods: {
-    async loginUser() {
+    async loginPatient() {
       this.error = '';
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/user/login', {
+        const response = await fetch('http://127.0.0.1:5000/api/patient/login', {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',

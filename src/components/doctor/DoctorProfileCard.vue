@@ -1,38 +1,54 @@
 <template>
-  <div class="bg-white p-4 rounded-lg shadow">
-    <h2 class="text-lg font-semibold mb-2">Profile Overview</h2>
-    <div v-if="loading">Loading...</div>
-    <div v-else>
-      <div class="flex items-center space-x-4">
-        <img :src="doctor.photoUrl || defaultPhoto" alt="Doctor Photo" class="w-16 h-16 rounded-full border" />
-        <div>
-          <h3 class="text-xl font-bold">{{ doctor.fullName }}</h3>
-          <p class="text-sm text-gray-600">{{ doctor.specialty }}</p>
-          <p class="text-sm">{{ doctor.degree }} | {{ doctor.experience }} yrs</p>
-        </div>
+  <div class="bg-white p-4 rounded-lg shadow w-full max-w-3xl mx-auto">
+    <h2 class="text-2xl font-semibold mb-4">Doctor Profile</h2>
+
+    <div v-if="loading" class="text-gray-500">Loading...</div>
+
+    <div v-else class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+      <img
+        :src="defaultPhoto"
+        alt="Doctor Photo"
+        class="w-24 h-24 rounded-full object-cover border"
+      />
+      <div>
+        <h3 class="text-xl font-bold">{{ doctor.full_name }}</h3>
+        <p class="text-sm text-gray-600 mb-1">{{ doctor.specialty }}</p>
+        <p class="text-sm text-gray-500">{{ doctor.experience }}</p>
+        <p class="mt-2 text-sm">
+          <strong>Status:</strong>
+          <span :class="statusClass">
+            {{ doctor.approved === 1 ? '✅ Approved' : '⏳ Pending Approval' }}
+          </span>
+        </p>
       </div>
-      <div class="mt-4 text-sm text-gray-700">
-        <p><strong>Email:</strong> {{ doctor.email }}</p>
-        <p><strong>Phone:</strong> {{ doctor.mobile }}</p>
-        <p><strong>Clinic:</strong> {{ doctor.clinicName }} ({{ doctor.clinicAddress }})</p>
-        <p><strong>Status:</strong> <span :class="statusClass">{{ doctor.status }}</span></p>
-      </div>
+    </div>
+
+    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
+      <p><strong>Email:</strong> {{ doctor.email }}</p>
+      <p><strong>Phone:</strong> {{ doctor.mobile }}</p>
+      <p><strong>Clinic:</strong> {{ doctor.clinic_name }}</p>
+      <p><strong>Clinic Address:</strong> {{ doctor.clinic_address }}</p>
+      <p><strong>Registration Number:</strong> {{ doctor.registration_number }}</p>
+      <p><strong>Medical Council:</strong> {{ doctor.council }}</p>
+      <p><strong>Location:</strong> {{ doctor.location }}</p>
+      <p><strong>Role:</strong> {{ doctor.role }}</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  name: "DoctorProfileCard",
   data() {
     return {
       doctor: {},
       loading: true,
-      defaultPhoto: 'https://via.placeholder.com/64'
+      defaultPhoto: 'https://via.placeholder.com/96'
     };
   },
   computed: {
     statusClass() {
-      return this.doctor.status === 'APPROVED' ? 'text-green-600' : 'text-yellow-600';
+      return this.doctor.approved === 1 ? 'text-green-600 font-semibold' : 'text-yellow-600 font-semibold';
     }
   },
   async created() {
@@ -45,7 +61,7 @@ export default {
       if (!res.ok) throw new Error('Failed to fetch profile');
       this.doctor = await res.json();
     } catch (err) {
-      alert(err.message);
+      alert("Error: " + err.message);
     } finally {
       this.loading = false;
     }
@@ -54,10 +70,10 @@ export default {
 </script>
 
 <style scoped>
-.status-approved {
-  color: green;
+.text-green-600 {
+  color: #16a34a;
 }
-.status-pending {
-  color: orange;
+.text-yellow-600 {
+  color: #ca8a04;
 }
 </style>

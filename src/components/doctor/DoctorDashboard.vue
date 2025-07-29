@@ -3,11 +3,11 @@
     <h1 class="text-2xl font-bold mb-6">Doctor Dashboard</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <DoctorProfileCard />
-      <EarningsSummary />
+      <!-- <EarningsSummary />
       <DoctorAvailability />
       <UpcomingAppointments />
       <PrescriptionUpload />
-      <DoctorNotifications />
+      <DoctorNotifications /> -->
     </div>
     <div class="mt-6">
       <DoctorLogout />
