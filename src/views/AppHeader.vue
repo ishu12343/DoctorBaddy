@@ -1,7 +1,10 @@
 <template>
   <header class="header">
     <div class="header__container">
-      <img src="@/assets/images/logo.png" alt="Logo" class="header__logo" />DoctorBuddy
+      <router-link to="/" class="header__logo-link">
+        <img src="@/assets/images/logo.png" alt="Logo" class="header__logo" />
+        DoctorBuddy
+      </router-link>
       <nav class="header__nav">
         <router-link to="/services">Our Services</router-link>
         <router-link to="/contact">Contact</router-link>
@@ -13,6 +16,7 @@
           <div v-if="showDropdown" class="dropdown-menu">
             <router-link to="/patient-login" class="dropdown-item">Patient Login</router-link>
             <router-link to="/doctor-login" class="dropdown-item">Doctor Login</router-link>
+            <router-link to="/admin-login" class="dropdown-item">Admin Login</router-link>
           </div>
         </div>
         <div class="dropdown" @mouseleave="hideSignupDropdown">
@@ -23,6 +27,7 @@
           <div v-if="showDropdown2" class="dropdown-menu">
             <router-link to="/patient-signup" class="dropdown-item">Patient Sign Up</router-link>
             <router-link to="/doctor-signup" class="dropdown-item">Doctor Sign Up</router-link>
+            <router-link to="/admin-signup" class="dropdown-item">Admin Sign Up</router-link>
           </div>
         </div>
         <!-- <router-link to="/signup" class="btn btn--primary btn--small">SIGN UP</router-link> -->
@@ -73,6 +78,16 @@ export default {
 
   .header__logo {
     height: 40px;
+  }
+
+  .header__logo-link {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: bold;
+    gap: 0.5rem;
   }
 
   .header__nav {

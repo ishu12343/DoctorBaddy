@@ -8,6 +8,9 @@ import DoctorSignUp from '../components/doctor/DoctorSignUp.vue'
 import PatientSignUp from '../components/patient/PatientSignUp.vue'
 import PatientDashboard from '@/components/patient/PatientDashboard.vue'
 import DoctorDashboard from '@/components/doctor/DoctorDashboard.vue'
+import AdminLogin from '@/components/admin/AdminLogin.vue'
+import AdminSignUp from '@/components/admin/AdminSignUp.vue'
+import AdminDashboard from '@/components/admin/AdminDashboard.vue'
 
 const routes = [
   { path: '/patient-login', name: 'PatientLogin', component: PatientLogin },
@@ -16,11 +19,7 @@ const routes = [
   { path: '/doctor-signup', name: 'DoctorSignUp', component: DoctorSignUp },
   { path: '/', component: Home },
   { path: '/contact', name: 'Contact', component: ContactPage },
-  {
-    path: '/services',
-    name: 'Services',
-    component: OurServices
-  },
+  { path: '/services', name: 'Services', component: OurServices },
   {
     path: '/patient-dashboard',
     name: 'PatientDashboard',
@@ -30,7 +29,11 @@ const routes = [
     path: '/doctor-dashboard',
     name: 'DoctorDashboard',
     component: DoctorDashboard
-  }
+  },
+  { path: '/admin-login', name: 'AdminLogin', component: AdminLogin },
+  { path: '/admin-signup', name: 'AdminSignUp', component: AdminSignUp },
+  { path: '/admin-dashboard', name: 'AdminDashboard', component: AdminDashboard },
+
   
   // {
   //   path: '/doctor-dashboard/profile',
