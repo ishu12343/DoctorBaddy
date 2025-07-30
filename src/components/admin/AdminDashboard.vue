@@ -1,6 +1,16 @@
 <template>
   <div class="p-6">
-    <h1 class="text-2xl font-bold mb-6">Admin Dashboard</h1>
+    <div class="flex items-center mb-6">
+      <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+      <div class="ml-auto">
+        <button
+          class="bg-red-500 text-white px-4 py-2 rounded"
+          @click="logout"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
 
     <!-- Doctors Table -->
     <div class="mb-10">
@@ -353,6 +363,18 @@ export default {
       } else if (type === 'patients') {
         this.selectedPatients = this.selectAllPatients ? this.patients.map(pat => pat.id) : [];
       }
+    },
+    async logout() {
+      const token = localStorage.getItem('token');
+      try {
+        await axios.post('http://127.0.0.1:5000/admin/logout', {}, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (err) {
+        console.error('Logout API error:', err);
+      }
+      localStorage.removeItem('token');
+      this.$router.replace('/'); // Prevent going back to dashboard
     },
   },
   mounted() {
