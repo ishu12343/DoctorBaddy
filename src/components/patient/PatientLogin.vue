@@ -43,7 +43,6 @@ export default {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          // credentials: 'include',  // Important for sending/receiving cookies
           body: JSON.stringify({
             email: this.email,
             password: this.password
@@ -64,9 +63,24 @@ export default {
         // Store the token in localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('userType', 'patient');
-        
-        // Redirect to patient dashboard
+
+        // Redirect to patient dashboard first
         this.$router.push('/patient-dashboard');
+
+        // Then fetch profile data with token
+        const profileResponse = await fetch('http://127.0.0.1:5000/api/patient/profile?id=1', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${data.token}`,
+            'Accept': 'application/json'
+          }
+        });
+
+        if (profileResponse.ok) {
+          const profileData = await profileResponse.json();
+          localStorage.setItem('patientProfile', JSON.stringify(profileData));
+        }
+        // Optionally handle profile fetch errors silently or show a message
       } catch (err) {
         this.error = err.message || 'Login failed. Please try again.';
       }
