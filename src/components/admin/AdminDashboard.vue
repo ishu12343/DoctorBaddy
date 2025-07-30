@@ -129,17 +129,28 @@
       :patient="patientPopupData"
       @close="closePatientPopup"
     />
+    
+    <DoctorPopup
+      v-if="showDoctorPopup"
+      :doctor="doctorPopupData"
+      @close="closeDoctorPopup"
+      @approve="handleApproveDoctor"
+      @suspend="handleSuspendDoctor"
+      @unsuspend="handleUnsuspendDoctor"
+    />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import PatientPopup from './PatientPopup.vue'; // Import the popup
+import PatientPopup from './PatientPopup.vue';
+import DoctorPopup from './DoctorPopup.vue';
 
 export default {
   name: 'AdminDashboard',
   components: {
-    PatientPopup, // Register the popup
+    PatientPopup,
+    DoctorPopup,
   },
   data() {
     return {
@@ -149,8 +160,10 @@ export default {
       selectAllPatients: false,
       selectedDoctors: [],
       selectedPatients: [],
-      showPatientPopup: false, // Popup visibility
-      patientPopupData: null,  // Data for popup
+      showPatientPopup: false, // Patient popup visibility
+      patientPopupData: null,  // Data for patient popup
+      showDoctorPopup: false,  // Doctor popup visibility
+      doctorPopupData: null,   // Data for doctor popup
     };
   },
   methods: {
@@ -208,36 +221,30 @@ export default {
 
     async viewDoctor(id) {
       try {
+        console.log('View doctor clicked, ID:', id);
         const token = localStorage.getItem('token');
         const response = await axios.get(`http://127.0.0.1:5000/admin/doctors/view?id=${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        // Try both possible structures
+        
+        console.log('Doctor API Response:', response);
+        
         const doc = response.data.data ? response.data.data : response.data;
+        console.log('Processed doctor data:', doc);
+        
         if (!doc || Object.keys(doc).length === 0) {
+          console.error('Doctor details not found or empty');
           alert('Doctor details not found.');
           return;
         }
-        alert(
-          `Doctor Details:\n
-ID: ${doc.id}
-Name: ${doc.full_name}
-Email: ${doc.email}
-Mobile: ${doc.mobile}
-Role: ${doc.role}
-Specialty: ${doc.specialty}
-Degree: ${doc.degree}
-Council: ${doc.council}
-Experience: ${doc.experience}
-Registration Number: ${doc.registration_number}
-Clinic Name: ${doc.clinic_name}
-Clinic Address: ${doc.clinic_address}
-Location: ${doc.location}
-Approved: ${doc.approved === 1 ? 'Yes' : 'No'}
-Suspended: ${doc.suspended === 1 ? 'Yes' : 'No'}
-Documents Verified: ${doc.documents_verified === 1 ? 'Yes' : 'No'}`
-        );
+        
+        this.doctorPopupData = doc;
+        this.showDoctorPopup = true;
+        console.log('Doctor popup should be visible');
+        
+        await this.$nextTick();
       } catch (err) {
+        console.error('Error in viewDoctor:', err);
         alert('Failed to load doctor details.');
       }
     },
@@ -290,6 +297,55 @@ Documents Verified: ${doc.documents_verified === 1 ? 'Yes' : 'No'}`
       this.showPatientPopup = false;
       this.patientPopupData = null;
       console.log('Popup state after close - showPatientPopup:', this.showPatientPopup);
+    },
+    
+    closeDoctorPopup() {
+      console.log('Closing doctor popup');
+      this.showDoctorPopup = false;
+      this.doctorPopupData = null;
+      console.log('Popup state after close - showDoctorPopup:', this.showDoctorPopup);
+    },
+    
+    async handleApproveDoctor(id) {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.put(`http://localhost:5000/admin/doctors/${id}/approve`, {}, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        this.closeDoctorPopup();
+        this.fetchData();
+      } catch (err) {
+        console.error('Error approving doctor:', err);
+        alert('Failed to approve doctor.');
+      }
+    },
+    
+    async handleSuspendDoctor(id) {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.put(`http://localhost:5000/admin/doctors/${id}/suspend`, {}, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        this.closeDoctorPopup();
+        this.fetchData();
+      } catch (err) {
+        console.error('Error suspending doctor:', err);
+        alert('Failed to suspend doctor.');
+      }
+    },
+    
+    async handleUnsuspendDoctor(id) {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.put(`http://localhost:5000/admin/doctors/${id}/unsuspend`, {}, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        this.closeDoctorPopup();
+        this.fetchData();
+      } catch (err) {
+        console.error('Error unsuspending doctor:', err);
+        alert('Failed to unsuspend doctor.');
+      }
     },
     toggleSelectAll(type) {
       if (type === 'doctors') {
