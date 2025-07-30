@@ -1,58 +1,62 @@
 <template>
-  <div class="max-w-md mx-auto p-6 bg-white shadow-xl rounded-xl mt-10">
-    <h2 class="text-2xl font-bold mb-6 text-center">Admin Signup</h2>
+  <div class="auth-page">
+    <div class="auth-container">
+      <h2>Admin Registration</h2>
+      <form @submit.prevent="handleSignup" class="auth-form">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input
+            type="text"
+            id="fullName"
+            v-model="form.full_name"
+            required
+            class="form-control"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            v-model="form.email"
+            required
+            class="form-control"
+          />
+        </div>
 
-    <form @submit.prevent="handleSignup">
-      <div class="mb-4">
-        <label class="block mb-1 font-medium">Full Name</label>
-        <input
-          v-model="form.full_name"
-          type="text"
-          required
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-      </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            v-model="form.password"
+            required
+            minlength="6"
+            class="form-control"
+          />
+        </div>
 
-      <div class="mb-4">
-        <label class="block mb-1 font-medium">Email</label>
-        <input
-          v-model="form.email"
-          type="email"
-          required
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-      </div>
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role" v-model="form.role" class="form-control">
+            <option value="ADMIN">Admin</option>
+          </select>
+        </div>
 
-      <div class="mb-4">
-        <label class="block mb-1 font-medium">Password</label>
-        <input
-          v-model="form.password"
-          type="password"
-          required
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-      </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" :disabled="isLoading">
+            {{ isLoading ? 'Registering...' : 'Register' }}
+          </button>
+          <p class="login-link">
+            Already have an account? <router-link to="/admin-login">Login here</router-link>
+          </p>
+        </div>
 
-      <div class="mb-4">
-        <label class="block mb-1 font-medium">Role</label>
-        <select
-          v-model="form.role"
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="ADMIN">ADMIN</option>
-        </select>
-      </div>
-
-      <button
-        type="submit"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
-      >
-        Signup
-      </button>
-
-      <p v-if="error" class="text-red-600 mt-4">{{ error }}</p>
-      <p v-if="success" class="text-green-600 mt-4">Signup successful! 🎉</p>
-    </form>
+        <p v-if="error" class="error-message">{{ error }}</p>
+        <p v-if="success" class="success-message">Registration successful! 🎉</p>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -60,9 +64,10 @@
 import axios from "axios";
 
 export default {
-  name: "AdminSignup",
+  name: 'AdminSignUp',
   data() {
     return {
+      isLoading: false,
       form: {
         full_name: "",
         email: "",
@@ -75,6 +80,7 @@ export default {
   },
   methods: {
     async handleSignup() {
+      this.isLoading = true;
       this.error = "";
       this.success = false;
 
@@ -82,16 +88,18 @@ export default {
         const response = await axios.post("http://127.0.0.1:5000/admin/create", this.form);
         const { token, admin } = response.data;
 
-        // Store token (for example in localStorage)
+        // Store token in localStorage
         localStorage.setItem("admin_token", token);
-
+        localStorage.setItem("userType", "admin");
+        
         this.success = true;
         console.log("Admin signed up:", admin);
-        // Optional: redirect to dashboard
         this.$router.push("/admin-dashboard");
       } catch (err) {
-        this.error =
-          err.response?.data?.error || "Signup failed. Please try again.";
+        this.error = err.response?.data?.error || "Registration failed. Please try again.";
+        console.error('Registration error:', err);
+      } finally {
+        this.isLoading = false;
       }
     },
   },
@@ -99,7 +107,143 @@ export default {
 </script>
 
 <style scoped>
-body {
-  background-color: #f8f9fa;
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f7fb;
+  padding: 20px;
+}
+
+.auth-container {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-weight: 500;
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.form-control {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.25rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.radio-label input[type="radio"] {
+  margin: 0;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-align: center;
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #4299e1;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #3182ce;
+}
+
+.btn-primary:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.login-link {
+  text-align: center;
+  color: #4a5568;
+  margin-top: 0.5rem;
+}
+
+.login-link a {
+  color: #4299e1;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #e53e3e;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.success-message {
+  color: #38a169;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.95rem;
 }
 </style>

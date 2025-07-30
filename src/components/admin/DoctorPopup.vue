@@ -5,11 +5,19 @@
       <div v-if="doctor">
         <p><strong>Name:</strong> {{ doctor.full_name }}</p>
         <p><strong>Email:</strong> {{ doctor.email }}</p>
-        <p><strong>Specialization:</strong> {{ doctor.specialization || 'Not specified' }}</p>
+        <p><strong>Role:</strong> {{ doctor.role }}</p>
+        <p><strong>Specialization:</strong> {{ doctor.specialization || doctor.specialty || 'Not specified' }}</p>
+        <p><strong>Degree:</strong> {{ doctor.degree || 'Not specified' }}</p>
+        <p><strong>Experience:</strong> {{ doctor.experience ? doctor.experience + ' years' : 'Not specified' }}</p>
         <p><strong>Mobile:</strong> {{ doctor.mobile || 'Not provided' }}</p>
+        <p><strong>Clinic Name:</strong> {{ doctor.clinic_name || 'Not specified' }}</p>
+        <p><strong>Clinic Address:</strong> {{ doctor.clinic_address || 'Not specified' }}</p>
+        <p><strong>Location:</strong> {{ doctor.location || 'Not specified' }}</p>
+        <p><strong>Council:</strong> {{ doctor.council || 'Not specified' }}</p>
+        <p><strong>Registration Number:</strong> {{ doctor.registration_number || 'Not specified' }}</p>
+        <p><strong>Documents Verified:</strong> {{ doctor.documents_verified ? 'Yes' : 'No' }}</p>
         <p><strong>Status:</strong> {{ doctor.approved ? 'Approved' : 'Pending Approval' }}</p>
         <p><strong>Suspended:</strong> {{ doctor.suspended ? 'Yes' : 'No' }}</p>
-        <!-- Add more doctor-specific fields as needed -->
       </div>
       <div class="mt-4 flex justify-end space-x-2">
         <button 

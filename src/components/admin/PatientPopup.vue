@@ -7,7 +7,13 @@
         <p><strong>Email:</strong> {{ patient.email }}</p>
         <p><strong>Mobile:</strong> {{ patient.mobile }}</p>
         <p><strong>Status:</strong> {{ patient.is_active ? 'Active' : 'Deactivated' }}</p>
-        <!-- Add more fields as needed -->
+        <p><strong>Address:</strong> {{ patient.address }}</p>
+        <p><strong>Blood Group:</strong> {{ patient.blood_group }}</p>
+        <p><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
+        <p><strong>Emergency Contact:</strong> {{ patient.emergency_contact }}</p>
+        <p><strong>Gender:</strong> {{ patient.gender }}</p>
+        <p><strong>Role:</strong> {{ patient.role }}</p>
+        <p><strong>ID:</strong> {{ patient.id }}</p>
       </div>
       <button class="mt-4 bg-red-600 text-white px-4 py-2 rounded" @click="$emit('close')">
         Close
