@@ -115,7 +115,7 @@
               <button
                 class="bg-blue-600 text-white px-4 py-1 rounded"
                 @click="viewPatient(pat.id)"
-              >
+               >
                 View
               </button>
             </td>
@@ -244,25 +244,52 @@ Documents Verified: ${doc.documents_verified === 1 ? 'Yes' : 'No'}`
 
     async viewPatient(id) {
       try {
+        console.log('1. View patient clicked, ID:', id);
         const token = localStorage.getItem('token');
+        console.log('2. Token exists:', !!token);
+        
+        // Log the current state before making the API call
+        console.log('3. Current popup state - showPatientPopup:', this.showPatientPopup);
+        console.log('4. Current popup data - patientPopupData:', this.patientPopupData);
+        
         const response = await axios.get(`http://127.0.0.1:5000/admin/patient/view?id=${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        
+        console.log('5. API Response status:', response.status);
+        console.log('6. API Response data:', response.data);
+        
         const pat = response.data.data ? response.data.data : response.data;
+        console.log('7. Processed patient data:', pat);
+        
         if (!pat || Object.keys(pat).length === 0) {
+          console.error('8. Patient details not found or empty');
           alert('Patient details not found.');
           return;
         }
-        this.patientPopupData = pat; // Set data for popup
-        this.showPatientPopup = true; // Show popup
-        console.log('Popup should open:', this.showPatientPopup, this.patientPopupData); // Debug log
+        
+        // Set the data first
+        this.patientPopupData = pat;
+        console.log('9. Set patientPopupData:', this.patientPopupData);
+        
+        // Then show the popup
+        this.showPatientPopup = true;
+        console.log('10. Set showPatientPopup to true');
+        
+        // Force Vue to update the DOM
+        await this.$nextTick();
+        console.log('11. After $nextTick - popup should be visible');
       } catch (err) {
+        console.error('Error in viewPatient:', err);
         alert('Failed to load patient details.');
       }
     },
+    
     closePatientPopup() {
+      console.log('Closing patient popup');
       this.showPatientPopup = false;
       this.patientPopupData = null;
+      console.log('Popup state after close - showPatientPopup:', this.showPatientPopup);
     },
     toggleSelectAll(type) {
       if (type === 'doctors') {

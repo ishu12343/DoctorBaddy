@@ -1,27 +1,17 @@
 <template>
-  <div
-    class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
-    @click.self="$emit('close')"
-  >
-    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
-      <button
-        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-        @click="$emit('close')"
-      >
-        ✕
-      </button>
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg min-w-[300px] max-w-[90vw]">
       <h2 class="text-xl font-bold mb-4">Patient Details</h2>
       <div v-if="patient">
-        <p><strong>ID:</strong> {{ patient.id }}</p>
         <p><strong>Name:</strong> {{ patient.full_name }}</p>
         <p><strong>Email:</strong> {{ patient.email }}</p>
         <p><strong>Mobile:</strong> {{ patient.mobile }}</p>
         <p><strong>Status:</strong> {{ patient.is_active ? 'Active' : 'Deactivated' }}</p>
         <!-- Add more fields as needed -->
       </div>
-      <div v-else>
-        <p>No patient data available.</p>
-      </div>
+      <button class="mt-4 bg-red-600 text-white px-4 py-2 rounded" @click="$emit('close')">
+        Close
+      </button>
     </div>
   </div>
 </template>
@@ -30,27 +20,38 @@
 export default {
   name: 'PatientPopup',
   props: {
-    patient: {
-      type: Object,
-      required: false,
-    },
-  },
-  mounted() {
-    document.addEventListener('keydown', this.handleEsc);
-  },
-  beforeUnmount() {
-    document.removeEventListener('keydown', this.handleEsc);
-  },
-  methods: {
-    handleEsc(e) {
-      if (e.key === 'Escape') {
-        this.$emit('close');
-      }
-    },
+    patient: Object,
   },
 };
 </script>
 
 <style scoped>
-/* Optional: Add custom styles for the popup */
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bg-white {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 90%;
+  max-width: 600px;
+}
+
+/* Ensure the popup stays on top of other elements */
+:global(body) {
+  overflow: hidden;
+}
 </style>
