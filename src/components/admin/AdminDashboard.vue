@@ -108,14 +108,14 @@
               <button
                 class="bg-green-600 text-white px-4 py-1 rounded"
                 @click="activatePatient(pat.id)"
-                v-if="!pat.is_active"
+                :disabled="pat.is_active"
               >
                 Activate
               </button>
               <button
                 class="bg-blue-600 text-white px-4 py-1 rounded"
                 @click="viewPatient(pat.id)"
-               >
+              >
                 View
               </button>
             </td>
