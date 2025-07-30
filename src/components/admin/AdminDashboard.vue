@@ -123,14 +123,24 @@
         </tbody>
       </table>
     </div>
+
+    <PatientPopup
+      v-if="showPatientPopup"
+      :patient="patientPopupData"
+      @close="closePatientPopup"
+    />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import PatientPopup from './PatientPopup.vue'; // Import the popup
 
 export default {
   name: 'AdminDashboard',
+  components: {
+    PatientPopup, // Register the popup
+  },
   data() {
     return {
       doctors: [],
@@ -139,6 +149,8 @@ export default {
       selectAllPatients: false,
       selectedDoctors: [],
       selectedPatients: [],
+      showPatientPopup: false, // Popup visibility
+      patientPopupData: null,  // Data for popup
     };
   },
   methods: {
@@ -241,26 +253,17 @@ Documents Verified: ${doc.documents_verified === 1 ? 'Yes' : 'No'}`
           alert('Patient details not found.');
           return;
         }
-        const statusText = pat.is_active === 1 ? 'Active' : 'Deactivated';
-        alert(
-          `Patient Details:\n
-ID: ${pat.id}
-Name: ${pat.full_name}
-Email: ${pat.email}
-Mobile: ${pat.mobile}
-Status: ${statusText}
-Address: ${pat.address}
-Blood Group: ${pat.blood_group}
-Date of Birth: ${pat.date_of_birth}
-Gender: ${pat.gender}
-Role: ${pat.role}
-Emergency Contact: ${pat.emergency_contact}`
-        );
+        this.patientPopupData = pat; // Set data for popup
+        this.showPatientPopup = true; // Show popup
+        console.log('Popup should open:', this.showPatientPopup, this.patientPopupData); // Debug log
       } catch (err) {
         alert('Failed to load patient details.');
       }
     },
-
+    closePatientPopup() {
+      this.showPatientPopup = false;
+      this.patientPopupData = null;
+    },
     toggleSelectAll(type) {
       if (type === 'doctors') {
         this.selectedDoctors = this.selectAllDoctors ? this.doctors.map(doc => doc.id) : [];
