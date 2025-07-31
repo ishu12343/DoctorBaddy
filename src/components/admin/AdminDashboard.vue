@@ -367,7 +367,7 @@ export default {
     async logout() {
       const token = localStorage.getItem('token');
       try {
-        await axios.post('http://127.0.0.1:5000/admin/logout', {}, {
+        await axios.post('http://127.0.0.1:5000/api/admin/logout', {}, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (err) {
