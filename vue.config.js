@@ -2,9 +2,10 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
+    historyApiFallback: true,
     proxy: {
-      '^/doctor-dashboard': {
-        target: 'http://localhost:8080', // or your backend port
+      '^/api': {
+        target: 'http://127.0.0.1:5000', // Your backend API
         changeOrigin: true,
       },
     },
