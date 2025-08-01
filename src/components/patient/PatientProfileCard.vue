@@ -164,10 +164,10 @@ export default {
       }
 
       try {
-        await axios.put('http://127.0.0.1:5000/api/patient/profile', formData, {
+        await axios.put('http://127.0.0.1:5000/api/patient/updateprofile', formData, {
           headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
+            Authorization: `Bearer ${token}`
+            // Do not set 'Content-Type' manually
           },
         })
         alert('Profile updated successfully')
