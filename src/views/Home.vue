@@ -77,7 +77,7 @@
           <div>We can help you feel better faster. Register now for access to our online doctors 24 hours a day.</div>
         </div>
         <div class="cta-footer__button">
-          <router-link to="/signup" class="btn btn--primary btn--medium">Sign up now</router-link>
+          <router-link to="/patient-signup" class="btn btn--primary btn--medium">Sign up now</router-link>
         </div>
       </div>
     </div>

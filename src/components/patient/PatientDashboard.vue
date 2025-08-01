@@ -1,21 +1,32 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-header">
-      <div v-if="profile" class="profile-section">
-        <h3>Your Profile</h3>
-        <p><strong>Email:</strong> {{ profile.email }}</p>
-        <p><strong>Role:</strong> {{ profile.role }}</p>
-        <p><strong>Full Name:</strong> {{ profile.patient.full_name }}</p>
-        <p><strong>Patient Email:</strong> {{ profile.patient.email }}</p>
-        <p><strong>Patient ID:</strong> {{ profile.patient.id }}</p>
-        <p><strong>Mobile:</strong> {{ profile.patient.mobile }}</p>
-      </div>
+      <button class="profile-btn" @click="showProfile = true">Profile</button>
       <button class="logout-btn" @click="logout">Logout</button>
     </div>
     <h2>Welcome to Patient Dashboard!</h2>
     <p>You have successfully logged in.</p>
     <div v-if="!profile">
       <p>Loading profile...</p>
+    </div>
+
+    <!-- Profile Modal -->
+    <div v-if="showProfile" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+        <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" @click="showProfile = false">&times;</button>
+        <h3>Your Profile</h3>
+        <div v-if="profile" class="profile-section">
+          <p><strong>Email:</strong> {{ profile.email }}</p>
+          <p><strong>Role:</strong> {{ profile.role }}</p>
+          <p><strong>Full Name:</strong> {{ profile.patient.full_name }}</p>
+          <p><strong>Patient Email:</strong> {{ profile.patient.email }}</p>
+          <p><strong>Patient ID:</strong> {{ profile.patient.id }}</p>
+          <p><strong>Mobile:</strong> {{ profile.patient.mobile }}</p>
+        </div>
+        <div v-else>
+          <p>Loading profile...</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -28,6 +39,7 @@ export default {
   data() {
     return {
       profile: null,
+      showProfile: false
     };
   },
   methods: {
@@ -88,6 +100,24 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.profile-btn {
+  align-self: flex-start;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(39, 95, 212, 0.12);
+  transition: background 0.2s, transform 0.2s;
+  margin-left: 1.5rem;
+}
+.profile-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px) scale(1.05);
 }
 .logout-btn {
   align-self: flex-start;

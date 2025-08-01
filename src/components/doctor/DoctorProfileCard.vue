@@ -8,7 +8,8 @@
       <img
         :src="defaultPhoto"
         alt="Doctor Photo"
-        class="w-24 h-24 rounded-full object-cover border"
+        class="rounded-full object-cover border-2"
+        style="width: 14%; height: auto; min-width: 40px; max-width: 80px;"
       />
       <div>
         <h3 class="text-xl font-bold">{{ doctor.full_name }}</h3>
@@ -43,7 +44,7 @@ export default {
     return {
       doctor: {},
       loading: true,
-      defaultPhoto: 'https://via.placeholder.com/96'
+      defaultPhoto: require('@/assets/profile.jpg') // Use local image
     };
   },
   computed: {
@@ -59,7 +60,8 @@ export default {
         }
       });
       if (!res.ok) throw new Error('Failed to fetch profile');
-      this.doctor = await res.json();
+      const response = await res.json();
+      this.doctor = response.doctor;
     } catch (err) {
       alert("Error: " + err.message);
     } finally {
