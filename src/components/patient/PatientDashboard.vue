@@ -30,18 +30,7 @@
       <div v-if="showProfile" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
           <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" @click="showProfile = false">&times;</button>
-          <h2 class="text-xl font-bold mb-4">Patient Profile</h2>
-          <div v-if="profile" class="profile-section">
-            <p><strong>Email:</strong> {{ profile.email }}</p>
-            <p><strong>Role:</strong> {{ profile.role }}</p>
-            <p><strong>Full Name:</strong> {{ profile.patient.full_name }}</p>
-            <p><strong>Patient Email:</strong> {{ profile.patient.email }}</p>
-            <p><strong>Patient ID:</strong> {{ profile.patient.id }}</p>
-            <p><strong>Mobile:</strong> {{ profile.patient.mobile }}</p>
-          </div>
-          <div v-else>
-            <p>Loading profile...</p>
-          </div>
+          <PatientProfileCard />
         </div>
       </div>
 
@@ -55,13 +44,14 @@
 
 <script>
 import axios from 'axios';
+import PatientProfileCard from './PatientProfileCard.vue';
 
 export default {
   components: {
+    PatientProfileCard
   },
   data() {
     return {
-      profile: null,
       showProfile: false,
       showHome: false,
       appointments: 0,
@@ -88,24 +78,12 @@ export default {
       this.showProfile = false;
     },
     async fetchProfile() {
-      const token = localStorage.getItem('token');
-      try {
-        const res = await axios.get('http://127.0.0.1:5000/api/patient/profile', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        this.profile = res.data;
-        // Example: set dashboard stats if available
-        this.appointments = res.data.patient.appointments_count || 0;
-        this.prescriptions = res.data.patient.prescriptions_count || 0;
-        this.bills = res.data.patient.bills_count || 0;
-        this.messages = res.data.patient.messages_count || 0;
-      } catch (err) {
-        console.error('Profile API error:', err);
-      }
+      // Remove profile fetching logic from here
+      // Keep dashboard stats logic if needed, or move to a separate API if required
     },
   },
   mounted() {
-    this.fetchProfile();
+    // Remove this.fetchProfile();
   },
 }
 </script>
