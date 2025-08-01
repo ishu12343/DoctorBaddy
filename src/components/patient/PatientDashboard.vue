@@ -1,33 +1,55 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-header">
-      <button class="profile-btn" @click="showProfile = true">Profile</button>
-      <button class="logout-btn" @click="logout">Logout</button>
-    </div>
-    <h2>Welcome to Patient Dashboard!</h2>
-    <p>You have successfully logged in.</p>
-    <div v-if="!profile">
-      <p>Loading profile...</p>
-    </div>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <button class="profile-btn" @click="showProfile = true">Profile</button>
+        <!-- <button class="profile-btn" @click="goHome">Home</button> -->
+      </div>
+      <div class="sidebar-bottom">
+        <button class="logout-btn" @click="logout">Logout</button>
+      </div>
+    </aside>
 
-    <!-- Profile Modal -->
-    <div v-if="showProfile" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
-        <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" @click="showProfile = false">&times;</button>
-        <h3>Your Profile</h3>
-        <div v-if="profile" class="profile-section">
-          <p><strong>Email:</strong> {{ profile.email }}</p>
-          <p><strong>Role:</strong> {{ profile.role }}</p>
-          <p><strong>Full Name:</strong> {{ profile.patient.full_name }}</p>
-          <p><strong>Patient Email:</strong> {{ profile.patient.email }}</p>
-          <p><strong>Patient ID:</strong> {{ profile.patient.id }}</p>
-          <p><strong>Mobile:</strong> {{ profile.patient.mobile }}</p>
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Dashboard Cards Row (above navbar) -->
+      <!-- <template v-if="!showProfile && !showHome">
+        <div class="dashboard-cards-row mb-6">
+          <dashboard-card title="Appointments" :value="appointments" icon="📅" />
+          <dashboard-card title="Prescriptions" :value="prescriptions" icon="💊" />
+          <dashboard-card title="Bills" :value="bills" icon="💵" />
+          <dashboard-card title="Messages" :value="messages" icon="✉️" />
         </div>
-        <div v-else>
-          <p>Loading profile...</p>
+      </template> -->
+      <header class="navbar">
+        <span class="font-bold text-lg text-gray-700">Patient Dashboard</span>
+      </header>
+
+      <!-- Profile Modal -->
+      <div v-if="showProfile" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+          <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" @click="showProfile = false">&times;</button>
+          <h2 class="text-xl font-bold mb-4">Patient Profile</h2>
+          <div v-if="profile" class="profile-section">
+            <p><strong>Email:</strong> {{ profile.email }}</p>
+            <p><strong>Role:</strong> {{ profile.role }}</p>
+            <p><strong>Full Name:</strong> {{ profile.patient.full_name }}</p>
+            <p><strong>Patient Email:</strong> {{ profile.patient.email }}</p>
+            <p><strong>Patient ID:</strong> {{ profile.patient.id }}</p>
+            <p><strong>Mobile:</strong> {{ profile.patient.mobile }}</p>
+          </div>
+          <div v-else>
+            <p>Loading profile...</p>
+          </div>
         </div>
       </div>
-    </div>
+
+      <!-- Home -->
+      <template v-if="showHome">
+        <PatientHome />
+      </template>
+    </main>
   </div>
 </template>
 
@@ -35,11 +57,17 @@
 import axios from 'axios';
 
 export default {
-  name: 'PatientDashboard',
+  components: {
+  },
   data() {
     return {
       profile: null,
-      showProfile: false
+      showProfile: false,
+      showHome: false,
+      appointments: 0,
+      prescriptions: 0,
+      bills: 0,
+      messages: 0
     };
   },
   methods: {
@@ -55,6 +83,10 @@ export default {
       localStorage.removeItem('token');
       this.$router.replace('/');
     },
+    goHome() {
+      this.showHome = true;
+      this.showProfile = false;
+    },
     async fetchProfile() {
       const token = localStorage.getItem('token');
       try {
@@ -62,6 +94,11 @@ export default {
           headers: { Authorization: `Bearer ${token}` },
         });
         this.profile = res.data;
+        // Example: set dashboard stats if available
+        this.appointments = res.data.patient.appointments_count || 0;
+        this.prescriptions = res.data.patient.prescriptions_count || 0;
+        this.bills = res.data.patient.bills_count || 0;
+        this.messages = res.data.patient.messages_count || 0;
       } catch (err) {
         console.error('Profile API error:', err);
       }
@@ -74,22 +111,73 @@ export default {
 </script>
 
 <style scoped>
-.dashboard-container {
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  background: linear-gradient(to right, #1D2856);
+  padding: 2rem 1rem;
+  width: 220px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  padding: 2rem;
-  position: relative;
-}
-.dashboard-header {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
-  gap: 2rem;
+  border-radius: 0.5rem 0 0 0.5rem;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+  min-height: 80vh;
+}
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+.sidebar-bottom {
+  width: 100%;
+}
+.main-content {
+  flex: 1;
+  padding: 2rem;
+}
+.navbar {
+  background: linear-gradient(to right, #3B82F6, #ffffff);
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+.logout-btn, .profile-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  color: white;
+  width: 100%;
+  text-align: left;
+}
+.logout-btn {
+  background: #ef4444;
+}
+.logout-btn:hover {
+  background: #dc2626;
+}
+.profile-btn {
+  background: #2563eb;
+}
+.profile-btn:hover {
+  background: #1d4ed8;
+}
+.dashboard-cards-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 .profile-section {
   background: #f5f8ff;
@@ -100,49 +188,5 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-.profile-btn {
-  align-self: flex-start;
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 0.7rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(39, 95, 212, 0.12);
-  transition: background 0.2s, transform 0.2s;
-  margin-left: 1.5rem;
-}
-.profile-btn:hover {
-  background: #1d4ed8;
-  transform: translateY(-2px) scale(1.05);
-}
-.logout-btn {
-  align-self: flex-start;
-  background: linear-gradient(90deg, #275FD4 0%, #1a3e8a 100%);
-  color: #fff;
-  border: none;
-  padding: 0.7rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(39, 95, 212, 0.12);
-  transition: background 0.2s, transform 0.2s;
-  margin-left: 1.5rem;
-}
-.logout-btn:hover {
-  background: linear-gradient(90deg, #1a3e8a 0%, #275FD4 100%);
-  transform: translateY(-2px) scale(1.05);
-}
-h2 {
-  color: #275FD4;
-  margin-bottom: 1rem;
-}
-p {
-  font-size: 1.2rem;
-  color: #333;
 }
 </style>
