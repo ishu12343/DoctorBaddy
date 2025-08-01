@@ -22,9 +22,9 @@
           <dashboard-card title="Messages" :value="messages" icon="✉️" />
         </div>
       </template> -->
-      <header class="navbar">
+      <!-- <header class="navbar">
         <span class="font-bold text-lg text-gray-700">Patient Dashboard</span>
-      </header>
+      </header> -->
 
       <!-- Profile Modal -->
       <div v-if="showProfile" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
