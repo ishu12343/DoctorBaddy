@@ -348,20 +348,14 @@ export default {
       this.docFile = event.target.files[0];
     },
     async submitForm() {
-      const formData = new FormData();
-      for (const key in this.doctor) {
-        formData.append(key, this.doctor[key]);
-      }
-      if (this.photoFile) formData.append('photo', this.photoFile);
-      if (this.docFile) formData.append('document', this.docFile);
-
       try {
         const response = await fetch('http://127.0.0.1:5000/api/doctor/profile/update', {
-          method: 'POST',
+          method: 'PUT',
           headers: {
+            'Content-Type': 'application/json',
             Authorization: 'Bearer ' + localStorage.getItem('token')
           },
-          body: formData
+          body: JSON.stringify(this.doctor)
         });
 
         if (!response.ok) throw new Error('Failed to save profile');
