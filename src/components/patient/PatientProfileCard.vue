@@ -1,7 +1,7 @@
 <template>
   <div class="profile-container">
     <!-- Professional Header Section -->
-    <div class="profile-header">
+    <!-- <div class="profile-header">
       <div class="header-content">
         <div class="profile-avatar">
           <svg viewBox="0 0 24 24" fill="currentColor">
@@ -13,15 +13,7 @@
           <p class="profile-subtitle">Comprehensive Healthcare Information Management</p>
         </div>
       </div>
-      <div class="header-actions">
-        <button class="edit-btn" @click="startEditing" v-if="!isEditing">
-          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-          </svg>
-          Edit Profile
-        </button>
-      </div>
-    </div>
+    </div> -->
 
     <!-- Scrollable Content Area -->
     <div class="content-container">
@@ -332,6 +324,12 @@ import axios from 'axios'
 
 export default {
   name: 'PatientProfileCard',
+  props: {
+    isEditingProp: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       form: null,
@@ -339,6 +337,18 @@ export default {
       documentFile: null,
       bloodGroups: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
       isEditing: false
+    }
+  },
+  watch: {
+    isEditingProp: {
+      handler(newVal) {
+        if (newVal && !this.isEditing) {
+          this.startEditing();
+        } else if (!newVal && this.isEditing) {
+          this.saveProfile();
+        }
+      },
+      immediate: true
     }
   },
   async mounted() {
@@ -385,11 +395,6 @@ export default {
       }
     },
     
-    startEditing() {
-      this.isEditing = true
-      this.originalForm = { ...this.form }
-    },
-    
     handleFileUpload(event) {
       this.documentFile = event.target.files[0]
     },
@@ -431,12 +436,31 @@ export default {
         console.error('Profile update failed:', err)
         this.$toast?.error?.('Failed to save profile. Please try again.')
       }
+      
+      this.isEditing = false
+      this.$emit('update:editing', false);
     },
     
     cancelEdit() {
       this.form = { ...this.originalForm }
       this.isEditing = false
       this.documentFile = null
+      this.$emit('update:editing', false);
+    },
+    
+    // Method to be called from parent component
+    toggleEdit() {
+      if (this.isEditing) {
+        this.saveProfile();
+      } else {
+        this.startEditing();
+      }
+    },
+    
+    startEditing() {
+      this.isEditing = true
+      this.originalForm = { ...this.form }
+      this.$emit('update:editing', true);
     },
     
     // Legacy method names for compatibility
@@ -565,8 +589,8 @@ export default {
 /* Scrollable Content Container */
 .content-container {
   position: fixed;
-  top: 120px;
-  left: 320px;
+  top: 40px;
+  left: 280px;
   right: 0;
   bottom: 0;
   overflow-y: auto;

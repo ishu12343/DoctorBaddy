@@ -87,6 +87,18 @@
       <header class="top-header">
         <div class="header-left">
           <span class="dashboard-title">Patient Dashboard</span>
+          <!-- Edit Profile Button in Navbar -->
+          <button 
+            v-if="showProfile" 
+            class="navbar-edit-btn" 
+            @click="toggleProfileEdit"
+            :class="{ 'active': isProfileEditing }"
+          >
+            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            Edit Profile
+          </button>
         </div>
         <div class="header-right">
           <div class="header-user-profile" @click="toggleUserDropdown" :class="{ 'dropdown-open': showUserDropdown }">
@@ -128,7 +140,7 @@
       <div class="content-wrapper">
         <!-- Profile Page - Show only profile when profile is selected -->
         <template v-if="showProfile">
-          <PatientProfileCard />
+          <PatientProfileCard ref="profileCard" :is-editing-prop="isProfileEditing" @update:editing="isProfileEditing = $event" />
         </template>
 
         <!-- Dashboard Home - Show only when home is selected -->
@@ -175,6 +187,7 @@ export default {
       showProfile: false,
       showHome: true, // Start with dashboard view
       showUserDropdown: false,
+      isProfileEditing: false, // Track profile editing state
       patientInfo: null, // Store patient information
       appointments: 0,
       prescriptions: 0,
@@ -261,6 +274,11 @@ export default {
     async fetchProfile() {
       // Remove profile fetching logic from here
       // Keep dashboard stats logic if needed, or move to a separate API if required
+    },
+    toggleProfileEdit() {
+      this.isProfileEditing = !this.isProfileEditing;
+      // Emit event to child component or use refs to trigger edit mode
+      this.$refs.profileCard?.toggleEdit();
     },
   },
 }
@@ -444,6 +462,41 @@ export default {
   font-weight: 700;
   color: #1e40af;
   margin: 0;
+}
+
+/* Navbar Edit Button Styling */
+.navbar-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #4f46e5;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 1.5rem;
+}
+
+.navbar-edit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+  background: linear-gradient(135deg, #3730a3, #6b21a8);
+}
+
+.navbar-edit-btn.active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: #10b981;
+}
+
+.navbar-edit-btn .btn-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .header-right {
