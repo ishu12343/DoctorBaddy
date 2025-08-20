@@ -1,5 +1,8 @@
 <template>
   <div class="dashboard-layout">
+    <!-- Toast Notifications -->
+    <ToastNotification ref="toast" />
+    
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-top">
@@ -24,7 +27,7 @@
         <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
           <!-- <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" @click="showProfile = false">&times;</button> -->
           <!-- <h2 class="text-xl font-bold mb-4">Doctor Profile</h2> -->
-          <DoctorProfileCard />
+          <DoctorProfileCard :onStatusUpdate="refreshStatus" @profileUpdated="handleProfileUpdate" />
         </div>
       </div>
 
@@ -39,18 +42,76 @@
 <script>
 import DoctorProfileCard from './DoctorProfileCard.vue';
 import DoctorAppointments from './DoctorAppointments.vue';
+import ToastNotification from '../ToastNotification.vue';
 
 import axios from 'axios';
 
 export default {
-  components: { DoctorProfileCard, DoctorAppointments },
+  components: { DoctorProfileCard, DoctorAppointments, ToastNotification },
   data() {
     return {
       showProfile: false,
-      showHome: false
+      showHome: false,
+      doctorStatus: null,
+      lastToastShown: null
     };
   },
+  async mounted() {
+    await this.checkDoctorStatus();
+    this.showStatusToast();
+  },
   methods: {
+    async checkDoctorStatus() {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://127.0.0.1:5000/api/doctor/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (response.data) {
+          this.doctorStatus = response.data;
+        }
+      } catch (error) {
+        console.error('Error checking doctor status:', error);
+      }
+    },
+    showStatusToast() {
+      if (!this.doctorStatus) return;
+      
+      let currentStatus = '';
+      if (this.doctorStatus.suspended) {
+        currentStatus = 'suspended';
+      } else if (!this.doctorStatus.approved) {
+        currentStatus = 'pending';
+      } else if (this.doctorStatus.approved && !this.doctorStatus.suspended) {
+        currentStatus = 'approved';
+      }
+      
+      // Don't show the same toast again
+      if (this.lastToastShown === currentStatus) return;
+      this.lastToastShown = currentStatus;
+      
+      // Show toast notification based on approval status
+      if (this.doctorStatus.suspended) {
+        this.$refs.toast.showError(
+          'Your account has been suspended by the administrator. Please contact support for assistance.',
+          'Account Suspended',
+          0 // Persistent toast
+        );
+      } else if (!this.doctorStatus.approved) {
+        this.$refs.toast.showWarning(
+          'Your account is pending approval by the administrator. You will be notified once approved.',
+          'Pending Approval',
+          0 // Persistent toast
+        );
+      } else if (this.doctorStatus.approved && !this.doctorStatus.suspended) {
+        this.$refs.toast.showSuccess(
+          'Your account is approved and active. You can now manage appointments and patients.',
+          'Account Active',
+          3000 // Show for 3 seconds
+        );
+      }
+    },
     async logout() {
       const token = localStorage.getItem('token');
       try {
@@ -66,6 +127,20 @@ export default {
     goHome() {
       this.showHome = true;
       this.showProfile = false;
+    },
+    async refreshStatus() {
+      await this.checkDoctorStatus();
+      this.showStatusToast();
+    },
+    handleProfileUpdate() {
+      // Show success toast when profile is updated
+      this.$refs.toast.showSuccess(
+        'Your profile has been updated successfully!',
+        'Profile Updated',
+        4000
+      );
+      // Refresh status to show any changes
+      this.refreshStatus();
     }
   }
 };

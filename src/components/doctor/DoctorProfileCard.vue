@@ -216,7 +216,7 @@
           </div>
           <!-- Status -->
           <div>
-            <label class="form-label">Status <span class="text-red-500">*</span></label>
+            <label class="form-label">Account Status <span class="text-red-500">*</span></label>
             <template v-if="isEditing">
               <select v-model="doctor.status" class="form-input" required>
                 <option value="Active">Active</option>
@@ -224,7 +224,7 @@
               </select>
             </template>
             <template v-else>
-              <div class="form-input bg-gray-100">{{ doctor.status }}</div>
+              <div class="form-input bg-gray-100" :class="getStatusClass()">{{ getDisplayStatus() }}</div>
             </template>
           </div>
           <!-- Medical Council -->
@@ -277,6 +277,12 @@
 
 <script>
 export default {
+  props: {
+    onStatusUpdate: {
+      type: Function,
+      default: null
+    }
+  },
   data() {
     return {
       doctor: null,
@@ -330,6 +336,8 @@ export default {
           status: data.status || '',
           council: data.council || '',
           location: data.location || '',
+          approved: data.approved || false,
+          suspended: data.suspended || false,
         };
         if (data.languages) {
           const langs = data.languages.split(',');
@@ -337,6 +345,11 @@ export default {
         }
         this.doctor = doctorObj;
         this.originalDoctor = { ...doctorObj };
+        
+        // Notify parent of status update if callback provided
+        if (this.onStatusUpdate) {
+          this.onStatusUpdate();
+        }
       }
     } catch (err) {
       alert('Error fetching profile: ' + err.message);
@@ -361,9 +374,15 @@ export default {
         });
 
         if (!response.ok) throw new Error('Failed to save profile');
-        alert('Profile updated successfully!');
+        
         this.isEditing = false;
         this.originalDoctor = { ...this.doctor };
+        
+        // Emit event to parent component
+        this.$emit('profileUpdated');
+        
+        // Optional: you can remove this alert if you prefer only toast
+        alert('Profile updated successfully!');
       } catch (error) {
         alert('Error: ' + error.message);
       }
@@ -373,6 +392,30 @@ export default {
       this.isEditing = false;
       this.photoFile = null;
       this.docFile = null;
+    },
+    getDisplayStatus() {
+      if (!this.doctor) return 'Unknown';
+      
+      if (this.doctor.suspended) {
+        return 'Suspended by Admin';
+      } else if (!this.doctor.approved) {
+        return 'Pending Admin Approval';
+      } else if (this.doctor.approved && !this.doctor.suspended) {
+        return 'Active - Approved';
+      }
+      return this.doctor.status || 'Unknown';
+    },
+    getStatusClass() {
+      if (!this.doctor) return '';
+      
+      if (this.doctor.suspended) {
+        return 'text-red-600 bg-red-50 border-red-200';
+      } else if (!this.doctor.approved) {
+        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      } else if (this.doctor.approved && !this.doctor.suspended) {
+        return 'text-green-600 bg-green-50 border-green-200';
+      }
+      return '';
     }
   }
 };

@@ -44,8 +44,16 @@
             </td>
             <td class="border px-4 py-2">{{ doc.full_name }}</td>
             <td class="border px-4 py-2">{{ doc.email }}</td>
-            <td class="border px-4 py-2">{{ doc.approved ? 'Yes' : 'No' }}</td>
-            <td class="border px-4 py-2">{{ doc.suspended ? 'Yes' : 'No' }}</td>
+            <td class="border px-4 py-2">
+              <span :class="doc.approved ? 'text-green-600 bg-green-100 px-2 py-1 rounded' : 'text-red-600 bg-red-100 px-2 py-1 rounded'">
+                {{ doc.approved ? 'Approved' : 'Pending' }}
+              </span>
+            </td>
+            <td class="border px-4 py-2">
+              <span :class="doc.suspended ? 'text-red-600 bg-red-100 px-2 py-1 rounded' : 'text-green-600 bg-green-100 px-2 py-1 rounded'">
+                {{ doc.suspended ? 'Suspended' : 'Active' }}
+              </span>
+            </td>
             <td class="border px-4 py-2 space-x-2">
               <button
                 class="bg-green-600 text-white px-4 py-1 rounded"
