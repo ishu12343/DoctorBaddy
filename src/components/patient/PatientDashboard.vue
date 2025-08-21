@@ -248,6 +248,44 @@
                     {{ appointment.doctor_mobile }}
                   </button>
                 </div>
+
+                <!-- Actions for completed appointments -->
+                <div class="appointment-actions" v-if="appointment.status === 'COMPLETED'">
+                  <button 
+                    class="chat-btn"
+                    @click="openChatModalFromAppointment(appointment)"
+                  >
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    </svg>
+                    Chat with Doctor
+                  </button>
+                </div>
+
+                <!-- Actions for cancelled appointments -->
+                <div class="appointment-actions" v-if="appointment.status === 'CANCELLED'">
+                  <button 
+                    class="chat-btn"
+                    @click="openChatModalFromAppointment(appointment)"
+                  >
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    </svg>
+                    Chat with Doctor
+                  </button>
+                  
+                  <button 
+                    class="reschedule-btn"
+                    @click="openRescheduleModal(appointment)"
+                  >
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                      <polyline points="9,22 9,12 15,12 15,22"/>
+                      <path d="M1 12l6-6 6 6"/>
+                    </svg>
+                    Reschedule Appointment
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -620,6 +658,82 @@
         </div>
       </div>
 
+      <!-- Reschedule Modal -->
+      <div v-if="showRescheduleModal" class="modal-overlay" @click="closeRescheduleModal">
+        <div class="reschedule-modal" @click.stop>
+          <div class="modal-header">
+            <h3>Reschedule Appointment</h3>
+            <button class="close-btn" @click="closeRescheduleModal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="modal-content">
+            <div class="doctor-summary">
+              <h4>Doctor: {{ selectedAppointment?.doctor_name }}</h4>
+              <p>Current: {{ formatDateTime(selectedAppointment?.appointment_datetime) }}</p>
+            </div>
+
+            <div class="reschedule-form">
+              <div class="form-group">
+                <label for="newDate">New Date:</label>
+                <input 
+                  id="newDate"
+                  v-model="rescheduleForm.date"
+                  type="date" 
+                  class="form-input"
+                  :min="getTomorrowDate()"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="newTime">New Time:</label>
+                <select id="newTime" v-model="rescheduleForm.time" class="form-select">
+                  <option value="">Select time</option>
+                  <option value="09:00">09:00 AM</option>
+                  <option value="09:30">09:30 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="10:30">10:30 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="11:30">11:30 AM</option>
+                  <option value="14:00">02:00 PM</option>
+                  <option value="14:30">02:30 PM</option>
+                  <option value="15:00">03:00 PM</option>
+                  <option value="15:30">03:30 PM</option>
+                  <option value="16:00">04:00 PM</option>
+                  <option value="16:30">04:30 PM</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="rescheduleReason">Reason for rescheduling:</label>
+                <textarea 
+                  id="rescheduleReason"
+                  v-model="rescheduleForm.reason"
+                  class="form-textarea"
+                  placeholder="Optional: Explain why you need to reschedule..."
+                  rows="3"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="modal-actions">
+              <button 
+                class="submit-btn"
+                @click="submitReschedule"
+                :disabled="!rescheduleForm.date || !rescheduleForm.time || submittingReschedule"
+              >
+                {{ submittingReschedule ? 'Rescheduling...' : 'Reschedule Appointment' }}
+              </button>
+              <button class="cancel-btn" @click="closeRescheduleModal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Chat Modal -->
       <div v-if="showChatModal" class="modal-overlay" @click="closeChatModal">
         <div class="chat-modal" @click.stop>
@@ -757,6 +871,16 @@ export default {
       selectedDoctor: null,
       submittingBooking: false,
       bookingForm: {
+        date: '',
+        time: '',
+        reason: ''
+      },
+      
+      // Reschedule modal
+      showRescheduleModal: false,
+      selectedAppointment: null,
+      submittingReschedule: false,
+      rescheduleForm: {
         date: '',
         time: '',
         reason: ''
@@ -1042,6 +1166,62 @@ export default {
         alert(errorMessage);
       } finally {
         this.cancellingAppointment = null;
+      }
+    },
+    
+    openRescheduleModal(appointment) {
+      this.selectedAppointment = appointment;
+      this.showRescheduleModal = true;
+      this.rescheduleForm = {
+        date: '',
+        time: '',
+        reason: ''
+      };
+    },
+
+    closeRescheduleModal() {
+      this.showRescheduleModal = false;
+      this.selectedAppointment = null;
+      this.rescheduleForm = {
+        date: '',
+        time: '',
+        reason: ''
+      };
+    },
+
+    async submitReschedule() {
+      this.submittingReschedule = true;
+      const token = localStorage.getItem('token');
+      
+      try {
+        const response = await axios.post(
+          `http://127.0.0.1:5000/api/patient/appointments/${this.selectedAppointment.id}/reschedule`,
+          {
+            new_date: this.rescheduleForm.date,
+            new_time: this.rescheduleForm.time,
+            reason: this.rescheduleForm.reason
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        
+        if (response.data.success) {
+          // Update the appointment locally
+          const appointment = this.appointments.find(apt => apt.id === this.selectedAppointment.id);
+          if (appointment) {
+            appointment.appointment_datetime = `${this.rescheduleForm.date} ${this.rescheduleForm.time}`;
+            appointment.status = 'PENDING'; // Reset status to pending after reschedule
+          }
+          this.closeRescheduleModal();
+          
+          // Show success message
+          alert('Appointment rescheduled successfully! The doctor will confirm the new time.');
+        }
+      } catch (error) {
+        console.error('Error rescheduling appointment:', error);
+        const errorMessage = error.response?.data?.error || 'Failed to reschedule appointment. Please try again.';
+        alert(errorMessage);
+      } finally {
+        this.submittingReschedule = false;
       }
     },
     
@@ -3513,6 +3693,26 @@ export default {
   color: white;
 }
 
+.reschedule-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reschedule-btn:hover {
+  background: #3b82f6;
+  color: white;
+}
+
 /* Booking Modal Styles */
 .modal-overlay {
   position: fixed;
@@ -3686,6 +3886,152 @@ export default {
 }
 
 .submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Reschedule Modal Styles */
+.reschedule-modal {
+  background: white;
+  border-radius: 1.25rem;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.reschedule-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 0;
+  margin-bottom: 1rem;
+}
+
+.reschedule-modal .modal-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.reschedule-modal .modal-content {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.doctor-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.doctor-summary h4 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.doctor-summary p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.reschedule-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reschedule-modal .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reschedule-modal .form-group label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.reschedule-modal .form-input,
+.reschedule-modal .form-select,
+.reschedule-modal .form-textarea {
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.reschedule-modal .form-input:focus,
+.reschedule-modal .form-select:focus,
+.reschedule-modal .form-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.reschedule-modal .form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.reschedule-modal .modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.reschedule-modal .cancel-btn {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reschedule-modal .cancel-btn:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.reschedule-modal .submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.reschedule-modal .submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.reschedule-modal .submit-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
