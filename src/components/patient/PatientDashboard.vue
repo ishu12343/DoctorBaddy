@@ -229,6 +229,17 @@
                     {{ cancellingAppointment === appointment.id ? 'Cancelling...' : 'Cancel' }}
                   </button>
                   
+                  <!-- Chat button for doctor -->
+                  <button 
+                    class="chat-btn"
+                    @click="openChatModalFromAppointment(appointment)"
+                  >
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    </svg>
+                    Chat with Doctor
+                  </button>
+                  
                   <!-- Only show doctor contact button for confirmed appointments -->
                   <button v-if="appointment.status === 'CONFIRMED'" class="contact-doctor-btn">
                     <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1079,6 +1090,17 @@ export default {
       this.$nextTick(() => {
         this.scrollToBottom();
       });
+    },
+    
+    openChatModalFromAppointment(appointment) {
+      // Create a doctor object from appointment data
+      const doctor = {
+        id: appointment.doctor_id || appointment.id, // Use doctor_id if available, fallback to appointment id
+        full_name: appointment.doctor_name,
+        specialization: appointment.specialization || 'General Medicine',
+        mobile: appointment.doctor_mobile
+      };
+      this.openChatModal(doctor);
     },
     
     closeChatModal() {
@@ -3468,6 +3490,26 @@ export default {
 
 .contact-doctor-btn:hover {
   background: #3b82f6;
+  color: white;
+}
+
+.chat-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 2px solid #10b981;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.chat-btn:hover {
+  background: #10b981;
   color: white;
 }
 

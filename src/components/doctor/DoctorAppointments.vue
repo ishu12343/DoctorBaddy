@@ -203,6 +203,13 @@
             {{ processingAppointment === appointment.id ? 'Rejecting...' : 'Reject' }}
           </button>
           
+          <button class="action-btn chat-btn" @click="openChatModalWithPatient(appointment)">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+            Chat with Patient
+          </button>
+          
           <button class="action-btn reschedule-btn" @click="openRescheduleModal(appointment)">
             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -228,9 +235,70 @@
             Mark Complete
           </button>
           
+          <button class="action-btn chat-btn" @click="openChatModalWithPatient(appointment)">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+            Chat with Patient
+          </button>
+          
           <button class="action-btn contact-btn" @click="contactPatient(appointment)">
             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+            Contact Patient
+          </button>
+        </div>
+
+        <!-- Completed Appointments Actions -->
+        <div class="appointment-actions" v-else-if="appointment.status === 'COMPLETED'">
+          <button class="action-btn chat-btn" @click="openChatModalWithPatient(appointment)">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+            Chat with Patient
+          </button>
+          
+          <button class="action-btn reschedule-btn" @click="openRescheduleModal(appointment)">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Follow-up Appointment
+          </button>
+          
+          <button class="action-btn contact-btn" @click="contactPatient(appointment)">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+            Contact Patient
+          </button>
+        </div>
+
+        <!-- Cancelled Appointments Actions -->
+        <div class="appointment-actions" v-else-if="appointment.status === 'CANCELLED'">
+          <button class="action-btn chat-btn" @click="openChatModalWithPatient(appointment)">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+            Chat with Patient
+          </button>
+          
+          <button class="action-btn reschedule-btn" @click="openRescheduleModal(appointment)">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Reschedule Appointment
+          </button>
+          
+          <button class="action-btn contact-btn" @click="contactPatient(appointment)">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 714.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
             </svg>
             Contact Patient
           </button>
@@ -328,6 +396,75 @@
         </div>
       </div>
     </div>
+
+    <!-- Chat Modal -->
+    <div v-if="showChatModal" class="modal-overlay" @click="closeChatModal">
+      <div class="chat-modal" @click.stop>
+        <div class="chat-header">
+          <div class="chat-patient-info">
+            <div class="chat-patient-avatar">
+              <div class="avatar-initials">
+                {{ selectedChatPatient ? getInitials(selectedChatPatient.patient_name) : '' }}
+              </div>
+            </div>
+            
+            <div class="chat-patient-details">
+              <h4>{{ selectedChatPatient?.patient_name }}</h4>
+              <p>Patient</p>
+            </div>
+          </div>
+          
+          <button class="close-btn" @click="closeChatModal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="chat-messages" ref="chatMessages">
+          <div v-if="chatMessages.length === 0" class="chat-welcome">
+            <div class="welcome-avatar">
+              <div class="avatar-initials">
+                {{ selectedChatPatient ? getInitials(selectedChatPatient.patient_name) : '' }}
+              </div>
+            </div>
+            <h3>Start conversation with {{ selectedChatPatient?.patient_name }}</h3>
+            <p>Send a message to begin your consultation.</p>
+          </div>
+          
+          <div v-for="message in chatMessages" :key="message.id" class="message" :class="message.sender">
+            <div class="message-avatar">
+              <div class="avatar-initials">
+                {{ message.sender === 'doctor' ? 'Dr' : getInitials(selectedChatPatient?.patient_name || '') }}
+              </div>
+            </div>
+            <div class="message-content">
+              <div class="message-text">{{ message.text }}</div>
+              <div class="message-time">{{ formatTime(message.timestamp) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input">
+          <div class="input-container">
+            <textarea 
+              v-model="newMessage"
+              placeholder="Type your message..."
+              class="message-input"
+              rows="2"
+              @keypress.enter.prevent="sendMessage"
+            ></textarea>
+            <button class="send-btn" @click="sendMessage" :disabled="!newMessage.trim()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22,2 15,22 11,13 2,9"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -357,7 +494,13 @@ export default {
         date: '',
         time: '',
         reason: ''
-      }
+      },
+      
+      // Chat modal
+      showChatModal: false,
+      selectedChatPatient: null,
+      chatMessages: [],
+      newMessage: ''
     }
   },
   computed: {
@@ -653,6 +796,82 @@ export default {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       return tomorrow.toISOString().split('T')[0];
+    },
+    
+    // Chat methods
+    openChatModalWithPatient(appointment) {
+      // Create a patient object from appointment data
+      const patient = {
+        id: appointment.patient_id || appointment.id,
+        patient_name: appointment.patient_name,
+        patient_phone: appointment.patient_phone
+      };
+      this.selectedChatPatient = patient;
+      this.showChatModal = true;
+      this.chatMessages = [
+        {
+          id: 1,
+          sender: 'doctor',
+          text: `Hello ${appointment.patient_name}! I'm Dr. ${localStorage.getItem('doctor_name') || 'Doctor'}. How can I help you today regarding your appointment?`,
+          timestamp: new Date()
+        }
+      ];
+      // Auto scroll to bottom when opened
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
+    },
+    
+    closeChatModal() {
+      this.showChatModal = false;
+      this.selectedChatPatient = null;
+      this.chatMessages = [];
+      this.newMessage = '';
+    },
+    
+    sendMessage() {
+      if (!this.newMessage.trim()) return;
+      
+      const message = {
+        id: Date.now(),
+        sender: 'doctor',
+        text: this.newMessage.trim(),
+        timestamp: new Date()
+      };
+      
+      this.chatMessages.push(message);
+      this.newMessage = '';
+      
+      // Auto scroll to bottom after sending
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
+      
+      // Simulate patient response (remove this in real implementation)
+      setTimeout(() => {
+        this.chatMessages.push({
+          id: Date.now(),
+          sender: 'patient',
+          text: 'Thank you for reaching out, Doctor. I appreciate your help.',
+          timestamp: new Date()
+        });
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
+      }, 2000);
+    },
+    
+    scrollToBottom() {
+      if (this.$refs.chatMessages) {
+        this.$refs.chatMessages.scrollTop = this.$refs.chatMessages.scrollHeight;
+      }
+    },
+    
+    formatTime(timestamp) {
+      return new Date(timestamp).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
     }
   }
 };
@@ -1235,6 +1454,17 @@ export default {
   box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);
 }
 
+.chat-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.chat-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
 /* Empty State */
 .empty-state {
   text-align: center;
@@ -1556,6 +1786,307 @@ export default {
 
   .appointment-card {
     padding: 1.5rem;
+  }
+}
+
+/* Chat Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.chat-modal {
+  background: white;
+  border-radius: 16px;
+  width: 90vw;
+  max-width: 600px;
+  height: 80vh;
+  max-height: 700px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.chat-patient-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chat-patient-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.avatar-initials {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: white;
+}
+
+.chat-patient-details h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.chat-patient-details p {
+  margin: 0;
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.close-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+}
+
+.chat-welcome {
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
+}
+
+.welcome-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.welcome-avatar .avatar-initials {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.chat-welcome h3 {
+  margin: 0 0 0.5rem;
+  color: #1e293b;
+  font-size: 1.25rem;
+}
+
+.chat-welcome p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.message {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 0.3s ease;
+}
+
+.message.doctor {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.message.doctor .message-avatar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.message.patient .message-avatar {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.message-avatar .avatar-initials {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.message-content {
+  flex: 1;
+  max-width: 70%;
+}
+
+.message.doctor .message-content {
+  text-align: right;
+}
+
+.message-text {
+  background: white;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+}
+
+.message.doctor .message-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+}
+
+.message-time {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+  padding: 0 0.5rem;
+}
+
+.chat-input {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  background: white;
+}
+
+.input-container {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.message-input {
+  flex: 1;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  resize: none;
+  outline: none;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.message-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.send-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.send-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.send-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Chat Modal */
+@media (max-width: 768px) {
+  .chat-modal {
+    width: 95vw;
+    height: 90vh;
+    border-radius: 12px;
+  }
+  
+  .chat-header {
+    padding: 1rem;
+  }
+  
+  .chat-messages {
+    padding: 1rem;
+  }
+  
+  .chat-input {
+    padding: 1rem;
+  }
+  
+  .message-content {
+    max-width: 85%;
   }
 }
 </style>
