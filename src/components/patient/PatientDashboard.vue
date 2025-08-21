@@ -737,6 +737,7 @@ export default {
       appointments: [],
       loadingAppointments: false,
       cancellingAppointment: null,
+      refreshInterval: null, // For auto-refreshing appointments
       
       // Booking modal
       showBookingModal: false,
@@ -768,10 +769,16 @@ export default {
     this.fetchPatientInfo();
     // Load doctors for the dashboard
     this.loadDoctors();
+    // Start auto-refresh for appointments when viewing appointments
+    this.startAppointmentRefresh();
   },
   beforeUnmount() {
     // Remove click outside listener
     document.removeEventListener('click', this.handleClickOutside);
+    // Clear appointment refresh interval
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
   },
   methods: {
     async logout() {
@@ -1035,6 +1042,23 @@ export default {
         hour: '2-digit',
         minute: '2-digit'
       });
+    },
+    
+    // Auto-refresh methods for appointments
+    startAppointmentRefresh() {
+      // Refresh appointments every 30 seconds when appointments view is active
+      this.refreshInterval = setInterval(() => {
+        if (this.showAppointments && !this.loadingAppointments) {
+          this.fetchAppointments();
+        }
+      }, 30000); // 30 seconds
+    },
+    
+    stopAppointmentRefresh() {
+      if (this.refreshInterval) {
+        clearInterval(this.refreshInterval);
+        this.refreshInterval = null;
+      }
     },
     
     // Chat methods

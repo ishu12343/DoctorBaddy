@@ -380,21 +380,30 @@ export default {
   },
   methods: {
     async loadAppointments() {
+      console.log('Loading appointments...');
       this.loading = true;
       this.error = null;
       const token = localStorage.getItem('token');
+      console.log('Token for loading appointments:', !!token);
       
       try {
         const response = await axios.get('http://127.0.0.1:5000/api/doctor/appointments', {
           headers: { Authorization: `Bearer ${token}` }
         });
         
+        console.log('Load appointments response:', response.data);
+        
         if (response.data.success) {
           this.appointments = response.data.appointments;
           this.filteredAppointments = this.appointments;
+          console.log('Loaded appointments:', this.appointments.length);
+          console.log('Appointments data:', this.appointments);
+        } else {
+          console.log('Load appointments returned success: false');
         }
       } catch (error) {
         console.error('Error loading appointments:', error);
+        console.log('Load appointments error response:', error.response?.data);
         this.error = 'Failed to load appointments. Please try again.';
       } finally {
         this.loading = false;
@@ -402,30 +411,43 @@ export default {
     },
 
     async approveAppointment(appointmentId) {
+      console.log('Approve button clicked for appointment ID:', appointmentId);
       this.processingAppointment = appointmentId;
       const token = localStorage.getItem('token');
+      console.log('Token available:', !!token);
       
       try {
+        console.log('Making API call to approve appointment...');
         const response = await axios.post(
           `http://127.0.0.1:5000/api/doctor/appointments/${appointmentId}/approve`, 
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
         
+        console.log('API Response:', response.data);
+        
         if (response.data.success) {
           // Update the appointment status locally
           const appointment = this.appointments.find(apt => apt.id === appointmentId);
           if (appointment) {
+            console.log('Updating appointment status to CONFIRMED');
             appointment.status = 'CONFIRMED';
           }
           this.filterAppointments();
           
           // Show success message
           this.$toast?.success('Appointment approved successfully!');
+          
+          // Refresh appointments to ensure data consistency
+          await this.loadAppointments();
+        } else {
+          console.log('API returned success: false');
         }
       } catch (error) {
         console.error('Error approving appointment:', error);
-        this.$toast?.error('Failed to approve appointment. Please try again.');
+        console.log('Error response:', error.response?.data);
+        const errorMessage = error.response?.data?.error || 'Failed to approve appointment. Please try again.';
+        this.$toast?.error(errorMessage);
       } finally {
         this.processingAppointment = null;
       }
@@ -452,10 +474,14 @@ export default {
           
           // Show success message
           this.$toast?.success('Appointment rejected successfully!');
+          
+          // Refresh appointments to ensure data consistency
+          await this.loadAppointments();
         }
       } catch (error) {
         console.error('Error rejecting appointment:', error);
-        this.$toast?.error('Failed to reject appointment. Please try again.');
+        const errorMessage = error.response?.data?.error || 'Failed to reject appointment. Please try again.';
+        this.$toast?.error(errorMessage);
       } finally {
         this.processingAppointment = null;
       }
@@ -482,10 +508,14 @@ export default {
           
           // Show success message
           this.$toast?.success('Appointment marked as completed!');
+          
+          // Refresh appointments to ensure data consistency
+          await this.loadAppointments();
         }
       } catch (error) {
         console.error('Error completing appointment:', error);
-        this.$toast?.error('Failed to complete appointment. Please try again.');
+        const errorMessage = error.response?.data?.error || 'Failed to complete appointment. Please try again.';
+        this.$toast?.error(errorMessage);
       } finally {
         this.processingAppointment = null;
       }
