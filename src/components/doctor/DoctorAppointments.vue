@@ -632,7 +632,7 @@ export default {
 .appointments-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 6rem 2rem 2rem;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   min-height: 100vh;
 }
@@ -1437,7 +1437,7 @@ export default {
 /* Responsive Design */
 @media (max-width: 768px) {
   .appointments-container {
-    padding: 1rem;
+    padding: 5rem 1rem 1rem;
   }
 
   .header-content {
@@ -1506,7 +1506,7 @@ export default {
 
 @media (max-width: 480px) {
   .appointments-container {
-    padding: 0.5rem;
+    padding: 4.5rem 0.5rem 0.5rem;
   }
 
   .appointments-header,

@@ -981,6 +981,7 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
 }
 
 /* Top Header */
@@ -989,14 +990,17 @@ export default {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(229, 231, 235, 0.8);
   padding: 0 2rem;
-  height: 60px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  left: 320px;
+  right: 0;
+  z-index: 999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
 .header-left {
@@ -1199,7 +1203,9 @@ export default {
 .content-wrapper {
   flex: 1;
   padding: 2rem;
+  padding-top: 90px; /* Account for fixed header height + spacing */
   background: transparent;
+  min-height: calc(100vh - 70px);
 }
 
 /* Welcome Container */
@@ -1307,6 +1313,10 @@ export default {
     margin-left: 280px;
   }
   
+  .top-header {
+    left: 280px;
+  }
+  
   .page-title {
     font-size: 2.25rem;
   }
@@ -1326,8 +1336,14 @@ export default {
     margin-left: 0;
   }
   
+  .top-header {
+    left: 0;
+    padding: 0 1rem;
+  }
+  
   .content-wrapper {
     padding: 1.5rem;
+    padding-top: 90px;
   }
   
   .page-title {
@@ -1381,6 +1397,16 @@ export default {
 @media (max-width: 480px) {
   .content-wrapper {
     padding: 1rem;
+    padding-top: 90px;
+  }
+  
+  .top-header {
+    height: 60px;
+    padding: 0 0.75rem;
+  }
+  
+  .content-wrapper {
+    padding-top: 80px; /* Adjusted for smaller header on mobile */
   }
   
   .doctors-container {

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6">
+  <div class="p-6 pt-24">
     <div class="flex items-center mb-6">
       <h1 class="text-2xl font-bold">Admin Dashboard</h1>
       <div class="ml-auto">

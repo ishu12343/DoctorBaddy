@@ -260,7 +260,7 @@ export default {
   margin-top: 2rem;
 }
 .cta-footer__bg {
-  background: linear-gradient(90deg, #5C9EF0 60%, #C8D67K 100%);
+  background: linear-gradient(90deg, #5C9EF0 60%, #C8D67E 100%);
   border-radius: 16px;
   padding: 2rem 0;
   position: relative;
@@ -298,7 +298,7 @@ export default {
 /* Existing styles for home container, subtitle, actions, smart search, specialties, top doctors */
 .services-fixed-container {
   position: fixed;
-  top: 70px; /* adjust if header height changes */
+  top: 90px; /* adjust if header height changes */
   left: 0;
   right: 0;
   bottom: 0;

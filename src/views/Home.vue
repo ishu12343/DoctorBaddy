@@ -149,7 +149,7 @@ export default {
 
 <style scoped>
 .masthead {
-  padding: 4rem 2rem;
+  padding: 6rem 2rem 4rem;
   background-color: #f8f9fa;
 }
 
@@ -384,7 +384,7 @@ p {
   margin-top: 2rem;
 }
 .cta-footer__bg {
-  background: linear-gradient(90deg, #5C9EF0 60%, #C8D67K 100%);
+  background: linear-gradient(90deg, #5C9EF0 60%, #C8D67E 100%);
   border-radius: 16px;
   padding: 2rem 0;
   position: relative;

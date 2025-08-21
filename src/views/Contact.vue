@@ -42,7 +42,7 @@ export default {
 <style scoped>
 .tab-container {
   max-width: 700px;
-  margin: 2rem auto;
+  margin: 6rem auto 2rem;
   padding: 2rem;
   background: #fff;
   border-radius: 16px;
@@ -85,13 +85,4 @@ export default {
 }
 
 .btn--small { font-size: 0.9rem; padding: 0.4rem 1rem; }
-
-.tab-container {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
 </style>
