@@ -176,7 +176,7 @@
               >
                 <div class="appointment-header">
                   <div class="appointment-doctor">
-                    <h4>Dr. {{ appointment.doctor_name }}</h4>
+                    <h4>{{ appointment.doctor_name.startsWith('Dr.') ? appointment.doctor_name : 'Dr. ' + appointment.doctor_name }}</h4>
                     <p class="specialty">{{ appointment.specialty }}</p>
                   </div>
                   <div class="appointment-status">
@@ -343,60 +343,160 @@
                 class="doctor-card"
                 @click="selectDoctor(doctor)"
               >
-                <div class="doctor-header">
+                <!-- Card Header with Status -->
+                <div class="card-header">
+                  <div class="doctor-status">
+                    <div :class="['status-indicator', getAvailabilityStatus(doctor)]"></div>
+                    <span :class="['status-text', getAvailabilityStatus(doctor)]">{{ getAvailabilityStatusText(doctor) }}</span>
+                  </div>
+                  <div class="card-favorite">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Doctor Profile Section -->
+                <div class="doctor-profile">
                   <div class="doctor-avatar">
+                    <div class="avatar-background"></div>
                     <div class="doctor-initials">
                       {{ getInitials(doctor.full_name) }}
                     </div>
+                    <div class="online-indicator"></div>
                   </div>
-                  <div class="doctor-info">
-                    <h3 class="doctor-name">Dr. {{ doctor.full_name }}</h3>
-                    <p class="doctor-specialty">{{ doctor.specialization }}</p>
-                    <div class="doctor-location">
+                  
+                  <div class="doctor-details">
+                    <h3 class="doctor-name">{{ doctor.full_name.startsWith('') ? doctor.full_name : 'Dr. ' + doctor.full_name }}</h3>
+                    <div class="doctor-specialty">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                      </svg>
+                      {{ doctor.specialization }}
+                    </div>
+                    
+                    <div class="doctor-rating">
+                      <div class="stars">
+                        <div class="stars-fill" style="width: 96%">
+                          <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          </svg>
+                        </div>
+                        <div class="stars-empty">
+                          <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <span class="rating-text">4.8</span>
+                      <span class="review-count">(247)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                  <div class="stat-item">
+                    <div class="stat-icon experience">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                      </svg>
+                    </div>
+                    <div class="stat-info">
+                      <span class="stat-value">{{ doctor.experience || '5+' }}</span>
+                      <span class="stat-label">Years</span>
+                    </div>
+                  </div>
+                  
+                  <div class="stat-item">
+                    <div class="stat-icon patients">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                      </svg>
+                    </div>
+                    <div class="stat-info">
+                      <span class="stat-value">1.2k+</span>
+                      <span class="stat-label">Patients</span>
+                    </div>
+                  </div>
+                  
+                  <div class="stat-item">
+                    <div class="stat-icon location">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
                         <circle cx="12" cy="10" r="3"/>
                       </svg>
-                      {{ doctor.location || 'Location not specified' }}
+                    </div>
+                    <div class="stat-info">
+                      <span class="stat-value">{{ doctor.location || doctor.city || '2.5km' }}</span>
+                      <span class="stat-label">{{ doctor.location || doctor.city ? 'Location' : 'Away' }}</span>
                     </div>
                   </div>
                 </div>
-                
-                <div class="doctor-details">
-                  <div class="doctor-experience">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10"/>
-                      <polyline points="12,6 12,12 16,14"/>
-                    </svg>
-                    {{ doctor.experience || 'Experience not specified' }}
+
+                <!-- Pricing & Availability -->
+                <div class="pricing-availability">
+                  <div class="price-section">
+                    <div class="consultation-fee">
+                      <span class="fee-amount">₹500</span>
+                      <span class="fee-label">Consultation</span>
+                    </div>
+                    <div class="discount-badge">
+                      20% OFF
+                    </div>
                   </div>
                   
-                  <div class="doctor-contact">
-                    <div class="contact-item">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                        <polyline points="22,6 12,13 2,6"/>
+                  <div class="availability-section">
+                    <div class="next-slot">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
                       </svg>
-                      {{ doctor.email }}
-                    </div>
-                    <div class="contact-item">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
-                      </svg>
-                      {{ doctor.phone }}
+                      <span>{{ getAvailabilityText(doctor) }}</span>
                     </div>
                   </div>
                 </div>
+
+                <!-- Contact Info -->
+                <div class="contact-summary">
+                  <div class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                    </svg>
+                    <span>{{ doctor.phone || doctor.mobile || 'Not Available' }}</span>
+                  </div>
+                  <div class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                      <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <span>{{ doctor.location || doctor.address || doctor.city || 'Location not specified' }}</span>
+                  </div>
+                  <div class="clinic-info">
+                    <span>{{ doctor.clinic_name || 'Private Practice' }}</span>
+                  </div>
+                </div>
                 
-                <div class="doctor-actions">
-                  <button class="book-appointment-btn" @click.stop="openBookingModal(doctor)">
+                <!-- Action Buttons -->
+                <div class="card-actions">
+                  <button class="btn-primary" @click.stop="openBookingModal(doctor)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                       <line x1="16" y1="2" x2="16" y2="6"/>
                       <line x1="8" y1="2" x2="8" y2="6"/>
                       <line x1="3" y1="10" x2="21" y2="10"/>
                     </svg>
-                    Book Appointment
+                    Book Now
+                  </button>
+                  <button class="btn-secondary" @click.stop="openChatModal(doctor)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    </svg>
+                    Chat
                   </button>
                 </div>
               </div>
@@ -439,7 +539,7 @@
                 </div>
               </div>
               <div class="doctor-info">
-                <h4>Dr. {{ selectedDoctor?.full_name }}</h4>
+                <h4>{{ selectedDoctor?.full_name.startsWith('Dr.') ? selectedDoctor.full_name : 'Dr. ' + selectedDoctor.full_name }}</h4>
                 <p>{{ selectedDoctor?.specialty }}</p>
                 <p>{{ selectedDoctor?.clinic_name }}</p>
               </div>
@@ -506,6 +606,102 @@
           </div>
         </div>
       </div>
+
+      <!-- Chat Modal -->
+      <div v-if="showChatModal" class="modal-overlay" @click="closeChatModal">
+        <div class="chat-modal" @click.stop>
+          <div class="chat-header">
+            <div class="chat-doctor-info">
+              <div class="chat-doctor-avatar">
+                <div class="doctor-initials">
+                  {{ selectedChatDoctor ? getInitials(selectedChatDoctor.full_name) : '' }}
+                </div>
+                <div class="online-indicator-small"></div>
+              </div>
+              <div class="chat-doctor-details">
+                <h4>{{ selectedChatDoctor ? (selectedChatDoctor.full_name.startsWith('Dr.') ? selectedChatDoctor.full_name : 'Dr. ' + selectedChatDoctor.full_name) : '' }}</h4>
+                <p>{{ selectedChatDoctor?.specialization }}</p>
+                <span class="online-status">Online now</span>
+              </div>
+            </div>
+            <button class="close-btn" @click="closeChatModal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="chat-messages" ref="chatMessages">
+            <div class="chat-welcome">
+              <div class="welcome-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+              </div>
+              <h3>Start conversation with {{ selectedChatDoctor ? (selectedChatDoctor.full_name.startsWith('Dr.') ? selectedChatDoctor.full_name : 'Dr. ' + selectedChatDoctor.full_name) : '' }}</h3>
+              <p>Feel free to ask any health-related questions. This doctor is available to help you.</p>
+            </div>
+            
+            <div v-for="message in chatMessages" :key="message.id" :class="['message', message.sender]">
+              <div class="message-avatar" v-if="message.sender === 'doctor'">
+                <div class="doctor-initials-small">
+                  {{ selectedChatDoctor ? getInitials(selectedChatDoctor.full_name) : '' }}
+                </div>
+              </div>
+              <div class="message-content">
+                <div class="message-bubble">
+                  <p>{{ message.text }}</p>
+                  <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+                </div>
+              </div>
+              <div class="message-avatar" v-if="message.sender === 'patient'">
+                <div class="patient-initials-small">
+                  {{ patientInfo ? getInitials(patientInfo.full_name) : 'P' }}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="chat-input-section">
+            <div class="chat-input-container">
+              <button class="attachment-btn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.64 16.2a2 2 0 01-2.83-2.83l8.49-8.48"/>
+                </svg>
+              </button>
+              <input 
+                type="text" 
+                v-model="newMessage" 
+                @keypress.enter="sendMessage"
+                placeholder="Type your message here..."
+                class="chat-input"
+              />
+              <button 
+                class="send-btn" 
+                @click="sendMessage"
+                :disabled="!newMessage.trim()"
+                type="button"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+                </svg>
+              </button>
+            </div>
+            <div class="chat-suggestions">
+              <button 
+                v-for="suggestion in chatSuggestions" 
+                :key="suggestion"
+                @click="sendSuggestion(suggestion)"
+                class="suggestion-btn"
+              >
+                {{ suggestion }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 </template>
@@ -550,7 +746,19 @@ export default {
         date: '',
         time: '',
         reason: ''
-      }
+      },
+      
+      // Chat modal
+      showChatModal: false,
+      selectedChatDoctor: null,
+      chatMessages: [],
+      newMessage: '',
+      chatSuggestions: [
+        "What are your consultation hours?",
+        "Can you help with my symptoms?",
+        "What should I bring to the appointment?",
+        "Do you accept insurance?"
+      ]
     };
   },
   mounted() {
@@ -827,6 +1035,190 @@ export default {
         hour: '2-digit',
         minute: '2-digit'
       });
+    },
+    
+    // Chat methods
+    openChatModal(doctor) {
+      this.selectedChatDoctor = doctor;
+      this.showChatModal = true;
+      this.chatMessages = [
+        {
+          id: 1,
+          sender: 'doctor',
+          text: `Hello! I'm ${doctor.full_name.startsWith('Dr.') ? doctor.full_name : 'Dr. ' + doctor.full_name}. How can I help you today?`,
+          timestamp: new Date()
+        }
+      ];
+      // Auto scroll to bottom when opened
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
+    },
+    
+    closeChatModal() {
+      this.showChatModal = false;
+      this.selectedChatDoctor = null;
+      this.chatMessages = [];
+      this.newMessage = '';
+    },
+    
+    sendMessage() {
+      if (!this.newMessage.trim()) return;
+      
+      const message = {
+        id: this.chatMessages.length + 1,
+        sender: 'patient',
+        text: this.newMessage.trim(),
+        timestamp: new Date()
+      };
+      
+      this.chatMessages.push(message);
+      this.newMessage = '';
+      
+      // Auto scroll to bottom
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
+      
+      // Simulate doctor response after a delay
+      setTimeout(() => {
+        this.simulateDoctorResponse();
+      }, 1000 + Math.random() * 2000);
+    },
+    
+    sendSuggestion(suggestion) {
+      this.newMessage = suggestion;
+      this.sendMessage();
+    },
+    
+    simulateDoctorResponse() {
+      const responses = [
+        "Thank you for reaching out. Can you tell me more about your symptoms?",
+        "I understand your concern. When did you first notice these symptoms?",
+        "Based on what you've described, I'd recommend scheduling an appointment for a proper examination.",
+        "That's a good question. Let me provide you with some helpful information.",
+        "I'm here to help. Could you provide more details about your medical history?",
+        "For a proper diagnosis, we should schedule a consultation. Would you like to book an appointment?"
+      ];
+      
+      const response = {
+        id: this.chatMessages.length + 1,
+        sender: 'doctor',
+        text: responses[Math.floor(Math.random() * responses.length)],
+        timestamp: new Date()
+      };
+      
+      this.chatMessages.push(response);
+      
+      // Auto scroll to bottom
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
+    },
+    
+    scrollToBottom() {
+      if (this.$refs.chatMessages) {
+        this.$refs.chatMessages.scrollTop = this.$refs.chatMessages.scrollHeight;
+      }
+    },
+    
+    formatTime(timestamp) {
+      return new Date(timestamp).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    },
+    
+    getAvailabilityText(doctor) {
+      // Check if doctor has availability data
+      if (doctor.available_from && doctor.available_to) {
+        const now = new Date();
+        const availableFrom = this.convertTo12Hour(doctor.available_from);
+        const availableTo = this.convertTo12Hour(doctor.available_to);
+        
+        // Check if currently available
+        const currentTime = now.getHours() * 100 + now.getMinutes();
+        const fromTime = this.timeStringToNumber(doctor.available_from);
+        const toTime = this.timeStringToNumber(doctor.available_to);
+        
+        if (currentTime >= fromTime && currentTime <= toTime) {
+          return `Available now (${availableFrom} - ${availableTo})`;
+        } else {
+          return `Available ${availableFrom} - ${availableTo}`;
+        }
+      }
+      
+      // Fallback if no availability data
+      return 'Available today';
+    },
+    
+    convertTo12Hour(time24) {
+      if (!time24) return '';
+      
+      const [hours, minutes] = time24.split(':');
+      const hour = parseInt(hours);
+      
+      if (hour === 0) {
+        return `12:${minutes.padStart(2, '0')} AM`;
+      } else if (hour < 12) {
+        return `${hour}:${minutes.padStart(2, '0')} AM`;
+      } else if (hour === 12) {
+        return `12:${minutes.padStart(2, '0')} PM`;
+      } else {
+        return `${hour - 12}:${minutes.padStart(2, '0')} PM`;
+      }
+    },
+    
+    timeStringToNumber(timeString) {
+      if (!timeString) return 0;
+      const [hours, minutes] = timeString.split(':');
+      return parseInt(hours) * 100 + parseInt(minutes);
+    },
+    
+    getAvailabilityStatus(doctor) {
+      // Check if doctor has availability data
+      if (doctor.available_from && doctor.available_to) {
+        const now = new Date();
+        const currentTime = now.getHours() * 100 + now.getMinutes();
+        const fromTime = this.timeStringToNumber(doctor.available_from);
+        const toTime = this.timeStringToNumber(doctor.available_to);
+        
+        if (currentTime >= fromTime && currentTime <= toTime) {
+          return 'online'; // Available now
+        } else {
+          return 'offline'; // Not available now
+        }
+      }
+      
+      // If no availability data, assume offline
+      return 'offline';
+    },
+    
+    getAvailabilityStatusText(doctor) {
+      // Check if doctor has availability data
+      if (doctor.available_from && doctor.available_to) {
+        const now = new Date();
+        const currentTime = now.getHours() * 100 + now.getMinutes();
+        const fromTime = this.timeStringToNumber(doctor.available_from);
+        const toTime = this.timeStringToNumber(doctor.available_to);
+        
+        if (currentTime >= fromTime && currentTime <= toTime) {
+          return 'Available Now';
+        } else {
+          // Calculate next available time
+          const availableFrom = this.convertTo12Hour(doctor.available_from);
+          
+          // Check if it's the same day or next day
+          if (currentTime < fromTime) {
+            return `Available at ${availableFrom}`;
+          } else {
+            return `Available tomorrow at ${availableFrom}`;
+          }
+        }
+      }
+      
+      // Fallback if no availability data
+      return 'Check Availability';
     }
   },
 }
@@ -1638,27 +2030,32 @@ export default {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* ===== DOCTORS GRID & CARDS ===== */
 .doctors-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
+  padding: 1rem 0;
 }
 
 .doctor-card {
-  background: rgba(255, 255, 255, 0.98);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 1.5rem;
-  padding: 2rem;
+  padding: 1.75rem;
   box-shadow: 
     0 10px 40px rgba(0, 0, 0, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    0 4px 20px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
 }
 
 .doctor-card::before {
@@ -1667,239 +2064,477 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  height: 5px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  height: 4px;
+  background: linear-gradient(90deg, #3B82F6, #8B5CF6, #06B6D4);
   border-radius: 1.5rem 1.5rem 0 0;
 }
 
-.doctor-card::after {
+.doctor-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.12),
+    0 10px 30px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.doctor-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
+  position: relative;
+}
+
+.status-indicator.offline {
+  background: #EF4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+}
+
+.status-indicator::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  transform: rotate(45deg);
-  transition: all 0.6s ease;
-  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
 }
 
-.doctor-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.15),
-    0 10px 30px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+.status-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #22C55E;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.doctor-card:hover::after {
-  opacity: 1;
-  animation: shimmer 0.8s ease-out;
+.status-text.offline {
+  color: #EF4444;
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%) translateY(-100%) rotate(45deg);
-  }
-  100% {
-    transform: translateX(100%) translateY(100%) rotate(45deg);
-  }
+.card-favorite {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.doctor-header {
+.card-favorite:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3B82F6;
+  transform: scale(1.1);
+}
+
+.card-favorite svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #64748B;
+  transition: color 0.3s ease;
+}
+
+.card-favorite:hover svg {
+  color: #3B82F6;
+}
+
+/* Doctor Profile */
+.doctor-profile {
   display: flex;
   align-items: flex-start;
-  gap: 1.5rem;
+  gap: 1.25rem;
   margin-bottom: 1.5rem;
 }
 
 .doctor-avatar {
-  width: 5rem;
-  height: 5rem;
+  width: 4.5rem;
+  height: 4.5rem;
   border-radius: 1.25rem;
-  overflow: hidden;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  flex-shrink: 0;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
 }
 
-.doctor-avatar::before {
-  content: '';
+.avatar-background {
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+  inset: -2px;
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6, #06B6D4);
   border-radius: 1.25rem;
   z-index: -1;
+  opacity: 0.7;
 }
 
 .doctor-initials {
   color: white;
   font-weight: 800;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 2;
 }
 
-.doctor-info {
+.online-indicator {
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.25rem;
+  width: 1rem;
+  height: 1rem;
+  background: #22C55E;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-details {
   flex: 1;
   min-width: 0;
 }
 
 .doctor-name {
-  font-size: 1.375rem;
-  font-weight: 800;
-  color: #1e293b;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1E293B;
   margin-bottom: 0.5rem;
-  line-height: 1.2;
-  background: linear-gradient(135deg, #1e293b, #475569);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  line-height: 1.3;
 }
 
 .doctor-specialty {
-  font-size: 1rem;
-  color: #667eea;
-  font-weight: 700;
-  margin-bottom: 0.375rem;
-  padding: 0.25rem 0.75rem;
-  background: rgba(102, 126, 234, 0.1);
-  border-radius: 2rem;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #3B82F6;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  padding: 0.375rem 0.75rem;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 1.5rem;
+  backdrop-filter: blur(10px);
 }
 
-.doctor-location {
+.doctor-specialty svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.doctor-rating {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
-  color: #64748b;
+  position: relative;
+}
+
+.stars {
+  display: flex;
+  position: relative;
+  width: 5rem;
+  height: 1rem;
+}
+
+.stars-fill,
+.stars-empty {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  gap: 0.125rem;
+}
+
+.stars-fill {
+  overflow: hidden;
+  z-index: 2;
+}
+
+.stars-fill svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: #F59E0B;
+  flex-shrink: 0;
+}
+
+.stars-empty svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: #E5E7EB;
+  flex-shrink: 0;
+}
+
+.rating-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.review-count {
+  font-size: 0.75rem;
+  color: #64748B;
   font-weight: 500;
 }
 
-.doctor-location svg {
-  width: 1rem;
-  height: 1rem;
-  color: #94a3b8;
-}
-
-.doctor-details {
-  margin-bottom: 2rem;
+/* Quick Stats */
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
   padding: 1.25rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%);
   border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
 }
 
-.doctor-experience {
+.stat-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.9rem;
-  color: #475569;
-  font-weight: 600;
-  margin-bottom: 1rem;
 }
 
-.doctor-experience svg {
+.stat-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.stat-icon.experience {
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
+}
+
+.stat-icon.patients {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+}
+
+.stat-icon.location {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25);
+}
+
+.stat-icon svg {
   width: 1.125rem;
   height: 1.125rem;
-  color: #667eea;
+  color: white;
 }
 
-.doctor-contact {
+.stat-info {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.125rem;
+}
+
+.stat-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1E293B;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.625rem;
+  color: #64748B;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Pricing & Availability */
+.pricing-availability {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.1);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.price-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.consultation-fee {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.fee-amount {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: #059669;
+  line-height: 1;
+}
+
+.fee-label {
+  font-size: 0.625rem;
+  color: #64748B;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.discount-badge {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.availability-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.next-slot {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #059669;
+  font-weight: 600;
+}
+
+.next-slot svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* Contact Summary */
+.contact-summary {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
 }
 
 .contact-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.875rem;
-  color: #64748b;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  color: #475569;
   font-weight: 500;
 }
 
 .contact-item svg {
   width: 1rem;
   height: 1rem;
-  color: #94a3b8;
+  color: #64748B;
+  flex-shrink: 0;
 }
 
-.doctor-actions {
+.clinic-info {
+  font-size: 0.75rem;
+  color: #64748B;
+  font-weight: 600;
+  padding-left: 1.75rem;
+}
+
+/* Card Actions */
+.card-actions {
   display: flex;
-  gap: 1rem;
-  align-items: center;
+  gap: 0.75rem;
+  margin-top: auto;
 }
 
-.book-appointment-btn {
+.btn-primary,
+.btn-secondary {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
   border: none;
-  border-radius: 1rem;
-  font-weight: 700;
-  font-size: 0.95rem;
+  border-radius: 0.875rem;
+  font-weight: 600;
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
 }
 
-.book-appointment-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transition: left 0.6s ease;
+.btn-primary {
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
-.book-appointment-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
 }
 
-.book-appointment-btn:hover::before {
-  left: 100%;
+.btn-secondary {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3B82F6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  backdrop-filter: blur(10px);
 }
 
-.book-appointment-btn:active {
-  transform: translateY(-1px);
+.btn-secondary:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: #3B82F6;
+  transform: translateY(-2px);
 }
 
-.book-appointment-btn svg {
-  width: 1.125rem;
-  height: 1.125rem;
+.btn-primary svg,
+.btn-secondary svg {
+  width: 1rem;
+  height: 1rem;
 }
+
+/* Doctor degree and rating styles */
 
 .doctor-degree {
   font-size: 0.875rem;
@@ -1931,6 +2566,495 @@ export default {
 .rating-text {
   font-size: 0.75rem;
   color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .doctors-grid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 2rem;
+  }
+  
+  .doctor-card {
+    padding: 2rem;
+  }
+  
+  .doctor-header {
+    gap: 1.5rem;
+  }
+  
+  .doctor-avatar {
+    width: 5rem;
+    height: 5rem;
+  }
+  
+  .doctor-initials {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .doctors-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  
+  .doctor-card {
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+  }
+  
+  .doctor-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding-right: 0;
+    margin-bottom: 1.5rem;
+  }
+  
+  .doctor-status-badge {
+    position: static;
+    align-self: flex-end;
+    margin-bottom: 1rem;
+  }
+  
+  .doctor-avatar {
+    width: 4rem;
+    height: 4rem;
+  }
+  
+  .doctor-initials {
+    font-size: 1.25rem;
+  }
+  
+  .doctor-name {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+  
+  .doctor-metrics {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .metric-item {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .doctor-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .book-appointment-btn,
+  .contact-btn {
+    width: 100%;
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Large Tablets and Small Laptops */
+@media (max-width: 1024px) {
+  .doctors-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .doctor-card {
+    padding: 1.5rem;
+    min-height: 380px;
+  }
+  
+  .quick-stats {
+    padding: 1rem;
+  }
+  
+  .stat-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .stat-icon svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  .doctors-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+  
+  .doctor-card {
+    padding: 1.25rem;
+    min-height: 350px;
+  }
+  
+  .doctor-profile {
+    gap: 1rem;
+  }
+  
+  .doctor-avatar {
+    width: 4rem;
+    height: 4rem;
+  }
+  
+  .doctor-initials {
+    font-size: 1.125rem;
+  }
+  
+  .doctor-name {
+    font-size: 1.125rem;
+  }
+  
+  .quick-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  
+  .stat-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .stat-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    margin: 0 auto;
+  }
+  
+  .stat-value {
+    font-size: 0.75rem;
+  }
+  
+  .stat-label {
+    font-size: 0.5rem;
+  }
+  
+  .pricing-availability {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .card-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 480px) {
+  .doctors-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .doctor-card {
+    padding: 1rem;
+    min-height: 320px;
+    border-radius: 1.25rem;
+  }
+  
+  .card-header {
+    margin-bottom: 1rem;
+  }
+  
+  .doctor-status {
+    padding: 0.375rem 0.75rem;
+  }
+  
+  .status-text {
+    font-size: 0.625rem;
+  }
+  
+  .card-favorite {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .card-favorite svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .doctor-profile {
+    margin-bottom: 1rem;
+  }
+  
+  .doctor-avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+  
+  .doctor-initials {
+    font-size: 1rem;
+  }
+  
+  .doctor-name {
+    font-size: 1rem;
+  }
+  
+  .doctor-specialty {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .doctor-specialty svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+  
+  .doctor-rating {
+    gap: 0.375rem;
+  }
+  
+  .stars {
+    width: 4rem;
+    height: 0.875rem;
+  }
+  
+  .stars-fill svg,
+  .stars-empty svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+  
+  .rating-text {
+    font-size: 0.75rem;
+  }
+  
+  .review-count {
+    font-size: 0.625rem;
+  }
+  
+  .quick-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .stat-item {
+    gap: 0.375rem;
+  }
+  
+  .stat-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .stat-icon svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  
+  .stat-value {
+    font-size: 0.625rem;
+  }
+  
+  .stat-label {
+    font-size: 0.5rem;
+  }
+  
+  .pricing-availability {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .fee-amount {
+    font-size: 1.125rem;
+  }
+  
+  .fee-label {
+    font-size: 0.5rem;
+  }
+  
+  .discount-badge {
+    font-size: 0.5rem;
+    padding: 0.125rem 0.375rem;
+  }
+  
+  .next-slot {
+    font-size: 0.625rem;
+  }
+  
+  .next-slot svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+  
+  .contact-summary {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .contact-item {
+    font-size: 0.625rem;
+    gap: 0.5rem;
+    margin-bottom: 0.375rem;
+  }
+  
+  .contact-item svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  
+  .clinic-info {
+    font-size: 0.625rem;
+    padding-left: 1.375rem;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  
+  .btn-primary svg,
+  .btn-secondary svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+/* Extra Small Phones */
+@media (max-width: 360px) {
+  .doctor-card {
+    padding: 0.875rem;
+  }
+  
+  .quick-stats {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .stat-item {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+  
+  .card-actions {
+    gap: 0.5rem;
+  }
+}
+
+/* Enhanced Animations and Micro-interactions */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Enhanced Hover Effects */
+.doctor-card:hover .doctor-name {
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6, #06B6D4);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 2s linear infinite;
+}
+
+.doctor-card:hover .doctor-avatar {
+  animation: float 2s ease-in-out infinite;
+  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+}
+
+.doctor-card:hover .stat-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.doctor-card:hover .discount-badge {
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+.doctor-card:hover .btn-primary {
+  background: linear-gradient(135deg, #1D4ED8 0%, #7C3AED 100%);
+  background-size: 200% auto;
+  animation: gradient-shift 2s ease infinite;
+}
+
+/* Focus States for Accessibility */
+.doctor-card:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+.card-favorite:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+.doctor-card:hover .metric-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+.doctor-card:hover .doctor-specialty-badge {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+  border-color: rgba(102, 126, 234, 0.4);
+  transform: scale(1.05);
+}
+
+/* Loading states */
+.metric-value, .contact-text, .price-amount {
+  transition: all 0.3s ease;
+}
+
+.doctor-card:hover .metric-value {
+  color: #667eea;
+  font-weight: 900;
+}
+
+/* Focus states for accessibility */
+.book-appointment-btn:focus,
+.contact-btn:focus {
+  outline: 3px solid rgba(102, 126, 234, 0.3);
+  outline-offset: 2px;
+}
+
+/* Advanced glassmorphism effects */
+.doctor-contact-info .contact-row:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(102, 126, 234, 0.2);
+  transform: translateX(5px);
 }
 
 .doctor-details {
@@ -2497,5 +3621,371 @@ export default {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+}
+
+/* Chat Modal Styles */
+.chat-modal {
+  width: 90%;
+  max-width: 500px;
+  height: 70vh;
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+.chat-header {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  color: white;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-doctor-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.chat-doctor-avatar {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.online-indicator-small {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #10b981;
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+.chat-doctor-details h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.chat-doctor-details p {
+  margin: 0;
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.online-status {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background: #f8fafc;
+}
+
+.chat-welcome {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #64748b;
+}
+
+.welcome-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1rem;
+  background: #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+}
+
+.welcome-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.chat-welcome h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  color: #334155;
+}
+
+.chat-welcome p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 1rem;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.message.doctor {
+  justify-content: flex-start;
+}
+
+.message.patient {
+  justify-content: flex-end;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.doctor-initials-small {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.patient-initials-small {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message-content {
+  max-width: 75%;
+}
+
+.message-bubble {
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.message.doctor .message-bubble {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.message.patient .message-bubble {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  color: white;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.message-bubble p {
+  margin: 0 0 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.message-time {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.chat-input-section {
+  padding: 1rem;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 2rem;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.chat-input-container:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.attachment-btn,
+.send-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.attachment-btn {
+  background: transparent;
+  color: #64748b;
+}
+
+.attachment-btn:hover {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.send-btn {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  color: white;
+}
+
+.send-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.attachment-btn svg,
+.send-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.chat-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+.chat-input::placeholder {
+  color: #94a3b8;
+}
+
+.chat-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.suggestion-btn {
+  padding: 0.5rem 0.75rem;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.suggestion-btn:hover {
+  background: #e2e8f0;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+/* Contact Info Improvements */
+.contact-summary {
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  margin: 1rem 0;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.contact-item:last-of-type {
+  margin-bottom: 0.75rem;
+}
+
+.contact-item svg {
+  width: 16px;
+  height: 16px;
+  color: #3b82f6;
+}
+
+.clinic-info {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Responsive Design for Chat */
+@media (max-width: 768px) {
+  .chat-modal {
+    width: 95%;
+    height: 80vh;
+  }
+  
+  .chat-doctor-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 0.75rem;
+  }
+  
+  .chat-doctor-details h4 {
+    font-size: 0.875rem;
+  }
+  
+  .chat-doctor-details p {
+    font-size: 0.75rem;
+  }
+  
+  .message-content {
+    max-width: 85%;
+  }
+  
+  .chat-suggestions {
+    gap: 0.25rem;
+  }
+  
+  .suggestion-btn {
+    font-size: 0.6875rem;
+    padding: 0.375rem 0.5rem;
+  }
 }
 </style>
