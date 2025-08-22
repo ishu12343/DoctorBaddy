@@ -347,6 +347,13 @@
                     </svg>
                     Choose Photo
                   </label>
+                  <div v-if="photoFile" class="file-selected">
+                    <span class="file-name">{{ photoFile.name }}</span>
+                    <button type="button" @click="clearPhoto" class="clear-file-btn">×</button>
+                  </div>
+                  <div v-if="!photoFile && doctor.profile_photo" class="current-file">
+                    <span class="current-file-label">Current: {{ doctor.profile_photo }}</span>
+                  </div>
                 </div>
               </div>
               
@@ -361,7 +368,29 @@
                     </svg>
                     Choose Document
                   </label>
+                  <div v-if="docFile" class="file-selected">
+                    <span class="file-name">{{ docFile.name }}</span>
+                    <button type="button" @click="clearDoc" class="clear-file-btn">×</button>
+                  </div>
+                  <div v-if="!docFile && doctor.documents" class="current-file">
+                    <span class="current-file-label">Current: {{ doctor.documents }}</span>
+                  </div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current Files Display (When Not Editing) -->
+          <div class="form-section" v-if="!isEditing && (doctor.profile_photo || doctor.documents)">
+            <h3 class="section-title">Uploaded Documents</h3>
+            <div class="form-grid">
+              <div class="form-group" v-if="doctor.profile_photo">
+                <label class="form-label">Profile Photo</label>
+                <div class="form-display">{{ doctor.profile_photo }}</div>
+              </div>
+              <div class="form-group" v-if="doctor.documents">
+                <label class="form-label">License/ID Document</label>
+                <div class="form-display">{{ doctor.documents }}</div>
               </div>
             </div>
           </div>
@@ -487,14 +516,62 @@ export default {
   },
   methods: {
     handlePhotoUpload(event) {
-      this.photoFile = event.target.files[0];
+      const file = event.target.files[0];
+      if (file) {
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+          alert('Please select a valid image file (JPEG, PNG, or GIF)');
+          event.target.value = '';
+          return;
+        }
+        
+        // Validate file size (max 5MB)
+        const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+        if (file.size > maxSize) {
+          alert('File size must be less than 5MB');
+          event.target.value = '';
+          return;
+        }
+        
+        this.photoFile = file;
+      }
     },
     handleDocUpload(event) {
-      this.docFile = event.target.files[0];
+      const file = event.target.files[0];
+      if (file) {
+        // Validate file type
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+          alert('Please select a valid document file (PDF, JPEG, or PNG)');
+          event.target.value = '';
+          return;
+        }
+        
+        // Validate file size (max 10MB)
+        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        if (file.size > maxSize) {
+          alert('File size must be less than 10MB');
+          event.target.value = '';
+          return;
+        }
+        
+        this.docFile = file;
+      }
+    },
+    clearPhoto() {
+      this.photoFile = null;
+      const photoInput = document.getElementById('photo-upload');
+      if (photoInput) photoInput.value = '';
+    },
+    clearDoc() {
+      this.docFile = null;
+      const docInput = document.getElementById('doc-upload');
+      if (docInput) docInput.value = '';
     },
     async submitForm() {
       try {
-        // Prepare data for API - convert arrays to comma-separated strings
+        // First, update the profile data
         const submitData = {
           ...this.doctor,
           languages: this.doctor.selectedLanguages.join(', '),
@@ -516,16 +593,70 @@ export default {
 
         if (!response.ok) throw new Error('Failed to save profile');
         
+        // If files are selected, upload them separately
+        if (this.photoFile || this.docFile) {
+          try {
+            await this.uploadFiles();
+            alert('Profile and files updated successfully!');
+          } catch (fileError) {
+            alert('Profile updated successfully, but file upload failed: ' + fileError.message);
+          }
+        } else {
+          alert('Profile updated successfully!');
+        }
+        
         this.isEditing = false;
         this.originalDoctor = { ...this.doctor };
         
         // Emit event to parent component
         this.$emit('profileUpdated');
         
-        // Optional: you can remove this alert if you prefer only toast
-        alert('Profile updated successfully!');
       } catch (error) {
         alert('Error: ' + error.message);
+      }
+    },
+    
+    async uploadFiles() {
+      try {
+        const formData = new FormData();
+        
+        if (this.photoFile) {
+          formData.append('profile_photo', this.photoFile);
+        }
+        
+        if (this.docFile) {
+          formData.append('document', this.docFile);
+        }
+        
+        const response = await fetch('http://127.0.0.1:5000/api/doctor/upload-files', {
+          method: 'POST',
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          },
+          body: formData
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to upload files');
+        }
+        
+        const data = await response.json();
+        console.log('Files uploaded successfully:', data);
+        
+        // Reset file inputs
+        this.photoFile = null;
+        this.docFile = null;
+        
+        // Clear file input elements
+        const photoInput = document.getElementById('photo-upload');
+        const docInput = document.getElementById('doc-upload');
+        if (photoInput) photoInput.value = '';
+        if (docInput) docInput.value = '';
+        
+      } catch (error) {
+        console.error('File upload error:', error);
+        throw new Error('File upload failed: ' + error.message);
       }
     },
     cancelEdit() {
@@ -930,6 +1061,63 @@ export default {
 .upload-icon {
   width: 1.25rem;
   height: 1.25rem;
+}
+
+.file-selected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #0c4a6e;
+}
+
+.file-name {
+  font-weight: 500;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clear-file-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.clear-file-btn:hover {
+  background: #dc2626;
+  transform: scale(1.1);
+}
+
+.current-file {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.current-file-label {
+  color: #6b7280;
+  font-weight: 500;
 }
 
 /* Form Actions */
