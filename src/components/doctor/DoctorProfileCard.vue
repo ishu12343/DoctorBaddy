@@ -571,7 +571,7 @@ export default {
     },
     async submitForm() {
       try {
-        // First, update the profile data
+        // Prepare submit data without files first
         const submitData = {
           ...this.doctor,
           languages: this.doctor.selectedLanguages.join(', '),
@@ -582,6 +582,17 @@ export default {
         delete submitData.selectedLanguages;
         delete submitData.selectedDays;
         
+        // Handle files - store just filename or a simple string reference instead of base64
+        if (this.photoFile) {
+          submitData.profile_photo = `${this.photoFile.name}_${Date.now()}`;
+        }
+        
+        if (this.docFile) {
+          submitData.documents = `${this.docFile.name}_${Date.now()}`;
+        }
+        
+        console.log('Submitting data:', submitData);
+        
         const response = await fetch('http://127.0.0.1:5000/api/doctor/profile/update', {
           method: 'PUT',
           headers: {
@@ -591,58 +602,15 @@ export default {
           body: JSON.stringify(submitData)
         });
 
-        if (!response.ok) throw new Error('Failed to save profile');
-        
-        // If files are selected, upload them separately
-        if (this.photoFile || this.docFile) {
-          try {
-            await this.uploadFiles();
-            alert('Profile and files updated successfully!');
-          } catch (fileError) {
-            alert('Profile updated successfully, but file upload failed: ' + fileError.message);
-          }
-        } else {
-          alert('Profile updated successfully!');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || errorData.details || 'Failed to save profile');
         }
+        
+        alert('Profile updated successfully!');
         
         this.isEditing = false;
         this.originalDoctor = { ...this.doctor };
-        
-        // Emit event to parent component
-        this.$emit('profileUpdated');
-        
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
-    },
-    
-    async uploadFiles() {
-      try {
-        const formData = new FormData();
-        
-        if (this.photoFile) {
-          formData.append('profile_photo', this.photoFile);
-        }
-        
-        if (this.docFile) {
-          formData.append('document', this.docFile);
-        }
-        
-        const response = await fetch('http://127.0.0.1:5000/api/doctor/upload-files', {
-          method: 'POST',
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
-          },
-          body: formData
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to upload files');
-        }
-        
-        const data = await response.json();
-        console.log('Files uploaded successfully:', data);
         
         // Reset file inputs
         this.photoFile = null;
@@ -654,10 +622,23 @@ export default {
         if (photoInput) photoInput.value = '';
         if (docInput) docInput.value = '';
         
+        // Emit event to parent component
+        this.$emit('profileUpdated');
+        
       } catch (error) {
-        console.error('File upload error:', error);
-        throw new Error('File upload failed: ' + error.message);
+        console.error('Submit error:', error);
+        alert('Error: ' + error.message);
       }
+    },
+    
+    // Convert file to base64 string
+    fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
     },
     cancelEdit() {
       this.doctor = { ...this.originalDoctor };
