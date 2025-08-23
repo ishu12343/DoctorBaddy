@@ -99,8 +99,8 @@
         <div class="header-right">
           <div class="header-user-profile" @click="toggleUserDropdown" :class="{ 'dropdown-open': showUserDropdown }">
             <div class="header-user-info">
-              <span class="header-user-name">Dr. Sneha Shahaaa</span>
-              <span class="header-user-specialty">Cardiology</span>
+              <span class="header-user-name">{{ doctorStatus?.full_name || 'Loading...' }}</span>
+              <span class="header-user-specialty">{{ doctorStatus?.specialty || 'Loading...' }}</span>
             </div>
             <div class="header-user-avatar">
               <svg viewBox="0 0 24 24" fill="currentColor">
