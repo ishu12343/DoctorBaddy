@@ -286,11 +286,20 @@
               </div>
             </div>
 
-            <!-- Recent Activity Section -->
+            <!-- Recent Activity Section - Modern Single Line Design -->
             <div class="recent-activity-section">
               <div class="section-header">
                 <h3 class="section-title">
-                  Recent Activity
+                  <div class="title-with-pulse">
+                    <svg class="activity-pulse-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    Recent Activity
+                    <div class="live-indicator">
+                      <span class="pulse-dot"></span>
+                      <span class="live-text">Live</span>
+                    </div>
+                  </div>
                   <span class="activity-counter" v-if="recentActivities.length > 0">{{ recentActivities.length }}</span>
                 </h3>
                 <div class="section-actions">
@@ -308,37 +317,72 @@
                 </div>
               </div>
               
-              <div class="activity-list" v-if="recentActivities.length > 0">
-                <div v-for="(activity, index) in recentActivities" :key="activity.id" 
-                     class="activity-item"
-                     :class="[activity.status, { 'latest': index === 0 }]">
-                  
-                  <div class="activity-icon" :class="activity.status">
-                    <svg v-if="activity.type === 'appointment'" viewBox="0 0 16 16" fill="currentColor">
-                      <path d="M4 .5a.5.5 0 00-1 0V1H2a2 2 0 00-2 2v1h16V3a2 2 0 00-2-2h-1V.5a.5.5 0 00-1 0V1H4V.5zM16 14V5H0v9a2 2 0 002 2h12a2 2 0 002-2zm-3.5-7h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1a.5.5 0 01.5-.5z"/>
-                    </svg>
-                    <svg v-else viewBox="0 0 16 16" fill="currentColor">
-                      <path d="M8 8a3 3 0 100-6 3 3 0 000 6zm2-3a2 2 0 11-4 0 2 2 0 014 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-                    </svg>
-                  </div>
-                  
-                  <div class="activity-content">
-                    <div class="activity-main">
-                      <h5 class="activity-title">{{ activity.title }}</h5>
-                      <span class="activity-status" :class="activity.status">{{ formatStatus(activity.status) }}</span>
+              <!-- Modern Horizontal Activity Stream -->
+              <div class="activity-stream" v-if="recentActivities.length > 0">
+                <div class="activity-timeline">
+                  <div v-for="(activity, index) in recentActivities" :key="activity.id" 
+                       class="activity-card"
+                       :class="[activity.status, { 'latest': index === 0 }]"
+                       :style="{ animationDelay: `${index * 0.1}s` }">
+                    
+                    <div class="activity-card-header">
+                      <div class="activity-icon" :class="activity.status">
+                        <svg v-if="activity.type === 'appointment'" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                        <svg v-else viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <div class="activity-status-badge" :class="activity.status">
+                        <span class="status-text">{{ formatStatus(activity.status) }}</span>
+                      </div>
                     </div>
-                    <p class="activity-description">{{ activity.description }}</p>
-                    <span class="activity-time">{{ activity.time }}</span>
+                    
+                    <div class="activity-card-content">
+                      <h5 class="activity-title">{{ activity.title }}</h5>
+                      <p class="activity-description">{{ activity.description }}</p>
+                      <div class="activity-meta">
+                        <span class="activity-time">{{ activity.time }}</span>
+                        <div class="activity-type-indicator" :class="activity.type">
+                          {{ activity.type }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Connection Line to Next Activity -->
+                    <div v-if="index < recentActivities.length - 1" class="activity-connector">
+                      <div class="connector-line"></div>
+                      <div class="connector-arrow">
+                        <svg viewBox="0 0 16 16" fill="currentColor">
+                          <path fill-rule="evenodd" d="M4 8a.5.5 0 01.5-.5h5.793L8.146 5.354a.5.5 0 11.708-.708l3 3a.5.5 0 010 .708l-3 3a.5.5 0 01-.708-.708L10.293 8.5H4.5A.5.5 0 014 8z"/>
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
               
-              <div v-else class="no-activities">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M12 6v6l4 2"/>
-                </svg>
-                <span>No recent activity</span>
+              <!-- Enhanced No Activities State -->
+              <div v-else class="no-activities-modern">
+                <div class="no-activities-content">
+                  <div class="empty-state-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 6v6l4 2"/>
+                    </svg>
+                  </div>
+                  <div class="empty-state-text">
+                    <h4>No recent activity</h4>
+                    <p>Your recent activities will appear here</p>
+                  </div>
+                  <button class="create-activity-btn" @click="goHome">
+                    <svg viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                    </svg>
+                    View Appointments
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1863,40 +1907,110 @@ export default {
   font-weight: 500;
 }
 
-/* Recent Activity Section */
+/* Recent Activity Section - Modern Single Line Design */
 .recent-activity-section {
   margin-bottom: 2rem;
-  background: white;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e2e8f0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.recent-activity-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4, #10b981);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 200% 0; }
+  50% { background-position: -200% 0; }
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .section-title {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: #1e293b;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.title-with-pulse {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+.activity-pulse-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #3b82f6;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pulse-dot {
+  width: 4px;
+  height: 4px;
+  background: #34d399;
+  border-radius: 50%;
+  animation: livePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+
+.live-text {
+  font-size: 0.6rem;
+}
+
 .activity-counter {
   font-size: 0.7rem;
-  color: #64748b;
-  background: #f1f5f9;
-  padding: 0.15rem 0.4rem;
-  border-radius: 6px;
-  font-weight: 500;
+  color: #3b82f6;
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  padding: 0.25rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 1px solid #93c5fd;
 }
 
 .section-actions {
@@ -1910,214 +2024,494 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 2rem;
+  height: 2rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .refresh-btn {
-  background: #f1f5f9;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
   color: #64748b;
+  border: 1px solid #cbd5e1;
 }
 
 .refresh-btn:hover {
-  background: #e2e8f0;
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
   color: #475569;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .view-all-btn {
-  background: #3b82f6;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
+  border: 1px solid #2563eb;
 }
 
 .view-all-btn:hover {
-  background: #2563eb;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
 }
 
 .refresh-btn svg,
 .view-all-btn svg {
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  transition: transform 0.3s ease;
 }
 
-/* Activity List */
-.activity-list {
+.refresh-btn:hover svg {
+  transform: rotate(180deg);
+}
+
+/* Modern Horizontal Activity Stream */
+.activity-stream {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.5rem;
+}
+
+.activity-timeline {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
+  min-height: 140px;
+  padding: 0.5rem 0;
 }
 
-.activity-item {
+.activity-card {
+  min-width: 280px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  animation: slideInUp 0.6s ease-out both;
+  cursor: pointer;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.activity-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  border-color: #3b82f6;
+}
+
+.activity-card.latest {
+  background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+  border: 2px solid #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+}
+
+.activity-card.latest::before {
+  content: 'Latest';
+  position: absolute;
+  top: -1px;
+  right: 1rem;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0 0 8px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.activity-card.confirmed {
+  border-left: 4px solid #10b981;
+}
+
+.activity-card.pending {
+  border-left: 4px solid #f59e0b;
+}
+
+.activity-card.cancelled {
+  border-left: 4px solid #ef4444;
+}
+
+.activity-card-header {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  background: #f8fafc;
-  border-radius: 8px;
-  border-left: 3px solid #e2e8f0;
-  transition: all 0.2s ease;
-}
-
-.activity-item.latest {
-  background: linear-gradient(135deg, #eff6ff, #f0f9ff);
-  border-left-color: #3b82f6;
-}
-
-.activity-item.confirmed {
-  border-left-color: #10b981;
-}
-
-.activity-item.pending {
-  border-left-color: #f59e0b;
-}
-
-.activity-item.cancelled {
-  border-left-color: #ef4444;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
 }
 
 .activity-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.8rem;
-  height: 1.8rem;
-  border-radius: 6px;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.activity-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.activity-card:hover .activity-icon::before {
+  transform: translateX(100%);
 }
 
 .activity-icon.confirmed {
-  background: #dcfce7;
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
   color: #16a34a;
+  border: 1px solid #86efac;
 }
 
 .activity-icon.pending {
-  background: #fef3c7;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
   color: #d97706;
+  border: 1px solid #fbbf24;
 }
 
 .activity-icon.cancelled {
-  background: #fee2e2;
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
   color: #dc2626;
+  border: 1px solid #f87171;
 }
 
 .activity-icon svg {
-  width: 0.9rem;
-  height: 0.9rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  z-index: 1;
 }
 
-.activity-content {
+.activity-status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.activity-status-badge.confirmed {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  color: #16a34a;
+  border: 1px solid #86efac;
+}
+
+.activity-status-badge.pending {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #d97706;
+  border: 1px solid #fbbf24;
+}
+
+.activity-status-badge.cancelled {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #dc2626;
+  border: 1px solid #f87171;
+}
+
+.activity-card-content {
   flex: 1;
-  min-width: 0;
-}
-
-.activity-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.25rem;
-  gap: 0.5rem;
 }
 
 .activity-title {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: #1e293b;
-  margin: 0;
+  margin: 0 0 0.5rem 0;
   line-height: 1.3;
-}
-
-.activity-status {
-  font-size: 0.65rem;
-  font-weight: 600;
-  padding: 0.1rem 0.4rem;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  flex-shrink: 0;
-}
-
-.activity-status.confirmed {
-  background: #dcfce7;
-  color: #16a34a;
-}
-
-.activity-status.pending {
-  background: #fef3c7;
-  color: #d97706;
-}
-
-.activity-status.cancelled {
-  background: #fee2e2;
-  color: #dc2626;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .activity-description {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #64748b;
-  line-height: 1.3;
-  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
+  margin: 0 0 0.75rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.activity-time {
-  font-size: 0.65rem;
-  color: #94a3b8;
-  font-weight: 500;
-}
-
-/* No Activities State */
-.no-activities {
+.activity-meta {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  text-align: center;
-  color: #64748b;
   gap: 0.5rem;
 }
 
-.no-activities svg {
-  width: 1.2rem;
-  height: 1.2rem;
+.activity-time {
+  font-size: 0.7rem;
   color: #94a3b8;
+  font-weight: 600;
 }
 
-.no-activities span {
-  font-size: 0.8rem;
+.activity-type-indicator {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #f1f5f9;
   color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.activity-type-indicator.appointment {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  color: #2563eb;
+  border-color: #93c5fd;
+}
+
+/* Activity Connector */
+.activity-connector {
+  display: flex;
+  align-items: center;
+  min-width: 2rem;
+  position: relative;
+}
+
+.connector-line {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #e2e8f0, #cbd5e1, #e2e8f0);
+  background-size: 200% 100%;
+  animation: flow 2s ease-in-out infinite;
+}
+
+@keyframes flow {
+  0%, 100% { background-position: 200% 0; }
+  50% { background-position: -200% 0; }
+}
+
+.connector-arrow {
+  position: absolute;
+  right: -6px;
+  width: 12px;
+  height: 12px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+.connector-arrow svg {
+  width: 0.6rem;
+  height: 0.6rem;
+  color: #64748b;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, transparent, rgba(248, 250, 252, 0.9));
+  padding: 1rem 0.5rem 1rem 2rem;
+  pointer-events: none;
+}
+
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 600;
+  animation: fadeInOut 3s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.scroll-hint svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+/* Enhanced No Activities State */
+.no-activities-modern {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.no-activities-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 300px;
+}
+
+.empty-state-icon {
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.empty-state-icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.empty-state-text h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+}
+
+.empty-state-text p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.create-activity-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+.create-activity-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.create-activity-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Scrollbar Styling */
+.activity-stream::-webkit-scrollbar {
+  height: 6px;
+}
+
+.activity-stream::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.activity-stream::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #cbd5e1, #94a3b8);
+  border-radius: 3px;
+}
+
+.activity-stream::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #94a3b8, #64748b);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .recent-activity-section {
-    padding: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
   }
   
   .section-header {
-    margin-bottom: 0.75rem;
-  }
-  
-  .activity-item {
-    padding: 0.5rem;
-    gap: 0.5rem;
-  }
-  
-  .activity-icon {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-  
-  .activity-icon svg {
-    width: 0.8rem;
-    height: 0.8rem;
-  }
-  
-  .activity-main {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.25rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .title-with-pulse {
+    flex-wrap: wrap;
+  }
+  
+  .activity-card {
+    min-width: 250px;
+  }
+  
+  .activity-timeline {
+    gap: 0.75rem;
+  }
+  
+  .scroll-indicator {
+    display: none;
+  }
+  
+  .no-activities-content {
+    padding: 1rem;
+  }
+  
+  .empty-state-icon {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .empty-state-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 }
 
