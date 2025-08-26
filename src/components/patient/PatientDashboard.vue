@@ -260,6 +260,24 @@
                     </svg>
                     Chat with Doctor
                   </button>
+                  
+                  <button 
+                    class="rate-btn"
+                    @click="openRatingModal(appointment)"
+                    v-if="!appointment.has_rating"
+                  >
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                    </svg>
+                    Rate Doctor
+                  </button>
+                  
+                  <span v-else class="rating-completed">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                    </svg>
+                    Rated
+                  </span>
                 </div>
 
                 <!-- Actions for cancelled appointments -->
@@ -450,7 +468,7 @@
                     
                     <div class="doctor-rating">
                       <div class="stars">
-                        <div class="stars-fill" style="width: 96%">
+                        <div class="stars-fill" :style="`width: ${(doctor.average_rating / 5) * 100}%`">
                           <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                           </svg>
@@ -461,8 +479,9 @@
                           </svg>
                         </div>
                       </div>
-                      <span class="rating-text">4.8</span>
-                      <span class="review-count">(247)</span>
+                      <span class="rating-text">{{ doctor.average_rating || 'No ratings' }}</span>
+                      <span class="review-count" v-if="doctor.total_reviews > 0">({{ doctor.total_reviews }})</span>
+                      <span class="review-count" v-else>(No reviews)</span>
                     </div>
                   </div>
                 </div>
@@ -883,6 +902,76 @@
           </div>
         </div>
       </div>
+
+      <!-- Rating Modal -->
+      <div v-if="showRatingModal" class="modal-overlay" @click="closeRatingModal">
+        <div class="rating-modal" @click.stop>
+          <div class="modal-header">
+            <h3>Rate Your Experience</h3>
+            <button class="close-btn" @click="closeRatingModal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="modal-content">
+            <div v-if="selectedAppointmentForRating" class="doctor-summary">
+              <h4>Dr. {{ selectedAppointmentForRating.doctor_name }}</h4>
+              <p>{{ selectedAppointmentForRating.specialty }}</p>
+              <p class="appointment-info">
+                {{ formatAppointmentDate(selectedAppointmentForRating.appointment_datetime) }}
+              </p>
+            </div>
+            
+            <form @submit.prevent="submitRating" class="rating-form">
+              <div class="form-group">
+                <label>Rate your experience (1-5 stars):</label>
+                <div class="star-rating">
+                  <button
+                    v-for="star in 5"
+                    :key="star"
+                    type="button"
+                    class="star-btn"
+                    :class="{ 'active': star <= selectedRating }"
+                    @click="selectRating(star)"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                    </svg>
+                  </button>
+                </div>
+                <p class="rating-label">{{ getRatingLabel(selectedRating) }}</p>
+              </div>
+              
+              <div class="form-group">
+                <label for="review">Write a review (optional):</label>
+                <textarea
+                  id="review"
+                  v-model="reviewText"
+                  placeholder="Share your experience with this doctor..."
+                  rows="4"
+                  class="form-textarea"
+                ></textarea>
+              </div>
+              
+              <div class="form-actions">
+                <button type="button" class="cancel-btn" @click="closeRatingModal">
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  class="submit-btn" 
+                  :disabled="!selectedRating || submittingRating"
+                >
+                  {{ submittingRating ? 'Submitting...' : 'Submit Rating' }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 </template>
@@ -950,7 +1039,14 @@ export default {
         "Can you help with my symptoms?",
         "What should I bring to the appointment?",
         "Do you accept insurance?"
-      ]
+      ],
+      
+      // Rating modal
+      showRatingModal: false,
+      selectedAppointmentForRating: null,
+      selectedRating: 0,
+      reviewText: '',
+      submittingRating: false
     };
   },
   mounted() {
@@ -1411,6 +1507,25 @@ export default {
       });
     },
     
+    formatAppointmentDate(dateTimeString) {
+      if (!dateTimeString) return 'Date not available';
+      
+      try {
+        const date = new Date(dateTimeString);
+        return date.toLocaleDateString('en-US', {
+          weekday: 'short',
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } catch (error) {
+        console.error('Error formatting date:', error);
+        return 'Invalid date';
+      }
+    },
+    
     getAvailabilityText(doctor) {
       // Check if doctor has availability data
       if (doctor.available_from && doctor.available_to) {
@@ -1539,6 +1654,83 @@ export default {
       }
       
       return addressParts.join(', ');
+    },
+    
+    // Rating methods
+    openRatingModal(appointment) {
+      this.selectedAppointmentForRating = appointment;
+      this.selectedRating = 0;
+      this.reviewText = '';
+      this.showRatingModal = true;
+    },
+    
+    closeRatingModal() {
+      this.showRatingModal = false;
+      this.selectedAppointmentForRating = null;
+      this.selectedRating = 0;
+      this.reviewText = '';
+      this.submittingRating = false;
+    },
+    
+    selectRating(rating) {
+      this.selectedRating = rating;
+    },
+    
+    getRatingLabel(rating) {
+      const labels = {
+        1: 'Poor',
+        2: 'Fair', 
+        3: 'Good',
+        4: 'Very Good',
+        5: 'Excellent'
+      };
+      return labels[rating] || 'Select rating';
+    },
+    
+    async submitRating() {
+      if (!this.selectedRating || !this.selectedAppointmentForRating) {
+        return;
+      }
+      
+      this.submittingRating = true;
+      
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.post(
+          `http://127.0.0.1:5000/api/patient/appointments/${this.selectedAppointmentForRating.id}/rate`,
+          {
+            rating: this.selectedRating,
+            review: this.reviewText.trim()
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        
+        if (response.data.success) {
+          // Mark appointment as rated
+          const appointmentIndex = this.appointments.findIndex(
+            a => a.id === this.selectedAppointmentForRating.id
+          );
+          if (appointmentIndex !== -1) {
+            this.appointments[appointmentIndex].has_rating = true;
+          }
+          
+          // Show success message
+          alert('Thank you for your rating!');
+          
+          // Close modal
+          this.closeRatingModal();
+          
+          // Refresh appointments to show updated status
+          this.fetchAppointments();
+        }
+      } catch (error) {
+        console.error('Error submitting rating:', error);
+        alert(error.response?.data?.error || 'Failed to submit rating. Please try again.');
+      } finally {
+        this.submittingRating = false;
+      }
     }
   },
 }
@@ -4603,6 +4795,117 @@ export default {
   .suggestion-btn {
     font-size: 0.6875rem;
     padding: 0.375rem 0.5rem;
+  }
+}
+
+/* Rating Modal Styles */
+.rating-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 0;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: modalSlide 0.3s ease-out;
+}
+
+.rating-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.star-rating {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0.5rem 0;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  color: #d1d5db;
+}
+
+.star-btn:hover {
+  transform: scale(1.1);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.star-btn.active {
+  color: #fbbf24;
+}
+
+.star-btn svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.rating-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0.5rem 0;
+  text-align: center;
+}
+
+.rate-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+.rate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(251, 191, 36, 0.4);
+}
+
+.rating-completed {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.rating-completed svg {
+  width: 1rem;
+  height: 1rem;
+  color: #fbbf24;
+}
+
+/* Responsive rating modal */
+@media (max-width: 768px) {
+  .rating-modal {
+    width: 95%;
+    max-width: none;
+    margin: 1rem;
+  }
+  
+  .star-btn svg {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 }
 </style>

@@ -668,19 +668,23 @@ export default {
       try {
         const token = localStorage.getItem('token');
         
-        // Fetch appointment stats
-        const statsResponse = await axios.get('http://127.0.0.1:5000/api/doctor/appointments/stats', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        // Fetch appointment stats, patients, and ratings
+        const [statsResponse, patientsResponse, ratingsResponse] = await Promise.all([
+          axios.get('http://127.0.0.1:5000/api/doctor/appointments/stats', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get('http://127.0.0.1:5000/api/doctor/patients', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get('http://127.0.0.1:5000/api/doctor/ratings/summary', {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+        ]);
         
-        // Fetch patients to get unique patient count
-        const patientsResponse = await axios.get('http://127.0.0.1:5000/api/doctor/patients', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        if (statsResponse.data.success && patientsResponse.data.success) {
+        if (statsResponse.data.success && patientsResponse.data.success && ratingsResponse.data.success) {
           const stats = statsResponse.data.stats;
           const patients = patientsResponse.data.patients;
+          const ratings = ratingsResponse.data;
           
           // Get unique patients count
           const uniquePatients = new Set(patients.map(p => p.patient_id));
@@ -689,8 +693,8 @@ export default {
             todayAppointments: stats.today_appointments || 0,
             totalPatients: uniquePatients.size || 0,
             monthlyRevenue: Math.floor(Math.random() * 20000) + 10000, // Keep mock for now
-            rating: (Math.random() * 1.5 + 3.5).toFixed(1), // Keep mock for now
-            reviewCount: Math.floor(Math.random() * 200) + 100 // Keep mock for now
+            rating: ratings.rating || 0,
+            reviewCount: ratings.reviewCount || 0
           };
         } else {
           // Fallback to mock data if API fails
@@ -698,8 +702,8 @@ export default {
             todayAppointments: 0,
             totalPatients: 0,
             monthlyRevenue: Math.floor(Math.random() * 20000) + 10000,
-            rating: (Math.random() * 1.5 + 3.5).toFixed(1),
-            reviewCount: Math.floor(Math.random() * 200) + 100
+            rating: 0,
+            reviewCount: 0
           };
         }
       } catch (error) {
@@ -709,8 +713,8 @@ export default {
           todayAppointments: 0,
           totalPatients: 0,
           monthlyRevenue: Math.floor(Math.random() * 20000) + 10000,
-          rating: (Math.random() * 1.5 + 3.5).toFixed(1),
-          reviewCount: Math.floor(Math.random() * 200) + 100
+          rating: 0,
+          reviewCount: 0
         };
       }
     },
