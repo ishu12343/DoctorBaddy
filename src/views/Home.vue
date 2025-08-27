@@ -2,8 +2,9 @@
   <div class="layout-container">
     <div class="layout-content">
       <AppHeader @login="goToLogin" />
-      <!-- Hero/Masthead -->
-      <section class="masthead">
+      <div class="main-content">
+        <!-- Hero/Masthead -->
+        <section class="masthead">
         <div class="masthead__content">
           <div class="masthead__text">
             <h1>Online doctor visits, 24/7</h1>
@@ -65,6 +66,7 @@
           </div>
         </div>
       </section>
+      </div> <!-- Close main-content -->
     </div>
   </div>
   <section class="cta-footer">

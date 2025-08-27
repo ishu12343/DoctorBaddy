@@ -66,6 +66,13 @@ export default {
     background: #275FD4;
     color: #fff;
     padding: 0.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .header__container {
@@ -74,6 +81,7 @@ export default {
     justify-content: space-between;
     max-width: 1100px;
     margin: 0 auto;
+    padding: 0 1rem;
   }
 
   .header__logo {

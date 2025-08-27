@@ -43,6 +43,21 @@ body {
   flex-direction: column;
 }
 
+/* Global styles for fixed header layout */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.layout-content {
+  flex: 1;
+}
+
+.main-content {
+  padding-top: 80px; /* Account for fixed header height */
+}
+
 /* Custom scrollbar styling */
 ::-webkit-scrollbar {
   width: 10px;
