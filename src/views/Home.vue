@@ -3,108 +3,214 @@
     <div class="layout-content">
       <AppHeader @login="goToLogin" />
       <div class="main-content">
-        <!-- Hero/Masthead -->
-        <section class="masthead">
-        <div class="masthead__content">
-          <div class="masthead__text">
-            <h1 class="animated-title">
-              <span class="highlight">Online doctor visits,</span>
-              <span class="typing-text">24/7</span>
-            </h1>
-            <p>We are offer you caring, expert medical advice whenever you need it, 
-              from the comfort of your home. Connect easily with trusted doctors for health concerns like fever,
-               skin issues, stress, and more. Enjoy private video consultations, quick prescriptions, and gentle guidance.
-                We’re here to support your well-being day or night. For emergencies, 
-                please call 101 or visit your nearest hospital right away. Your health matters to us!</p>
-            <div class="cta-buttons">
-              <button @click="scrollToServices" class="btn btn--secondary btn--large">
-                <i class="fas fa-info-circle"></i>
-                Learn More
-              </button>
+        <!-- Hero/Masthead or Smart Doctor Recommendations -->
+        <section v-if="!showSmartDoctorSection" class="masthead">
+          <div class="masthead__content">
+            <div class="masthead__text">
+              <h1 class="animated-title">
+                <span class="highlight">Online doctor visits,</span>
+                <span class="typing-text">24/7</span>
+              </h1>
+              <p>We are offer you caring, expert medical advice whenever you need it, 
+                from the comfort of your home. Connect easily with trusted doctors for health concerns like fever,
+                skin issues, stress, and more. Enjoy private video consultations, quick prescriptions, and gentle guidance.
+                  We’re here to support your well-being day or night. For emergencies, 
+                  please call 101 or visit your nearest hospital right away. Your health matters to us!</p>
+              <div class="cta-buttons">
+                <button @click="scrollToServices" class="btn btn--secondary btn--large">
+                  <i class="fas fa-info-circle"></i>
+                  Learn More
+                </button>
+              </div>
+              <div class="stats-row">
+                <div class="stat-item">
+                  <div class="stat-number">{{ animatedStats.doctors }}+</div>
+                  <div class="stat-label">Expert Doctors</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number">{{ animatedStats.patients }}+</div>
+                  <div class="stat-label">Happy Patients</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number">{{ animatedStats.consultations }}+</div>
+                  <div class="stat-label">Consultations</div>
+                </div>
+              </div>
             </div>
-            <div class="stats-row">
-              <div class="stat-item">
-                <div class="stat-number">{{ animatedStats.doctors }}+</div>
-                <div class="stat-label">Expert Doctors</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-number">{{ animatedStats.patients }}+</div>
-                <div class="stat-label">Happy Patients</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-number">{{ animatedStats.consultations }}+</div>
-                <div class="stat-label">Consultations</div>
+            <div class="masthead__image">
+              <div class="hero-visual-container">
+                <div class="top-doctors-showcase">
+                  <div class="showcase-header">
+                    <h3>Top Rated Doctors</h3>
+                    <div class="header-actions">
+                      <span class="live-badge">
+                        <i class="fas fa-circle"></i>
+                        Live Now
+                      </span>
+                      <button @click="showSmartDoctorSection = true" class="btn btn--primary btn--compact pulse-animation">
+                        <i class="fas fa-video"></i>
+                        See a doctor now
+                      </button>
+                    </div>
+                  </div>
+                  <div class="doctors-carousel">
+                    <div 
+                      v-for="(doctor, index) in topRatedDoctors.slice(0, 3)" 
+                      :key="doctor.id"
+                      class="doctor-mini-card"
+                      :style="{ animationDelay: `${index * 0.2}s` }">
+                      <div class="doctor-mini-avatar">
+                        <img :src="doctor.image" :alt="doctor.name" />
+                        <div class="rating-badge">
+                          <i class="fas fa-star"></i>
+                          {{ doctor.rating }}
+                        </div>
+                      </div>
+                      <div class="doctor-mini-info">
+                        <h4>{{ doctor.name }}</h4>
+                        <p>{{ doctor.specialty }}</p>
+                        <div class="consultation-info">
+                          <span class="price">${{ doctor.consultationFee }}</span>
+                          <button class="quick-book-btn">
+                            <i class="fas fa-video"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="showcase-stats">
+                    <div class="stat-mini">
+                      <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                      </div>
+                      <div class="stat-text">
+                        <span class="number">2.5k+</span>
+                        <span class="label">Patients Served</span>
+                      </div>
+                    </div>
+                    <div class="stat-mini">
+                      <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                      </div>
+                      <div class="stat-text">
+                        <span class="number">24/7</span>
+                        <span class="label">Available</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="masthead__image">
-            <div class="hero-visual-container">
-              <div class="top-doctors-showcase">
-                <div class="showcase-header">
-                  <h3>Top Rated Doctors</h3>
-                  <div class="header-actions">
-                    <span class="live-badge">
-                      <i class="fas fa-circle"></i>
-                      Live Now
-                    </span>
-                    <button @click="showDoctorSuggestions" class="btn btn--primary btn--compact pulse-animation">
-                      <i class="fas fa-video"></i>
-                      See a doctor now
+        </section>
+        <section v-else class="smart-suggestions smart-suggestions--main">
+          <div class="suggestions-container">
+            <div class="suggestions-header">
+              <div class="header-content">
+                <h2 class="suggestions-title">
+                  <i class="fas fa-brain"></i>
+                  Smart Doctor Recommendations
+                </h2>
+                <p class="suggestions-subtitle">Based on availability, ratings, and your needs</p>
+              </div>
+              <button @click="showSmartDoctorSection = false" class="back-btn stylish-back-btn">
+                <span class="back-icon-wrapper">
+                  <i class="fas fa-arrow-left"></i>
+                </span>
+                <span class="back-text">Back</span>
+              </button>
+            </div>
+            <div class="suggestion-categories">
+              <div class="category-tabs">
+                <button 
+                  v-for="category in suggestionCategories" 
+                  :key="category.id"
+                  @click="currentSuggestionCategory = category.id"
+                  :class="['category-tab', { active: currentSuggestionCategory === category.id }]">
+                  <i :class="category.icon"></i>
+                  {{ category.name }}
+                  <span class="count">{{ category.count }}</span>
+                </button>
+              </div>
+            </div>
+            <div class="suggestions-grid">
+              <div 
+                v-for="doctor in currentSuggestions" 
+                :key="doctor.id"
+                class="suggestion-card"
+                @click="selectDoctorForConsultation(doctor)">
+                <div class="suggestion-badge">
+                  <span v-if="doctor.isTopRated" class="badge top-rated">
+                    <i class="fas fa-crown"></i>
+                    Top Rated
+                  </span>
+                  <span v-if="doctor.isOnline" class="badge available">
+                    <i class="fas fa-circle"></i>
+                    Available Now
+                  </span>
+                  <span v-if="doctor.isSpecialist" class="badge specialist">
+                    <i class="fas fa-star"></i>
+                    Specialist
+                  </span>
+                </div>
+                <div class="doctor-suggestion-info">
+                  <div class="doctor-avatar-large">
+                    <img :src="doctor.image" :alt="doctor.name" />
+                    <div class="availability-indicator" :class="{ online: doctor.isOnline }"></div>
+                  </div>
+                  <div class="doctor-details-extended">
+                    <h3>{{ doctor.name }}</h3>
+                    <p class="specialty-detail">{{ doctor.specialty }}</p>
+                    <div class="experience-rating">
+                      <span class="experience">{{ doctor.experience }}+ years</span>
+                      <div class="rating-stars">
+                        <i v-for="star in 5" :key="star" 
+                          :class="['fas fa-star', { filled: star <= Math.floor(doctor.rating) }]"></i>
+                        <span class="rating-number">{{ doctor.rating }}</span>
+                      </div>
+                    </div>
+                    <div class="consultation-options-extended">
+                      <div class="option video-option">
+                        <i class="fas fa-video"></i>
+                        <span>Video Call</span>
+                        <span class="price">${{ doctor.consultationFee }}</span>
+                      </div>
+                      <div class="option chat-option">
+                        <i class="fas fa-comments"></i>
+                        <span>Chat</span>
+                        <span class="price">${{ doctor.consultationFee - 20 }}</span>
+                      </div>
+                    </div>
+                    <div class="quick-stats">
+                      <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <span>{{ doctor.totalPatients }}+ patients</span>
+                      </div>
+                      <div class="stat">
+                        <i class="fas fa-clock"></i>
+                        <span>{{ doctor.isOnline ? 'Available now' : doctor.nextAvailable }}</span>
+                      </div>
+                    </div>
+                    <button class="book-now-btn" @click.stop="bookConsultation(doctor)">
+                      <i class="fas fa-calendar-check"></i>
+                      Book Consultation
                     </button>
                   </div>
                 </div>
-                
-                <div class="doctors-carousel">
-                  <div 
-                    v-for="(doctor, index) in topRatedDoctors.slice(0, 3)" 
-                    :key="doctor.id"
-                    class="doctor-mini-card"
-                    :style="{ animationDelay: `${index * 0.2}s` }">
-                    <div class="doctor-mini-avatar">
-                      <img :src="doctor.image" :alt="doctor.name" />
-                      <div class="rating-badge">
-                        <i class="fas fa-star"></i>
-                        {{ doctor.rating }}
-                      </div>
-                    </div>
-                    <div class="doctor-mini-info">
-                      <h4>{{ doctor.name }}</h4>
-                      <p>{{ doctor.specialty }}</p>
-                      <div class="consultation-info">
-                        <span class="price">${{ doctor.consultationFee }}</span>
-                        <button class="quick-book-btn">
-                          <i class="fas fa-video"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="showcase-stats">
-                  <div class="stat-mini">
-                    <div class="stat-icon">
-                      <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-text">
-                      <span class="number">2.5k+</span>
-                      <span class="label">Patients Served</span>
-                    </div>
-                  </div>
-                  <div class="stat-mini">
-                    <div class="stat-icon">
-                      <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-text">
-                      <span class="number">24/7</span>
-                      <span class="label">Available</span>
-                    </div>
-                  </div>
-                </div>
               </div>
-             </div>
+            </div>
+            <div class="suggestions-footer">
+              <button @click="showAllDoctors" class="btn btn--outline">
+                <i class="fas fa-th-large"></i>
+                View All Doctors
+              </button>
+              <button @click="emergencyContact" class="btn btn--emergency">
+                <i class="fas fa-exclamation-triangle"></i>
+                Emergency? Call 911
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
       
       <!-- Smart Doctor Suggestions -->
       <section class="smart-suggestions" v-if="showSuggestions">
@@ -563,6 +669,7 @@ export default {
   },
   data() {
     return {
+  showSmartDoctorSection: false,
       showTestimonials: false,
       showSuggestions: false,
       currentSpecialty: 'All',
@@ -797,11 +904,10 @@ export default {
       });
     },
     showDoctorSuggestions() {
-      this.showSuggestions = true;
-      this.showTestimonials = false;
-      // Smooth scroll to suggestions
+      this.showSmartDoctorSection = true;
+      // Optionally scroll to the section
       setTimeout(() => {
-        const element = document.querySelector('.smart-suggestions');
+        const element = document.querySelector('.smart-suggestions--main');
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         }
@@ -911,6 +1017,57 @@ export default {
 </script>
 
 <style scoped>
+/* Stylish and dynamic back button for Smart Doctor Recommendations */
+.stylish-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 0.7rem 1.6rem 0.7rem 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.18);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+  margin-right: 10px;
+}
+.stylish-back-btn:hover, .stylish-back-btn:focus {
+  background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.28);
+}
+.back-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.13);
+  border-radius: 50%;
+  width: 2.1rem;
+  height: 2.1rem;
+  margin-right: 0.2rem;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.12);
+  transition: background 0.2s;
+}
+.stylish-back-btn:hover .back-icon-wrapper {
+  background: rgba(255,255,255,0.22);
+}
+.back-icon-wrapper i {
+  font-size: 1.2rem;
+  color: #fff;
+  transition: color 0.2s;
+}
+.back-text {
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  font-size: 1.08rem;
+  transition: color 0.2s;
+}
 /* Import Font Awesome for icons */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 
@@ -1003,7 +1160,7 @@ export default {
 
 /* Modern masthead styles */
 .masthead {
-  padding: 4rem 0rem 0rem;
+  padding: 2rem 0rem 0rem;
   background: linear-gradient(135deg, #6d25b7 0%, #540c1f 100%);
   /* Fixed background color, no animation */
   background-size: cover;
@@ -1114,7 +1271,7 @@ export default {
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 4rem;
+  /* gap: 4rem; */
   position: relative;
   z-index: 2;
   transform: translateY(0);
@@ -1126,6 +1283,7 @@ export default {
 }
 
 .masthead__text {
+  margin-top: -12rem;
   flex: 1;
   animation: slideInLeft 1s ease-out;
   position: relative;
@@ -1289,7 +1447,7 @@ export default {
 /* Realistic Hero Visual Container */
 .hero-visual-container {
   position: relative;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -3242,5 +3400,6 @@ export default {
 
 .main-content {
   padding-top: 0;
+  margin-top: 40px;
 }
 </style>
