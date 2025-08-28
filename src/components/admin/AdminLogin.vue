@@ -37,7 +37,7 @@
   </div>
 </template> -->
 <template>
-  <AppHeader @login="goToLogin" />
+  <AppHeader />
   <div class="login-container">
     <div class="login-card">
       <img src="@/assets/images/logo.png" alt="Logo" class="login-logo" />
@@ -55,13 +55,20 @@
       </div>
     </div>
   </div>
+  <AppFooter class="footer-fixed" />
 </template>
 
 <script>
 import axios from 'axios';
+import AppHeader from '@/views/AppHeader.vue';
+import AppFooter from '@/views/AppFooter.vue';
 
 export default {
   name: 'AdminLogin',
+  components: {
+    AppHeader,
+    AppFooter
+  },
   data() {
     return {
       email: '',
@@ -98,13 +105,13 @@ export default {
 </script>
 
 <style scoped>
-.login-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(90deg, #5C9EF0 60%, #C8D67C 100%);
-}
+  .login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(90deg, #5C9EF0 60%, #C8D67C 100%);
+  }
 .login-card {
   background: #fff;
   padding: 2.5rem 2rem;
@@ -142,10 +149,18 @@ input {
   margin-top: 1.5rem;
   text-align: center;
 }
-.login-footer a {
-  color: #275FD4;
-  text-decoration: underline;
-  font-size: 1rem;
-}
+  .login-footer a {
+    color: #275FD4;
+    text-decoration: underline;
+    font-size: 1rem;
+  }
+
+  .footer-fixed {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    z-index: 100;
+  }
 </style>
 

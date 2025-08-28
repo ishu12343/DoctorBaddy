@@ -1,8 +1,10 @@
 <template>
-  <div class="auth-page">
-    <div class="auth-container">
-      <h2>Admin Registration</h2>
-      <form @submit.prevent="handleSignup" class="auth-form">
+  <div>
+    <AppHeader />
+    <div class="auth-page">
+      <div class="auth-container">
+        <h2>Admin Registration</h2>
+        <form @submit.prevent="handleSignup" class="auth-form">
         <div class="form-group">
           <label for="fullName">Full Name</label>
           <input
@@ -55,16 +57,24 @@
 
         <p v-if="error" class="error-message">{{ error }}</p>
         <p v-if="success" class="success-message">Registration successful! 🎉</p>
-      </form>
+        </form>
+      </div>
     </div>
+    <AppFooter />
   </div>
 </template>
 
 <script>
+import AppHeader from '@/views/AppHeader.vue';
+import AppFooter from '@/views/AppFooter.vue';
 import axios from "axios";
 
 export default {
   name: 'AdminSignUp',
+  components: {
+    AppHeader,
+    AppFooter
+  },
   data() {
     return {
       isLoading: false,

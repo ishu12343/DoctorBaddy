@@ -1,64 +1,66 @@
 <template>
-  <AppHeader @login="goToLogin" />
-  <AppFooter />
-  <div class="services-fixed-container">
-    <div class="services-page">
-      <!-- <h1>Our Services</h1> -->
-      <div class="services-list">
-        <div class="service-box appointment">
-          <div class="service-content">
-            <span class="service-icon appointment">
-              <i class="fas fa-user-md"></i>
+  <div class="our-services-root">
+    <AppHeader @login="goToLogin" />
+    <div class="our-services-content">
+      <div class="services-page">
+        <!-- <h1>Our Services</h1> -->
+        <div class="services-list">
+          <div class="service-box appointment">
+            <div class="service-content">
+              <span class="service-icon appointment">
+                <i class="fas fa-user-md"></i>
+              </span>
+              <strong>Book Doctor Appointments:</strong>
+              <div>Easily find and book appointments with doctors and specialists near you.</div>
+            </div>
+            <span class="service-img-right">
+              <img src="@/assets/images/10.webp" alt="Service" />
             </span>
-            <strong>Book Doctor Appointments:</strong>
-            <div>Easily find and book appointments with doctors and specialists near you.</div>
           </div>
-          <span class="service-img-right">
-            <img src="@/assets/images/10.webp" alt="Service" />
-          </span>
-        </div>
-        <div class="service-box online">
-          <div class="service-content">
-            <span class="service-icon online">
-              <i class="fa-solid fa-user-doctor-message"></i>
+          <div class="service-box online">
+            <div class="service-content">
+              <span class="service-icon online">
+                <i class="fa-solid fa-user-doctor-message"></i>
+              </span>
+              <strong>Online Doctor Visits (24/7):</strong>
+              <div>See a doctor or therapist from home, using your phone, tablet, or computer—anytime, day or night.</div>
+            </div>
+            <span class="service-img-right">
+              <img src="@/assets/images/10.webp" alt="Service" />
             </span>
-            <strong>Online Doctor Visits (24/7):</strong>
-            <div>See a doctor or therapist from home, using your phone, tablet, or computer—anytime, day or night.</div>
           </div>
-          <span class="service-img-right">
-            <img src="@/assets/images/10.webp" alt="Service" />
-          </span>
-        </div>
-        <div class="service-box medicine">
-          <div class="service-content">
-            <span class="service-icon medicine">
-              <i class="fa-solid fa-pills"></i>
+          <div class="service-box medicine">
+            <div class="service-content">
+              <span class="service-icon medicine">
+                <i class="fa-solid fa-pills"></i>
+              </span>
+              <strong>Buy Medicine:</strong>
+              <div>Order prescribed medicines online and get them delivered to your doorstep.</div>
+            </div>
+            <span class="service-img-right">
+              <img src="@/assets/images/10.webp" alt="Service" />
             </span>
-            <strong>Buy Medicine:</strong>
-            <div>Order prescribed medicines online and get them delivered to your doorstep.</div>
           </div>
-          <span class="service-img-right">
-            <img src="@/assets/images/10.webp" alt="Service" />
-          </span>
-        </div>
-        <div class="service-box insurance">
-          <div class="service-content">
-            <span class="service-icon insurance">
-              <i class="fa-solid fa-file-medical"></i>
+          <div class="service-box insurance">
+            <div class="service-content">
+              <span class="service-icon insurance">
+                <i class="fa-solid fa-file-medical"></i>
+              </span>
+              <strong>Insurance Coverage:</strong>
+              <div>Choose insurance plans accepted by doctors, and check coverage before booking.</div>
+            </div>
+            <span class="service-img-right">
+              <img src="@/assets/images/10.webp" alt="Service" />
             </span>
-            <strong>Insurance Coverage:</strong>
-            <div>Choose insurance plans accepted by doctors, and check coverage before booking.</div>
           </div>
-          <span class="service-img-right">
-            <img src="@/assets/images/10.webp" alt="Service" />
-          </span>
+          <div class="emergency-note">
+            <strong>If you’re having a medical emergency, call 101 immediately.</strong>
+          </div>
         </div>
-        <div class="emergency-note">
-          <strong>If you’re having a medical emergency, call 101 immediately.</strong>
-        </div>
+        <!-- Add more detailed content about services here -->
       </div>
-      <!-- Add more detailed content about services here -->
     </div>
+    <AppFooter />
   </div>
 </template>
 
@@ -297,14 +299,7 @@ export default {
 
 /* Existing styles for home container, subtitle, actions, smart search, specialties, top doctors */
 .services-fixed-container {
-  position: fixed;
-  top: 90px; /* adjust if header height changes */
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 10;
   background: #f9fbff;
-  overflow-y: auto;
   padding-bottom: 2rem;
 }
 .services-page {
@@ -433,6 +428,15 @@ export default {
     margin-top: 1rem;
     justify-content: flex-start;
   }
+}
+/* Ensure footer stays at the bottom */
+.our-services-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.our-services-content {
+  flex: 1 0 auto;
 }
 </style>
 

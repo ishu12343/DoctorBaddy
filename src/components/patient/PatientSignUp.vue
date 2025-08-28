@@ -1,8 +1,10 @@
 <template>
-  <div class="auth-page">
-    <div class="auth-container">
-      <h2>Patient Registration</h2>
-      <form @submit.prevent="handleSubmit" class="auth-form">
+  <div>
+    <AppHeader />
+    <div class="auth-page">
+      <div class="auth-container">
+        <h2>Patient Registration</h2>
+        <form @submit.prevent="handleSubmit" class="auth-form">
         <div class="form-group">
           <label for="fullName">Full Name</label>
           <input
@@ -136,14 +138,22 @@
             Already have an account? <router-link to="/patient-login">Login here</router-link>
           </p>
         </div>
-      </form>
+        </form>
+      </div>
     </div>
+    <AppFooter />
   </div>
 </template>
 
 <script>
+import AppHeader from '@/views/AppHeader.vue';
+import AppFooter from '@/views/AppFooter.vue';
 export default {
   name: 'PatientSignUp',
+  components: {
+    AppHeader,
+    AppFooter
+  },
   data() {
     return {
       isLoading: false,

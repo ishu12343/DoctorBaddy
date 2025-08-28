@@ -1,8 +1,10 @@
 <template>
-  <div class="auth-page">
-    <div class="auth-container">
-      <h2>Doctor Registration</h2>
-      <form @submit.prevent="handleSubmit" class="auth-form">
+  <div>
+    <AppHeader />
+    <div class="auth-page">
+      <div class="auth-container">
+        <h2>Doctor Registration</h2>
+        <form @submit.prevent="handleSubmit" class="auth-form">
         <!-- Error Message -->
         <div v-if="error" class="alert alert-danger">
           {{ error }}
@@ -170,14 +172,22 @@
             Already have an account? <router-link to="/doctor-login">Login here</router-link>
           </p>
         </div>
-      </form>
+        </form>
+      </div>
     </div>
+    <AppFooter />
   </div>
 </template>
 
 <script>
+import AppHeader from '@/views/AppHeader.vue';
+import AppFooter from '@/views/AppFooter.vue';
 export default {
   name: 'DoctorSignUp',
+  components: {
+    AppHeader,
+    AppFooter
+  },
   data() {
     return {
       isLoading: false,

@@ -22,15 +22,19 @@
       </div>
     </div>
   </div>
+
+  <AppFooter class="footer-fixed" />
 </template>
 
 <script>
 import AppHeader from '@/views/AppHeader.vue';
+import AppFooter from '@/views/AppFooter.vue';
 
 export default {
   name: 'LoginPage',
   components: {
-    AppHeader
+    AppHeader,
+    AppFooter
   },
   data() {
     return {
@@ -159,5 +163,13 @@ input {
   margin-top: 1rem;
   color: red;
   font-weight: bold;
+}
+
+.footer-fixed {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 100;
 }
 </style>
