@@ -24,7 +24,7 @@
                 </span>
               </div>
               <div class="cta-buttons">
-                <button @click="scrollToServices" class="btn btn--secondary btn--large">
+                <button @click="showLearnMoreSections" class="btn btn--secondary btn--large">
                   <i class="fas fa-info-circle"></i>
                   Learn More
                 </button>
@@ -403,8 +403,8 @@
           </button>
         </div>
       </section>
-      <!-- Benefits Icon Cards -->
-      <section class="benefits-showcase slide-up">
+      <!-- Benefits Icon Cards and How it Works Section, shown only after Learn More -->
+      <section v-if="showLearnMore" class="benefits-showcase slide-up">
         <h2 class="section-title">Why Choose DoctorBuddy?</h2>
         <div class="benefits-horizontal">
           <div class="benefit-item">
@@ -449,8 +449,7 @@
         </div>
       </section>
       
-      <!-- How it Works Section -->
-      <section class="how-it-works">
+      <section v-if="showLearnMore" class="how-it-works">
         <div class="container">
           <h2 class="section-title">Get Expert Care in 4 Simple Steps</h2>
           <p class="section-subtitle">From sign-up to treatment - experience healthcare made simple</p>
@@ -697,7 +696,8 @@ export default {
       currentSubtitle: 'Caring, expert medical advice whenever you need it, from the comfort of your home.',
       subtitleIndex: 0,
       subtitleInterval: null,
-      showSmartDoctorSection: false,
+  showSmartDoctorSection: false,
+  showLearnMore: false,
       showTestimonials: false,
       showSuggestions: false,
       currentSpecialty: 'All',
@@ -967,11 +967,15 @@ export default {
     emergencyContact() {
       alert('For immediate emergency, call 911 or visit your nearest emergency room!');
     },
-    scrollToServices() {
-      const element = document.querySelector('.icon-card-row');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
+    showLearnMoreSections() {
+      this.showLearnMore = true;
+      this.$nextTick(() => {
+        // Scroll to the benefits section after it appears
+        const el = document.querySelector('.benefits-showcase');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
     },
     selectDoctor(doctor) {
       console.log('Selected doctor:', doctor);
