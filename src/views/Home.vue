@@ -638,26 +638,6 @@
       </section>
       </div> <!-- Close main-content -->
       
-      <!-- CTA Footer Section -->
-      <section class="cta-footer">
-        <div class="cta-footer__bg">
-          <div class="cta-footer__container">
-            <div class="cta-footer__icon">
-              <i class="fas fa-user-md fa-3x"></i>
-            </div>
-            <div class="cta-footer__text">
-              <h2>Ready to start your health journey?</h2>
-              <div>Experience the future of healthcare with our expert doctors available 24/7. Join thousands of satisfied patients today!</div>
-            </div>
-            <div class="cta-footer__button">
-              <router-link to="/patient-signup" class="btn btn--primary btn--large pulse-animation">
-                <i class="fas fa-rocket"></i>
-                Start Your Journey
-              </router-link>
-            </div>
-          </div>
-        </div>
-      </section>
     </div> <!-- Close layout-content -->
   </div> <!-- Close layout-container -->
   <AppFooter />
