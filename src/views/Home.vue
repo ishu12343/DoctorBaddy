@@ -5,12 +5,6 @@
       <div class="main-content">
         <!-- Hero/Masthead -->
         <section class="masthead">
-          <div class="dynamic-bg-elements">
-            <div class="floating-element element-1"></div>
-            <div class="floating-element element-2"></div>
-            <div class="floating-element element-3"></div>
-            <div class="floating-element element-4"></div>
-          </div>
         <div class="masthead__content">
           <div class="masthead__text">
             <h1 class="animated-title">
@@ -965,24 +959,6 @@ export default {
   }
 }
 
-@keyframes dynamicGradient {
-  0% {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
-  25% {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ff6b6b 100%);
-  }
-  50% {
-    background: linear-gradient(135deg, #764ba2 0%, #ff6b6b 50%, #feca57 100%);
-  }
-  75% {
-    background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #667eea 100%);
-  }
-  100% {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
-}
-
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -1027,11 +1003,11 @@ export default {
 
 /* Modern masthead styles */
 .masthead {
-  padding: 6rem 2rem 5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 4rem 0rem 0rem;
+  background: linear-gradient(135deg, #6d25b7 0%, #540c1f 100%);
   /* Fixed background color, no animation */
   background-size: cover;
-  animation: slideDownFadeIn 1.2s ease-out;
+  /* animation: slideDownFadeIn 1.2s ease-out; */
   position: relative;
   overflow: hidden;
   margin-top: 20px;
@@ -1324,7 +1300,7 @@ export default {
   padding: 2rem 1.5rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(102, 126, 234, 0.1);
-  animation: float 6s ease-in-out infinite;
+  /* animation: float 6s ease-in-out infinite; */
   position: relative;
   overflow: hidden;
 }

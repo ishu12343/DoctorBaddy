@@ -63,7 +63,7 @@ export default {
 </script>
 <style scoped>
   .header {
-    background: #275FD4;
+    background: #002b5c;
     color: #fff;
     padding: 0.5rem 0;
     position: fixed;
@@ -119,9 +119,26 @@ export default {
     margin-left: 0.5rem;
   }
 
+
+  /* Unique, stylish, and dynamic gradient for login and signup buttons */
   .btn--primary {
-    background: #5C9EF0;
+    background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
     color: #fff;
+    box-shadow: 0 4px 14px 0 rgba(221,36,118,0.15);
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    border: none;
+    outline: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn--primary:hover, .btn--primary:focus {
+    background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 20px 0 rgba(54,209,196,0.18);
   }
 
   .btn--small { 
