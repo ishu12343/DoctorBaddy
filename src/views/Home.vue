@@ -566,75 +566,153 @@
       </section>
 
       <!-- Patient Reviews Section -->
-      <section class="patient-reviews">
-        <div class="container">
-          <h2 class="section-title">What Our Patients Say</h2>
-          <div class="reviews-grid">
-            <div class="review-card">
-              <div class="review-content">
-                <div class="stars">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
+      <section>
+        <transition name="fade" mode="out-in">
+          <div v-if="showDoctorTestimonials" key="doctors">
+            <section class="patient-reviews">
+              <div class="container">
+                <h2 class="section-title">What Our Doctors Say</h2>
+                <div class="reviews-grid">
+                  <div class="review-card">
+                    <div class="review-content">
+                      <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                      </div>
+                      <p>"I love being able to help patients from anywhere. The platform makes consultations easy and effective!"</p>
+                    </div>
+                    <div class="review-author">
+                      <div class="author-avatar">
+                        <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=60&h=60&fit=crop&crop=face" alt="Dr. Sarah Johnson" />
+                      </div>
+                      <div class="author-info">
+                        <h4>Dr. Sarah Johnson</h4>
+                        <span>Family Medicine</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="review-card">
+                    <div class="review-content">
+                      <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                      </div>
+                      <p>"The technology allows me to reach more patients and provide timely care. It's truly rewarding."</p>
+                    </div>
+                    <div class="review-author">
+                      <div class="author-avatar">
+                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=60&h=60&fit=crop&crop=face" alt="Dr. Michael Chen" />
+                      </div>
+                      <div class="author-info">
+                        <h4>Dr. Michael Chen</h4>
+                        <span>Cardiology</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="review-card">
+                    <div class="review-content">
+                      <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                      </div>
+                      <p>"Virtual care is the future. I can support my patients and their families better than ever before."</p>
+                    </div>
+                    <div class="review-author">
+                      <div class="author-avatar">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&h=60&fit=crop&crop=face" alt="Dr. Emily Rodriguez" />
+                      </div>
+                      <div class="author-info">
+                        <h4>Dr. Emily Rodriguez</h4>
+                        <span>Dermatology</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <p>"Amazing experience! Got consultation at 2 AM when my fever spiked. Doctor was very professional and caring."</p>
               </div>
-              <div class="review-author">
-                <div class="author-avatar">
-                  <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face" alt="Sarah M." />
-                </div>
-                <div class="author-info">
-                  <h4>Sarah M.</h4>
-                  <span>Mother of 2</span>
-                </div>
-              </div>
-            </div>
-            <div class="review-card">
-              <div class="review-content">
-                <div class="stars">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                </div>
-                <p>"Saved me a trip to the ER! Quick diagnosis and prescription delivered to my door. Highly recommend!"</p>
-              </div>
-              <div class="review-author">
-                <div class="author-avatar">
-                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face" alt="Michael R." />
-                </div>
-                <div class="author-info">
-                  <h4>Michael R.</h4>
-                  <span>Business Executive</span>
-                </div>
-              </div>
-            </div>
-            <div class="review-card">
-              <div class="review-content">
-                <div class="stars">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                </div>
-                <p>"Perfect for busy parents. No waiting rooms, no exposure to other illnesses. Just quality healthcare!"</p>
-              </div>
-              <div class="review-author">
-                <div class="author-avatar">
-                  <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" alt="Emily C." />
-                </div>
-                <div class="author-info">
-                  <h4>Emily C.</h4>
-                  <span>Working Mom</span>
-                </div>
-              </div>
-            </div>
+            </section>
           </div>
-        </div>
+          <div v-else key="patients">
+            <section class="patient-reviews">
+              <div class="container">
+                <h2 class="section-title">What Our Patients Say</h2>
+                <div class="reviews-grid">
+                  <div class="review-card">
+                    <div class="review-content">
+                      <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                      </div>
+                      <p>"Amazing experience! Got consultation at 2 AM when my fever spiked. Doctor was very professional and caring."</p>
+                    </div>
+                    <div class="review-author">
+                      <div class="author-avatar">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face" alt="Sarah M." />
+                      </div>
+                      <div class="author-info">
+                        <h4>Sarah M.</h4>
+                        <span>Mother of 2</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="review-card">
+                    <div class="review-content">
+                      <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                      </div>
+                      <p>"Saved me a trip to the ER! Quick diagnosis and prescription delivered to my door. Highly recommend!"</p>
+                    </div>
+                    <div class="review-author">
+                      <div class="author-avatar">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face" alt="Michael R." />
+                      </div>
+                      <div class="author-info">
+                        <h4>Michael R.</h4>
+                        <span>Business Executive</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="review-card">
+                    <div class="review-content">
+                      <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                      </div>
+                      <p>"Perfect for busy parents. No waiting rooms, no exposure to other illnesses. Just quality healthcare!"</p>
+                    </div>
+                    <div class="review-author">
+                      <div class="author-avatar">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" alt="Emily C." />
+                      </div>
+                      <div class="author-info">
+                        <h4>Emily C.</h4>
+                        <span>Working Mom</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </transition>
       </section>
       </div> <!-- Close main-content -->
       
@@ -678,7 +756,7 @@ export default {
       subtitleInterval: null,
   showSmartDoctorSection: false,
   showLearnMore: false,
-      showTestimonials: false,
+  showDoctorTestimonials: true, // true = show doctors, false = show patients
       showSuggestions: false,
       currentSpecialty: 'All',
       currentSuggestionCategory: 'top-rated',
@@ -993,6 +1071,10 @@ export default {
     }
   },
   mounted() {
+    // Auto swap testimonials every 7 seconds
+    this.testimonialInterval = setInterval(() => {
+      this.showDoctorTestimonials = !this.showDoctorTestimonials;
+    }, 7000);
     // Start stat animations when component mounts
     setTimeout(() => {
       this.animateStats();
@@ -1009,6 +1091,7 @@ export default {
     }, 3200);
   },
   beforeUnmount() {
+  if (this.testimonialInterval) clearInterval(this.testimonialInterval);
     if (this.heroPhraseInterval) clearInterval(this.heroPhraseInterval);
     if (this.subtitleInterval) clearInterval(this.subtitleInterval);
   },
