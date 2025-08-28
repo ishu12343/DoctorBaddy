@@ -7,15 +7,22 @@
         <section v-if="!showSmartDoctorSection" class="masthead">
           <div class="masthead__content">
             <div class="masthead__text">
-              <h1 class="animated-title">
+              <h1 class="animated-title dynamic-hero-title">
                 <span class="highlight">Online doctor visits,</span>
-                <span class="typing-text">24/7</span>
+                <transition-group name="swap-fade" tag="span">
+                  <span :key="currentHeroPhrase" class="swap-phrase">{{ currentHeroPhrase }}</span>
+                </transition-group>
               </h1>
-              <p>We are offer you caring, expert medical advice whenever you need it, 
-                from the comfort of your home. Connect easily with trusted doctors for health concerns like fever,
-                skin issues, stress, and more. Enjoy private video consultations, quick prescriptions, and gentle guidance.
-                  We’re here to support your well-being day or night. For emergencies, 
-                  please call 101 or visit your nearest hospital right away. Your health matters to us!</p>
+              <div class="masthead-subtitle stylish-paragraph">
+                <span class="fade-in-text">
+                  <span class="subtitle-main">Your health, <span class="subtitle-highlight">your way.</span></span>
+                  <span class="subtitle-animated">
+                    <transition-group name="swap-fade" tag="span">
+                      <span :key="currentSubtitle" class="subtitle-swap">{{ currentSubtitle }}</span>
+                    </transition-group>
+                  </span>
+                </span>
+              </div>
               <div class="cta-buttons">
                 <button @click="scrollToServices" class="btn btn--secondary btn--large">
                   <i class="fas fa-info-circle"></i>
@@ -669,7 +676,28 @@ export default {
   },
   data() {
     return {
-  showSmartDoctorSection: false,
+      heroPhrases: [
+        '24/7',
+        'Instant Care',
+        'Expert Advice',
+        'Video Consults',
+        'From Anywhere',
+        'No Waiting Rooms'
+      ],
+      currentHeroPhrase: '24/7',
+      heroPhraseIndex: 0,
+      heroPhraseInterval: null,
+      subtitlePhrases: [
+        'Caring, expert medical advice whenever you need it, from the comfort of your home.',
+        'Connect instantly with trusted doctors for any health concern.',
+        'Private video consultations, quick e-prescriptions, and gentle guidance.',
+        'Support for your well-being, day or night—no waiting rooms.',
+        'For emergencies, call 101 or visit your nearest hospital. Your health matters!'
+      ],
+      currentSubtitle: 'Caring, expert medical advice whenever you need it, from the comfort of your home.',
+      subtitleIndex: 0,
+      subtitleInterval: null,
+      showSmartDoctorSection: false,
       showTestimonials: false,
       showSuggestions: false,
       currentSpecialty: 'All',
@@ -985,6 +1013,20 @@ export default {
     setTimeout(() => {
       this.animateStats();
     }, 500);
+    // Start hero phrase swap animation
+    this.heroPhraseInterval = setInterval(() => {
+      this.heroPhraseIndex = (this.heroPhraseIndex + 1) % this.heroPhrases.length;
+      this.currentHeroPhrase = this.heroPhrases[this.heroPhraseIndex];
+    }, 2200);
+    // Start subtitle swap animation
+    this.subtitleInterval = setInterval(() => {
+      this.subtitleIndex = (this.subtitleIndex + 1) % this.subtitlePhrases.length;
+      this.currentSubtitle = this.subtitlePhrases[this.subtitleIndex];
+    }, 3200);
+  },
+  beforeUnmount() {
+    if (this.heroPhraseInterval) clearInterval(this.heroPhraseInterval);
+    if (this.subtitleInterval) clearInterval(this.subtitleInterval);
   },
   emits: [],
   computed: {
@@ -1283,7 +1325,7 @@ export default {
 }
 
 .masthead__text {
-  margin-top: -12rem;
+  /* margin-top: -12rem; */
   flex: 1;
   animation: slideInLeft 1s ease-out;
   position: relative;
@@ -1302,28 +1344,143 @@ export default {
   animation: slideInLeft 1.5s ease-out 0.5s both;
 }
 
-.animated-title {
-  font-size: 3.5rem;
+.animated-title.dynamic-hero-title {
+  font-size: 3.2rem;
   margin-bottom: 2rem;
   color: #fff;
   line-height: 1.2;
   font-weight: 700;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  max-width: 600px;
+  white-space: normal;
+  word-break: break-word;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
 
-.highlight {
+.animated-title .highlight {
   display: block;
   background: linear-gradient(45deg, #ff6b6b, #feca57);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: #fff;
 }
 
-.typing-text {
+.swap-phrase {
   display: inline-block;
-  border-right: 2px solid #fff;
-  animation: typing 2s steps(4) 1s both, pulse 1s infinite;
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-left: 0.5rem;
+  min-width: 120px;
+  transition: color 0.3s;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+@media (max-width: 900px) {
+  .animated-title.dynamic-hero-title {
+    font-size: 2.1rem;
+  }
+  .swap-phrase {
+    font-size: 1.3rem;
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 600px) {
+  .animated-title.dynamic-hero-title {
+    font-size: 1.3rem;
+    max-width: 95vw;
+  }
+  .swap-phrase {
+    font-size: 1rem;
+    min-width: 60px;
+  }
+}
+
+/* Swap animation */
+.swap-fade-enter-active, .swap-fade-leave-active {
+  transition: opacity 0.5s, transform 0.5s;
+}
+.swap-fade-enter-from, .swap-fade-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.swap-fade-enter-to, .swap-fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.masthead-subtitle.stylish-paragraph {
+  position: relative;
+  background: rgba(255,255,255,0.07);
+  border-radius: 18px;
+  padding: 1.1rem 2rem 1.1rem 1.5rem;
+  margin-bottom: 1.7rem;
+  box-shadow: 0 4px 24px 0 rgba(102,126,234,0.10);
+  overflow: hidden;
+  min-height: 3.2em;
+  display: flex;
+  align-items: center;
+  border-left: 5px solid #feca57;
+  animation: fadeInUp 1s;
+}
+.subtitle-main {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-right: 1.1rem;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.13);
+}
+.subtitle-highlight {
+  background: linear-gradient(45deg, #feca57, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.subtitle-animated {
+  display: inline-block;
+  min-width: 180px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+.subtitle-swap {
+  color: #fff;
+  font-size: 1.08rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  animation: fadeInUp 0.7s;
+}
+@media (max-width: 900px) {
+  .masthead-subtitle.stylish-paragraph {
+    font-size: 1rem;
+    padding: 0.8rem 1.1rem 0.8rem 1rem;
+  }
+  .subtitle-main {
+    font-size: 1.05rem;
+  }
+  .subtitle-animated {
+    min-width: 100px;
+  }
+}
+@media (max-width: 600px) {
+  .masthead-subtitle.stylish-paragraph {
+    font-size: 0.95rem;
+    padding: 0.7rem 0.7rem 0.7rem 0.7rem;
+    min-height: 2.2em;
+  }
+  .subtitle-main {
+    font-size: 0.95rem;
+  }
+  .subtitle-animated {
+    min-width: 60px;
+  }
 }
 
 .fade-in-text {
