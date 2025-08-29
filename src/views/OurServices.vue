@@ -2,63 +2,93 @@
   <div class="our-services-root">
     <AppHeader @login="goToLogin" />
     <div class="our-services-content">
-      <div class="services-page">
-        <!-- <h1>Our Services</h1> -->
-        <div class="services-list">
-          <div class="service-box appointment">
-            <div class="service-content">
-              <span class="service-icon appointment">
-                <i class="fas fa-user-md"></i>
-              </span>
-              <strong>Book Doctor Appointments:</strong>
-              <div>Easily find and book appointments with doctors and specialists near you.</div>
+      <!-- Animated Hero Section -->
+      <div class="services-hero">
+        <div class="hero-content" data-aos="fade-right">
+          <h1>Premium <span class="highlight">Healthcare</span> Services</h1>
+          <p class="subtitle">Experience healthcare reimagined with our comprehensive digital solutions</p>
+          <div class="hero-stats">
+            <div class="stat" v-for="(stat, index) in stats" :key="index">
+              <span class="stat-number">{{ stat.number }}+</span>
+              <span class="stat-label">{{ stat.label }}</span>
             </div>
-            <span class="service-img-right">
-              <img src="@/assets/images/10.webp" alt="Service" />
-            </span>
-          </div>
-          <div class="service-box online">
-            <div class="service-content">
-              <span class="service-icon online">
-                <i class="fa-solid fa-user-doctor-message"></i>
-              </span>
-              <strong>Online Doctor Visits (24/7):</strong>
-              <div>See a doctor or therapist from home, using your phone, tablet, or computer—anytime, day or night.</div>
-            </div>
-            <span class="service-img-right">
-              <img src="@/assets/images/10.webp" alt="Service" />
-            </span>
-          </div>
-          <div class="service-box medicine">
-            <div class="service-content">
-              <span class="service-icon medicine">
-                <i class="fa-solid fa-pills"></i>
-              </span>
-              <strong>Buy Medicine:</strong>
-              <div>Order prescribed medicines online and get them delivered to your doorstep.</div>
-            </div>
-            <span class="service-img-right">
-              <img src="@/assets/images/10.webp" alt="Service" />
-            </span>
-          </div>
-          <div class="service-box insurance">
-            <div class="service-content">
-              <span class="service-icon insurance">
-                <i class="fa-solid fa-file-medical"></i>
-              </span>
-              <strong>Insurance Coverage:</strong>
-              <div>Choose insurance plans accepted by doctors, and check coverage before booking.</div>
-            </div>
-            <span class="service-img-right">
-              <img src="@/assets/images/10.webp" alt="Service" />
-            </span>
-          </div>
-          <div class="emergency-note">
-            <strong>If you’re having a medical emergency, call 101 immediately.</strong>
+            <button class="see-more-btn" @click="seeMoreStats">See More</button>
           </div>
         </div>
-        <!-- Add more detailed content about services here -->
+        <div class="hero-animation" data-aos="fade-left">
+          <img src="https://media.giphy.com/media/3oKIPEqDGUULpEU0aQ/giphy.gif" alt="Doctor and Healthcare" />
+        </div>
       </div>
+      
+      <div class="services-page" ref="servicesSection">
+        <div v-if="showServices">
+          <div class="section-header" data-aos="fade-up">
+            <h2>Our Comprehensive Services</h2>
+            <p>Designed to provide seamless healthcare experiences for everyone</p>
+          </div>
+          <div class="modern-services-grid">
+            <div 
+              v-for="(service, index) in services" 
+              :key="index"
+              class="modern-service-block"
+              :class="service.class"
+              data-aos="fade-up"
+              :data-aos-delay="index * 100"
+              @mouseenter="activeService = index"
+            >
+              <div class="service-icon" :class="{'active': activeService === index}">
+                <img :src="service.icon" :alt="service.title + ' icon'" style="width:48px;height:48px;object-fit:contain;" />
+              </div>
+              <h3>{{ service.title }}</h3>
+              <ul>
+                <li v-for="(feature, i) in service.features" :key="i">
+                  <i class="fas fa-check"></i> {{ feature }}
+                </li>
+              </ul>
+              <div class="service-animation" v-if="activeService === index">
+                <img :src="service.animation" :alt="service.title + ' animation'" />
+              </div>
+              <button class="service-cta" @click="navigateTo(service.ctaLink)">
+                {{ service.ctaText }}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left:8px;vertical-align:middle;">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emergency Banner -->
+      <div class="emergency-banner" data-aos="fade-up" data-aos-delay="200">
+        <div class="banner-content">
+          <div class="pulse-icon">
+            <img src="@/assets/icons/medicine.svg" alt="Medicine Icon" style="width:32px;height:32px;object-fit:contain;filter:invert(1);" />
+          </div>
+          <div class="banner-text">
+            <h3>24/7 Emergency Support</h3>
+            <p>Immediate assistance when you need it most</p>
+          </div>
+          <button class="emergency-btn" @click="callEmergency">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:6px;vertical-align:middle;">
+              <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1v3.5a1 1 0 01-1 1C10.07 22 2 13.93 2 4.5A1 1 0 013 3.5H6.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Call 101
+          </button>
+        </div>
+      </div>
+
+      <!-- Back to Top Button -->
+      <button 
+        class="back-to-top" 
+        @click="scrollToTop"
+        :class="{ 'visible': showBackToTop }"
+        aria-label="Back to top"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
     <AppFooter />
   </div>
@@ -67,43 +97,904 @@
 <script>
 import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 export default {
   name: 'OurServices',
   components: {
     AppHeader,
     AppFooter
   },
-   methods: {
+  data() {
+    return {
+  activeService: 0,
+  showBackToTop: false,
+  showServices: false,
+  stats: [
+        { number: '500', label: 'Expert Doctors' },
+        { number: '10K', label: 'Happy Patients' },
+        { number: '24/7', label: 'Support' },
+        { number: '50+', label: 'Specialties' }
+      ],
+      services: [
+        {
+          class: 'patient',
+          icon: require('@/assets/icons/medicine.svg'),
+          title: 'Patient Services',
+          features: [
+            'Book in-clinic & online consultations',
+            'Verified doctors directory',
+            'Digital health records',
+            'Appointment reminders'
+          ],
+          ctaText: 'Book Appointment',
+          ctaLink: '/book-appointment',
+          animation: require('@/assets/images/10.webp')
+        },
+        {
+          class: 'doctor',
+          icon: require('@/assets/icons/visiting.svg'),
+          title: 'Doctor Services',
+          features: [
+            'Profile management',
+            'Appointment scheduling',
+            'Video consultations',
+            'Earnings dashboard'
+          ],
+          ctaText: 'Join as Doctor',
+          ctaLink: '/doctor-signup',
+          animation: require('@/assets/icons/Prescriptions.svg')
+        },
+        {
+          class: 'common',
+          icon: require('@/assets/icons/Always Available.svg'),
+          title: 'Common Services',
+          features: [
+            'Secure payments',
+            '24/7 support',
+            'Mobile access',
+            'Trusted platform'
+          ],
+          ctaText: 'Learn More',
+          ctaLink: '/services',
+          animation: require('@/assets/images/Footer1.svg')
+        }
+      ]
+    }
+  },
+  mounted() {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true,
+      mirror: false
+    });
+    
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  methods: {
+    handleScroll() {
+      this.showBackToTop = window.scrollY > 500;
+    },
+    
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
+    
+    callEmergency() {
+      window.location.href = 'tel:101';
+    },
+    
+    navigateTo(route) {
+      this.$router.push(route);
+    },
+    
     getListOfAllDoctors() {
-
+      // Implementation here
     },
-    getStarted() {
-      // Logic for Get Started button
-      // e.g., navigate to registration or doctor search
-    },
-    learnMore() {
-      // Logic for Learn More button
-      // e.g., show modal or navigate to info page
-    },
-    findSpecialist() {
-      // Logic to suggest specialist based on searchIssue
-      // e.g., call API or match keywords
-    },
-    searchDoctors() {
-      // Logic to search doctors by name, condition, location
-      // e.g., call API or filter list
+    learnMore(service) {
+      // Smooth scroll to the selected service section
+      const element = document.querySelector(`.service-box.${service}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+      // You can add more specific logic for each service
+      switch(service) {
+        case 'appointment':
+          // Handle appointment specific logic
+          break;
+        case 'online':
+          // Handle online visit logic
+          break;
+        // Add more cases as needed
+      }
     },
     goToLogin() {
       this.$router.push({ name: 'Login' });
-    }
+      },
+
+      seeMoreStats() {
+        this.showServices = true;
+        this.$nextTick(() => {
+          const section = this.$refs.servicesSection;
+          if (section && section.scrollIntoView) {
+            section.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      }
   },
+  beforeUnmount() {
+    AOS.refresh();
+    window.removeEventListener('scroll', this.handleScroll);
+  }
 }
 </script>
 
 <style scoped>
+:root {
+  --primary: #275FD4;
+  --primary-light: #5C9EF0;
+  --secondary: #4CAF50;
+  --accent: #FF9800;
+  --text: #ffffff;
+  --light-bg: #f8f9fa;
+  --white: #ffffff;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.our-services-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--light-bg);
+}
+
+.our-services-content {
+  flex: 1;
+  padding: 2rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.see-more-btn {
+  margin-top: 1.5rem;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(39, 95, 212, 0.08);
+  transition: background 0.2s, transform 0.2s;
+}
+.see-more-btn:hover {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+/* Hero Section */
+.services-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2rem 0 4rem;
+  gap: 3rem;
+}
+
+.hero-content {
+  flex: 1;
+  max-width: 600px;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.hero-content h1 .highlight {
+  color: var(--primary);
+  position: relative;
+  display: inline-block;
+}
+
+.hero-content h1 .highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, var(--primary-light), transparent);
+  z-index: -1;
+  border-radius: 4px;
+}
+
+.hero-content .subtitle {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.hero-animation {
+  flex: 1;
+  max-width: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-animation img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  text-align: center;
+  padding: 1rem;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  min-width: 120px;
+  transition: transform 0.3s ease;
+}
+
+.stat:hover {
+  transform: translateY(-5px);
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Section Header */
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.section-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+.section-header p {
+  color: #ffffff;
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Modern Services Grid */
+.modern-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.modern-service-block {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.modern-service-block:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.service-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: white;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.service-icon::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  border-radius: inherit;
+  opacity: 0.15;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.service-icon.active {
+  transform: rotateY(180deg);
+}
+
+.patient .service-icon {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+}
+
+.doctor .service-icon {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.common .service-icon {
+  background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
+}
+
+.modern-service-block h3 {
+  font-size: 1.5rem;
+  color: var(--text);
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+}
+
+.modern-service-block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.modern-service-block li {
+  margin-bottom: 0.8rem;
+  color: #555;
+  display: flex;
+  align-items: flex-start;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.modern-service-block li i {
+  color: var(--primary);
+  margin-right: 10px;
+  margin-top: 4px;
+  font-size: 0.8rem;
+}
+
+.service-animation {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  opacity: 0.1;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.modern-service-block:hover .service-animation {
+  opacity: 0.2;
+  transform: scale(1.1);
+}
+
+.service-animation img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.service-cta {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.service-cta::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+
+.service-cta:hover {
+  padding-left: 10px;
+}
+
+.service-cta:hover::after {
+  width: 100%;
+}
+
+.service-cta i {
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+
+.service-cta:hover i {
+  transform: translateX(5px);
+}
+
+/* Emergency Banner */
+.emergency-banner {
+  background: linear-gradient(135deg, #ff4b4b 0%, #ff6b6b 100%);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin: 4rem 0;
+  color: white;
+  box-shadow: 0 10px 30px rgba(255, 75, 75, 0.2);
+  overflow: hidden;
+  position: relative;
+}
+
+.emergency-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif') no-repeat;
+  background-size: cover;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.banner-text h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.banner-text p {
+  opacity: 0.9;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.emergency-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.emergency-btn:hover {
+  background: white;
+  color: #ff4b4b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.pulse-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* Back to Top Button */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 5px 20px rgba(39, 95, 212, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: var(--primary-light);
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 25px rgba(39, 95, 212, 0.4);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .banner-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .emergency-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .pulse-icon {
+    margin: 0 auto;
+  }
+  
+  .back-to-top {
+    width: 45px;
+    height: 45px;
+    font-size: 1rem;
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+}
+@media (max-width: 1100px) {
+  .modern-services-grid {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: stretch;
+  }
+  .modern-service-block {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.our-services-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+}
+
+.our-services-content {
+  flex: 1;
+  padding: 2rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.services-intro {
+  text-align: center;
+  margin: 2rem 0 4rem;
+  padding: 0 1rem;
+}
+
+.services-intro h1 {
+  font-size: 2.8rem;
+  color: #275FD4;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #275FD4, #5C9EF0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.services-intro .subtitle {
+  font-size: 1.2rem;
+  color: #ffffff;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.service-box {
+  display: flex;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  min-height: 300px;
+}
+
+.service-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+.service-content {
+  flex: 1;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.service-content h3 {
+  font-size: 1.8rem;
+  margin: 1rem 0;
+  color: #2c3e50;
+}
+
+.service-content p {
+  color: #ffffff;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.service-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.service-icon.appointment { background: #5C9EF0; }
+.service-icon.online { background: #4CAF50; }
+.service-icon.medicine { background: #FF9800; }
+.service-icon.insurance { background: #9C27B0; }
+
+.service-img-right {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  min-height: 300px;
+}
+
+.service-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.service-box:hover .service-gif {
+  transform: scale(1.05);
+}
+
+.learn-more-btn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: #275FD4;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.learn-more-btn:hover {
+  color: #1a4a9e;
+  transform: translateX(5px);
+}
+
+.emergency-note {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+  border-left: 5px solid #f44336;
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  margin: 3rem auto;
+  max-width: 800px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  animation: pulse 2s infinite;
+}
+
+.pulse-icon {
+  background: #f44336;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  animation: bounce 2s infinite;
+}
+
+.emergency-note p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.emergency-note strong {
+  font-weight: 700;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .service-box {
+    flex-direction: column;
+  }
+  
+  .service-img-right {
+    order: -1;
+    min-height: 200px;
+  }
+  
+  .services-intro h1 {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .our-services-content {
+    padding: 1rem;
+  }
+  
+  .services-intro h1 {
+    font-size: 1.8rem;
+  }
+  
+  .service-content {
+    padding: 1.5rem;
+  }
+  
+  .service-content h3 {
+    font-size: 1.5rem;
+  }
+  
+  .emergency-note {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-intro h1 {
+    font-size: 1.6rem;
+  }
+  
+  .service-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+  
+  .emergency-note p {
+    font-size: 1rem;
+  }
+}
 /* Header styles */
 .header {
-  background: #275FD4;
+  /* background: #275FD4; */
   color: #fff;
   padding: 0.5rem 0;
 }
@@ -434,6 +1325,7 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: #764ba2;
 }
 .our-services-content {
   flex: 1 0 auto;

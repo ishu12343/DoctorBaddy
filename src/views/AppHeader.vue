@@ -6,8 +6,14 @@
         DoctorBuddy
       </router-link>
       <nav class="header__nav">
-        <router-link to="/services">Our Services</router-link>
-        <router-link to="/contact">Contact</router-link>
+        <router-link to="/services">
+          <i class="fas fa-stethoscope nav-icon"></i>
+          Our Services
+        </router-link>
+        <router-link to="/contact">
+          <i class="fas fa-envelope-open-text nav-icon"></i>
+          Contact
+        </router-link>
         <div class="dropdown" @mouseleave="hideLoginDropdown">
           <button @mouseenter="showLoginDropdown" class="btn btn--primary btn--small">
             LOG IN
@@ -62,6 +68,16 @@ export default {
 }
 </script>
 <style scoped>
+  .nav-icon {
+    margin-right: 0.5em;
+    font-size: 1.15em;
+    vertical-align: middle;
+    color: #5C9EF0;
+    transition: color 0.2s;
+  }
+  .header__nav a:hover .nav-icon {
+    color: #fff;
+  }
   .header {
     background: #002b5c;
     color: #fff;
