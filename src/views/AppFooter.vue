@@ -25,7 +25,24 @@ export default {
           svg: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a2.994 2.994 0 0 0-2.112-2.112C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.386.574A2.994 2.994 0 0 0 .502 6.186C0 8.072 0 12 0 12s0 3.928.502 5.814a2.994 2.994 0 0 0 2.112 2.112C4.5 20.5 12 20.5 12 20.5s7.5 0 9.386-.574a2.994 2.994 0 0 0 2.112-2.112C24 15.928 24 12 24 12s0-3.928-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`
         }
       ],
-      year: new Date().getFullYear()
+      year: new Date().getFullYear(),
+      showRoleModal: false
+    }
+  },
+  methods: {
+    openRoleModal() {
+      this.showRoleModal = true;
+    },
+    closeRoleModal() {
+      this.showRoleModal = false;
+    },
+    selectRole(role) {
+      this.showRoleModal = false;
+      if (role === 'doctor') {
+        this.$router.push('/doctor-login');
+      } else if (role === 'patient') {
+        this.$router.push('/patient-login');
+      }
     }
   }
 }
@@ -48,13 +65,94 @@ export default {
       <span class="footer-copyright-single">
         &copy; <span>{{ year }}</span> DoctorBuddy
       </span>
-      <router-link to="/patient-signup" class="footer-cta-btn-single stylish-cta pulse-animation">
+      <button class="footer-cta-btn-single stylish-cta pulse-animation" @click="openRoleModal">
         <i class="fas fa-rocket"></i>
         Ready to start your health journey
-      </router-link>
+      </button>
+      <div v-if="showRoleModal" class="role-modal-overlay" @click.self="closeRoleModal">
+        <div class="role-modal">
+          <h3>Select your role</h3>
+          <button class="role-btn doctor-btn" @click="selectRole('doctor')">Doctor</button>
+          <button class="role-btn patient-btn" @click="selectRole('patient')">Patient</button>
+          <button class="close-modal-btn" @click="closeRoleModal">&times;</button>
+        </div>
+      </div>
     </div>
   </footer>
 </template>
+
+<style scoped>
+/* Modal styles */
+.role-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(30,40,90,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.role-modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(44,100,200,0.18);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.role-modal h3 {
+  margin-bottom: 1.2rem;
+  color: #223a5e;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.role-btn {
+  width: 180px;
+  margin: 0.3rem 0;
+  padding: 0.7rem 0;
+  border-radius: 22px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px rgba(44,100,200,0.10);
+}
+.doctor-btn {
+  background: linear-gradient(90deg, #5C9EF0 0%, #3b5998 100%);
+  color: #fff;
+}
+.doctor-btn:hover {
+  background: linear-gradient(90deg, #3b5998 0%, #5C9EF0 100%);
+}
+.patient-btn {
+  background: linear-gradient(90deg, #f0a35c 0%, #f05c7a 100%);
+  color: #fff;
+}
+.patient-btn:hover {
+  background: linear-gradient(90deg, #f05c7a 0%, #f0a35c 100%);
+}
+.close-modal-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.7rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-modal-btn:hover {
+  color: #223a5e;
+}
+</style>
 
 <style scoped>
 

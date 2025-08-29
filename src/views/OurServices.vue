@@ -5,51 +5,32 @@
       <!-- Animated Hero Section -->
       <div class="services-hero">
         <div class="hero-content" data-aos="fade-right">
-          <h1>Premium <span class="highlight">Healthcare</span> Services</h1>
-          <p class="subtitle">Experience healthcare reimagined with our comprehensive digital solutions</p>
-          <div class="hero-stats">
-            <div class="stat" v-for="(stat, index) in stats" :key="index">
-              <span class="stat-number">{{ stat.number }}+</span>
-              <span class="stat-label">{{ stat.label }}</span>
-            </div>
-            <button class="see-more-btn" @click="seeMoreStats">See More</button>
-          </div>
-        </div>
-        <div class="hero-animation" data-aos="fade-left">
-          <img src="https://media.giphy.com/media/3oKIPEqDGUULpEU0aQ/giphy.gif" alt="Doctor and Healthcare" />
-        </div>
-      </div>
-      
-      <div class="services-page" ref="servicesSection">
-        <div v-if="showServices">
           <div class="section-header" data-aos="fade-up">
             <h2>Our Comprehensive Services</h2>
             <p>Designed to provide seamless healthcare experiences for everyone</p>
           </div>
           <div class="modern-services-grid">
-            <div 
-              v-for="(service, index) in services" 
-              :key="index"
+            <div
+              v-if="services.length > 0"
+              :key="activeService"
               class="modern-service-block"
-              :class="service.class"
+              :class="services[activeService].class"
               data-aos="fade-up"
-              :data-aos-delay="index * 100"
-              @mouseenter="activeService = index"
             >
-              <div class="service-icon" :class="{'active': activeService === index}">
-                <img :src="service.icon" :alt="service.title + ' icon'" style="width:48px;height:48px;object-fit:contain;" />
+              <div class="service-icon active">
+                <img :src="services[activeService].icon" :alt="services[activeService].title + ' icon'" style="width:48px;height:48px;object-fit:contain;" />
               </div>
-              <h3>{{ service.title }}</h3>
+              <h3>{{ services[activeService].title }}</h3>
               <ul>
-                <li v-for="(feature, i) in service.features" :key="i">
+                <li v-for="(feature, i) in services[activeService].features" :key="i">
                   <i class="fas fa-check"></i> {{ feature }}
                 </li>
               </ul>
-              <div class="service-animation" v-if="activeService === index">
-                <img :src="service.animation" :alt="service.title + ' animation'" />
+              <div class="service-animation">
+                <img :src="services[activeService].animation" :alt="services[activeService].title + ' animation'" />
               </div>
-              <button class="service-cta" @click="navigateTo(service.ctaLink)">
-                {{ service.ctaText }}
+              <button class="service-cta" @click="navigateTo(services[activeService].ctaLink)">
+                {{ services[activeService].ctaText }}
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left:8px;vertical-align:middle;">
                   <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -57,7 +38,12 @@
             </div>
           </div>
         </div>
+        <div class="hero-animation" data-aos="fade-left">
+          <img src="https://media.giphy.com/media/3oKIPEqDGUULpEU0aQ/giphy.gif" alt="Doctor and Healthcare" />
+        </div>
       </div>
+      
+  <!-- Removed duplicate services grid section -->
 
       <!-- Emergency Banner -->
       <div class="emergency-banner" data-aos="fade-up" data-aos-delay="200">
@@ -184,8 +170,11 @@ export default {
       once: true,
       mirror: false
     });
-    
     window.addEventListener('scroll', this.handleScroll);
+    // Auto-swap carousel for services
+    this.carouselInterval = setInterval(() => {
+      this.activeService = (this.activeService + 1) % this.services.length;
+    }, 3000);
   },
   methods: {
     handleScroll() {
@@ -244,6 +233,9 @@ export default {
   beforeUnmount() {
     AOS.refresh();
     window.removeEventListener('scroll', this.handleScroll);
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
+    }
   }
 }
 </script>
