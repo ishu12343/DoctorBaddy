@@ -143,7 +143,7 @@ export default {
             'Appointment reminders'
           ],
           ctaText: 'Book Appointment',
-          ctaLink: '/book-appointment',
+          ctaLink: '/patient-login',
           animation: require('@/assets/images/10.webp')
         },
         {
@@ -171,7 +171,7 @@ export default {
             'Trusted platform'
           ],
           ctaText: 'Learn More',
-          ctaLink: '/services',
+          ctaLink: '/contact',
           animation: require('@/assets/images/Footer1.svg')
         }
       ]
