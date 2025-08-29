@@ -62,21 +62,38 @@
       <!-- Emergency Banner -->
       <div class="emergency-banner" data-aos="fade-up" data-aos-delay="200">
         <div class="banner-content">
-          <div class="pulse-icon">
-            <img src="@/assets/icons/medicine.svg" alt="Medicine Icon" style="width:32px;height:32px;object-fit:contain;filter:invert(1);" />
-          </div>
-          <div class="banner-text">
-            <h3>24/7 Emergency Support</h3>
-            <p>Immediate assistance when you need it most</p>
-          </div>
-          <button class="emergency-btn" @click="callEmergency">
+                <button class="emergency-btn" @click="callEmergency">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:6px;vertical-align:middle;">
               <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1v3.5a1 1 0 01-1 1C10.07 22 2 13.93 2 4.5A1 1 0 013 3.5H6.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             Call 101
           </button>
+           <!-- Animated Road with Medicine Icon Running to Phone -->
+          <div class="road-animation-container">
+            <svg class="road-svg" viewBox="0 0 1100 80" width="100%" height="80">
+              <!-- Road -->
+              <rect x="0" y="35" width="1100" height="10" rx="5" fill="#444" />
+              <!-- Road dashed line -->
+              <rect x="0" y="39" width="1100" height="2" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="32,18" />
+            </svg>
+            <div class="banner-text" style="flex:1;">
+              <h3>24/7 Emergency Support</h3>
+              <p>Immediate assistance when you need it most</p>
+            </div>
+            <div class="hospital-icon-section" style="justify-content: flex-end; align-items: center; flex:0 0 60px; margin-left: 24px;">
+              <img src="@/assets/icons/hospital-bed.png" alt="Hospital Icon" style="margin-top:10px;width:38px;height:40px;object-fit:contain;" />
+            </div>
+            <img
+              src="@/assets/icons/medicine.svg"
+              alt="Medicine Icon"
+              class="medicine-on-road"
+            />
+          </div>
+         
         </div>
       </div>
+
+     
 
       <!-- Back to Top Button -->
       <button 
@@ -584,6 +601,55 @@ export default {
   position: relative;
 }
 
+.road-animation-container {
+  position: relative;
+  width: 100%;
+  /* max-width: 600px;
+  margin: 0 auto 2.5rem auto; */
+  height: 90px;
+  display: flex;
+  /* align-items: flex-end; */
+  justify-content: flex-start;
+}
+.road-svg {
+  position: absolute;
+  left: 0;
+  top: 19px;
+  /* width: 100%;
+  height: 80px; */
+  z-index: 0;
+}
+.medicine-on-road {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 48px;
+  height: 48px;
+  z-index: 2;
+  animation: medicine-move 3.5s linear infinite;
+  filter: drop-shadow(0 2px 8px #275fd4aa);
+}
+@keyframes medicine-move {
+  0% { left: 0; }
+  90% { left: calc(100% - 70px); }
+  100% { left: 0; }
+}
+.phone-destination {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+}
+.phone-label {
+  color: #275FD4;
+  font-size: 0.95rem;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
 .emergency-banner::before {
   content: '';
   position: absolute;
@@ -600,16 +666,17 @@ export default {
 .banner-content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between;
   position: relative;
   z-index: 1;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 1.5rem; */
+  height: 60px;
 }
 
 .banner-text h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.0rem;
+  margin-bottom: 1.0rem;
   font-weight: 600;
 }
 
