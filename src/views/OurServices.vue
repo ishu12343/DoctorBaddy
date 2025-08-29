@@ -62,12 +62,9 @@
       <!-- Emergency Banner -->
       <div class="emergency-banner" data-aos="fade-up" data-aos-delay="200">
         <div class="banner-content">
-                <button class="emergency-btn" @click="callEmergency">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:6px;vertical-align:middle;">
-              <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1v3.5a1 1 0 01-1 1C10.07 22 2 13.93 2 4.5A1 1 0 013 3.5H6.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Call 101
-          </button>
+          <div class="hospital-icon-section" style="display: flex; justify-content: flex-start; align-items: center; height: 100%;">
+            <img src="@/assets/icons/telephone.gif" alt="Hospital Icon" style="width:38px;height:40px;object-fit:contain;" />
+          </div>
            <!-- Animated Road with Medicine Icon Running to Phone -->
           <div class="road-animation-container">
             <svg class="road-svg" viewBox="0 0 1100 80" width="100%" height="80">
@@ -81,7 +78,7 @@
               <p>Immediate assistance when you need it most</p>
             </div>
             <div class="hospital-icon-section" style="justify-content: flex-end; align-items: center; flex:0 0 60px; margin-left: 24px;">
-              <img src="@/assets/icons/hospital-bed.png" alt="Hospital Icon" style="margin-top:10px;width:38px;height:40px;object-fit:contain;" />
+              <img src="@/assets/icons/clinic.gif" alt="Hospital Icon" style="margin-top:10px;width:38px;height:40px;object-fit:contain;" />
             </div>
             <img
               src="@/assets/icons/medicine.svg"
