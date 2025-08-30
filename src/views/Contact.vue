@@ -191,9 +191,12 @@
                       @click="contactForm.role = 'Doctor'"
                       style="display: flex; align-items: center; gap: 8px;"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        <path d="M16.67 13.13c2.31.53 4.33 1.46 6.33 2.87v-2.5c-1.29-.58-2.61-.96-4-1.15v-1.5c1.32-.24 2.6-.6 3.8-1.05l-1-1.6c-1.49.7-3.14 1.05-4.8 1.05-.14 0-.27 0-.4 0-.24-.31-.5-.6-.78-.88l-1.47-1.47c-1.24-1.24-2.9-1.93-4.65-1.93-1.75 0-3.41.69-4.65 1.93L1.69 4.87 3 6.18l1.48 1.48c-.2.29-.39.59-.56.9-1.3 2.42-1.12 5.28.56 7.44v2.5c1.29-.58 2.61-.96 4-1.15v1.5c-1.32.24-2.6.6-3.8 1.05l1 1.6c1.49-.7 3.14-1.05 4.8-1.05 1.66 0 3.31.35 4.8 1.05l1-1.6c-1.2-.45-2.48-.81-3.8-1.05v-1.5c1.39.19 2.71.57 4 1.15v-2.5c1.24-.55 2.56-.9 3.87-1.1z"/>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/>
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="1"/>
+                        <path d="M12 17v4"/>
+                        <path d="M8 21h8"/>
                       </svg>
                       Doctor
                     </button>
@@ -203,10 +206,11 @@
                       @click="contactForm.role = 'Patient'"
                       style="display: flex; align-items: center; gap: 8px;"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        <path d="M19 8h2v2h-2z"/>
-                        <path d="M3 8h2v2H3z"/>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                       </svg>
                       Patient
                     </button>
@@ -1046,7 +1050,7 @@ export default {
 
 /* Vibrant, glassy, and colorful backgrounds for each tab */
 .contact-pane {
-  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  background: linear-gradient(135deg, #030a14 0%, #072c11 100%);
   border-radius: 22px;
   padding: 2rem 1.5rem;
   box-shadow: 0 8px 32px 0 rgba(168, 237, 234, 0.25);
