@@ -328,8 +328,8 @@
               <div class="chat-messages" ref="chatMessages">
                 <div v-for="(msg, index) in chatMessages" :key="index" :class="['message', msg.sender]">
                   <div class="message-avatar">
-                    <i v-if="msg.sender === 'agent'" class="fas fa-headset"></i>
-                    <i v-else class="fas fa-user"></i>
+                    <svg v-if="msg.sender === 'agent'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-headset"><path d="M4 17v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="17" width="4" height="4" rx="2"/><rect x="18" y="17" width="4" height="4" rx="2"/><path d="M8 21v-4M16 21v-4"/></svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                   </div>
                   <div class="message-content">
                     <div class="message-text">{{ msg.text }}</div>
