@@ -24,16 +24,19 @@
   </div>
 
   <AppFooter class="footer-fixed" />
+  <ChatButton />
 </template>
 
 <script>
 import AppHeader from '@/views/AppHeader.vue';
+import ChatButton from '@/components/ChatButton.vue';
 import AppFooter from '@/views/AppFooter.vue';
 
 export default {
   name: 'LoginPage',
   components: {
     AppHeader,
+    ChatButton,
     AppFooter
   },
   data() {

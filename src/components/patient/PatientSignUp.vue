@@ -143,17 +143,16 @@
     </div>
     <AppFooter />
   </div>
+  <ChatButton />
 </template>
 
 <script>
 import AppHeader from '@/views/AppHeader.vue';
+import ChatButton from '@/components/ChatButton.vue';
 import AppFooter from '@/views/AppFooter.vue';
 export default {
   name: 'PatientSignUp',
-  components: {
-    AppHeader,
-    AppFooter
-  },
+  components: { AppHeader, ChatButton, AppFooter },
   data() {
     return {
       isLoading: false,

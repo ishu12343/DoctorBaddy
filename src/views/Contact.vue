@@ -371,18 +371,17 @@
       </div>
     </div>
     <AppFooter />
+    <ChatButton />
   </div>
 </template>
 <script>
 import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
+import ChatButton from '@/components/ChatButton.vue';
 
 export default {
   name: 'ContactPage',
-  components: {
-    AppHeader,
-    AppFooter
-  },
+  components: { AppHeader, AppFooter, ChatButton },
   data() {
     return {
       activeTab: 0,

@@ -720,23 +720,17 @@
   </div> <!-- Close layout-container -->
   <AppFooter />
   
-  <!-- Floating Chat Button -->
-  <div 
-    class="floating-chat-btn"
-    @click="openChat"
-  >
-    <i class="fas fa-comments"></i>
-    <span class="pulse-animation"></span>
-  </div>
+  <ChatButton />
 </template>
 
 <script>
 import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
+import ChatButton from '@/components/ChatButton.vue';
 
 export default {
   name: 'DoctorHome',
-  components: { AppHeader, AppFooter },
+  components: { AppHeader, AppFooter, ChatButton },
   props: {
     msg: String
   },

@@ -88,11 +88,13 @@
       </button>
     </div>
     <AppFooter />
+    <ChatButton />
   </div>
 </template>
 
 <script>
 import AppHeader from '@/views/AppHeader.vue';
+import ChatButton from '@/components/ChatButton.vue';
 import AppFooter from '@/views/AppFooter.vue';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -101,6 +103,7 @@ export default {
   name: 'OurServices',
   components: {
     AppHeader,
+    ChatButton,
     AppFooter
   },
   data() {
