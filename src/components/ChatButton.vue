@@ -28,8 +28,8 @@
       </div>
     </transition>
     
-    <button class="floating-chat-btn" @click="toggleChat" :class="{ 'active': isOpen }">
-      <i v-if="!isOpen" class="fas fa-comment-dots"></i>
+    <button class="floating-chat-btn" @click="toggleChat" :class="{ 'active': isOpen }" :title="isOpen ? 'Close Chat' : 'Chat with Health Assistant'">
+      <i v-if="!isOpen" class="fas fa-stethoscope"></i>
       <i v-else class="fas fa-times"></i>
     </button>
   </div>
@@ -146,13 +146,23 @@ export default {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 1000;
+  max-width: 400px;
+  width: auto;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
 }
 
 /* Chat Window */
 .chat-window {
   width: 350px;
+  max-width: 90vw;
   height: 500px;
+  max-height: 80vh;
   background: white;
   border-radius: 10px;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
@@ -303,9 +313,10 @@ export default {
 
 /* Floating Chat Button */
 .floating-chat-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  margin: 0;
   width: 60px;
   height: 60px;
   border-radius: 50%;
