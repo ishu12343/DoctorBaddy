@@ -5,10 +5,7 @@
       <!-- Animated Hero Section -->
       <div class="services-hero">
         <div class="hero-content" data-aos="fade-right">
-          <div class="section-header" data-aos="fade-up">
-            <h2>Our Comprehensive Services</h2>
-            <p>Designed to provide seamless healthcare experiences for everyone</p>
-          </div>
+        
           <div class="modern-services-grid">
             <div
               v-if="services.length > 0"
@@ -290,7 +287,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 2rem 0 4rem;
+  margin: 3rem 0 2rem;
   gap: 3rem;
 }
 
@@ -420,10 +417,10 @@ export default {
 
 /* Modern Services Grid */
 .modern-services-grid {
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  margin: 3rem 0;
+  margin: 3rem 0; */
 }
 
 .modern-service-block {
@@ -583,7 +580,7 @@ export default {
   background: linear-gradient(135deg, #ff4b4b 0%, #ff6b6b 100%);
   border-radius: 16px;
   padding: 1.5rem 2rem;
-  margin: 4rem 0;
+  /* margin: 4rem 0; */
   color: white;
   box-shadow: 0 10px 30px rgba(255, 75, 75, 0.2);
   overflow: hidden;
