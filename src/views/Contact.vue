@@ -30,9 +30,11 @@
               <div class="contact-card doctor-card">
                 <div class="contact-card-header">
                   <div class="icon-circle" style="background-color: #e3f2fd; color: #1976d2;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                    </svg>
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 5.5c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5S9.5 9.38 9.5 8s1.12-2.5 2.5-2.5z"/>
+                      <path d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3.5 10.5h-7c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h7c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"/>
+                    </svg> -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72zM380 384.8C374.6 384.3 369 384 363.4 384L276.5 384C270.9 384 265.4 384.3 259.9 384.8L259.9 452.3C276.4 459.9 287.9 476.6 287.9 495.9C287.9 522.4 266.4 543.9 239.9 543.9C213.4 543.9 191.9 522.4 191.9 495.9C191.9 476.5 203.4 459.8 219.9 452.3L219.9 393.9C157 417 112 477.6 112 548.6C112 563.7 124.3 576 139.4 576L500.5 576C515.6 576 527.9 563.7 527.9 548.6C527.9 477.6 482.9 417.1 419.9 394L419.9 431.4C443.2 439.6 459.9 461.9 459.9 488L459.9 520C459.9 531 450.9 540 439.9 540C428.9 540 419.9 531 419.9 520L419.9 488C419.9 477 410.9 468 399.9 468C388.9 468 379.9 477 379.9 488L379.9 520C379.9 531 370.9 540 359.9 540C348.9 540 339.9 531 339.9 520L339.9 488C339.9 461.9 356.6 439.7 379.9 431.4L379.9 384.8z"/></svg>
                     <div class="icon-badge" style="background-color: #4caf50; color: white;">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
@@ -102,12 +104,11 @@
               <div class="contact-card patient-card">
                 <div class="contact-card-header">
                   <div class="icon-circle" style="background-color: #fce4ec; color: #c2185b;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                    </svg>
+                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M531.2 41.6L572 96L616 96C629.3 96 640 106.7 640 120C640 133.3 629.3 144 616 144L560 144C552.4 144 545.3 140.4 540.8 134.4L516.7 102.3L469.7 202.2C466 210 458.4 215.3 449.8 215.9C441.2 216.5 432.9 212.5 428.1 205.3L387.2 144L344 144C330.7 144 320 133.3 320 120C320 106.7 330.7 96 344 96L400 96C408 96 415.5 100 420 106.7L444.4 143.3L490.3 45.8C493.9 38.2 501.2 33 509.6 32.1C518 31.2 526.2 34.8 531.2 41.6zM320 224C320 206.3 334.3 192 352 192L361.5 192L388.1 231.9C402.5 253.5 427.4 265.7 453.3 263.8C479.2 261.9 502.1 246.2 513.1 222.7L527 193.2C572.9 200.4 608 240.1 608 288L608 512C608 529.7 593.7 544 576 544C558.3 544 544 529.7 544 512L544 448L96 448L96 512C96 529.7 81.7 544 64 544C46.3 544 32 529.7 32 512L32 128C32 110.3 46.3 96 64 96C81.7 96 96 110.3 96 128L96 352L320 352L320 224zM144 256C144 220.7 172.7 192 208 192C243.3 192 272 220.7 272 256C272 291.3 243.3 320 208 320C172.7 320 144 291.3 144 256z"/></svg>
                     <div class="icon-badge" style="background-color: #f44336; color: white;">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                        <path d="M11 7h2v6h-2zm0 8h2v2h-2z"/>
                       </svg>
                     </div>
                   </div>
@@ -315,45 +316,6 @@
 
           <!-- Live Chat Tab -->
           <div v-else class="tab-pane chat-pane">
-/* Distinct backgrounds for each tab and card */
-
-/* Vibrant, glassy, and colorful backgrounds for each tab */
-.contact-pane {
-  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-  border-radius: 22px;
-  padding: 2rem 1.5rem;
-  box-shadow: 0 8px 32px 0 rgba(168, 237, 234, 0.25);
-  backdrop-filter: blur(8px);
-  border: 1.5px solid rgba(255,255,255,0.25);
-}
-.faqs-pane {
-  background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
-  border-radius: 22px;
-  padding: 2rem 1.5rem;
-  box-shadow: 0 8px 32px 0 rgba(251, 194, 235, 0.18);
-  backdrop-filter: blur(8px);
-  border: 1.5px solid rgba(255,255,255,0.25);
-}
-.chat-pane {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  border-radius: 22px;
-  padding: 2rem 1.5rem;
-  box-shadow: 0 8px 32px 0 rgba(195, 207, 226, 0.18);
-  backdrop-filter: blur(8px);
-  border: 1.5px solid rgba(255,255,255,0.25);
-}
-.doctor-card {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
-  box-shadow: 0 4px 24px 0 rgba(67, 233, 123, 0.15);
-  border: 1.5px solid rgba(67, 233, 123, 0.15);
-  backdrop-filter: blur(6px);
-}
-.patient-card {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
-  box-shadow: 0 4px 24px 0 rgba(250, 112, 154, 0.15);
-  border: 1.5px solid rgba(250, 112, 154, 0.15);
-  backdrop-filter: blur(6px);
-}
             <div class="chat-container">
               <div class="chat-header">
                 <div class="agent-status">
@@ -364,13 +326,14 @@
               </div>
               
               <div class="chat-messages" ref="chatMessages">
-                <div class="message agent">
+                <div v-for="(msg, index) in chatMessages" :key="index" :class="['message', msg.sender]">
                   <div class="message-avatar">
-                    <i class="fas fa-headset"></i>
+                    <i v-if="msg.sender === 'agent'" class="fas fa-headset"></i>
+                    <i v-else class="fas fa-user"></i>
                   </div>
                   <div class="message-content">
-                    <div class="message-text">Hello! How can we help you today?</div>
-                    <div class="message-time">Just now</div>
+                    <div class="message-text">{{ msg.text }}</div>
+                    <div class="message-time">{{ msg.time }}</div>
                   </div>
                 </div>
               </div>
@@ -378,12 +341,13 @@
               <div class="chat-input">
                 <input 
                   v-model="chatMessage" 
-                  type="text" 
-                  placeholder="Type your message..."
                   @keyup.enter="sendChatMessage"
-                >
-                <button @click="sendChatMessage">
-                  <i class="fas fa-paper-plane"></i>
+                  type="text" 
+                  placeholder="Type your message here..." 
+                  class="chat-message-input"
+                />
+                <button @click="sendChatMessage" class="chat-send-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 </button>
               </div>
             </div>
@@ -892,6 +856,211 @@ export default {
 .icon-wrapper.whatsapp {
   background: rgba(37, 211, 102, 0.1);
   color: #25D366;
+}
+
+/* Chat Interface Styles */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 16px;
+  background: linear-gradient(135deg, #4a6cf7 0%, #2541b2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.agent-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #4ade80;
+}
+
+.status-dot.online {
+  background-color: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+}
+
+.status-text {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.message {
+  display: flex;
+  max-width: 80%;
+  gap: 12px;
+}
+
+.message.agent {
+  align-self: flex-start;
+}
+
+.message.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4a6cf7 0%, #2541b2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.message.user .message-avatar {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: calc(100% - 48px);
+}
+
+.message-text {
+  padding: 10px 16px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.agent .message-text {
+  background: white;
+  border-top-left-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.user .message-text {
+  background: #4a6cf7;
+  color: white;
+  border-top-right-radius: 4px;
+}
+
+.message-time {
+  font-size: 11px;
+  color: #6b7280;
+  padding: 0 4px;
+}
+
+.user .message-time {
+  text-align: right;
+}
+
+.chat-input {
+  display: flex;
+  padding: 16px;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  gap: 8px;
+}
+
+.chat-message-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-message-input:focus {
+  border-color: #4a6cf7;
+  box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.2);
+}
+
+.chat-send-btn {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4a6cf7 0%, #2541b2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chat-send-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 108, 247, 0.3);
+}
+
+/* Scrollbar styling */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Distinct backgrounds for each tab and card */
+
+/* Vibrant, glassy, and colorful backgrounds for each tab */
+.contact-pane {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  border-radius: 22px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(168, 237, 234, 0.25);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255,255,255,0.25);
+}
+
+.chat-pane {
+  background: linear-gradient(135deg, #030a14 0%, #072c11 100%);
+  border-radius: 22px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(195, 207, 226, 0.18);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255,255,255,0.25);
 }
 
 /* Hover Effects */
