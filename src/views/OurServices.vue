@@ -140,7 +140,7 @@ export default {
             'Earnings dashboard'
           ],
           ctaText: 'Join as Doctor',
-          ctaLink: '/doctor-signup',
+          ctaLink: '/doctor-login',
           animation: require('@/assets/icons/Prescriptions.svg')
         },
         {

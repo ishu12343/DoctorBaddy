@@ -591,7 +591,7 @@ export default {
 
 .contact-content {
   flex: 1 0 auto;
-  padding: 3rem 1rem;
+  padding: 0.5rem 1rem;
   position: relative;
   z-index: 1;
 }
@@ -631,8 +631,7 @@ export default {
 .contact-subtitle {
   text-align: center;
   color: var(--text-light);
-  margin-bottom: 2.5rem;
-  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
 }
 
 /* Contact Cards */
@@ -1687,7 +1686,6 @@ textarea.form-control {
 .tabs {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 2rem;
   border-bottom: 1px solid var(--border);
   padding-bottom: 1rem;
   flex-wrap: wrap;
