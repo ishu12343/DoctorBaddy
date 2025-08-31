@@ -48,16 +48,22 @@
               <div class="hero-visual-container">
                 <div class="top-doctors-showcase">
                   <div class="showcase-header">
-                    <h3>Top Rated Doctors</h3>
-                    <div class="header-actions">
-                      <span class="live-badge">
-                        <i class="fas fa-circle"></i>
-                        Live Now
-                      </span>
-                      <button @click="showSmartDoctorSection = true" class="btn btn--primary btn--compact pulse-animation">
-                        <i class="fas fa-video"></i>
-                        See a doctor now
-                      </button>
+                    <div class="showcase-header-row">
+                      <h3 class="showcase-title">Top Rated Doctors</h3>
+                      <div class="header-actions">
+                        <span class="live-badge">
+                          <i class="fas fa-circle"></i>
+                          Live Now
+                        </span>
+                        <button @click="showSmartDoctorSection = true" class="unique-doctor-btn">
+                          <span class="btn-inner">
+                            <span class="btn-icon">
+                              <i class="fas fa-stethoscope"></i>
+                            </span>
+                            <span class="btn-text">Find Your Specialist <i class="fas fa-arrow-right btn-arrow-icon"></i></span>
+                          </span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div class="doctors-carousel">
@@ -556,7 +562,7 @@
                 <span class="cta-button__icon">
                   <i class="fas fa-stethoscope"></i>
                 </span>
-                <span class="cta-button__text">Start Free Consultation</span>
+                <span class="cta-button__text">Start with your health Consultation</span>
                 <span class="cta-button__arrow">→</span>
               </router-link>
               <div class="guarantee">
@@ -1138,6 +1144,204 @@ export default {
 </script>
 
 <style scoped>
+/* Showcase Header Styles */
+.showcase-header {
+  margin-bottom: 1.25rem;
+  width: 100%;
+}
+
+.showcase-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+}
+
+.showcase-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+  padding: 0.35rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.live-badge i {
+  color: #ef4444;
+  font-size: 0.5rem;
+  animation: pulse 1.5s infinite;
+  margin-bottom: 0.1rem;
+}
+
+/* Unique Doctor Button Styles */
+.unique-doctor-btn {
+  --primary-color: #4f46e5;
+  --secondary-color: #7c3aed;
+  --accent-color: #00ff95;
+  position: relative;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  outline-offset: 3px;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 12px rgba(79, 70, 229, 0.2);
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.unique-doctor-btn:hover {
+  transform: translateY(-2px);
+}
+
+.unique-doctor-btn:active {
+  transform: translateY(0);
+}
+
+.unique-doctor-btn .btn-inner {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 100%;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  position: relative;
+  z-index: 2;
+  transition: all 0.2s ease;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.unique-doctor-btn:hover .btn-inner {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.unique-doctor-btn .btn-icon {
+  margin-right: 8px;
+  font-size: 1rem;
+  color: var(--accent-color);
+  transition: transform 0.2s ease;
+  text-shadow: 0 0 6px rgba(0, 255, 149, 0.5);
+}
+
+.unique-doctor-btn:hover .btn-icon {
+  transform: rotate(-10deg) scale(1.1);
+  animation: pulse 1.5s infinite;
+}
+
+.unique-doctor-btn .btn-text {
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.unique-doctor-btn .btn-arrow-icon {
+  font-size: 0.8em;
+  transition: transform 0.2s ease;
+  margin-left: 2px;
+}
+
+.unique-doctor-btn:hover .btn-arrow-icon {
+  transform: translateX(3px);
+}
+
+.unique-doctor-btn .btn-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.unique-doctor-btn .btn-particles::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.unique-doctor-btn:hover .btn-particles::before {
+  opacity: 0.3;
+  transform: scale(1);
+  animation: particles 6s linear infinite;
+}
+
+@keyframes particles {
+  0% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .unique-doctor-btn .btn-text {
+    display: none;
+  }
+  
+  .unique-doctor-btn .btn-icon {
+    margin-right: 0;
+    font-size: 1rem;
+  }
+  
+  .unique-doctor-btn .btn-inner {
+    padding: 0 12px;
+    width: 38px;
+    justify-content: center;
+  }
+  
+  .unique-doctor-btn {
+    height: 36px;
+  }
+  
+  .showcase-title {
+    font-size: 1.1rem;
+  }
+  
+  .live-badge {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+  }
+}
+
 /* Floating Chat Button Styles */
 .floating-chat-btn {
   position: fixed;
