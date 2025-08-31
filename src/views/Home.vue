@@ -552,10 +552,13 @@
             <div class="cta-content">
               <h3>Ready to experience better healthcare?</h3>
               <p>Join thousands of satisfied patients who chose convenience without compromising quality.</p>
-              <button @click="showTestimonials = true" class="btn btn--primary btn--large">
-                <i class="fas fa-play-circle"></i>
-                Start Free Consultation
-              </button>
+              <router-link to="/patient-login" class="cta-button">
+                <span class="cta-button__icon">
+                  <i class="fas fa-stethoscope"></i>
+                </span>
+                <span class="cta-button__text">Start Free Consultation</span>
+                <span class="cta-button__arrow">→</span>
+              </router-link>
               <div class="guarantee">
                 <i class="fas fa-shield-check"></i>
                 <span>30-day money-back guarantee</span>
@@ -2563,29 +2566,68 @@ export default {
   color: #667eea;
 }
 
-.book-now-btn {
-  width: 100%;
-  background: linear-gradient(45deg, #ff6b6b, #ff8e53);
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 15px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
+.cta-button {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  background: linear-gradient(90deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  margin: 1.5rem 0;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.book-now-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(90deg, #45a049 0%, #4CAF50 100%);
+}
+
+.cta-button:active {
+  transform: translateY(1px);
+}
+
+.cta-button__icon {
+  margin-right: 10px;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.cta-button:hover .cta-button__icon {
+  transform: scale(1.2);
+}
+
+.cta-button__arrow {
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.cta-button:hover .cta-button__arrow {
+  transform: translateX(5px);
+}
+
+.btn--primary {
+  background-color: #4b6cb7;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.8rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .suggestions-footer {
