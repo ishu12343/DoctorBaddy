@@ -2860,7 +2860,7 @@ export default {
 
 /* Modern benefits section */
 .benefits-showcase {
-  padding: 4rem 2rem;
+  padding: 0rem 1rem;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   position: relative;
   overflow: hidden;
@@ -2883,14 +2883,14 @@ export default {
   justify-content: center;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   background: white;
   border-radius: 25px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 1;
   flex-wrap: wrap;
-  gap: 1rem;
+  /* gap: 1rem; */
   border: 2px solid rgba(102, 126, 234, 0.1);
   backdrop-filter: blur(10px);
 }
@@ -3196,7 +3196,7 @@ export default {
 
 /* Enhanced How it Works Section */
 .how-it-works {
-  padding: 6rem 2rem;
+  /* padding: 6rem 2rem; */
   background: white;
 }
 
@@ -3336,7 +3336,7 @@ export default {
 .cta-section {
   text-align: center;
   margin-top: 4rem;
-  padding: 3rem 2rem;
+  padding: 0.5rem 0rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 25px;
   color: white;
@@ -3371,7 +3371,7 @@ export default {
 
 /* Patient Reviews Section */
 .patient-reviews {
-  padding: 6rem 2rem;
+  padding: 0.5rem 1rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
