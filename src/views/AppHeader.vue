@@ -2,7 +2,7 @@
   <header class="header">
     <div class="header__container">
       <router-link to="/" class="header__logo-link">
-        <img src="@/assets/images/logo.png" alt="Logo" class="header__logo" />
+        <img src="@/assets/logo/logo1.png" alt="Logo" class="header__logo" />
         DoctorBuddy
       </router-link>
       <nav class="header__nav">
