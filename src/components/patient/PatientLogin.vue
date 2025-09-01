@@ -1,361 +1,108 @@
 <template>
-  <div class="login-wrapper">
-    <div class="login-container">
-      <div class="login-left">
-        <div class="welcome-container">
-          <h1>Welcome Back!</h1>
-          <p class="subtitle">Please sign in to continue</p>
-          <form @submit.prevent="loginPatient" class="login-form">
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input 
-                id="email" 
-                v-model="email" 
-                type="email" 
-                placeholder="Enter your email" 
-                required 
-                class="form-input"
-              >
-            </div>
-            <div class="form-group">
-              <div class="password-header">
-                <label for="password">Password</label>
-                <router-link to="/forgot-password" class="forgot-password">Forgot Password?</router-link>
-              </div>
-              <input 
-                id="password" 
-                v-model="password" 
-                type="password" 
-                placeholder="Enter your password" 
-                required 
-                class="form-input"
-              >
-            </div>
-            <button type="submit" class="login-button">Sign In</button>
-            <div class="signup-link">
-              Don't have an account? <router-link to="/patient-signup">Sign up</router-link>
-            </div>
-          </form>
-        </div>
+  <AppHeader @login="goToLogin" />
+  <div class="login-container">
+    <div class="login-card">
+      <img src="@/assets/images/logo.png" alt="Logo" class="login-logo" />
+      <h2>DoctorBuddy on patient</h2>
+      <form @submit.prevent="loginPatient">
+        <input v-model="email" type="email" placeholder="Email" required />
+        <input v-model="password" type="password" placeholder="Password" required />
+        <button type="submit" class="btn btn--primary btn--large">Log In</button>
+      </form>
+      <div class="login-footer">
+        <router-link to="/">Back to Home</router-link>
       </div>
-      <div class="login-right">
-        <div class="logo-container">
-          <img src="@/assets/images/logo.png" alt="Logo" class="logo">
-          <h2>DoctorBuddy</h2>
-          <p>Your Personal Health Assistant</p>
-        </div>
+      <div class="login-footer">
+        <router-link to="/patient-signup">Sign Up</router-link>
       </div>
     </div>
   </div>
+  <AppFooter class="footer-fixed" />
+  <ChatButton />
 </template>
 
 <script>
+import AppHeader from '@/views/AppHeader.vue';
+import ChatButton from '@/components/ChatButton.vue';
+import AppFooter from '@/views/AppFooter.vue';
 export default {
   name: 'LoginPage',
-  components: {},
+  components: {
+    AppHeader,
+    ChatButton,
+    AppFooter
+  },
   data() {
     return {
       email: '',
-      password: '',
-      error: ''
+      password: ''
     };
   },
   methods: {
-    async loginPatient() {
-      this.error = '';
-      try {
-        const response = await fetch('http://127.0.0.1:5000/api/patient/login', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            email: this.email,
-            password: this.password
-          })
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          const errorMessage = errorData.error || 'Login failed. Please check your credentials.';
-          throw new Error(errorMessage);
-        }
-
-        const data = await response.json();
-        if (!data.token) {
-          throw new Error('No authentication token received');
-        }
-
-        // Store the token in localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userType', 'patient');
-
-        // Redirect to patient dashboard first
-        this.$router.push('/patient-dashboard');
-
-        // Then fetch profile data with token
-        const profileResponse = await fetch('http://127.0.0.1:5000/api/patient/profile?id=1', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${data.token}`,
-            'Accept': 'application/json'
-          }
-        });
-
-        if (profileResponse.ok) {
-          const profileData = await profileResponse.json();
-          localStorage.setItem('patientProfile', JSON.stringify(profileData));
-        }
-        // Optionally handle profile fetch errors silently or show a message
-      } catch (err) {
-        this.error = err.message || 'Login failed. Please try again.';
-      }
+    loginPatient() {
+      // login logic
+    },
+    goToLogin() {
+      // navigation logic
     }
   }
-}
+};
 </script>
 
 <style scoped>
-.login-wrapper {
+.login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f8f9fa;
-  padding: 20px;
-  font-family: 'Inter', sans-serif;
+  background: linear-gradient(90deg, #5C9EF0 60%, #C8D67C 100%);
 }
-
-.login-container {
-  display: flex;
-  width: 100%;
-  max-width: 1000px;
-  background: white;
-  border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  min-height: 600px;
-}
-
-.login-left {
-  flex: 1;
-  padding: 80px 60px;
+.login-card {
+  background: #fff;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-}
-
-.login-right {
-  flex: 1;
-  background: linear-gradient(135deg, #4a90e2 0%, #8bc34a 100%);
-  color: white;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 40px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+  min-width: 320px;
 }
-
-.welcome-container h1 {
-  font-size: 2.2rem;
-  color: #1a1a1a;
-  margin-bottom: 0.75rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+.login-logo {
+  height: 40px;
+  margin-bottom: 1rem;
 }
-
-.subtitle {
-  color: #666;
-  margin-bottom: 2.5rem;
-  font-size: 1rem;
-  font-weight: 400;
+h2 {
+  color: #275FD4;
+  margin-bottom: 2rem;
 }
-
-.login-form {
-  max-width: 380px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.form-group {
-  margin-bottom: 1.75rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #333;
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-.form-input {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-  background-color: #f9f9f9;
-}
-
-.form-input:focus {
-  border-color: #4a90e2;
-  background-color: #fff;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-.password-header {
+form {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
+  flex-direction: column;
+  gap: 1rem;
 }
-
-.forgot-password {
-  color: #4a90e2;
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.forgot-password:hover {
-  color: #3a7bc8;
-  text-decoration: underline;
-}
-
-.login-button {
-  width: 100%;
-  padding: 14px;
-  background-color: #4a90e2;
-  color: white;
-  border: none;
-  border-radius: 10px;
+input {
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
   font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
-  margin-top: 10px;
 }
-
-.login-button:hover {
-  background-color: #3a7bc8;
+.btn {
+  width: 100%;
 }
-
-.login-button:active {
-  transform: translateY(1px);
-}
-
-.signup-link {
-  text-align: center;
+.login-footer {
   margin-top: 1.5rem;
-  color: #666;
-  font-size: 0.9rem;
+  text-align: center;
 }
-
-.signup-link a {
-  color: #4a90e2;
-  text-decoration: none;
-  font-weight: 600;
-  margin-left: 4px;
-  transition: color 0.2s;
-}
-
-.signup-link a:hover {
+.login-footer a {
+  color: #275FD4;
   text-decoration: underline;
+  font-size: 1rem;
 }
-
-.logo-container {
-  max-width: 300px;
-  position: relative;
-  z-index: 2;
-}
-
-.logo {
-  width: 100px;
-  height: auto;
-  margin-bottom: 1.5rem;
-}
-
-.logo-container h2 {
-  color: white;
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.logo-container p {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.05rem;
-  margin: 0;
-  line-height: 1.5;
-}
-
-/* Decorative elements */
-.login-right::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 100%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-  border-radius: 50%;
-  z-index: 1;
-}
-
-/* Responsive Styles */
-@media (max-width: 992px) {
-  .login-container {
-    max-width: 800px;
-  }
-  
-  .login-left {
-    padding: 60px 40px;
-  }
-}
-
-@media (max-width: 768px) {
-  .login-container {
-    flex-direction: column;
-    max-width: 500px;
-    min-height: auto;
-  }
-  
-  .login-right {
-    display: none;
-  }
-  
-  .login-left {
-    padding: 50px 30px;
-  }
-  
-  .welcome-container h1 {
-    font-size: 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .login-wrapper {
-    padding: 15px;
-  }
-  
-  .login-left {
-    padding: 40px 25px;
-  }
-  
-  .welcome-container h1 {
-    font-size: 1.8rem;
-  }
-  
-  .login-form {
-    max-width: 100%;
-  }
+.footer-fixed {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 100;
 }
 </style>
