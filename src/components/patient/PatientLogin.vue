@@ -39,6 +39,7 @@
       <div class="login-footer">
         <router-link to="/patient-signup">Sign Up</router-link>
       </div>
+      <p v-if="error" class="error-message">{{ error }}</p>
     </div>
   </div>
   <AppFooter class="footer-fixed" />
@@ -59,15 +60,74 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      error: ''
     };
   },
   methods: {
-    loginPatient() {
-      // login logic
+    async loginPatient() {
+      this.error = '';
+
+      // Validate input
+      if (!this.email || !this.password) {
+        this.error = 'Email and password are required.';
+        return;
+      }
+
+      const requestBody = {
+        email: this.email,
+        password: this.password
+      };
+
+      console.log('Sending patient login payload:', requestBody);
+
+      const loginUrl = 'http://127.0.0.1:5000/api/patient/login';
+
+      try {
+        const response = await fetch(loginUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        });
+
+        const responseText = await response.clone().text();
+        console.log('Patient login response:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: responseText
+        });
+
+        if (!response.ok) {
+          let errorMessage = 'Login failed. Please check your credentials.';
+          try {
+            const errorData = JSON.parse(responseText);
+            if (errorData.error) errorMessage = errorData.error;
+          } catch (_) {
+            // Ignore parse error
+          }
+          throw new Error(errorMessage);
+        }
+
+        const data = JSON.parse(responseText);
+
+        if (!data.token) {
+          throw new Error('No authentication token received');
+        }
+
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userType', 'patient');
+
+        this.$router.push('/patient-dashboard');
+      } catch (err) {
+        this.error = err.message || 'Login failed. Please try again.';
+        console.error('Patient login error:', err);
+      }
     },
     goToLogin() {
-      // navigation logic
+      this.$router.push('/login');
     }
   }
 };
@@ -122,6 +182,12 @@ input {
   text-decoration: underline;
   font-size: 1rem;
 }
+.error-message {
+  margin-top: 1rem;
+  color: red;
+  font-weight: bold;
+}
+
 .footer-fixed {
   position: fixed;
   left: 0;
