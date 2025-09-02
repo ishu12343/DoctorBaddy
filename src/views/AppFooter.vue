@@ -59,8 +59,8 @@ export default {
         </a>
       </nav>
       <nav class="footer-utility-links-single" role="navigation" aria-label="Footer Utility Links">
-        <a href="/company/privacy-policy" class="footer-utility-link-single">Privacy Policy</a>
-        <a href="/company/terms-of-use" class="footer-utility-link-single">Terms Of Use</a>
+        <a href="/services" class="footer-utility-link-single">Our Services</a>
+        <!-- <a href="/company/terms-of-use" class="footer-utility-link-single">Terms Of Use</a> -->
       </nav>
       <span class="footer-copyright-single">
         &copy; <span>{{ year }}</span> DoctorBuddy
