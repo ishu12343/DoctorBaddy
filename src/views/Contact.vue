@@ -293,7 +293,7 @@
                 </div>
 
                 <div class="form-row">
-                  <div class="form-group">
+                  <div class="form-group form-group-half">
                     <input 
                       v-model="contactForm.email" 
                       type="email" 
@@ -302,7 +302,7 @@
                       class="form-control"
                     />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group form-group-half">
                     <input 
                       v-model="contactForm.phone" 
                       type="tel" 
@@ -626,6 +626,8 @@ export default {
   background: linear-gradient(135deg, #f8faff 0%, #f0f5ff 100%);
   position: relative;
   overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .contact-root::before {
@@ -644,15 +646,19 @@ export default {
 
 .contact-content {
   flex: 1 0 auto;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
   position: relative;
   z-index: 1;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 .tab-container {
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: 3rem;
+  padding: 2rem;
   background: rgba(255, 255, 255, 0.98);
   border-radius: 24px;
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
@@ -660,6 +666,7 @@ export default {
   overflow: hidden;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.5);
+  box-sizing: border-box;
 }
 
 .tab-container::before {
@@ -690,15 +697,17 @@ export default {
 /* Contact Cards */
 .contact-methods {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .contact-card {
   background: white;
   border-radius: 20px;
-  padding: 2.5rem 2rem;
+  padding: 2rem;
   box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0, 0, 0, 0.05);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(255, 255, 255, 0.9);
@@ -711,6 +720,8 @@ export default {
   z-index: 1;
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.7);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .contact-card::before {
@@ -1495,11 +1506,13 @@ export default {
   border-radius: 16px;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05), 
               -5px -5px 15px rgba(255, 255, 255, 0.8);
-  padding: 2.5rem;
-  margin-top: 2.5rem;
+  padding: 2rem;
+  margin-top: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.8);
   position: relative;
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .contact-form-section::before {
@@ -1519,6 +1532,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  text-align: left;
 }
 
 .contact-form-section h3 i {
@@ -1528,12 +1542,28 @@ export default {
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group-half {
+  flex: 1;
+  min-width: 0;
 }
 
 .form-group {
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group label {
@@ -1549,14 +1579,15 @@ export default {
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 0.9rem 1.25rem;
-  border: 1px solid var(--border);
+  padding: 1rem;
+  border: 2px solid var(--border);
   border-radius: 10px;
   font-size: 1rem;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.05);
   color: var(--text);
+  box-sizing: border-box;
 }
 
 .form-group input::placeholder,
@@ -1572,6 +1603,7 @@ export default {
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
   outline: none;
   background: white;
+  transform: translateY(-1px);
 }
 
 /* Form Focus Effect */
@@ -1656,6 +1688,8 @@ textarea.form-control {
   display: flex;
   gap: 1rem;
   margin-top: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .role-btn {
@@ -1666,12 +1700,14 @@ textarea.form-control {
   gap: 0.5rem;
   padding: 1rem;
   background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.95rem;
   color: var(--text-light);
+  font-weight: 500;
+  box-sizing: border-box;
 }
 
 .role-btn i {
@@ -1681,32 +1717,41 @@ textarea.form-control {
 .role-btn:hover {
   border-color: var(--primary-light);
   color: var(--primary);
+  background: rgba(67, 97, 238, 0.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(67, 97, 238, 0.1);
 }
 
 .role-btn.active {
-  background: rgba(39, 95, 212, 0.05);
+  background: var(--primary);
   border-color: var(--primary);
-  color: var(--primary);
-  font-weight: 500;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
 }
 
 /* Form Success Message */
 .form-actions {
-  margin-top: 1rem;
-  text-align: right;
+  margin-top: 1.5rem;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-success {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   color: var(--success);
   margin-top: 1rem;
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   background: rgba(76, 175, 80, 0.1);
   border-radius: 8px;
   font-size: 0.95rem;
   animation: fadeIn 0.3s ease;
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  text-align: center;
 }
 
 @keyframes fadeIn {
@@ -1714,24 +1759,401 @@ textarea.form-control {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
+/* Comprehensive Responsive Design */
+.contact-root {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.contact-content {
+  padding: 1rem;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+.tab-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.contact-methods {
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.contact-card {
+  width: 100%;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.contact-form-section {
+  width: 100%;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Tablet Styles (601px - 900px) */
+@media (max-width: 900px) and (min-width: 601px) {
   .tab-container {
-    padding: 1.5rem;
+    padding: 2rem;
     margin: 1rem;
   }
-  
+
+  .contact-methods {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .contact-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .contact-title {
+    font-size: 2rem;
+  }
+
+  .tabs {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tab-button {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+
+  .chat-container {
+    height: 450px;
+  }
+
+  .form-row {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+/* Mobile Styles (401px - 600px) */
+@media (max-width: 600px) {
+  .contact-content {
+    padding: 0.5rem;
+  }
+
+  .tab-container {
+    padding: 1.5rem 1rem;
+    margin: 0.5rem;
+    border-radius: 16px;
+  }
+
+  .contact-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tabs {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .tab-button {
+    padding: 0.75rem 1rem;
+    justify-content: center;
+    font-size: 0.9rem;
+  }
+
+  .contact-methods {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .contact-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .contact-card-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .icon-circle {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+
+  .contact-card h3 {
+    font-size: 1.25rem;
+  }
+
+  .contact-card li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1rem 0;
+  }
+
+  .contact-link {
+    width: 100%;
+    padding: 0.5rem;
+    background: rgba(67, 97, 238, 0.05);
+    border-radius: 8px;
+    justify-content: center;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 1rem;
+    font-size: 0.95rem;
+    margin-top: 1rem;
+  }
+
+  .contact-form-section {
+    padding: 1.5rem 1rem;
+    margin-top: 2rem;
+    border-radius: 12px;
+  }
+
+  .contact-form-section h3 {
+    font-size: 1.25rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+  }
+
   .form-row {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+  }
+
   .role-selector {
     flex-direction: column;
+    gap: 0.75rem;
   }
-  
+
+  .role-btn {
+    padding: 1rem;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.95rem;
+  }
+
+  .btn-submit {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .chat-container {
+    height: 400px;
+  }
+
+  .chat-messages {
+    padding: 1rem;
+  }
+
+  .message {
+    max-width: 95%;
+  }
+
+  .message-avatar {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+
+  .message-content {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .chat-input {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .chat-input input {
+    margin-right: 0;
+    padding: 1rem;
+  }
+
+  .chat-input button {
+    width: 100%;
+    height: 45px;
+    border-radius: 8px;
+  }
+
+  .faq-question {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .faq-answer {
+    padding: 0 1rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Mobile Styles (≤ 400px) */
+@media (max-width: 400px) {
+  .contact-content {
+    padding: 0.25rem;
+  }
+
+  .tab-container {
+    padding: 1rem 0.75rem;
+    margin: 0.25rem;
+  }
+
   .contact-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
+  }
+
+  .contact-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .tabs {
+    gap: 0.25rem;
+  }
+
+  .tab-button {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .contact-card {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .icon-circle {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+
+  .contact-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .contact-card li {
+    padding: 0.75rem 0;
+  }
+
+  .contact-link {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .contact-form-section {
+    padding: 1.25rem 0.75rem;
+    margin-top: 1.5rem;
+    border-radius: 10px;
+  }
+
+  .contact-form-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 0.9rem;
+    font-size: 0.95rem;
+    border-radius: 6px;
+  }
+
+  .role-btn {
+    padding: 0.9rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+  }
+
+  .btn-primary, .btn-secondary, .btn-submit {
+    padding: 0.9rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .chat-container {
+    height: 350px;
+  }
+
+  .chat-messages {
+    padding: 0.75rem;
+  }
+
+  .message-avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+  }
+
+  .message-content {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .chat-input input {
+    padding: 0.9rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Large Desktop Styles (≥ 1201px) */
+@media (min-width: 1201px) {
+  .contact-methods {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+
+  .contact-card {
+    padding: 3rem 2.5rem;
+  }
+
+  .contact-form-section {
+    padding: 3rem;
+  }
+
+  .form-row {
+    gap: 1.5rem;
+  }
+
+  .chat-container {
+    height: 600px;
   }
 }
 
@@ -2018,21 +2440,28 @@ textarea.form-control {
   to { opacity: 1; max-height: 300px; }
 }
 
-/* Responsive Adjustments */
+/* Enhanced Responsive Adjustments for Additional Components */
 @media (max-width: 768px) {
   .tab-container {
-    padding: 1rem;
+    padding: 1.5rem;
     margin: 1rem;
   }
   
+  .contact-methods {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
   .tabs {
-    gap: 0.25rem;
-    padding-bottom: 0.5rem;
+    justify-content: center;
+    gap: 0.5rem;
   }
   
   .tab-button {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1rem;
     font-size: 0.9rem;
+    min-width: 100px;
+    justify-content: center;
   }
   
   .chat-container {
@@ -2041,6 +2470,56 @@ textarea.form-control {
   
   .message {
     max-width: 90%;
+  }
+
+  .message-avatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  .contact-card-header {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .icon-circle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .contact-card li {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .contact-link {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .whatsapp-link {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .role-selector {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .contact-title {
+    font-size: 1.8rem;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
   }
 }
 
