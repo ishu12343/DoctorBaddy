@@ -1,3 +1,27 @@
+<style scoped>
+@media (max-width: 900px) {
+  .popup-container {
+    flex-direction: column !important;
+    padding: 1rem !important;
+    gap: 1.5rem !important;
+  }
+}
+@media (max-width: 600px) {
+  .popup-container {
+    padding: 0.5rem 0.2rem !important;
+    margin: 0 !important;
+    width: 100vw;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .popup-content {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+  }
+}
+</style>
 <template>
   <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white p-6 rounded-lg shadow-lg min-w-[300px] max-w-[90vw] max-h-[90vh] overflow-y-auto">

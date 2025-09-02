@@ -1,3 +1,76 @@
+/* Responsive image and section styles for Home.vue */
+.masthead__image img,
+.doctor-mini-avatar img,
+.doctor-avatar-large img,
+.doctor-avatar-img,
+.step-image img,
+.author-avatar img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.main-content, .masthead, .suggestions-container, .reviews-grid, .cta-section {
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (max-width: 900px) {
+  .main-content, .masthead, .suggestions-container, .reviews-grid, .cta-section {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+@media (max-width: 600px) {
+  .main-content, .masthead, .suggestions-container, .reviews-grid, .cta-section {
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+  }
+}
+/* Extra responsive improvements for Home.vue */
+@media (max-width: 1200px) {
+  .masthead__content, .suggestions-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+@media (max-width: 900px) {
+  .masthead__content, .suggestions-container {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 0 0.5rem;
+  }
+  .doctors-carousel {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+@media (max-width: 600px) {
+  .masthead, .main-content, .suggestions-container {
+    padding: 0.5rem 0.2rem !important;
+    margin: 0 !important;
+    width: 100vw;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .doctor-mini-card, .suggestion-card {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .stats-row, .showcase-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .cta-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
 <template>
   <div class="layout-container">
     <div class="layout-content">

@@ -1,3 +1,27 @@
+<style scoped>
+@media (max-width: 900px) {
+  .list-container {
+    flex-direction: column !important;
+    padding: 1rem !important;
+    gap: 1.5rem !important;
+  }
+}
+@media (max-width: 600px) {
+  .list-container {
+    padding: 0.5rem 0.2rem !important;
+    margin: 0 !important;
+    width: 100vw;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .list-item {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+  }
+}
+</style>
 <template>
   <div class="patients-list-container">
     <!-- Header Section -->

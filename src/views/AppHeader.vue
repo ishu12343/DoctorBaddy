@@ -98,6 +98,54 @@ export default {
     max-width: 1100px;
     margin: 0 auto;
     padding: 0 1rem;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+  /* Responsive header styles */
+  @media (max-width: 900px) {
+    .header__container {
+      max-width: 100vw;
+      padding: 0 0.5rem;
+    }
+    .header__nav {
+      gap: 1rem;
+    }
+    .header__logo {
+      height: 32px;
+    }
+    .header__logo-link {
+      font-size: 1.1rem;
+    }
+  }
+  @media (max-width: 600px) {
+    .header__container {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0.3rem 0.3rem;
+      gap: 0.5rem;
+    }
+    .header__nav {
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+      align-items: flex-start;
+    }
+    .header__logo {
+      height: 24px;
+    }
+    .header__logo-link {
+      font-size: 1rem;
+      gap: 0.3rem;
+    }
+    .dropdown-menu {
+      min-width: 120px;
+      right: auto;
+      left: 0;
+    }
+    .btn--primary, .btn--small {
+      font-size: 0.85rem;
+      padding: 0.3rem 0.7rem;
+    }
   }
 
   .header__logo {

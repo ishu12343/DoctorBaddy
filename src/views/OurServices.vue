@@ -1,3 +1,59 @@
+<style scoped>
+.service-img-right img,
+.hero-animation img,
+.service-animation img,
+.icon-card img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.services-container, .service-card, .service-img-right {
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (max-width: 900px) {
+  .services-container, .service-card, .service-img-right {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+@media (max-width: 600px) {
+  .services-container, .service-card, .service-img-right {
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+  }
+}
+</style>
+<style scoped>
+@media (max-width: 900px) {
+  .services-container {
+    flex-direction: column !important;
+    padding: 1rem !important;
+    gap: 1.5rem !important;
+  }
+}
+@media (max-width: 600px) {
+  .services-container {
+    padding: 0.5rem 0.2rem !important;
+    margin: 0 !important;
+    width: 100vw;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .service-card {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+  }
+}
+</style>
 <template>
   <div class="our-services-root">
     <AppHeader @login="goToLogin" />

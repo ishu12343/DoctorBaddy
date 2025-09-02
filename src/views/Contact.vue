@@ -1,3 +1,57 @@
+<style scoped>
+.contact-form img,
+.contact-info img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.contact-container, .contact-form, .contact-info {
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (max-width: 900px) {
+  .contact-container, .contact-form, .contact-info {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+@media (max-width: 600px) {
+  .contact-container, .contact-form, .contact-info {
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+  }
+}
+</style>
+<style scoped>
+@media (max-width: 900px) {
+  .contact-container {
+    flex-direction: column !important;
+    padding: 1rem !important;
+    gap: 1.5rem !important;
+  }
+}
+@media (max-width: 600px) {
+  .contact-container {
+    padding: 0.5rem 0.2rem !important;
+    margin: 0 !important;
+    width: 100vw;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .contact-form, .contact-info {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+  }
+}
+</style>
 <template>
   <div class="contact-root">
     <AppHeader @login="goToLogin" />
