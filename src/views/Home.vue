@@ -1229,6 +1229,8 @@ export default {
   align-items: center;
   width: 100%;
   gap: 1rem;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
 .showcase-title {
@@ -1237,6 +1239,10 @@ export default {
   font-weight: 600;
   color: #1e293b;
   white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header-actions {
@@ -1244,6 +1250,8 @@ export default {
   align-items: center;
   gap: 0.75rem;
   flex-shrink: 0;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .live-badge {
@@ -1385,7 +1393,23 @@ export default {
 }
 
 /* Responsive adjustments */
+@media (max-width: 1024px) {
+  .header-actions {
+    gap: 0.5rem;
+  }
+  
+  .showcase-title {
+    font-size: 1.15rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .header-actions {
+    gap: 0.4rem;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  
   .unique-doctor-btn .btn-text {
     display: none;
   }
@@ -1403,6 +1427,7 @@ export default {
   
   .unique-doctor-btn {
     height: 36px;
+    flex-shrink: 0;
   }
   
   .showcase-title {
@@ -1412,6 +1437,55 @@ export default {
   .live-badge {
     padding: 0.25rem 0.6rem;
     font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .showcase-header-row {
+    gap: 0.5rem;
+  }
+  
+  .header-actions {
+    gap: 0.3rem;
+  }
+  
+  .showcase-title {
+    font-size: 1rem;
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .showcase-header-row {
+    align-items: flex-start;
+  }
+  
+  .header-actions {
+    gap: 0.25rem;
+  }
+  
+  .showcase-title {
+    font-size: 0.95rem;
+  }
+  
+  .live-badge {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  
+  .live-badge i {
+    font-size: 0.45rem;
+  }
+  
+  .unique-doctor-btn {
+    height: 32px;
+  }
+  
+  .unique-doctor-btn .btn-inner {
+    padding: 0 10px;
+    width: 32px;
   }
 }
 
@@ -2030,8 +2104,6 @@ export default {
   position: relative;
   max-width: 600px;
   margin: 0 auto;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 /* Top Doctors Showcase */
@@ -2041,11 +2113,9 @@ export default {
   padding: 2rem 1.5rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(102, 126, 234, 0.1);
+  /* animation: float 6s ease-in-out infinite; */
   position: relative;
   overflow: hidden;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 .top-doctors-showcase::before {
@@ -2062,32 +2132,19 @@ export default {
 .showcase-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 2px solid #f8f9fa;
   flex-wrap: wrap;
-  gap: 1rem;
-  width: 100%;
-  box-sizing: border-box;
+  gap: 0.8rem;
 }
 
-.showcase-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.showcase-title {
+.showcase-header h3 {
   color: #2c3e50;
   font-size: 1.4rem;
   font-weight: 700;
   margin: 0;
-  flex: 1;
-  min-width: 200px;
 }
 
 .live-badge {
@@ -2111,10 +2168,8 @@ export default {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
   flex-wrap: wrap;
-  justify-content: flex-end;
-  min-width: 0;
 }
 
 .doctors-carousel {
@@ -2122,22 +2177,18 @@ export default {
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .doctor-mini-card {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: 0.75rem;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border-radius: 15px;
   transition: all 0.3s ease;
   animation: slideInRight 0.6s ease-out both;
   border: 1px solid rgba(102, 126, 234, 0.1);
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .doctor-mini-card:hover {
@@ -2235,9 +2286,7 @@ export default {
 .showcase-stats {
   display: flex;
   gap: 1rem;
-  margin-bottom: 1rem;
-  width: 100%;
-  box-sizing: border-box;
+  margin-bottom: 1.5rem;
 }
 
 .stat-mini {
@@ -2249,8 +2298,6 @@ export default {
   background: rgba(102, 126, 234, 0.1);
   border-radius: 15px;
   border: 1px solid rgba(102, 126, 234, 0.2);
-  min-width: 0;
-  box-sizing: border-box;
 }
 
 .stat-icon {
@@ -3809,64 +3856,6 @@ export default {
   animation: pulse 2s infinite;
 }
 
-/* Large Desktop and Tablet Landscape Responsive */
-@media (min-width: 901px) and (max-width: 1200px) {
-  .top-doctors-showcase {
-    padding: 1.8rem 1.3rem;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  
-  .showcase-title {
-    font-size: 1.3rem;
-  }
-  
-  .doctor-mini-card {
-    padding: 0.9rem;
-  }
-  
-  .doctor-mini-avatar img {
-    width: 48px;
-    height: 48px;
-  }
-}
-
-/* Tablet Portrait Responsive */
-@media (max-width: 900px) and (min-width: 769px) {
-  .top-doctors-showcase {
-    margin: 0 1.5rem;
-    padding: 1.6rem 1.2rem;
-    max-width: 450px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .showcase-header-row {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .header-actions {
-    flex-direction: row;
-    gap: 0.8rem;
-    justify-content: flex-end;
-  }
-  
-  .showcase-title {
-    font-size: 1.25rem;
-  }
-  
-  .doctor-mini-card {
-    padding: 0.85rem;
-  }
-  
-  .showcase-stats {
-    flex-direction: row;
-    gap: 0.8rem;
-  }
-}
-
 /* Enhanced responsive improvements */
 @media (max-width: 768px) {
   .masthead {
@@ -3938,82 +3927,27 @@ export default {
   .top-doctors-showcase {
     margin: 0 1rem;
     padding: 1.5rem 1rem;
-    border-radius: 20px;
-    max-width: calc(100vw - 2rem);
-    box-sizing: border-box;
   }
   
-  .showcase-header-row {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-  
-  .showcase-title {
+  .showcase-header h3 {
     font-size: 1.2rem;
-    text-align: center;
   }
   
   .header-actions {
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
     width: 100%;
-    justify-content: center;
   }
   
-  .live-badge {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.75rem;
-  }
-  
-  .unique-doctor-btn {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 0.85rem;
-  }
-  
-  .doctor-mini-card {
-    padding: 0.75rem;
-    gap: 0.75rem;
-  }
-  
-  .doctor-mini-avatar img {
-    width: 45px;
-    height: 45px;
-  }
-  
-  .doctor-mini-info h4 {
-    font-size: 0.95rem;
-  }
-  
-  .doctor-mini-info p {
+  .header-actions .btn--compact {
     font-size: 0.8rem;
-  }
-  
-  .consultation-info .price {
-    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
   }
   
   .showcase-stats {
     flex-direction: column;
     gap: 0.75rem;
-  }
-  
-  .stat-mini {
-    padding: 0.75rem;
-  }
-  
-  .stat-icon {
-    width: 35px;
-    height: 35px;
-  }
-  
-  .stat-text .number {
-    font-size: 1rem;
-  }
-  
-  .stat-text .label {
-    font-size: 0.7rem;
   }
   
   .trust-badge {
@@ -4072,76 +4006,6 @@ export default {
   }
 }
 
-/* Medium Mobile & Small Tablet Responsive (600px) */
-@media (max-width: 600px) {
-  .masthead {
-    padding: 5rem 1rem 3rem;
-  }
-  
-  .animated-title {
-    font-size: 2.2rem;
-  }
-  
-  .top-doctors-showcase {
-    margin: 0 0.75rem;
-    padding: 1.25rem 0.9rem;
-    border-radius: 18px;
-  }
-  
-  .showcase-title {
-    font-size: 1.15rem;
-  }
-  
-  .doctor-mini-card {
-    padding: 0.7rem;
-    gap: 0.7rem;
-  }
-  
-  .doctor-mini-avatar img {
-    width: 42px;
-    height: 42px;
-  }
-  
-  .doctor-mini-info h4 {
-    font-size: 0.92rem;
-  }
-  
-  .doctor-mini-info p {
-    font-size: 0.78rem;
-  }
-  
-  .consultation-info .price {
-    font-size: 0.88rem;
-  }
-  
-  .quick-book-btn {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .showcase-stats {
-    gap: 0.6rem;
-  }
-  
-  .stat-mini {
-    padding: 0.7rem;
-    gap: 0.6rem;
-  }
-  
-  .stat-icon {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .stat-text .number {
-    font-size: 0.95rem;
-  }
-  
-  .stat-text .label {
-    font-size: 0.68rem;
-  }
-}
-
 @media (max-width: 480px) {
   .animated-title {
     font-size: 2rem;
@@ -4187,53 +4051,17 @@ export default {
   
   .top-doctors-showcase {
     margin: 0 0.5rem;
-    padding: 1rem 0.75rem;
-    border-radius: 16px;
-    max-width: calc(100vw - 1rem);
+    padding: 1rem;
   }
   
   .showcase-header {
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-  }
-  
-  .showcase-header-row {
     flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .showcase-title {
-    font-size: 1.1rem;
-  }
-  
-  .header-actions {
     gap: 0.5rem;
-  }
-  
-  .live-badge {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.7rem;
-  }
-  
-  .unique-doctor-btn {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.8rem;
+    text-align: center;
   }
   
   .doctor-mini-card {
-    padding: 0.6rem;
-    gap: 0.6rem;
-    border-radius: 12px;
-  }
-  
-  .doctor-mini-avatar img {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .rating-badge {
-    padding: 0.15rem 0.4rem;
-    font-size: 0.65rem;
+    padding: 0.5rem;
   }
   
   .doctor-mini-info h4 {
@@ -4242,39 +4070,6 @@ export default {
   
   .doctor-mini-info p {
     font-size: 0.75rem;
-  }
-  
-  .consultation-info .price {
-    font-size: 0.85rem;
-  }
-  
-  .quick-book-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 0.8rem;
-  }
-  
-  .showcase-stats {
-    gap: 0.5rem;
-  }
-  
-  .stat-mini {
-    padding: 0.6rem;
-    gap: 0.5rem;
-  }
-  
-  .stat-icon {
-    width: 30px;
-    height: 30px;
-    font-size: 0.8rem;
-  }
-  
-  .stat-text .number {
-    font-size: 0.9rem;
-  }
-  
-  .stat-text .label {
-    font-size: 0.65rem;
   }
   
   .stat-mini {
