@@ -605,6 +605,7 @@ export default {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -612,7 +613,7 @@ export default {
 }
 
 /* Responsive adjustments */
-@media (max-width: 576px) {
+@media (width <= 576px) {
   .heading-1 {
     font-size: 2.5rem;
   }

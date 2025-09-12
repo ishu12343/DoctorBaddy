@@ -1,12 +1,13 @@
 <style scoped>
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .profile-card-container {
     flex-direction: column !important;
     padding: 1rem !important;
     gap: 1.5rem !important;
   }
 }
-@media (max-width: 600px) {
+
+@media (width <= 600px) {
   .profile-card-container {
     padding: 0.5rem 0.2rem !important;
     margin: 0 !important;
@@ -14,6 +15,7 @@
     min-width: 0;
     box-sizing: border-box;
   }
+
   .profile-card {
     min-width: 0;
     width: 100%;
@@ -707,18 +709,18 @@ export default {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 2rem;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Header Section */
 .profile-header {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 10%);
+  border: 1px solid rgb(255 255 255 / 20%);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -730,7 +732,7 @@ export default {
   font-size: 2.5rem;
   font-weight: 700;
   background: linear-gradient(135deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0;
@@ -740,7 +742,7 @@ export default {
 .header-content .profile-subtitle {
   color: #64748b;
   font-size: 1.1rem;
-  margin: 0.5rem 0 0 0;
+  margin: 0.5rem 0 0;
   font-weight: 400;
 }
 
@@ -757,12 +759,12 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 4px 12px rgb(79 70 229 / 30%);
 }
 
 .edit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 8px 20px rgb(79 70 229 / 40%);
 }
 
 .btn-icon {
@@ -772,11 +774,11 @@ export default {
 
 /* Profile Card */
 .profile-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 10%);
+  border: 1px solid rgb(255 255 255 / 20%);
   overflow: hidden;
 }
 
@@ -868,7 +870,7 @@ export default {
   border: 2px solid #e2e8f0;
   border-radius: 12px;
   padding: 0.875rem 1rem;
-  background: #ffffff;
+  background: #fff;
   font-size: 1rem;
   color: #1e293b;
   transition: all 0.3s ease;
@@ -877,7 +879,7 @@ export default {
 
 .form-input:focus {
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgb(102 126 234 / 10%);
   transform: translateY(-1px);
 }
 
@@ -990,12 +992,12 @@ export default {
   font-weight: 500;
   display: inline-flex;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 2px 8px rgb(102 126 234 / 20%);
 }
 
 .tag:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgb(102 126 234 / 30%);
 }
 
 .status-display.text-red-600 {
@@ -1148,12 +1150,12 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 12px rgb(16 185 129 / 30%);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 8px 20px rgb(16 185 129 / 40%);
 }
 
 .btn-secondary {
@@ -1210,7 +1212,7 @@ export default {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .profile-container {
     padding: 1rem;
   }
@@ -1245,7 +1247,7 @@ export default {
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .profile-container {
     padding: 0.5rem;
   }
@@ -1280,6 +1282,7 @@ export default {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

@@ -1,12 +1,13 @@
 <style scoped>
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .list-container {
     flex-direction: column !important;
     padding: 1rem !important;
     gap: 1.5rem !important;
   }
 }
-@media (max-width: 600px) {
+
+@media (width <= 600px) {
   .list-container {
     padding: 0.5rem 0.2rem !important;
     margin: 0 !important;
@@ -14,6 +15,7 @@
     min-width: 0;
     box-sizing: border-box;
   }
+
   .list-item {
     min-width: 0;
     width: 100%;
@@ -773,12 +775,12 @@ export default {
 
 /* Header Section */
 .patients-header {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 10%);
 }
 
 .header-content {
@@ -792,7 +794,7 @@ export default {
   font-size: 2rem;
   font-weight: 700;
   color: #1a202c;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.5rem;
 }
 
 .title-icon {
@@ -857,7 +859,7 @@ export default {
 .search-input:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgb(102 126 234 / 10%);
 }
 
 .clear-search-btn {
@@ -910,7 +912,7 @@ export default {
 .filter-select:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgb(102 126 234 / 10%);
 }
 
 .refresh-btn {
@@ -929,7 +931,7 @@ export default {
 
 .refresh-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 15px rgb(102 126 234 / 40%);
 }
 
 .refresh-btn:disabled {
@@ -951,20 +953,20 @@ export default {
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   backdrop-filter: blur(20px);
   border-radius: 12px;
   padding: 1rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   transition: all 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 15%);
 }
 
 .stat-card.clickable {
@@ -974,13 +976,13 @@ export default {
 
 .stat-card.clickable:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 15%);
 }
 
 .stat-card.clickable.active {
   border-color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
-  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+  background: rgb(59 130 246 / 10%);
+  box-shadow: 0 4px 20px rgb(59 130 246 / 30%);
 }
 
 .stat-card.clickable.active:hover {
@@ -1050,11 +1052,11 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 10%);
 }
 
 .loading-spinner {
@@ -1089,14 +1091,14 @@ export default {
   font-size: 1.5rem;
   font-weight: 600;
   color: #1a202c;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.5rem;
 }
 
 .error-message,
 .empty-message {
   color: #64748b;
   font-size: 1rem;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1.5rem;
 }
 
 .retry-btn,
@@ -1114,7 +1116,7 @@ export default {
 .retry-btn:hover,
 .clear-filters-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 15px rgb(102 126 234 / 40%);
 }
 
 /* Patients Grid */
@@ -1126,19 +1128,19 @@ export default {
 }
 
 .patient-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   backdrop-filter: blur(20px);
   border-radius: 16px;
   padding: 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   border: 2px solid transparent;
 }
 
 .patient-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 15%);
   border-color: #667eea;
 }
 
@@ -1209,13 +1211,13 @@ export default {
   font-size: 1.25rem;
   font-weight: 600;
   color: #1a202c;
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.25rem;
 }
 
 .patient-email {
   color: #64748b;
   font-size: 0.9rem;
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem;
 }
 
 .patient-status-badge {
@@ -1260,7 +1262,7 @@ export default {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: currentColor;
+  background: currentcolor;
 }
 
 .appointment-counts {
@@ -1317,7 +1319,7 @@ export default {
 .appointment-info {
   margin: 0.75rem 0;
   padding: 0.5rem;
-  background: rgba(99, 102, 241, 0.05);
+  background: rgb(99 102 241 / 5%);
   border-radius: 8px;
   border-left: 3px solid #6366f1;
 }
@@ -1338,7 +1340,7 @@ export default {
 .appointment-summary {
   margin: 0.75rem 0;
   padding: 0.5rem;
-  background: rgba(243, 244, 246, 0.8);
+  background: rgb(243 244 246 / 80%);
   border-radius: 6px;
 }
 
@@ -1365,22 +1367,22 @@ export default {
 }
 
 .summary-counts .count-item.pending {
-  background: rgba(245, 158, 11, 0.1);
+  background: rgb(245 158 11 / 10%);
   color: #d97706;
 }
 
 .summary-counts .count-item.confirmed {
-  background: rgba(59, 130, 246, 0.1);
+  background: rgb(59 130 246 / 10%);
   color: #1d4ed8;
 }
 
 .summary-counts .count-item.completed {
-  background: rgba(16, 185, 129, 0.1);
+  background: rgb(16 185 129 / 10%);
   color: #059669;
 }
 
 .summary-counts .count-item.cancelled {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgb(239 68 68 / 10%);
   color: #dc2626;
 }
 
@@ -1457,7 +1459,7 @@ export default {
 
 /* Pagination */
 .pagination-container {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   backdrop-filter: blur(20px);
   border-radius: 16px;
   padding: 1.5rem;
@@ -1465,7 +1467,7 @@ export default {
   justify-content: between;
   align-items: center;
   gap: 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   flex-wrap: wrap;
 }
 
@@ -1543,11 +1545,8 @@ export default {
 /* Modal */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -1563,7 +1562,7 @@ export default {
   max-width: 800px;
   max-height: 90vh;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 40px rgb(0 0 0 / 20%);
 }
 
 .modal-header {
@@ -1586,7 +1585,7 @@ export default {
   width: 2.5rem;
   height: 2.5rem;
   border: none;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255 255 255 / 20%);
   color: white;
   border-radius: 50%;
   cursor: pointer;
@@ -1597,7 +1596,7 @@ export default {
 }
 
 .modal-close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgb(255 255 255 / 30%);
   transform: scale(1.1);
 }
 
@@ -1633,13 +1632,13 @@ export default {
   font-size: 1.75rem;
   font-weight: 600;
   color: #1a202c;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.5rem;
 }
 
 .patient-email-large {
   color: #64748b;
   font-size: 1.1rem;
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.75rem;
 }
 
 .patient-status-badge {
@@ -1675,7 +1674,7 @@ export default {
   font-size: 1.125rem;
   font-weight: 600;
   color: #1a202c;
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid #e2e8f0;
 }
@@ -1732,7 +1731,7 @@ export default {
 
 .modal-action-btn.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 15px rgb(102 126 234 / 40%);
 }
 
 .modal-action-btn.secondary {
@@ -1752,13 +1751,13 @@ export default {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .stats-section {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .patients-list-container {
     padding: 1rem;
   }
@@ -1832,7 +1831,7 @@ export default {
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .search-input-wrapper {
     max-width: none;
   }

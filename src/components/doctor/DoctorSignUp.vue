@@ -1,12 +1,13 @@
 <style scoped>
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .signup-container {
     flex-direction: column !important;
     padding: 1rem !important;
     gap: 1.5rem !important;
   }
 }
-@media (max-width: 600px) {
+
+@media (width <= 600px) {
   .signup-container {
     padding: 0.5rem 0.2rem !important;
     margin: 0 !important;
@@ -14,6 +15,7 @@
     min-width: 0;
     box-sizing: border-box;
   }
+
   .signup-form {
     min-width: 0;
     width: 100%;
@@ -306,7 +308,7 @@ export default {
     background: #fff;
     padding: 2.5rem;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
     width: 100%;
     max-width: 600px;
   }
@@ -340,7 +342,7 @@ export default {
   .form-control:focus {
     border-color: #3498db;
     outline: none;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    box-shadow: 0 0 0 2px rgb(52 152 219 / 20%);
   }
   
   textarea.form-control {
@@ -389,7 +391,7 @@ export default {
     text-decoration: underline;
   }
   
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     .auth-container {
       padding: 1.5rem;
     }

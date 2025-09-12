@@ -211,7 +211,7 @@ export default {
 
 .btn-primary {
   background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
-  box-shadow: 0 4px 14px 0 rgba(221, 36, 118, 0.15);
+  box-shadow: 0 4px 14px 0 rgb(221 36 118 / 15%);
   font-weight: 600;
   letter-spacing: 0.5px;
   border: none;
@@ -223,7 +223,7 @@ export default {
 .btn-primary:hover {
   background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px 0 rgba(54, 209, 196, 0.18);
+  box-shadow: 0 6px 20px 0 rgb(54 209 196 / 18%);
 }
 
 /* Remove router-link default styles */
@@ -232,7 +232,7 @@ export default {
 }
 
 /* Responsive font size adjustments */
-@media (max-width: 576px) {
+@media (width <= 576px) {
   .nav-item span {
     font-size: 0.9rem;
   }
@@ -249,6 +249,7 @@ export default {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

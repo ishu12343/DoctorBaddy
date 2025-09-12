@@ -1,12 +1,13 @@
 <style scoped>
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .profile-card-container {
     flex-direction: column !important;
     padding: 1rem !important;
     gap: 1.5rem !important;
   }
 }
-@media (max-width: 600px) {
+
+@media (width <= 600px) {
   .profile-card-container {
     padding: 0.5rem 0.2rem !important;
     margin: 0 !important;
@@ -14,6 +15,7 @@
     min-width: 0;
     box-sizing: border-box;
   }
+
   .profile-card {
     min-width: 0;
     width: 100%;
@@ -499,13 +501,10 @@ export default {
 /* Modern Professional Medical Theme */
 .profile-container {
   position: fixed;
-  top: 0;
-  left: 320px;
-  right: 0;
-  bottom: 0;
+  inset: 0 0 0 320px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
   overflow: hidden;
 }
 
@@ -516,15 +515,15 @@ export default {
   left: 320px;
   right: 0;
   height: 120px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgb(255 255 255 / 20%);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 3rem;
   z-index: 100;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 10%);
 }
 
 .header-content {
@@ -544,8 +543,8 @@ export default {
   color: white;
   font-size: 2rem;
   font-weight: 600;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(79, 70, 229, 0.3);
+  border: 4px solid rgb(255 255 255 / 30%);
+  box-shadow: 0 8px 32px rgb(79 70 229 / 30%);
 }
 
 .profile-avatar svg {
@@ -564,12 +563,12 @@ export default {
   font-size: 2rem;
   font-weight: 800;
   margin: 0;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 4px 8px rgb(0 0 0 / 20%);
   letter-spacing: -0.5px;
 }
 
 .profile-subtitle {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgb(255 255 255 / 90%);
   font-size: 1.1rem;
   margin: 0;
   font-weight: 500;
@@ -582,9 +581,9 @@ export default {
 }
 
 .edit-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255 255 255 / 20%);
   color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgb(255 255 255 / 30%);
   padding: 1rem 2rem;
   border-radius: 16px;
   font-weight: 700;
@@ -600,9 +599,9 @@ export default {
 }
 
 .edit-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgb(255 255 255 / 30%);
   transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 20%);
 }
 
 .btn-icon {
@@ -613,10 +612,7 @@ export default {
 /* Scrollable Content Container */
 .content-container {
   position: fixed;
-  top: 40px;
-  left: 280px;
-  right: 0;
-  bottom: 0;
+  inset: 40px 0 0 280px;
   overflow-y: auto;
   padding: 2rem 3rem;
 }
@@ -627,14 +623,14 @@ export default {
 }
 
 .content-container::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
   border-radius: 6px;
 }
 
 .content-container::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
   border-radius: 6px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid rgb(255 255 255 / 10%);
 }
 
 .content-container::-webkit-scrollbar-thumb:hover {
@@ -643,12 +639,12 @@ export default {
 
 /* Premium Form Container */
 .form-container {
-  background: rgba(255, 255, 255, 0.98);
+  background: rgb(255 255 255 / 98%);
   border-radius: 24px;
   padding: 3rem;
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgb(255 255 255 / 20%);
+  box-shadow: 0 25px 50px rgb(0 0 0 / 15%);
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -656,17 +652,17 @@ export default {
 /* Enhanced Form Sections */
 .form-section {
   margin-bottom: 3rem;
-  background: rgba(248, 250, 252, 0.8);
+  background: rgb(248 250 252 / 80%);
   border-radius: 20px;
   padding: 2.5rem;
-  border: 1px solid rgba(226, 232, 240, 0.5);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgb(226 232 240 / 50%);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
   transition: all 0.3s ease;
 }
 
 .form-section:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 10%);
 }
 
 .form-section:last-child {
@@ -705,7 +701,7 @@ export default {
   justify-content: center;
   color: white;
   flex-shrink: 0;
-  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 8px 25px rgb(79 70 229 / 30%);
 }
 
 .section-icon svg {
@@ -765,13 +761,13 @@ export default {
   background: white;
   color: #1e293b;
   font-weight: 500;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
 }
 
 .form-input:focus {
   outline: none;
   border-color: #4f46e5;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1), 0 4px 20px rgba(79, 70, 229, 0.15);
+  box-shadow: 0 0 0 4px rgb(79 70 229 / 10%), 0 4px 20px rgb(79 70 229 / 15%);
   transform: translateY(-1px);
 }
 
@@ -799,7 +795,7 @@ export default {
   min-height: 1.5rem;
   display: flex;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
 }
 
 .form-display.readonly {
@@ -836,7 +832,7 @@ export default {
 .form-help {
   font-size: 0.875rem;
   color: #64748b;
-  margin: 0.5rem 0 0 0;
+  margin: 0.5rem 0 0;
   font-style: italic;
   font-weight: 500;
 }
@@ -866,12 +862,12 @@ export default {
   font-size: 1.1rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 8px 25px rgb(79 70 229 / 30%);
 }
 
 .submit-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 15px 40px rgb(79 70 229 / 40%);
 }
 
 .cancel-btn {
@@ -930,7 +926,7 @@ export default {
 }
 
 /* Responsive Design Enhancements */
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .profile-container {
     left: 0;
   }
@@ -958,7 +954,7 @@ export default {
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .profile-header {
     height: 100px;
     padding: 0 1.5rem;
@@ -1012,7 +1008,7 @@ export default {
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .form-grid {
     gap: 1.5rem;
   }
@@ -1039,6 +1035,7 @@ export default {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1054,7 +1051,7 @@ export default {
 }
 
 .form-input:focus {
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1), 0 4px 20px rgba(79, 70, 229, 0.15);
+  box-shadow: 0 0 0 4px rgb(79 70 229 / 10%), 0 4px 20px rgb(79 70 229 / 15%);
 }
 
 /* Print Optimization */

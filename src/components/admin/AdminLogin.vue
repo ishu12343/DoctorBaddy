@@ -1,12 +1,13 @@
 <style scoped>
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .login-container {
     flex-direction: column !important;
     padding: 1rem !important;
     gap: 1.5rem !important;
   }
 }
-@media (max-width: 600px) {
+
+@media (width <= 600px) {
   .login-container {
     padding: 0.5rem 0.2rem !important;
     margin: 0 !important;
@@ -14,6 +15,7 @@
     min-width: 0;
     box-sizing: border-box;
   }
+
   .login-form {
     min-width: 0;
     width: 100%;
@@ -136,43 +138,51 @@ export default {
     justify-content: center;
     background: linear-gradient(90deg, #5C9EF0 60%, #C8D67C 100%);
   }
+
 .login-card {
   background: #fff;
   padding: 2.5rem 2rem;
   border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 16px rgb(0 0 0 / 8%);
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 320px;
 }
+
 .login-logo {
   height: 40px;
   margin-bottom: 1rem;
 }
+
 h2 {
   color: #275FD4;
   margin-bottom: 2rem;
 }
+
 form {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
 input {
   padding: 0.7rem 1rem;
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 1rem;
 }
+
 .btn {
   width: 100%;
 }
+
 .login-footer {
   margin-top: 1.5rem;
   text-align: center;
 }
+
   .login-footer a {
     color: #275FD4;
     text-decoration: underline;

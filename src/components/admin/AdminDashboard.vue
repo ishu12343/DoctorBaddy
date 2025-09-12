@@ -1,12 +1,13 @@
 <style scoped>
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .dashboard-container {
     flex-direction: column !important;
     padding: 1rem !important;
     gap: 1.5rem !important;
   }
 }
-@media (max-width: 600px) {
+
+@media (width <= 600px) {
   .dashboard-container {
     padding: 0.5rem 0.2rem !important;
     margin: 0 !important;
@@ -14,6 +15,7 @@
     min-width: 0;
     box-sizing: border-box;
   }
+
   .dashboard-card {
     min-width: 0;
     width: 100%;
@@ -419,16 +421,19 @@ export default {
 h1, h2 {
   color: #2c3e50;
 }
+
 table {
   border-collapse: collapse;
   width: 100%;
   margin-bottom: 1rem;
 }
+
 th, td {
   border: 1px solid #e2e8f0;
   padding: 0.75rem;
   text-align: left;
 }
+
 th {
   background-color: #f8fafc;
 }

@@ -545,7 +545,7 @@ export default {
 
 <style scoped>
 /* Responsive adjustments */
-@media (max-width: 576px) {
+@media (width <= 576px) {
   .form-input {
     font-size: 16px; /* Prevents zoom on iOS */
   }
