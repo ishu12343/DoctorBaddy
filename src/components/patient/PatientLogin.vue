@@ -2,18 +2,18 @@
   <div class="min-h-screen flex flex-col">
     <AppHeader />
     
-    <main class="flex-1 pt-16 lg:pt-20 flex items-center justify-center bg-gradient-to-br from-medical-primary to-medical-secondary">
+    <main class="flex-1 pt-16 lg:pt-20 flex items-center justify-center bg-gradient-to-br from-medical-primary to-medical-secondary dark:from-gray-900 dark:to-gray-800">
       <div class="container py-8">
         <div class="max-w-md mx-auto">
           <!-- Login Card -->
-          <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-orange-500 to-pink-500 p-6 text-center text-white">
+            <div class="bg-gradient-to-r from-brand-500 to-teal-500 p-6 text-center text-white">
               <div class="w-16 h-16 mx-auto mb-4 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
                 <i class="fas fa-user text-2xl"></i>
               </div>
               <h1 class="text-2xl font-bold">Patient Login</h1>
-              <p class="text-orange-100 mt-2">Access your healthcare portal</p>
+              <p class="text-blue-100 mt-2">Access your healthcare portal</p>
             </div>
 
             <!-- Form -->
@@ -30,7 +30,7 @@
                       v-model="email" 
                       type="email" 
                       required 
-                      class="form-input pl-10"
+                      class="form-input pl-10 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
                       placeholder="your.email@example.com"
                       :class="{ 'border-red-300 focus:border-red-500 focus:ring-red-500': emailError }"
                     />
@@ -49,7 +49,7 @@
                       v-model="password" 
                       :type="showPassword ? 'text' : 'password'" 
                       required 
-                      class="form-input pl-10 pr-10"
+                      class="form-input pl-10 pr-10 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
                       placeholder="Enter your password"
                       :class="{ 'border-red-300 focus:border-red-500 focus:ring-red-500': passwordError }"
                     />
@@ -58,7 +58,7 @@
                       @click="showPassword = !showPassword"
                       class="absolute inset-y-0 right-0 pr-3 flex items-center"
                     >
-                      <i :class="[showPassword ? 'fas fa-eye-slash' : 'fas fa-eye', 'text-gray-400 hover:text-gray-600']"></i>
+                      <i :class="[showPassword ? 'fas fa-eye-slash' : 'fas fa-eye', 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300']"></i>
                     </button>
                   </div>
                   <p v-if="passwordError" class="mt-1 text-sm text-red-600">{{ passwordError }}</p>
@@ -67,10 +67,10 @@
                 <!-- Remember Me & Forgot Password -->
                 <div class="flex items-center justify-between">
                   <label class="flex items-center">
-                    <input v-model="rememberMe" type="checkbox" class="w-4 h-4 text-orange-500 focus:ring-orange-500 border-gray-300 rounded">
+                    <input v-model="rememberMe" type="checkbox" class="w-4 h-4 text-brand-500 focus:ring-brand-500 border-gray-300 rounded">
                     <span class="ml-2 text-sm text-gray-700">Remember me</span>
                   </label>
-                  <button type="button" @click="showForgotPassword = true" class="text-sm text-orange-500 hover:text-orange-600">
+                  <button type="button" @click="showForgotPassword = true" class="text-sm text-brand-600 hover:text-brand-700">
                     Forgot password?
                   </button>
                 </div>
@@ -86,21 +86,16 @@
                 <!-- Success Message -->
                 <div v-if="successMessage" class="bg-green-50 border border-green-200 rounded-lg p-3">
                   <div class="flex items-center">
-                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    <i class="fas fa-check-circle text-success-500 mr-2"></i>
                     <p class="text-sm text-green-700">{{ successMessage }}</p>
                   </div>
                 </div>
 
                 <!-- Submit Button -->
-                <button 
-                  type="submit" 
-                  :disabled="isLoading"
-                  class="w-full btn bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600 disabled:opacity-50"
-                >
-                  <i v-if="!isLoading" class="fas fa-sign-in-alt mr-2"></i>
-                  <i v-else class="fas fa-spinner fa-spin mr-2"></i>
+                <BaseButton type="submit" :loading="isLoading" variant="primary" size="md" :block="true">
+                  <i class="fas fa-sign-in-alt mr-2" v-if="!isLoading"></i>
                   {{ isLoading ? 'Signing In...' : 'Sign In' }}
-                </button>
+                </BaseButton>
               </form>
 
               <!-- Divider -->
@@ -109,25 +104,25 @@
                   <div class="w-full border-t border-gray-300"></div>
                 </div>
                 <div class="relative flex justify-center text-sm">
-                  <span class="px-2 bg-white text-gray-500">Don't have an account?</span>
+                  <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">Don't have an account?</span>
                 </div>
               </div>
 
               <!-- Sign Up Link -->
               <div class="mt-6 text-center">
-                <button @click="$router.push('/patient-signup')" class="btn btn-outline w-full">
+                <BaseButton @click="$router.push('/patient-signup')" variant="outline" :block="true">
                   <i class="fas fa-user-plus mr-2"></i>
                   Create Patient Account
-                </button>
+                </BaseButton>
               </div>
 
               <!-- Quick Actions -->
               <div class="mt-6 grid grid-cols-2 gap-4 text-center">
-                <button @click="$router.push('/')" class="text-sm text-gray-600 hover:text-gray-800">
+                <button @click="$router.push('/')" class="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">
                   <i class="fas fa-home mr-1"></i>
                   Back to Home
                 </button>
-                <button @click="$router.push('/doctor-login')" class="text-sm text-gray-600 hover:text-gray-800">
+                <button @click="$router.push('/doctor-login')" class="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">
                   <i class="fas fa-stethoscope mr-1"></i>
                   Doctor Login
                 </button>
@@ -162,10 +157,10 @@
 
     <!-- Forgot Password Modal -->
     <div v-if="showForgotPassword" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="showForgotPassword = false">
-      <div class="bg-white rounded-2xl p-6 max-w-md w-full animate-bounce-in">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full animate-bounce-in">
         <div class="text-center mb-6">
-          <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-            <i class="fas fa-key text-2xl text-blue-600"></i>
+          <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+            <i class="fas fa-key text-2xl text-brand-600"></i>
           </div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">Reset Password</h3>
           <p class="text-gray-600">Enter your email to receive a password reset link</p>
@@ -178,20 +173,17 @@
               v-model="resetEmail" 
               type="email" 
               required 
-              class="form-input"
+              class="form-input dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
               placeholder="your.email@example.com"
             />
           </div>
 
           <div class="flex gap-3">
-            <button type="button" @click="showForgotPassword = false" class="btn btn-outline flex-1">
-              Cancel
-            </button>
-            <button type="submit" :disabled="isResetting" class="btn btn-primary flex-1">
-              <i v-if="!isResetting" class="fas fa-paper-plane mr-2"></i>
-              <i v-else class="fas fa-spinner fa-spin mr-2"></i>
+            <BaseButton type="button" @click="showForgotPassword = false" variant="outline" class="flex-1">Cancel</BaseButton>
+            <BaseButton type="submit" :loading="isResetting" variant="primary" class="flex-1">
+              <i class="fas fa-paper-plane mr-2" v-if="!isResetting"></i>
               {{ isResetting ? 'Sending...' : 'Send Reset Link' }}
-            </button>
+            </BaseButton>
           </div>
         </form>
       </div>
@@ -206,10 +198,11 @@
 import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
 import ChatButton from '@/components/ChatButton.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
 
 export default {
   name: 'PatientLogin',
-  components: { AppHeader, AppFooter, ChatButton },
+  components: { AppHeader, AppFooter, ChatButton, BaseButton },
   data() {
     return {
       email: '',

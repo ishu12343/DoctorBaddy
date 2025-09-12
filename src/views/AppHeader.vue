@@ -50,6 +50,9 @@
               <router-link to="/admin-signup" class="dropdown-item">Admin Sign Up</router-link>
             </div>
           </div>
+
+          <!-- Theme Toggle -->
+          <ThemeToggle />
         </nav>
 
         <!-- Mobile Menu Button -->
@@ -149,8 +152,10 @@
 </template>
 
 <script>
+import ThemeToggle from '@/components/ThemeToggle.vue'
 export default {
   name: 'AppHeader',
+  components: { ThemeToggle },
   data() {
     return {
       showDropdown: false,

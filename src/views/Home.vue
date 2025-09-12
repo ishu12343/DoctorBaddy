@@ -326,6 +326,7 @@
 
     <AppFooter />
     <ChatButton @open-chat="openChat" />
+    <FloatingActionButton @click="$router.push('/patient-signup')" />
   </div>
 </template>
 
@@ -333,10 +334,11 @@
 import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
 import ChatButton from '@/components/ChatButton.vue';
+import FloatingActionButton from '@/components/ui/FloatingActionButton.vue';
 
 export default {
   name: 'DoctorHome',
-  components: { AppHeader, AppFooter, ChatButton },
+  components: { AppHeader, AppFooter, ChatButton, FloatingActionButton },
   data() {
     return {
       // Hero content
