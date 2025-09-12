@@ -127,10 +127,7 @@ export default {
   max-width: 600px;
 }
 
-/* Ensure the popup stays on top of other elements */
-:global(body) {
-  overflow: hidden;
-}
+/* Removed global body scroll lock to prevent page from becoming unscrollable */
 
 button {
   transition: background-color 0.2s;

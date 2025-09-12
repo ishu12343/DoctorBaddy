@@ -1,7 +1,12 @@
 <template>
   <div id="app" class="min-h-screen flex flex-col w-full">
-    <router-view />
+    <RouterView v-slot="{ Component, route }">
+      <transition name="route-fade" mode="out-in">
+        <component :is="Component" :key="route.fullPath" />
+      </transition>
+    </RouterView>
   </div>
+  
 </template>
 
 <script>
@@ -36,5 +41,15 @@ html, body {
   padding: 0;
   height: 100%;
   overflow-x: hidden;
+}
+
+/* Route transition - subtle and fast */
+.route-fade-enter-active, .route-fade-leave-active {
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.route-fade-enter-from, .route-fade-leave-to {
+  opacity: 0;
+  transform: translateY(6px);
 }
 </style>
