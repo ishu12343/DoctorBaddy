@@ -4,6 +4,7 @@
     <button 
       @click="toggleChat"
       class="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all duration-300"
+      :class="{ 'transform scale-110': isOpen }"
     >
       <span v-if="!isOpen" class="text-xl">💬</span>
       <span v-else class="text-xl">✕</span>
@@ -25,11 +26,12 @@
           v-for="(message, index) in messages" 
           :key="index"
           class="flex"
+          :class="{ 'justify-end': message.sender === 'user', 'justify-start': message.sender === 'ai' }"
         >
           <div 
             class="max-w-xs px-3 py-2 rounded-lg"
             :class="{
-              'bg-blue-600 text-white ml-auto': message.sender === 'user',
+              'bg-blue-600 text-white': message.sender === 'user',
               'bg-gray-100 text-gray-800': message.sender === 'ai'
             }"
           >
@@ -50,7 +52,7 @@
           >
           <button 
             @click="sendMessage"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-lg"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-lg transition-colors duration-300"
           >
             Send
           </button>
@@ -119,5 +121,5 @@ export default {
 </script>
 
 <style scoped>
-/* No Tailwind dependencies - using basic styles */
+/* Component styles are handled by Tailwind classes */
 </style>
