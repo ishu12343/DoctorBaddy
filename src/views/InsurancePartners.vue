@@ -16,15 +16,23 @@
       <!-- Insurance Partners Grid -->
       <div class="max-w-7xl mx-auto">
         <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <div v-for="(partner, index) in insurancePartners" :key="index" 
-               class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <div v-for="(partner, index) in insurancePartners" :key="index"
+               class="bg-white rounded-xl shadow-md overflow-hidden group transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
             <div class="p-6">
-              <div class="h-32 flex items-center justify-center mb-4">
-                <img :src="partner.logo" :alt="partner.name" class="max-h-20 max-w-full object-contain" />
+              <div class="h-32 flex items-center justify-center mb-4 relative">
+                <img 
+                  :src="partner.logo" 
+                  :alt="partner.name" 
+                  class="max-h-20 max-w-full object-contain transition-opacity duration-300 group-hover:opacity-0"
+                  loading="lazy"
+                />
+                <span class="absolute text-5xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  {{ partner.icon }}
+                </span>
               </div>
               <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ partner.name }}</h3>
               <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ partner.description }}</p>
-              <a :href="partner.website" target="_blank" rel="noopener noreferrer" 
+              <a :href="partner.website" target="_blank" rel="noopener noreferrer"
                  class="text-sm font-medium text-medical-primary hover:text-medical-secondary">
                 Visit Website <span aria-hidden="true">→</span>
               </a>
@@ -70,40 +78,60 @@ export default {
     return {
       insurancePartners: [
         {
-          name: 'HealthGuard',
-          description: 'Comprehensive health insurance plans with extensive network coverage.',
-          logo: 'https://via.placeholder.com/200x100?text=HealthGuard',
-          website: 'https://example.com/healthguard'
+          name: 'Family Health Plus',
+          description: 'Comprehensive family health coverage with extensive pediatric care options.',
+          logo: 'https://img.icons8.com/color/480/family--v1.png',
+          icon: '👨‍👩‍👧‍👦',
+          website: '#'
         },
         {
-          name: 'MediCare Plus',
-          description: 'Affordable healthcare solutions for individuals and families.',
-          logo: 'https://via.placeholder.com/200x100?text=MediCare+Plus',
-          website: 'https://example.com/medicareplus'
+          name: 'Senior Care Plus',
+          description: 'Specialized healthcare plans for seniors with comprehensive coverage.',
+          logo: 'https://img.icons8.com/color/480/elderly-person.png',
+          icon: '👵',
+          website: '#'
         },
         {
           name: 'Wellness First',
-          description: 'Prioritizing preventive care and wellness programs.',
-          logo: 'https://via.placeholder.com/200x100?text=Wellness+First',
-          website: 'https://example.com/wellnessfirst'
+          description: 'Preventive care and wellness programs for a healthier lifestyle.',
+          logo: 'https://img.icons8.com/color/480/health-check.png',
+          icon: '💪',
+          website: '#'
         },
         {
           name: 'Global Health',
-          description: 'International health coverage with premium benefits.',
-          logo: 'https://via.placeholder.com/200x100?text=Global+Health',
-          website: 'https://example.com/globalhealth'
+          description: 'Worldwide coverage for travelers and expatriates.',
+          logo: 'https://img.icons8.com/color/480/globe--v1.png',
+          icon: '🌎',
+          website: '#'
         },
         {
-          name: 'Family Care',
-          description: 'Specialized plans for family healthcare needs.',
-          logo: 'https://via.placeholder.com/200x100?text=Family+Care',
-          website: 'https://example.com/familycare'
+          name: 'Dental Care',
+          description: 'Comprehensive dental insurance for the whole family.',
+          logo: 'https://img.icons8.com/color/480/dental-braces.png',
+          icon: '🦷',
+          website: '#'
         },
         {
-          name: 'Senior Shield',
-          description: 'Dedicated healthcare solutions for seniors.',
-          logo: 'https://via.placeholder.com/200x100?text=Senior+Shield',
-          website: 'https://example.com/seniorshield'
+          name: 'Vision Plus',
+          description: 'Affordable vision care and eyewear coverage.',
+          logo: 'https://img.icons8.com/color/480/eye-checked.png',
+          icon: '👓',
+          website: '#'
+        },
+        {
+          name: 'Emergency Care',
+          description: '24/7 emergency medical coverage and support.',
+          logo: 'https://img.icons8.com/color/480/emergency-room.png',
+          icon: '🚑',
+          website: '#'
+        },
+        {
+          name: 'Mental Wellness',
+          description: 'Therapy and mental health support services.',
+          logo: 'https://img.icons8.com/color/480/mental-health.png',
+          icon: '🧠',
+          website: '#'
         }
       ]
     };

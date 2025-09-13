@@ -127,7 +127,7 @@
       </section>
 
       <!-- Smart Doctor Recommendations Section -->
-      <section v-else class="section bg-gray-50">
+      <section v-else class="section bg-gray-50" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container">
           <div class="max-w-4xl mx-auto">
             <div class="text-center mb-8">
@@ -223,7 +223,7 @@
       </section>
 
       <!-- Services Section -->
-      <section v-if="showLearnMore && !showSmartDoctorSection" class="section bg-white">
+      <section v-if="showLearnMore && !showSmartDoctorSection" class="section bg-slate-50" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container">
           <div class="text-center mb-12">
             <h2 class="heading-2 text-gray-900 mb-4">Our Services</h2>
@@ -232,28 +232,36 @@
             </p>
           </div>
 
-          <div class="grid-cards">
-            <div v-for="service in services" :key="service.id" class="card group hover:shadow-xl transition-all duration-300">
-              <div class="card-body text-center">
-                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform duration-300">
-                  <i :class="service.icon"></i>
+          <div class="relative group">
+            <button @click="scrollServices('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <div ref="servicesContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+              <div v-for="service in services" :key="service.id" class="flex-shrink-0 w-[85vw] sm:w-80 card group hover:shadow-xl transition-all duration-300 snap-center">
+                <div class="card-body text-center">
+                  <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform duration-300">
+                    <i :class="service.icon"></i>
+                  </div>
+                  <h3 class="heading-3 text-gray-900 mb-3">{{ service.title }}</h3>
+                  <p class="text-gray-600 mb-4">{{ service.description }}</p>
+                  <ul class="text-left space-y-2">
+                    <li v-for="feature in service.features" :key="feature" class="flex items-center gap-2 text-sm text-gray-600">
+                      <i class="fas fa-check text-green-500"></i>
+                      {{ feature }}
+                    </li>
+                  </ul>
                 </div>
-                <h3 class="heading-3 text-gray-900 mb-3">{{ service.title }}</h3>
-                <p class="text-gray-600 mb-4">{{ service.description }}</p>
-                <ul class="text-left space-y-2">
-                  <li v-for="feature in service.features" :key="feature" class="flex items-center gap-2 text-sm text-gray-600">
-                    <i class="fas fa-check text-green-500"></i>
-                    {{ feature }}
-                  </li>
-                </ul>
               </div>
             </div>
+            <button @click="scrollServices('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
           </div>
         </div>
       </section>
 
       <!-- How It Works Section -->
-      <section v-if="showLearnMore && !showSmartDoctorSection" class="section bg-gray-50">
+      <section v-if="showLearnMore && !showSmartDoctorSection" class="section bg-white" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container">
           <div class="text-center mb-12">
             <h2 class="heading-2 text-gray-900 mb-4">How It Works</h2>
@@ -261,12 +269,12 @@
           </div>
 
           <div class="grid md:grid-cols-3 gap-8">
-            <div v-for="(step, index) in howItWorksSteps" :key="step.id" class="text-center">
+            <div v-for="(step, index) in howItWorksSteps" :key="step.id" class="text-center relative">
               <div class="relative mb-6">
-                <div class="w-20 h-20 mx-auto bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md">
                   {{ index + 1 }}
                 </div>
-                <div v-if="index < howItWorksSteps.length - 1" class="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-medical-secondary to-blue-600 opacity-30"></div>
+                <div v-if="index < howItWorksSteps.length - 1" class="hidden md:block absolute top-1/2 -translate-y-1/2 left-1/2 w-full h-0.5 bg-gray-200 -z-10"></div>
               </div>
               <h3 class="heading-3 text-gray-900 mb-3">{{ step.title }}</h3>
               <p class="text-gray-600">{{ step.description }}</p>
@@ -276,35 +284,48 @@
       </section>
 
       <!-- Testimonials Section -->
-      <section v-if="showLearnMore && !showSmartDoctorSection" class="section bg-white">
+      <section v-if="showLearnMore && !showSmartDoctorSection" class="section bg-red-50" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container">
           <div class="text-center mb-12">
-            <h2 class="heading-2 text-gray-900 mb-4">What Our Patients Say</h2>
-            <p class="text-large text-gray-600">Real experiences from real people</p>
+            <h2 class="heading-2 text-gray-900 mb-4">Patient & Doctor Stories</h2>
+            <p class="text-large text-gray-600">Real experiences from our community</p>
           </div>
 
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div v-for="testimonial in testimonials" :key="testimonial.id" class="card">
-              <div class="card-body">
-                <div class="flex items-center gap-1 text-yellow-500 mb-4">
-                  <i v-for="star in 5" :key="star" class="fas fa-star"></i>
-                </div>
-                <p class="text-gray-600 mb-4 italic">"{{ testimonial.text }}"</p>
-                <div class="flex items-center gap-3">
-                  <img :src="testimonial.avatar" :alt="testimonial.name" class="w-12 h-12 rounded-full object-cover" />
-                  <div>
-                    <div class="font-semibold text-gray-900">{{ testimonial.name }}</div>
-                    <div class="text-sm text-gray-500">{{ testimonial.location }}</div>
+          <div class="relative group">
+            <button @click="scrollAllTestimonials('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <div ref="allTestimonialsContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+              <div v-for="story in allTestimonials" :key="story.storyId" class="flex-shrink-0 w-[90vw] sm:w-96 card snap-center">
+                <div class="card-body">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-1 text-yellow-500">
+                      <i v-for="star in 5" :key="star" class="fas fa-star"></i>
+                    </div>
+                    <span class="text-xs font-semibold px-3 py-1 rounded-full" :class="story.type === 'Patient' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'">
+                      {{ story.type }} Story
+                    </span>
+                  </div>
+                  <p class="text-gray-600 mb-4 italic">"{{ story.text }}"</p>
+                  <div class="flex items-center gap-3">
+                    <img :src="story.avatar" :alt="story.name" class="w-12 h-12 rounded-full object-cover" />
+                    <div>
+                      <div class="font-semibold text-gray-900">{{ story.name }}</div>
+                      <div class="text-sm text-gray-500">{{ story.location || story.specialty }}</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <button @click="scrollAllTestimonials('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
           </div>
         </div>
       </section>
 
       <!-- Health Tips Section -->
-      <section class="section bg-white py-16">
+      <section class="section bg-emerald-50" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container mx-auto px-4 relative">
           <div class="text-center mb-12">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Health & Wellness Tips</h2>
@@ -389,28 +410,18 @@
       </section>
 
       <!-- Insurance Partners Section -->
-      <section class="section bg-gray-50 py-12">
+      <section class="section bg-white" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container mx-auto px-4">
-          <div class="flex flex-col sm:flex-row justify-between items-center mb-10">
-            <div class="text-center sm:text-left mb-4 sm:mb-0">
-              <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Our Insurance Partners</h2>
-              <p class="text-lg text-gray-600 max-w-2xl">We work with leading insurance providers to bring you the best healthcare coverage</p>
-            </div>
-            <button 
-              @click="navigateToInsurancePartners"
-              class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group"
-            >
-              View All Partners
-              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-              </svg>
-            </button>
+          <div class="text-center mb-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Our Insurance Partners</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">We work with leading insurance providers to bring you the best healthcare coverage</p>
           </div>
           
-          <div class="relative">
+          <div class="relative group">
             <div ref="partnersContainer" class="insurance-partners-container flex items-center space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
               <!-- Insurance Partner Items -->
-              <div v-for="(partner, index) in insurancePartners" :key="index" 
+              <a v-for="(partner, index) in insurancePartners" :key="index" 
+                   :href="partner.website" target="_blank" rel="noopener noreferrer"
                    class="flex-shrink-0 w-48 h-32 bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:border-2 hover:border-medical-primary cursor-pointer"
                    :class="{ 'ring-2 ring-medical-primary': partner.isHovered }"
                    @mouseover="partner.isHovered = true"
@@ -435,37 +446,50 @@
                     </svg>
                   </div>
                 </div>
-              </div>
-              
-              <!-- Navigation Arrows -->
-              <button @click="scrollPartners('left')" class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button @click="scrollPartners('right')" class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+              </a>
             </div>
+            
+            <!-- Navigation Arrows -->
+            <button @click="scrollPartners('left')" class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button @click="scrollPartners('right')" class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- View All Partners Button -->
+          <div class="flex justify-end mt-8">
+            <button 
+              @click="navigateToInsurancePartners"
+              class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group"
+            >
+              View All Partners
+              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button>
           </div>
         </div>
       </section>
 
       <!-- CTA Section -->
-      <section class="section bg-gradient-to-r from-medical-primary to-medical-secondary text-white">
+      <section class="bg-gradient-to-r from-medical-primary to-medical-secondary text-white relative -mt-16 z-10 rounded-t-2xl py-12" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container text-center">
-          <h2 class="heading-2 text-white mb-4">Ready to Get Started?</h2>
-          <p class="text-large text-blue-100 mb-8 max-w-2xl mx-auto">
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">Ready to Get Started?</h2>
+          <p class="text-base text-blue-100 mb-6 max-w-xl mx-auto">
             Join thousands of patients who trust DoctorBuddy for their healthcare needs. Start your consultation today.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button @click="$router.push('/patient-login')" class="btn btn-secondary btn-large">
+            <button @click="$router.push('/patient-login')" class="btn btn-secondary">
               <i class="fas fa-user-plus mr-2"></i>
               Sign Up as Patient
             </button>
-            <button @click="$router.push('/doctor-login')" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary">
+            <button @click="$router.push('/doctor-login')" class="btn btn-outline text-white border-white hover:bg-white hover:text-medical-primary">
               <i class="fas fa-stethoscope mr-2"></i>
               Join as Doctor
             </button>
@@ -618,54 +642,78 @@ export default {
       ],
       // Insurance Partners
       insurancePartners: [
-        { 
-          id: 1, 
-          name: 'Blue Cross', 
-          tagline: 'Nationwide Coverage', 
-          logo: 'https://www.bluecrossmn.com/sites/default/files/2022-07/blue-cross-logo-full-color-rgb.svg',
-          isHovered: false,
-          bgClass: 'bg-blue-50'
-        },
-        { 
-          id: 2, 
-          name: 'Aetna', 
-          tagline: 'Health Benefits', 
-          logo: 'https://www.aetna.com/content/dam/aetna/images/logos/Aetna_Logo_Vertical_BlueBlack_RGB.svg',
+        {
+          id: 1,
+          name: 'Star Health',
+          tagline: 'Personal & Family',
+          logo: 'https://www.starhealth.in/sites/all/themes/starhealth/images/star-logo.svg',
+          website: 'https://www.starhealth.in/',
           isHovered: false,
           bgClass: 'bg-red-50'
         },
-        { 
-          id: 3, 
-          name: 'Cigna', 
-          tagline: 'Global Health', 
-          logo: 'https://www.cigna.com/static/www-cigna-com/images/logo-cigna-combined.svg',
-          isHovered: false,
-          bgClass: 'bg-green-50'
-        },
-        { 
-          id: 4, 
-          name: 'UnitedHealth', 
-          tagline: 'Optum Care', 
-          logo: 'https://www.uhc.com/content/dam/uhcdotcom/header/UHC_Logo_RGB_No_Background.png',
-          isHovered: false,
-          bgClass: 'bg-purple-50'
-        },
-        { 
-          id: 5, 
-          name: 'Humana', 
-          tagline: 'Wellness First', 
-          logo: 'https://www.humana.com/content/dam/portal/web/humana-logo.svg',
-          isHovered: false,
-          bgClass: 'bg-yellow-50'
-        },
-        { 
-          id: 6, 
-          name: 'Kaiser', 
-          tagline: 'Permanente', 
-          logo: 'https://healthy.kaiserpermanente.org/static/health/images/kaiser-permanente-logo.svg',
+        {
+          id: 2,
+          name: 'HDFC ERGO',
+          tagline: 'Trusted Partner',
+          logo: 'https://www.hdfcergo.com/images/default-source/header-logo/hdfc-ergo-logo.svg',
+          website: 'https://www.hdfcergo.com/',
           isHovered: false,
           bgClass: 'bg-blue-50'
         },
+        {
+          id: 3,
+          name: 'ICICI Lombard',
+          tagline: 'Complete Healthcare',
+          logo: 'https://www.icicilombard.com/assets/images/ICICI-Lombard-logo.svg',
+          website: 'https://www.icicilombard.com/',
+          isHovered: false,
+          bgClass: 'bg-orange-50'
+        },
+        {
+          id: 4,
+          name: 'Bajaj Allianz',
+          tagline: 'Caringly Yours',
+          logo: 'https://www.bajajallianz.com/content/dam/bagic/images/logo/bajaj-allianz-logo.png',
+          website: 'https://www.bajajallianz.com/',
+          isHovered: false,
+          bgClass: 'bg-sky-50'
+        },
+        {
+          id: 5,
+          name: 'Niva Bupa',
+          tagline: 'Health First',
+          logo: 'https://www.nivabupa.com/content/dam/nivabupa/images/logos/logo.svg',
+          website: 'https://www.nivabupa.com/',
+          isHovered: false,
+          bgClass: 'bg-indigo-50'
+        },
+        {
+          id: 6,
+          name: 'Care Health',
+          tagline: 'Quality Care',
+          logo: 'https://www.careinsurance.com/assets/images/care_logo_header.svg',
+          website: 'https://www.careinsurance.com/',
+          isHovered: false,
+          bgClass: 'bg-rose-50'
+        },
+        {
+          id: 7,
+          name: 'Aditya Birla',
+          tagline: 'Healthier Lives',
+          logo: 'https://www.adityabirlacapital.com/healthinsurance/assets/images/ab-health-logo.svg',
+          website: 'https://www.adityabirlacapital.com/healthinsurance/',
+          isHovered: false,
+          bgClass: 'bg-teal-50'
+        },
+        {
+          id: 8,
+          name: 'ManipalCigna',
+          tagline: 'Expert Care',
+          logo: 'https://www.manipalcigna.com/assets/images/logo.png',
+          website: 'https://www.manipalcigna.com/',
+          isHovered: false,
+          bgClass: 'bg-lime-50'
+        }
       ],
       
       // Hero content
@@ -909,6 +957,29 @@ export default {
           text: 'Saved me a trip to the ER! Quick diagnosis and prescription delivered.',
           avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face'
         }
+      ],
+      doctorTestimonials: [
+        {
+          id: 1,
+          name: 'Dr. John Doe',
+          specialty: 'Cardiology',
+          text: 'DoctorBuddy has revolutionized how I connect with my patients. It\'s efficient, secure, and incredibly user-friendly.',
+          avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=60&h=60&fit=crop&crop=face'
+        },
+        {
+          id: 2,
+          name: 'Dr. Jane Smith',
+          specialty: 'Pediatrics',
+          text: 'The platform allows me to provide quality care to children and their families, no matter where they are. A game-changer for pediatric medicine.',
+          avatar: 'https://images.unsplash.com/photo-1537368910025-7003507965b6?w=60&h=60&fit=crop&crop=face'
+        },
+        {
+          id: 3,
+          name: 'Dr. Alex Richards',
+          specialty: 'Dermatology',
+          text: 'I can now consult with more patients and provide timely advice, which is crucial in dermatology. Highly recommended!',
+          avatar: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=60&h=60&fit=crop&crop=face'
+        }
       ]
     }
   },
@@ -927,6 +998,19 @@ export default {
         default:
           return this.allDoctors;
       }
+    },
+    allTestimonials() {
+      const patientStories = this.testimonials.map(t => ({ ...t, type: 'Patient', storyId: `p-${t.id}` }));
+      const doctorStories = this.doctorTestimonials.map(t => ({ ...t, type: 'Doctor', storyId: `d-${t.id}` }));
+      
+      // Interleave them for a mixed view
+      const combined = [];
+      const maxLength = Math.max(patientStories.length, doctorStories.length);
+      for (let i = 0; i < maxLength; i++) {
+        if (patientStories[i]) combined.push(patientStories[i]);
+        if (doctorStories[i]) combined.push(doctorStories[i]);
+      }
+      return combined;
     }
   },
   
@@ -1016,6 +1100,33 @@ export default {
     scrollPartners(direction) {
       const container = this.$el.querySelector('.insurance-partners-container');
       const scrollAmount = 300; // Adjust this value to control scroll distance
+      if (direction === 'left') {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    },
+    scrollServices(direction) {
+      const container = this.$refs.servicesContainer;
+      const scrollAmount = 320 + 32; // w-80 card + space-x-8 gap
+      if (direction === 'left') {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    },
+    scrollHowItWorks(direction) {
+      const container = this.$refs.howItWorksContainer;
+      const scrollAmount = 320 + 32; // w-80 card + space-x-8 gap
+      if (direction === 'left') {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    },
+    scrollAllTestimonials(direction) {
+      const container = this.$refs.allTestimonialsContainer;
+      const scrollAmount = 384 + 32; // w-96 card + space-x-8 gap
       if (direction === 'left') {
         container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
       } else {
