@@ -391,9 +391,20 @@
       <!-- Insurance Partners Section -->
       <section class="section bg-gray-50 py-12">
         <div class="container mx-auto px-4">
-          <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Insurance Partners</h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">We work with leading insurance providers to bring you the best healthcare coverage</p>
+          <div class="flex flex-col sm:flex-row justify-between items-center mb-10">
+            <div class="text-center sm:text-left mb-4 sm:mb-0">
+              <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Our Insurance Partners</h2>
+              <p class="text-lg text-gray-600 max-w-2xl">We work with leading insurance providers to bring you the best healthcare coverage</p>
+            </div>
+            <button 
+              @click="navigateToInsurancePartners"
+              class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group"
+            >
+              View All Partners
+              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button>
           </div>
           
           <div class="relative">
@@ -939,6 +950,11 @@ export default {
         this.closeModal();
       }
       this.$router.push('/health-tips');
+    },
+    
+    // Navigate to insurance partners page
+    navigateToInsurancePartners() {
+      this.$router.push('/insurance-partners');
     },
     
     // Set hovered tip

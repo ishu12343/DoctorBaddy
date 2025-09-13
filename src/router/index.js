@@ -12,6 +12,7 @@ import AdminLogin from '@/components/admin/AdminLogin.vue'
 import AdminSignUp from '@/components/admin/AdminSignUp.vue'
 import AdminDashboard from '@/components/admin/AdminDashboard.vue'
 import TipsPage from '@/views/TipsPage.vue'
+import InsurancePartners from '@/views/InsurancePartners.vue'
 
 const routes = [
   { path: '/patient-login', name: 'PatientLogin', component: PatientLogin },
@@ -35,6 +36,7 @@ const routes = [
   { path: '/admin-signup', name: 'AdminSignUp', component: AdminSignUp },
   { path: '/admin-dashboard', name: 'AdminDashboard', component: AdminDashboard },
   { path: '/health-tips', name: 'HealthTips', component: TipsPage },
+  { path: '/insurance-partners', name: 'InsurancePartners', component: InsurancePartners },
 
   // {
   //   path: '/doctor-dashboard/profile',
