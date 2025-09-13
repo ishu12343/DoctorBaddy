@@ -3,16 +3,16 @@
     <AppHeader />
     
     <!-- Main Content with proper spacing for fixed header -->
-    <main class="flex-1 pt-16 lg:pt-20">
+    <main class="flex-1 pt-16 lg:pt-2">
       
       <!-- Hero Section -->
-      <section v-if="!showSmartDoctorSection" class="hero-pattern bg-gradient-to-br from-medical-primary via-medical-secondary to-blue-600 text-white section">
+      <section v-if="!showSmartDoctorSection" class="bg-gradient-to-br from-medical-primary via-medical-secondary to-blue-600 text-white section">
         <div class="container">
           <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             
             <!-- Hero Text Content -->
             <div class="text-left space-y-6 animate-fade-in">
-              <h1 class="heading-1 text-white">
+              <h1 class="heading-1 text-blue-100 mb-6">
                 <span class="text-highlight">Online doctor visits,</span>
                 <transition-group name="fade" tag="span" class="block">
                   <span :key="currentHeroPhrase" class="inline-block">{{ currentHeroPhrase }}</span>
@@ -20,7 +20,7 @@
               </h1>
               
               <div class="text-large text-blue-100 space-y-2">
-                <p class="font-medium">Your health, <span class="text-white font-bold">your way.</span></p>
+                <p class="font-medium">Your health, <span class="text-blue-100 font-bold">your way.</span></p>
                 <transition-group name="fade" tag="div">
                   <p :key="currentSubtitle" class="opacity-90">{{ currentSubtitle }}</p>
                 </transition-group>
@@ -303,6 +303,145 @@
         </div>
       </section>
 
+      <!-- Health Tips Section -->
+      <section class="section bg-white py-16">
+        <div class="container mx-auto px-4 relative">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Health & Wellness Tips</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Expert advice to help you maintain a healthy lifestyle and prevent illness</p>
+          </div>
+          
+          <div class="relative group">
+            <!-- Left Arrow -->
+            <button @click="scrollHealthTips('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <!-- Health Tips Container -->
+            <div ref="healthTipsContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+              <!-- Tip 1 -->
+              <div v-for="tip in healthTips" :key="tip.id" 
+                   class="flex-shrink-0 w-80 bg-white rounded-xl shadow-md p-6 transform transition-all duration-300 cursor-pointer snap-center"
+                   :class="{ 'scale-105 shadow-xl border-2 border-medical-primary': tip.isHovered }"
+                   @mouseenter="setHoveredTip(tip.id)"
+                   @mouseleave="tip.isHovered = false">
+                <div class="h-48 overflow-hidden rounded-lg mb-4">
+                  <img 
+                    :src="tip.image" 
+                    :alt="tip.title" 
+                    class="w-full h-full object-cover transition-transform duration-700"
+                    :class="{ 'scale-110': tip.isHovered }"
+                  />
+                </div>
+                <div class="flex items-center mb-3">
+                  <div :class="tip.tagClass">{{ tip.tag }}</div>
+                  <div v-if="tip.isHovered" class="ml-auto text-medical-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">{{ tip.title }}</h3>
+                <p class="text-gray-600 mb-4">{{ tip.description }}</p>
+                <button @click="viewTipDetails(tip)" class="text-medical-primary font-medium flex items-center group">
+                  Read More
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Right Arrow -->
+            <button @click="scrollHealthTips('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Dots and View All Button -->
+          <div class="flex flex-col sm:flex-row justify-between items-center mt-8 gap-4">
+            <!-- Dots Indicator -->
+            <div class="flex justify-center space-x-2">
+              <button v-for="(tip, index) in healthTips" :key="'dot-'+tip.id" 
+                      @click="scrollToHealthTip(index)"
+                      class="w-2.5 h-2.5 rounded-full transition-all duration-300"
+                      :class="currentTipIndex === index ? 'bg-medical-primary w-6' : 'bg-gray-300'">
+                <span class="sr-only">Go to tip {{ index + 1 }}</span>
+              </button>
+            </div>
+            
+            <!-- View All Tips Button -->
+            <button 
+              @click="navigateToTips"
+              class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group mt-4 sm:mt-0"
+            >
+              View All Health Tips
+              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Insurance Partners Section -->
+      <section class="section bg-gray-50 py-12">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Insurance Partners</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">We work with leading insurance providers to bring you the best healthcare coverage</p>
+          </div>
+          
+          <div class="relative">
+            <div ref="partnersContainer" class="insurance-partners-container flex items-center space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+              <!-- Insurance Partner Items -->
+              <div v-for="(partner, index) in insurancePartners" :key="index" 
+                   class="flex-shrink-0 w-48 h-32 bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:border-2 hover:border-medical-primary cursor-pointer"
+                   :class="{ 'ring-2 ring-medical-primary': partner.isHovered }"
+                   @mouseover="partner.isHovered = true"
+                   @mouseleave="partner.isHovered = false">
+                <div class="h-16 w-full flex items-center justify-center mb-3 p-2 rounded-lg overflow-hidden" :class="partner.bgClass">
+                  <img 
+                    :src="partner.logo" 
+                    :alt="partner.name" 
+                    class="h-full w-full object-contain" 
+                    :class="{ 'p-1': partner.id === 4 }"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="text-center">
+                  <h4 class="font-medium text-gray-800">{{ partner.name }}</h4>
+                  <p class="text-sm text-gray-500">{{ partner.tagline }}</p>
+                </div>
+                <div v-if="partner.isHovered" class="absolute -right-4">
+                  <div class="bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-md border-2 border-medical-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-medical-primary" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Navigation Arrows -->
+              <button @click="scrollPartners('left')" class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button @click="scrollPartners('right')" class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- CTA Section -->
       <section class="section bg-gradient-to-r from-medical-primary to-medical-secondary text-white">
         <div class="container text-center">
@@ -311,11 +450,11 @@
             Join thousands of patients who trust DoctorBuddy for their healthcare needs. Start your consultation today.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button @click="$router.push('/patient-signup')" class="btn btn-secondary btn-large">
+            <button @click="$router.push('/patient-login')" class="btn btn-secondary btn-large">
               <i class="fas fa-user-plus mr-2"></i>
               Sign Up as Patient
             </button>
-            <button @click="$router.push('/doctor-signup')" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary">
+            <button @click="$router.push('/doctor-login')" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary">
               <i class="fas fa-stethoscope mr-2"></i>
               Join as Doctor
             </button>
@@ -326,7 +465,83 @@
 
     <AppFooter />
     <ChatButton @open-chat="openChat" />
-    <FloatingActionButton @click="$router.push('/patient-signup')" />
+    <FloatingActionButton @click="$router.push('/patient-login')" />
+    <FloatingActionButton @click="$router.push('/doctor-login')" />
+    
+    <!-- Tip Detail Modal -->
+    <div v-if="selectedTip" class="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50" @click.self="closeModal">
+      <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+        <button 
+          @click="closeModal"
+          class="fixed sm:absolute top-4 right-4 bg-white/80 hover:bg-gray-100 rounded-full p-2 shadow-lg text-gray-700 hover:text-gray-900 z-10"
+          aria-label="Close modal"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        
+        <div class="h-64 overflow-hidden">
+          <img 
+            :src="selectedTip.image" 
+            :alt="selectedTip.title"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <span :class="selectedTip.tagClass" class="text-xs font-semibold px-3 py-1 rounded-full">
+              {{ selectedTip.tag }}
+            </span>
+            <span class="text-sm text-gray-500">Today</span>
+          </div>
+          
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ selectedTip.title }}</h2>
+          
+          <div class="prose max-w-none text-gray-600 mb-6">
+            <p class="mb-4">{{ selectedTip.description }}</p>
+            
+            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+              <h3 class="font-semibold text-blue-800 mb-2">Key Benefits</h3>
+              <ul class="space-y-2">
+                <li v-for="(benefit, index) in ['Improved health', 'Better lifestyle', 'Increased energy']" 
+                    :key="index" 
+                    class="flex items-start">
+                  <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" 
+                       fill="none" 
+                       viewBox="0 0 24 24" 
+                       stroke="currentColor">
+                    <path stroke-linecap="round" 
+                          stroke-linejoin="round" 
+                          stroke-width="2" 
+                          d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{{ benefit }}</span>
+                </li>
+              </ul>
+            </div>
+            
+            <p class="text-gray-700">For more detailed information and personalized advice, please consult with our healthcare professionals.</p>
+          </div>
+          
+          <div class="flex justify-between items-center">
+            <button 
+              @click="closeModal"
+              class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+            >
+              Close
+            </button>
+            <button 
+              @click="navigateToTips"
+              class="px-6 py-2.5 bg-medical-primary text-white rounded-lg hover:bg-medical-secondary transition-colors duration-200 font-medium"
+            >
+              View All Tips
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -341,6 +556,107 @@ export default {
   components: { AppHeader, AppFooter, ChatButton, FloatingActionButton },
   data() {
     return {
+      selectedTip: null,
+      currentTipIndex: 0,
+      healthTips: [
+        {
+          id: 1,
+          title: 'Eat a Balanced Diet',
+          description: 'Incorporate a variety of fruits, vegetables, whole grains, and lean proteins into your meals for optimal health.',
+          image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+          tag: 'NUTRITION',
+          tagClass: 'bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full',
+          isHovered: false
+        },
+        {
+          id: 2,
+          title: 'Stay Active Daily',
+          description: 'Aim for at least 30 minutes of moderate exercise most days of the week to maintain good health.',
+          image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+          tag: 'FITNESS',
+          tagClass: 'bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full',
+          isHovered: false
+        },
+        {
+          id: 3,
+          title: 'Manage Stress',
+          description: 'Practice mindfulness, meditation, or deep breathing exercises to reduce stress and improve mental health.',
+          image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+          tag: 'WELLBEING',
+          tagClass: 'bg-purple-100 text-purple-800 text-xs font-semibold px-3 py-1 rounded-full',
+          isHovered: false
+        },
+        {
+          id: 4,
+          title: 'Stay Hydrated',
+          description: 'Drink at least 8 glasses of water daily to maintain proper body function and energy levels.',
+          image: 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+          tag: 'HYDRATION',
+          tagClass: 'bg-cyan-100 text-cyan-800 text-xs font-semibold px-3 py-1 rounded-full',
+          isHovered: false
+        },
+        {
+          id: 5,
+          title: 'Quality Sleep',
+          description: 'Get 7-9 hours of quality sleep each night to support overall health and well-being.',
+          image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+          tag: 'SLEEP',
+          tagClass: 'bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full',
+          isHovered: false
+        }
+      ],
+      // Insurance Partners
+      insurancePartners: [
+        { 
+          id: 1, 
+          name: 'Blue Cross', 
+          tagline: 'Nationwide Coverage', 
+          logo: 'https://www.bluecrossmn.com/sites/default/files/2022-07/blue-cross-logo-full-color-rgb.svg',
+          isHovered: false,
+          bgClass: 'bg-blue-50'
+        },
+        { 
+          id: 2, 
+          name: 'Aetna', 
+          tagline: 'Health Benefits', 
+          logo: 'https://www.aetna.com/content/dam/aetna/images/logos/Aetna_Logo_Vertical_BlueBlack_RGB.svg',
+          isHovered: false,
+          bgClass: 'bg-red-50'
+        },
+        { 
+          id: 3, 
+          name: 'Cigna', 
+          tagline: 'Global Health', 
+          logo: 'https://www.cigna.com/static/www-cigna-com/images/logo-cigna-combined.svg',
+          isHovered: false,
+          bgClass: 'bg-green-50'
+        },
+        { 
+          id: 4, 
+          name: 'UnitedHealth', 
+          tagline: 'Optum Care', 
+          logo: 'https://www.uhc.com/content/dam/uhcdotcom/header/UHC_Logo_RGB_No_Background.png',
+          isHovered: false,
+          bgClass: 'bg-purple-50'
+        },
+        { 
+          id: 5, 
+          name: 'Humana', 
+          tagline: 'Wellness First', 
+          logo: 'https://www.humana.com/content/dam/portal/web/humana-logo.svg',
+          isHovered: false,
+          bgClass: 'bg-yellow-50'
+        },
+        { 
+          id: 6, 
+          name: 'Kaiser', 
+          tagline: 'Permanente', 
+          logo: 'https://healthy.kaiserpermanente.org/static/health/images/kaiser-permanente-logo.svg',
+          isHovered: false,
+          bgClass: 'bg-blue-50'
+        },
+      ],
+      
       // Hero content
       heroPhrases: [
         '24/7',
@@ -604,6 +920,92 @@ export default {
   },
   
   methods: {
+    // Close modal and reset body overflow
+    closeModal() {
+      this.selectedTip = null;
+      document.body.style.overflow = '';
+    },
+    
+    // Method to view tip details
+    viewTipDetails(tip) {
+      this.selectedTip = { ...tip };
+      document.body.style.overflow = 'hidden';
+    },
+    
+    // Navigate to tips page
+    navigateToTips() {
+      // Close modal if open when navigating to tips page
+      if (this.selectedTip) {
+        this.closeModal();
+      }
+      this.$router.push('/health-tips');
+    },
+    
+    // Set hovered tip
+    setHoveredTip(tipId) {
+      this.healthTips = this.healthTips.map(tip => ({
+        ...tip,
+        isHovered: tip.id === tipId
+      }));
+    },
+    
+    scrollHealthTips(direction) {
+      const container = this.$refs.healthTipsContainer;
+      const scrollAmount = 320; // Width of card + gap
+      
+      if (direction === 'left') {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+      
+      // Update current tip index based on scroll position
+      this.updateCurrentTipIndex();
+    },
+    
+    scrollToHealthTip(index) {
+      const container = this.$refs.healthTipsContainer;
+      const card = container.children[index];
+      if (card) {
+        card.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center'
+        });
+        this.currentTipIndex = index;
+      }
+    },
+    
+    updateCurrentTipIndex() {
+      const container = this.$refs.healthTipsContainer;
+      if (!container) return;
+      
+      const scrollPosition = container.scrollLeft;
+      const cardWidth = 320; // Width of card + gap
+      const newIndex = Math.round(scrollPosition / cardWidth);
+      
+      if (newIndex !== this.currentTipIndex) {
+        this.currentTipIndex = newIndex;
+      }
+    },
+    
+    // Smooth scroll to section
+    scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    },
+    
+    scrollPartners(direction) {
+      const container = this.$el.querySelector('.insurance-partners-container');
+      const scrollAmount = 300; // Adjust this value to control scroll distance
+      if (direction === 'left') {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    },
     showLearnMoreSections() {
       this.showLearnMore = true;
       setTimeout(() => {
@@ -678,6 +1080,47 @@ export default {
 </script>
 
 <style scoped>
+/* Custom scrollbar for horizontal containers */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  height: 8px;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 4px;
+}
+
+.scrollbar-hide::-webkit-scrollbar-track {
+  background-color: #f3f4f6;
+  border-radius: 4px;
+}
+
+/* Health Tips hover effect */
+.health-tip-card {
+  transition: all 0.3s ease;
+}
+
+.health-tip-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Custom scrollbar for insurance partners */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Transition animations */
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.8s ease-in-out;
