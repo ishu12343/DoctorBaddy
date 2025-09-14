@@ -40,7 +40,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 /* Route transition - subtle and fast */
