@@ -32,7 +32,7 @@
                   <i class="fas fa-info-circle mr-2"></i>
                   Learn More
                 </button>
-                <button @click="showSmartDoctorSection = true" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary">
+                <button @click="showAllDoctorsList" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary">
                   <i class="fas fa-stethoscope mr-2"></i>
                   Find Specialists
                 </button>
@@ -65,11 +65,7 @@
                       <i class="fas fa-circle text-xs"></i>
                       Live Now
                     </span>
-                    <button @click="showSmartDoctorSection = true" class="btn btn-primary btn-small">
-                      <i class="fas fa-stethoscope mr-1"></i>
-                      Find Specialist
-                      <i class="fas fa-arrow-right ml-1"></i>
-                    </button>
+                    <button @click="showAllDoctorsList" class="btn btn-primary btn-small">Find All Doctors</button>
                   </div>
                 </div>
                 
@@ -96,9 +92,9 @@
                         <div v-else class="w-16 h-16 rounded-lg bg-gray-200 flex items-center justify-center">
                             <span class="text-xl font-bold text-gray-500">{{ getInitials(doctor.full_name) }}</span>
                         </div>
-                        <div class="absolute -top-1 -right-1 bg-yellow-400 text-xs px-1.5 py-0.5 rounded-full flex items-center gap-1 shadow-md">
-                          <i class="fas fa-star text-yellow-800 text-xs"></i>
-                          <span class="text-yellow-900 font-bold">{{ doctor.average_rating || doctor.rating }}</span>
+                        <div class="absolute -top-2 -right-2 bg-yellow-400 text-white px-2 py-1 rounded-lg shadow-md flex items-center gap-1">
+                            <i class="fas fa-star text-xs"></i>
+                            <span class="font-bold text-sm">{{ doctor.average_rating > 0 ? doctor.average_rating.toFixed(1) : 'New' }}</span>
                         </div>
                       </div>
                       <!-- Info -->
@@ -165,26 +161,25 @@
             </div>
 
             <!-- Filter Categories -->
-            <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
               <button 
-                v-for="category in suggestionCategories" 
-                :key="category.id"
-                @click="currentSuggestionCategory = category.id"
+                v-for="specialty in availableSpecialties" 
+                :key="specialty"
+                @click="currentSpecialty = specialty"
                 :class="[
                   'flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all duration-200',
-                  currentSuggestionCategory === category.id 
+                  currentSpecialty === specialty
                     ? 'bg-medical-secondary text-white border-medical-secondary' 
                     : 'bg-white text-gray-700 border-gray-300 hover:border-medical-secondary'
                 ]"
               >
-                <i :class="category.icon"></i>
-                <span>{{ category.name }}</span>
-                <span class="bg-white/20 text-xs px-2 py-1 rounded-full">{{ category.count }}</span>
+                <span>{{ specialty }}</span>
               </button>
             </div>
 
             <!-- Doctor Cards Grid -->
-            <div class="grid-cards">
+            <div v-if="loadingAllDoctors" class="text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-medical-primary"></i></div>
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div 
                 v-for="doctor in filteredDoctors" 
                 :key="doctor.id"
@@ -192,50 +187,43 @@
               >
                 <div class="card-body">
                   <div class="flex items-start gap-4">
-                    <div class="relative">
-                      <img :src="doctor.image" :alt="doctor.name" class="w-16 h-16 rounded-full object-cover" />
-                      <div v-if="doctor.isOnline" class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div class="relative flex-shrink-0">
+                      <img v-if="doctor.profile_photo" :src="doctor.profile_photo" :alt="doctor.full_name" class="w-20 h-20 rounded-lg object-cover shadow-md" />
+                      <div v-else class="w-20 h-20 rounded-lg bg-gray-200 flex items-center justify-center">
+                          <span class="text-2xl font-bold text-gray-500">{{ getInitials(doctor.full_name) }}</span>
+                      </div>
                     </div>
                     <div class="flex-1">
                       <div class="flex items-start justify-between mb-2">
                         <div>
-                          <h3 class="font-semibold text-gray-900">{{ doctor.name }}</h3>
-                          <p class="text-medical-secondary">{{ doctor.specialty }}</p>
-                          <p class="text-sm text-gray-500">{{ doctor.experience }} years experience</p>
-                        </div>
-                        <div class="text-right">
-                          <div class="flex items-center gap-1 text-yellow-500 mb-1">
-                            <i class="fas fa-star"></i>
-                            <span class="font-semibold">{{ doctor.rating }}</span>
-                          </div>
-                          <div class="text-lg font-bold text-medical-primary">${{ doctor.consultationFee }}</div>
+                          <h3 class="font-bold text-gray-900 truncate">{{ doctor.full_name }}</h3>
+                          <p class="text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
                         </div>
                       </div>
-                      
-                      <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-4 text-sm">
-                          <span class="flex items-center gap-1">
-                            <i class="fas fa-users text-gray-400"></i>
-                            {{ doctor.totalPatients }}+ patients
-                          </span>
-                          <span :class="[
-                            'flex items-center gap-1',
-                            doctor.isOnline ? 'text-green-600' : 'text-orange-600'
-                          ]">
-                            <i class="fas fa-clock"></i>
-                            {{ doctor.nextAvailable }}
-                          </span>
+                      <div class="flex items-center gap-2 mb-2">
+                        <div class="flex items-center gap-1 text-yellow-500">
+                            <i class="fas fa-star"></i>
+                            <span class="font-bold text-gray-800">{{ doctor.average_rating > 0 ? doctor.average_rating.toFixed(1) : 'New' }}</span>
                         </div>
-                        
-                        <button 
-                          @click="selectDoctorForConsultation(doctor)"
-                          class="btn btn-primary btn-small"
-                        >
-                          <i class="fas fa-video mr-1"></i>
-                          Consult Now
-                        </button>
+                        <span class="text-xs text-gray-500 ml-1">({{ doctor.total_reviews }} reviews)</span>
+                      </div>
+                      <div class="text-xs text-gray-500 space-y-1">
+                          <div class="flex items-center gap-2">
+                              <i class="fas fa-briefcase-medical w-3 text-center text-gray-400"></i>
+                              <span>{{ doctor.experience }} years exp.</span>
+                          </div>
+                          <div class="flex items-center gap-2" v-if="doctor.languages && doctor.languages.length">
+                              <i class="fas fa-language w-3 text-center text-gray-400"></i>
+                              <span class="truncate">{{ doctor.languages.join(', ') }}</span>
+                          </div>
                       </div>
                     </div>
+                  </div>
+                  <div class="mt-4 border-t pt-3 flex items-center justify-between">
+                      <span class="text-lg font-bold text-medical-primary">${{ doctor.consultation_fee || 'N/A' }}</span>
+                      <button @click="bookAppointment(doctor)" class="btn btn-primary btn-small">
+                          Book Now
+                      </button>
                   </div>
                 </div>
               </div>
@@ -562,6 +550,8 @@ export default {
     return {
       selectedTip: null,
       loadingDoctors: false,
+      loadingAllDoctors: false,
+      allDoctors: [],
       currentTipIndex: 0,
       healthTips: [
         {
@@ -639,7 +629,8 @@ export default {
       showSmartDoctorSection: false,
       showLearnMore: false,
       currentSuggestionCategory: 'top-rated',
-      howItWorksView: 'patient',
+      currentSpecialty: 'All',
+      availableSpecialties: ['All'],
       
       // Animated stats
       animatedStats: {
@@ -684,64 +675,7 @@ export default {
       // Mock data
       topRatedDoctors: [],
       
-      allDoctors: [
-        {
-          id: 1,
-          name: 'Dr. Sarah Johnson',
-          specialty: 'Family Medicine',
-          experience: 15,
-          rating: 4.9,
-          consultationFee: 49,
-          isOnline: true,
-          isTopRated: true,
-          isSpecialist: false,
-          totalPatients: 2500,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: 2,
-          name: 'Dr. Michael Chen',
-          specialty: 'Cardiology',
-          experience: 20,
-          rating: 4.8,
-          consultationFee: 75,
-          isOnline: true,
-          isTopRated: true,
-          isSpecialist: true,
-          totalPatients: 3200,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: 3,
-          name: 'Dr. Emily Rodriguez',
-          specialty: 'Dermatology',
-          experience: 12,
-          rating: 4.9,
-          consultationFee: 65,
-          isOnline: false,
-          isTopRated: true,
-          isSpecialist: true,
-          totalPatients: 1800,
-          nextAvailable: '2:00 PM',
-          image: 'https://images.unsplash.com/photo-1594824804732-ca8db5ac6d34?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: 4,
-          name: 'Dr. David Kim',
-          specialty: 'Pediatrics',
-          experience: 18,
-          rating: 4.7,
-          consultationFee: 55,
-          isOnline: true,
-          isTopRated: false,
-          isSpecialist: true,
-          totalPatients: 2100,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face'
-        }
-      ],
+      
       
       services: [
         {
@@ -866,18 +800,10 @@ export default {
   
   computed: {
     filteredDoctors() {
-      switch (this.currentSuggestionCategory) {
-        case 'top-rated':
-          return this.allDoctors.filter(doctor => doctor.isTopRated);
-        case 'available-now':
-          return this.allDoctors.filter(doctor => doctor.isOnline);
-        case 'specialists':
-          return this.allDoctors.filter(doctor => doctor.isSpecialist);
-        case 'recommended':
-          return this.allDoctors.filter(doctor => doctor.rating >= 4.8);
-        default:
-          return this.allDoctors;
+      if (this.currentSpecialty === 'All') {
+        return this.allDoctors;
       }
+      return this.allDoctors.filter(doctor => doctor.specialty === this.currentSpecialty);
     },
     allTestimonials() {
       const patientStories = this.testimonials.map(t => ({ ...t, type: 'Patient', storyId: `p-${t.id}` }));
@@ -1013,12 +939,32 @@ export default {
         container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
       }
     },
+    showAllDoctorsList() {
+        this.showSmartDoctorSection = true;
+        if (this.allDoctors.length === 0) {
+            this.fetchAllDoctors();
+        }
+    },
+    async fetchAllDoctors() {
+      this.loadingAllDoctors = true;
+      try {
+        const response = await axios.get('http://127.0.0.1:5000/api/patient/doctors');
+        if (response.data && response.data.doctors) {
+          this.allDoctors = response.data.doctors;
+          const specialties = [...new Set(response.data.doctors.map(d => d.specialty).filter(Boolean))];
+          this.availableSpecialties = ['All', ...specialties];
+        }
+      } catch (error) {
+        console.error('Error fetching all doctors:', error);
+        this.allDoctors = [];
+      } finally {
+        this.loadingAllDoctors = false;
+      }
+    },
     async fetchTopRatedDoctors() {
       this.loadingDoctors = true;
       try {
-        const token = localStorage.getItem('token');
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        const response = await axios.get('http://127.0.0.1:5000/api/patient/doctors', { headers });
+        const response = await axios.get('http://127.0.0.1:5000/api/patient/doctors');
 
         if (response.data && response.data.doctors) {
             this.topRatedDoctors = response.data.doctors
