@@ -265,17 +265,27 @@
       <section v-if="showLearnMore && !showSmartDoctorSection" class="section bg-white" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container">
           <div class="text-center mb-12">
-            <h2 class="heading-2 text-gray-900 mb-4">How It Works</h2>
-            <p class="text-large text-gray-600">Simple steps to get the care you need</p>
+            <h2 class="heading-2 text-gray-900 mb-4">{{ howItWorks[howItWorksView].title }}</h2>
+            <p class="text-large text-gray-600">Simple steps to get started on our platform</p>
+            
+            <!-- Toggle Buttons -->
+            <div class="mt-6 inline-flex rounded-lg shadow-sm">
+              <button @click="howItWorksView = 'patient'" :class="['px-6 py-2 rounded-l-lg border border-gray-300 transition-colors', howItWorksView === 'patient' ? 'bg-medical-primary text-white border-medical-primary' : 'bg-white text-gray-700 hover:bg-gray-50']">
+                <i class="fas fa-user mr-2"></i> For Patients
+              </button>
+              <button @click="howItWorksView = 'doctor'" :class="['px-6 py-2 rounded-r-lg border border-gray-300 -ml-px transition-colors', howItWorksView === 'doctor' ? 'bg-medical-primary text-white border-medical-primary' : 'bg-white text-gray-700 hover:bg-gray-50']">
+                <i class="fas fa-user-md mr-2"></i> For Doctors
+              </button>
+            </div>
           </div>
 
           <div class="grid md:grid-cols-3 gap-8">
-            <div v-for="(step, index) in howItWorksSteps" :key="step.id" class="text-center relative">
+            <div v-for="(step, index) in howItWorks[howItWorksView].steps" :key="step.id" class="text-center relative">
               <div class="relative mb-6">
-                <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md">
-                  {{ index + 1 }}
+                <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                  <i :class="step.icon"></i>
                 </div>
-                <div v-if="index < howItWorksSteps.length - 1" class="hidden md:block absolute top-1/2 -translate-y-1/2 left-1/2 w-full h-0.5 bg-gray-200 -z-10"></div>
+                <div v-if="index < howItWorks[howItWorksView].steps.length - 1" class="hidden md:block absolute top-1/2 -translate-y-1/2 left-1/2 w-full h-0.5 bg-gray-200 -z-10"></div>
               </div>
               <h3 class="heading-3 text-gray-900 mb-3">{{ step.title }}</h3>
               <p class="text-gray-600">{{ step.description }}</p>
@@ -605,6 +615,7 @@ export default {
       showSmartDoctorSection: false,
       showLearnMore: false,
       currentSuggestionCategory: 'top-rated',
+      howItWorksView: 'patient',
       
       // Animated stats
       animatedStats: {
@@ -784,23 +795,26 @@ export default {
         }
       ],
       
-      howItWorksSteps: [
-        {
-          id: 1,
-          title: 'Sign Up',
-          description: 'Create your account and complete your medical profile in minutes.'
+      howItWorks: {
+        patient: {
+          title: 'How It Works for Patients',
+          description: 'Simple steps to get the care you need, anytime, anywhere.',
+          steps: [
+            { id: 1, icon: 'fas fa-user-plus', title: 'Sign Up', description: 'Create your secure account and complete your medical profile in minutes.' },
+            { id: 2, icon: 'fas fa-search', title: 'Find Your Doctor', description: 'Browse our network of certified doctors and choose the right one for you.' },
+            { id: 3, icon: 'fas fa-video', title: 'Start Consultation', description: 'Begin your video consultation and get the expert care you need instantly.' }
+          ]
         },
-        {
-          id: 2,
-          title: 'Choose Doctor',
-          description: 'Browse and select from our network of certified healthcare professionals.'
-        },
-        {
-          id: 3,
-          title: 'Start Consultation',
-          description: 'Begin your video consultation and get the care you need instantly.'
+        doctor: {
+          title: 'How It Works for Doctors',
+          description: 'Join our network to expand your practice and connect with patients.',
+          steps: [
+            { id: 1, icon: 'fas fa-id-card', title: 'Register & Verify', description: 'Join our platform by completing a simple registration and verification process.' },
+            { id: 2, icon: 'fas fa-calendar-alt', title: 'Set Your Schedule', description: 'Manage your availability and appointments with our flexible scheduling tools.' },
+            { id: 3, icon: 'fas fa-laptop-medical', title: 'Conduct Consultations', description: 'Provide high-quality care to patients through secure video calls.' }
+          ]
         }
-      ],
+      },
       
       testimonials: [
         {
