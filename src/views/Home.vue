@@ -75,30 +75,52 @@
                 
                 <!-- Doctor Cards -->
                 <div class="grid gap-4">
-                  <div 
-                    v-for="(doctor, index) in topRatedDoctors.slice(0, 3)" 
+                  <div v-if="loadingDoctors" class="text-center text-white py-10">
+                    <i class="fas fa-spinner fa-spin text-2xl"></i>
+                    <p class="mt-2">Loading doctors...</p>
+                  </div>
+                  <div v-else-if="topRatedDoctors.length === 0" class="text-center text-white py-10">
+                    <p>No top rated doctors available at the moment.</p>
+                  </div>
+                  <div
+                    v-else
+                    v-for="(doctor, index) in topRatedDoctors"
                     :key="doctor.id"
-                    class="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                    class="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-gray-800"
                     :style="{ animationDelay: `${index * 0.2}s` }"
                   >
-                    <div class="flex items-center gap-3">
-                      <div class="relative">
-                        <img :src="doctor.image" :alt="doctor.name" class="w-12 h-12 rounded-full object-cover" />
-                        <div class="absolute -top-1 -right-1 bg-yellow-400 text-xs px-1 py-0.5 rounded-full flex items-center gap-1">
-                          <i class="fas fa-star text-yellow-800"></i>
-                          <span class="text-yellow-800 font-bold">{{ doctor.rating }}</span>
+                    <div class="flex items-start gap-4">
+                      <!-- Avatar -->
+                      <div class="relative flex-shrink-0">
+                        <img v-if="doctor.profile_photo" :src="doctor.profile_photo" :alt="doctor.full_name" class="w-16 h-16 rounded-lg object-cover" />
+                        <div v-else class="w-16 h-16 rounded-lg bg-gray-200 flex items-center justify-center">
+                            <span class="text-xl font-bold text-gray-500">{{ getInitials(doctor.full_name) }}</span>
+                        </div>
+                        <div class="absolute -top-1 -right-1 bg-yellow-400 text-xs px-1.5 py-0.5 rounded-full flex items-center gap-1 shadow-md">
+                          <i class="fas fa-star text-yellow-800 text-xs"></i>
+                          <span class="text-yellow-900 font-bold">{{ doctor.average_rating || doctor.rating }}</span>
                         </div>
                       </div>
-                      <div class="flex-1">
-                        <h4 class="font-semibold text-gray-900">{{ doctor.name }}</h4>
-                        <p class="text-sm text-gray-600">{{ doctor.specialty }}</p>
-                        <div class="flex items-center justify-between mt-2">
-                          <span class="text-lg font-bold text-medical-primary">${{ doctor.consultationFee }}</span>
-                          <button class="bg-medical-secondary text-white p-2 rounded-lg hover:bg-blue-600 transition-colors">
-                            <i class="fas fa-video"></i>
-                          </button>
+                      <!-- Info -->
+                      <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-gray-900 truncate">{{ doctor.full_name || doctor.name }}</h4>
+                        <p class="text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
+                        <div class="text-xs text-gray-500 mt-2 space-y-1">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-briefcase-medical w-3 text-center text-gray-400"></i>
+                                <span>{{ doctor.experience }} years exp.</span>
+                            </div>
+                            <div class="flex items-center gap-2" v-if="doctor.languages && doctor.languages.length">
+                                <i class="fas fa-language w-3 text-center text-gray-400"></i>
+                                <span class="truncate">{{ doctor.languages.join(', ') }}</span>
+                            </div>
                         </div>
                       </div>
+                    </div>
+                    <div class="mt-4">
+                        <button @click="bookAppointment(doctor)" class="btn btn-primary w-full btn-small">
+                            Book Appointment
+                        </button>
                     </div>
                   </div>
                 </div>
@@ -531,6 +553,7 @@ import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
 import ChatButton from '@/components/ChatButton.vue';
 import FloatingActionButton from '@/components/ui/FloatingActionButton.vue';
+import axios from 'axios';
 
 export default {
   name: 'DoctorHome',
@@ -538,6 +561,7 @@ export default {
   data() {
     return {
       selectedTip: null,
+      loadingDoctors: false,
       currentTipIndex: 0,
       healthTips: [
         {
@@ -658,32 +682,7 @@ export default {
       ],
       
       // Mock data
-      topRatedDoctors: [
-        { 
-          id: 1,
-          name: 'Dr. Sarah Johnson', 
-          specialty: 'Family Medicine', 
-          rating: 4.9,
-          consultationFee: 49,
-          image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face'
-        },
-        { 
-          id: 2,
-          name: 'Dr. Michael Chen', 
-          specialty: 'Cardiology', 
-          rating: 4.8,
-          consultationFee: 75,
-          image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=80&h=80&fit=crop&crop=face'
-        },
-        { 
-          id: 3,
-          name: 'Dr. Emily Rodriguez', 
-          specialty: 'Dermatology', 
-          rating: 4.9,
-          consultationFee: 65,
-          image: 'https://images.unsplash.com/photo-1594824804732-ca8db5ac6d34?w=80&h=80&fit=crop&crop=face'
-        }
-      ],
+      topRatedDoctors: [],
       
       allDoctors: [
         {
@@ -896,6 +895,20 @@ export default {
   },
   
   methods: {
+    getInitials(name) {
+      if (!name) return '';
+      return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    },
+    bookAppointment(doctor) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        console.log(`Booking appointment with ${doctor.full_name}`);
+        this.$router.push(`/patient-dashboard`); // Or a specific booking page
+      } else {
+        // User not logged in, redirect to login
+        this.$router.push('/patient-login');
+      }
+    },
     // Close modal and reset body overflow
     closeModal() {
       this.selectedTip = null;
@@ -1000,6 +1013,26 @@ export default {
         container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
       }
     },
+    async fetchTopRatedDoctors() {
+      this.loadingDoctors = true;
+      try {
+        const token = localStorage.getItem('token');
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const response = await axios.get('http://127.0.0.1:5000/api/patient/doctors', { headers });
+
+        if (response.data && response.data.doctors) {
+            this.topRatedDoctors = response.data.doctors
+                .sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0))
+                .slice(0, 3);
+        }
+      } catch (error) {
+        console.error('Error fetching top rated doctors:', error);
+        // This error is expected for unauthenticated users. The UI will gracefully fall back to the empty state.
+        this.topRatedDoctors = [];
+      } finally {
+        this.loadingDoctors = false;
+      }
+    },
     showLearnMoreSections() {
       this.showLearnMore = true;
       setTimeout(() => {
@@ -1060,6 +1093,7 @@ export default {
     this.animateStats();
     this.startHeroPhraseRotation();
     this.startSubtitleRotation();
+    this.fetchTopRatedDoctors();
   },
   
   beforeUnmount() {
