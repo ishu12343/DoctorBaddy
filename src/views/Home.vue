@@ -238,12 +238,21 @@
 
       <!-- Services Section -->
       <section v-if="showLearnMore && !showSmartDoctorSection" class="section bg-slate-50" style="padding-top: 1rem; padding-bottom: 1rem;">
-        <div class="container">
-          <div class="text-center mb-12">
-            <h2 class="heading-2 text-gray-900 mb-4">Our Services</h2>
-            <p class="text-large text-gray-600 max-w-2xl mx-auto">
-              Comprehensive healthcare services designed to meet all your medical needs from the comfort of your home.
-            </p>
+        <div class="container mx-auto px-4">
+          <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+              <h2 class="heading-2 text-gray-900 mb-2">Our Services</h2>
+              <p class="text-large text-gray-600">Comprehensive healthcare for your needs.</p>
+            </div>
+            <button 
+              @click="navigateToServices"
+              class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group"
+            >
+              View All Services
+              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button>
           </div>
 
           <div class="relative group">
@@ -277,7 +286,7 @@
 
       <!-- How It Works Section -->
       <section v-if="showLearnMore && !showSmartDoctorSection" class="section bg-white" style="padding-top: 1rem; padding-bottom: 1rem;">
-        <div class="container">
+        <div class="container mx-auto px-4">
           <div class="text-center mb-12">
             <h2 class="heading-2 text-gray-900 mb-4">{{ howItWorks[howItWorksView].title }}</h2>
             <p class="text-large text-gray-600">Simple steps to get started on our platform</p>
@@ -293,17 +302,34 @@
             </div>
           </div>
 
-          <div class="grid md:grid-cols-3 gap-8">
-            <div v-for="(step, index) in howItWorks[howItWorksView].steps" :key="step.id" class="text-center relative">
-              <div class="relative mb-6">
-                <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-                  <i :class="step.icon"></i>
+          <div class="relative group">
+            <button @click="scrollHowItWorks('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <div ref="howItWorksContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+              <div v-for="step in howItWorks[howItWorksView].steps" :key="step.id" class="flex-shrink-0 w-80 text-center snap-center">
+                <div class="relative mb-6">
+                  <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                    <i :class="step.icon"></i>
+                  </div>
                 </div>
-                <div v-if="index < howItWorks[howItWorksView].steps.length - 1" class="hidden md:block absolute top-1/2 -translate-y-1/2 left-1/2 w-full h-0.5 bg-gray-200 -z-10"></div>
+                <h3 class="heading-3 text-gray-900 mb-3">{{ step.title }}</h3>
+                <p class="text-gray-600">{{ step.description }}</p>
               </div>
-              <h3 class="heading-3 text-gray-900 mb-3">{{ step.title }}</h3>
-              <p class="text-gray-600">{{ step.description }}</p>
             </div>
+            <button @click="scrollHowItWorks('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+
+          <!-- Dots Indicator -->
+          <div class="flex justify-center space-x-2 mt-4">
+            <button v-for="(step, index) in howItWorks[howItWorksView].steps" :key="'dot-'+step.id" 
+                    @click="scrollToHowItWorksStep(index)"
+                    class="w-2.5 h-2.5 rounded-full transition-all duration-300"
+                    :class="howItWorksIndex === index ? 'bg-medical-primary w-6' : 'bg-gray-300'">
+              <span class="sr-only">Go to step {{ index + 1 }}</span>
+            </button>
           </div>
         </div>
       </section>
@@ -392,7 +418,7 @@
 
       <!-- Testimonials Section -->
       <section class="section bg-gradient-to-br from-red-500" style="padding-top: 1rem; padding-bottom: 1rem;">
-        <div class="container">
+        <div class="container mx-auto px-4">
           <div class="text-center mb-12">
             <h2 class="heading-2 text-white mb-4">Patient & Doctor Stories</h2>
             <p class="text-large text-red-100">Real experiences from our community</p>
@@ -433,7 +459,7 @@
 
       <!-- CTA Section -->
       <section class="section bg-gradient-to-r from-medical-primary to-medical-secondary text-white">
-        <div class="container">
+        <div class="container mx-auto px-4">
           <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
             <div class="text-center lg:text-left">
               <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Ready to Get Started?</h2>
@@ -700,6 +726,8 @@ export default {
       showLearnMore: false,
       currentSuggestionCategory: 'top-rated',
       currentSpecialty: 'All',
+      howItWorksIndex: 0,
+      howItWorksInterval: null,
       howItWorksView: 'patient',
       availableSpecialties: ['All'],
       
@@ -960,6 +988,55 @@ export default {
       this.$router.push('/health-tips');
     },
     
+    navigateToServices() {
+      this.$router.push('/services');
+    },
+    
+    startHowItWorksRotation() {
+      if (this.howItWorksInterval) {
+        clearInterval(this.howItWorksInterval);
+      }
+      this.howItWorksInterval = setInterval(() => {
+        this.advanceHowItWorksStep();
+      }, 5000); // Swap every 5 seconds
+    },
+
+    advanceHowItWorksStep() {
+      const stepsCount = this.howItWorks[this.howItWorksView].steps.length;
+      if (stepsCount === 0) return;
+      const newIndex = (this.howItWorksIndex + 1) % stepsCount;
+      this.scrollToHowItWorksStep(newIndex);
+    },
+
+    scrollToHowItWorksStep(index) {
+      const container = this.$refs.howItWorksContainer;
+      if (!container || !container.children[index]) return;
+
+      const card = container.children[index];
+      card.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+      this.howItWorksIndex = index;
+      
+      // Reset the timer on manual interaction
+      this.startHowItWorksRotation();
+    },
+
+    scrollHowItWorks(direction) {
+      const stepsCount = this.howItWorks[this.howItWorksView].steps.length;
+      if (stepsCount === 0) return;
+
+      let newIndex = this.howItWorksIndex;
+      if (direction === 'left') {
+        newIndex = (this.howItWorksIndex - 1 + stepsCount) % stepsCount;
+      } else {
+        newIndex = (this.howItWorksIndex + 1) % stepsCount;
+      }
+      this.scrollToHowItWorksStep(newIndex);
+    },
+
     // Set hovered tip
     setHoveredTip(tipId) {
       this.healthTips = this.healthTips.map(tip => ({
@@ -1018,15 +1095,6 @@ export default {
     
     scrollServices(direction) {
       const container = this.$refs.servicesContainer;
-      const scrollAmount = 320 + 32; // w-80 card + space-x-8 gap
-      if (direction === 'left') {
-        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      } else {
-        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      }
-    },
-    scrollHowItWorks(direction) {
-      const container = this.$refs.howItWorksContainer;
       const scrollAmount = 320 + 32; // w-80 card + space-x-8 gap
       if (direction === 'left') {
         container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
@@ -1139,6 +1207,16 @@ export default {
     }
   },
   
+  watch: {
+    howItWorksView() {
+      // Reset the carousel when the user toggles between Patient/Doctor views
+      this.howItWorksIndex = 0;
+      this.$nextTick(() => {
+        this.scrollToHowItWorksStep(0);
+      });
+    }
+  },
+
   mounted() {
     this.animateStats();
     this.startHeroPhraseRotation();
@@ -1152,6 +1230,9 @@ export default {
     }
     if (this.subtitleInterval) {
       clearInterval(this.subtitleInterval);
+    }
+    if (this.howItWorksInterval) {
+      clearInterval(this.howItWorksInterval);
     }
   }
 }
