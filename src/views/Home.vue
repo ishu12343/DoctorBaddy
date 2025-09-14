@@ -240,7 +240,8 @@
               <div v-for="service in services" :key="service.id" class="flex-shrink-0 w-[85vw] sm:w-80 card group hover:shadow-xl transition-all duration-300 snap-center">
                 <div class="card-body text-center">
                   <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform duration-300">
-                    <i :class="service.icon"></i>
+                    <svg v-if="service.iconSvg" v-html="service.iconSvg" class="service-icon"></svg>
+                    <i v-else :class="service.icon" class="service-icon-fallback"></i>
                   </div>
                   <h3 class="heading-3 text-gray-900 mb-3">{{ service.title }}</h3>
                   <p class="text-gray-600 mb-4">{{ service.description }}</p>
@@ -283,53 +284,23 @@
         </div>
       </section>
 
-      <!-- Testimonials Section -->
-      <section v-if="showLearnMore && !showSmartDoctorSection" class="section bg-red-50" style="padding-top: 1rem; padding-bottom: 1rem;">
-        <div class="container">
-          <div class="text-center mb-12">
-            <h2 class="heading-2 text-gray-900 mb-4">Patient & Doctor Stories</h2>
-            <p class="text-large text-gray-600">Real experiences from our community</p>
-          </div>
-
-          <div class="relative group">
-            <button @click="scrollAllTestimonials('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </button>
-            <div ref="allTestimonialsContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
-              <div v-for="story in allTestimonials" :key="story.storyId" class="flex-shrink-0 w-[90vw] sm:w-96 card snap-center">
-                <div class="card-body">
-                  <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-1 text-yellow-500">
-                      <i v-for="star in 5" :key="star" class="fas fa-star"></i>
-                    </div>
-                    <span class="text-xs font-semibold px-3 py-1 rounded-full" :class="story.type === 'Patient' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'">
-                      {{ story.type }} Story
-                    </span>
-                  </div>
-                  <p class="text-gray-600 mb-4 italic">"{{ story.text }}"</p>
-                  <div class="flex items-center gap-3">
-                    <img :src="story.avatar" :alt="story.name" class="w-12 h-12 rounded-full object-cover" />
-                    <div>
-                      <div class="font-semibold text-gray-900">{{ story.name }}</div>
-                      <div class="text-sm text-gray-500">{{ story.location || story.specialty }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button @click="scrollAllTestimonials('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </button>
-          </div>
-        </div>
-      </section>
-
       <!-- Health Tips Section -->
       <section class="section bg-emerald-50" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container mx-auto px-4 relative">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Health & Wellness Tips</h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Expert advice to help you maintain a healthy lifestyle and prevent illness</p>
+          <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+              <h2 class="heading-2 text-gray-900 mb-2">Health & Wellness Tips</h2>
+              <p class="text-large text-gray-600">Expert advice to help you maintain a healthy lifestyle</p>
+            </div>
+            <button 
+              @click="navigateToTips"
+              class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group"
+            >
+              View All Health Tips
+              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button>
           </div>
           
           <div class="relative group">
@@ -383,116 +354,81 @@
             </button>
           </div>
           
-          <!-- Dots and View All Button -->
-          <div class="flex flex-col sm:flex-row justify-between items-center mt-8 gap-4">
-            <!-- Dots Indicator -->
-            <div class="flex justify-center space-x-2">
-              <button v-for="(tip, index) in healthTips" :key="'dot-'+tip.id" 
-                      @click="scrollToHealthTip(index)"
-                      class="w-2.5 h-2.5 rounded-full transition-all duration-300"
-                      :class="currentTipIndex === index ? 'bg-medical-primary w-6' : 'bg-gray-300'">
-                <span class="sr-only">Go to tip {{ index + 1 }}</span>
-              </button>
-            </div>
-            
-            <!-- View All Tips Button -->
-            <button 
-              @click="navigateToTips"
-              class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group mt-4 sm:mt-0"
-            >
-              View All Health Tips
-              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-              </svg>
+          <!-- Dots Indicator -->
+          <!-- <div class="flex justify-center space-x-2 mt-8">
+            <button v-for="(tip, index) in healthTips" :key="'dot-'+tip.id" 
+                    @click="scrollToHealthTip(index)"
+                    class="w-2.5 h-2.5 rounded-full transition-all duration-300"
+                    :class="currentTipIndex === index ? 'bg-medical-primary w-6' : 'bg-gray-300'">
+              <span class="sr-only">Go to tip {{ index + 1 }}</span>
             </button>
-          </div>
+          </div> -->
         </div>
       </section>
 
-      <!-- Insurance Partners Section -->
-      <section class="section bg-white" style="padding-top: 1rem; padding-bottom: 1rem;">
-        <div class="container mx-auto px-4">
-          <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Our Insurance Partners</h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">We work with leading insurance providers to bring you the best healthcare coverage</p>
-          </div>
-          
-          <div class="relative group">
-            <div ref="partnersContainer" class="insurance-partners-container flex items-center space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
-              <!-- Insurance Partner Items -->
-              <a v-for="(partner, index) in insurancePartners" :key="index" 
-                   :href="partner.website" target="_blank" rel="noopener noreferrer"
-                   class="flex-shrink-0 w-48 h-32 bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:border-2 hover:border-medical-primary cursor-pointer"
-                   :class="{ 'ring-2 ring-medical-primary': partner.isHovered }"
-                   @mouseover="partner.isHovered = true"
-                   @mouseleave="partner.isHovered = false">
-                <div class="h-16 w-full flex items-center justify-center mb-3 p-2 rounded-lg overflow-hidden" :class="partner.bgClass">
-                  <img 
-                    :src="partner.logo" 
-                    :alt="partner.name" 
-                    class="h-full w-full object-contain" 
-                    :class="{ 'p-1': partner.id === 4 }"
-                    loading="lazy"
-                  />
-                </div>
-                <div class="text-center">
-                  <h4 class="font-medium text-gray-800">{{ partner.name }}</h4>
-                  <p class="text-sm text-gray-500">{{ partner.tagline }}</p>
-                </div>
-                <div v-if="partner.isHovered" class="absolute -right-4">
-                  <div class="bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-md border-2 border-medical-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-medical-primary" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-              </a>
-            </div>
-            
-            <!-- Navigation Arrows -->
-            <button @click="scrollPartners('left')" class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button @click="scrollPartners('right')" class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+      <!-- Testimonials Section -->
+      <section class="section bg-gradient-to-br from-red-500" style="padding-top: 1rem; padding-bottom: 1rem;">
+        <div class="container">
+          <div class="text-center mb-12">
+            <h2 class="heading-2 text-white mb-4">Patient & Doctor Stories</h2>
+            <p class="text-large text-red-100">Real experiences from our community</p>
           </div>
 
-          <!-- View All Partners Button -->
-          <div class="flex justify-end mt-8">
-            <button 
-              @click="navigateToInsurancePartners"
-              class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group"
-            >
-              View All Partners
-              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-              </svg>
+          <div class="relative group">
+            <button @click="scrollAllTestimonials('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <div ref="allTestimonialsContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+              <div v-for="story in allTestimonials" :key="story.storyId" class="flex-shrink-0 w-[90vw] sm:w-96 card snap-center">
+                <div class="card-body">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-1 text-yellow-500">
+                      <i v-for="star in 5" :key="star" class="fas fa-star"></i>
+                    </div>
+                    <span class="text-xs font-semibold px-3 py-1 rounded-full" :class="story.type === 'Patient' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'">
+                      {{ story.type }} Story
+                    </span>
+                  </div>
+                  <p class="text-gray-600 mb-4 italic">"{{ story.text }}"</p>
+                  <div class="flex items-center gap-3">
+                    <img :src="story.avatar" :alt="story.name" class="w-12 h-12 rounded-full object-cover" />
+                    <div>
+                      <div class="font-semibold text-gray-900">{{ story.name }}</div>
+                      <div class="text-sm text-gray-500">{{ story.location || story.specialty }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button @click="scrollAllTestimonials('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </button>
           </div>
         </div>
       </section>
 
       <!-- CTA Section -->
-      <section class="bg-gradient-to-r from-medical-primary to-medical-secondary text-white relative -mt-16 z-10 rounded-t-2xl py-12" style="padding-top: 1rem; padding-bottom: 1rem;">
-        <div class="container text-center">
-          <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">Ready to Get Started?</h2>
-          <p class="text-base text-blue-100 mb-6 max-w-xl mx-auto">
-            Join thousands of patients who trust DoctorBuddy for their healthcare needs. Start your consultation today.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button @click="$router.push('/patient-login')" class="btn btn-secondary">
-              <i class="fas fa-user-plus mr-2"></i>
-              Sign Up as Patient
-            </button>
-            <button @click="$router.push('/doctor-login')" class="btn btn-outline text-white border-white hover:bg-white hover:text-medical-primary">
-              <i class="fas fa-stethoscope mr-2"></i>
-              Join as Doctor
-            </button>
+      <section class="section bg-gradient-to-r from-medical-primary to-medical-secondary text-white">
+        <div class="container">
+          <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="text-center lg:text-left">
+              <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Ready to Get Started?</h2>
+              <p class="text-base text-blue-100">
+                Join thousands of patients who trust DoctorBuddy for their healthcare needs.
+              </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <button @click="$router.push('/patient-login')" class="btn btn-secondary group">
+                <i class="fas fa-user-plus mr-2"></i>
+                Sign Up as Patient
+                <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform duration-200"></i>
+              </button>
+              <button @click="$router.push('/doctor-login')" class="btn btn-outline text-white border-white hover:bg-white hover:text-medical-primary group">
+                <i class="fas fa-stethoscope mr-2"></i>
+                Join as Doctor
+                <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform duration-200"></i>
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -638,81 +574,6 @@ export default {
           tag: 'SLEEP',
           tagClass: 'bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full',
           isHovered: false
-        }
-      ],
-      // Insurance Partners
-      insurancePartners: [
-        {
-          id: 1,
-          name: 'Star Health',
-          tagline: 'Personal & Family',
-          logo: 'https://www.starhealth.in/sites/all/themes/starhealth/images/star-logo.svg',
-          website: 'https://www.starhealth.in/',
-          isHovered: false,
-          bgClass: 'bg-red-50'
-        },
-        {
-          id: 2,
-          name: 'HDFC ERGO',
-          tagline: 'Trusted Partner',
-          logo: 'https://www.hdfcergo.com/images/default-source/header-logo/hdfc-ergo-logo.svg',
-          website: 'https://www.hdfcergo.com/',
-          isHovered: false,
-          bgClass: 'bg-blue-50'
-        },
-        {
-          id: 3,
-          name: 'ICICI Lombard',
-          tagline: 'Complete Healthcare',
-          logo: 'https://www.icicilombard.com/assets/images/ICICI-Lombard-logo.svg',
-          website: 'https://www.icicilombard.com/',
-          isHovered: false,
-          bgClass: 'bg-orange-50'
-        },
-        {
-          id: 4,
-          name: 'Bajaj Allianz',
-          tagline: 'Caringly Yours',
-          logo: 'https://www.bajajallianz.com/content/dam/bagic/images/logo/bajaj-allianz-logo.png',
-          website: 'https://www.bajajallianz.com/',
-          isHovered: false,
-          bgClass: 'bg-sky-50'
-        },
-        {
-          id: 5,
-          name: 'Niva Bupa',
-          tagline: 'Health First',
-          logo: 'https://www.nivabupa.com/content/dam/nivabupa/images/logos/logo.svg',
-          website: 'https://www.nivabupa.com/',
-          isHovered: false,
-          bgClass: 'bg-indigo-50'
-        },
-        {
-          id: 6,
-          name: 'Care Health',
-          tagline: 'Quality Care',
-          logo: 'https://www.careinsurance.com/assets/images/care_logo_header.svg',
-          website: 'https://www.careinsurance.com/',
-          isHovered: false,
-          bgClass: 'bg-rose-50'
-        },
-        {
-          id: 7,
-          name: 'Aditya Birla',
-          tagline: 'Healthier Lives',
-          logo: 'https://www.adityabirlacapital.com/healthinsurance/assets/images/ab-health-logo.svg',
-          website: 'https://www.adityabirlacapital.com/healthinsurance/',
-          isHovered: false,
-          bgClass: 'bg-teal-50'
-        },
-        {
-          id: 8,
-          name: 'ManipalCigna',
-          tagline: 'Expert Care',
-          logo: 'https://www.manipalcigna.com/assets/images/logo.png',
-          website: 'https://www.manipalcigna.com/',
-          isHovered: false,
-          bgClass: 'bg-lime-50'
         }
       ],
       
@@ -878,6 +739,7 @@ export default {
           title: 'Video Consultations',
           description: 'Face-to-face consultations with certified doctors from anywhere.',
           icon: 'fas fa-video',
+          iconSvg: '<path fill="currentColor" d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>',
           features: ['HD Video Quality', 'Secure & Private', 'Record Sessions', 'Multiple Devices']
         },
         {
@@ -885,6 +747,7 @@ export default {
           title: 'E-Prescriptions',
           description: 'Get prescriptions delivered directly to your preferred pharmacy.',
           icon: 'fas fa-prescription-bottle',
+          iconSvg: '<path fill="currentColor" d="M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6c0 1.66 1.34 3 3 3h14c1.66 0 3-1.34 3-3v-6c0-1.66-1.34-3-3-3zM8 5h8v3H8V5zm11 12H5v-6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v6z"/>',
           features: ['Digital Prescriptions', 'Pharmacy Integration', 'Medication Reminders', 'Refill Alerts']
         },
         {
@@ -892,6 +755,7 @@ export default {
           title: 'Health Records',
           description: 'Secure digital health records accessible anytime, anywhere.',
           icon: 'fas fa-file-medical',
+          iconSvg: '<path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>',
           features: ['Cloud Storage', 'Easy Sharing', 'Medical History', 'Lab Results']
         },
         {
@@ -899,6 +763,7 @@ export default {
           title: 'Specialist Care',
           description: 'Access to specialists for complex medical conditions.',
           icon: 'fas fa-stethoscope',
+          iconSvg: '<path fill="currentColor" d="M19 14c1.49-1.46 2.26-3.5 2.26-5.5 0-4.14-3.36-7.5-7.5-7.5S6.24 4.36 6.24 8.5c0 2 .77 4.04 2.26 5.5L8 16l2 2 2-2-1.5-1.5c-.96-.94-1.5-2.25-1.5-3.5 0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.25-.54 2.56-1.5 3.5L16 16l2 2 2-2-1.5-1.5z"/>',
           features: ['Expert Specialists', 'Second Opinions', 'Treatment Plans', 'Follow-up Care']
         },
         {
@@ -906,6 +771,7 @@ export default {
           title: 'Mental Health',
           description: 'Professional mental health support and counseling services.',
           icon: 'fas fa-brain',
+          iconSvg: '<path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>',
           features: ['Licensed Therapists', 'Confidential Sessions', 'Crisis Support', 'Wellness Programs']
         },
         {
@@ -913,6 +779,7 @@ export default {
           title: '24/7 Support',
           description: 'Round-the-clock medical support for urgent health concerns.',
           icon: 'fas fa-clock',
+          iconSvg: '<path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/>',
           features: ['Always Available', 'Emergency Support', 'Quick Response', 'Medical Guidance']
         }
       ],
@@ -1036,11 +903,6 @@ export default {
       this.$router.push('/health-tips');
     },
     
-    // Navigate to insurance partners page
-    navigateToInsurancePartners() {
-      this.$router.push('/insurance-partners');
-    },
-    
     // Set hovered tip
     setHoveredTip(tipId) {
       this.healthTips = this.healthTips.map(tip => ({
@@ -1097,15 +959,6 @@ export default {
       }
     },
     
-    scrollPartners(direction) {
-      const container = this.$el.querySelector('.insurance-partners-container');
-      const scrollAmount = 300; // Adjust this value to control scroll distance
-      if (direction === 'left') {
-        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      } else {
-        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      }
-    },
     scrollServices(direction) {
       const container = this.$refs.servicesContainer;
       const scrollAmount = 320 + 32; // w-80 card + space-x-8 gap
@@ -1286,6 +1139,56 @@ export default {
 
 .animate-slide-up {
   animation: slideUp 1s ease-out 0.3s both;
+}
+
+/* Service Icons Styling */
+.service-icon {
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
+  display: block;
+}
+
+.service-icon-fallback {
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure Font Awesome icons are visible */
+.fas, .far, .fab {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 6 Brands" !important;
+  font-weight: 900;
+}
+
+/* Insurance Partner Icons Styling */
+.insurance-partner-icon {
+  width: 48px;
+  height: 48px;
+  fill: currentColor;
+  display: block;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.insurance-partner-icon:hover {
+  opacity: 1;
+}
+
+.insurance-partner-fallback {
+  font-size: 3rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.insurance-partner-fallback:hover {
+  opacity: 1;
 }
 
 /* Responsive adjustments */
