@@ -588,7 +588,7 @@
                         <span class="font-bold text-gray-800">{{ selectedDoctorProfile.average_rating > 0 ? selectedDoctorProfile.average_rating.toFixed(1) : 'New' }}</span>
                     </dd>
 
-                    <dt class="font-semibold text-gray-500">Reviews Count</dt>
+                    <dt class="font-semibold text-gray-500">Reviewed patients</dt>
                     <dd class="sm:col-span-2 text-gray-800">{{ selectedDoctorProfile.total_reviews }} reviews</dd>
                 </dl>
             </div>
@@ -700,6 +700,7 @@ export default {
       showLearnMore: false,
       currentSuggestionCategory: 'top-rated',
       currentSpecialty: 'All',
+      howItWorksView: 'patient',
       availableSpecialties: ['All'],
       
       // Animated stats
