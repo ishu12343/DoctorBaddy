@@ -1,93 +1,265 @@
-<style scoped>
-@media (width <= 900px) {
-  .login-container {
-    flex-direction: column !important;
-    padding: 1rem !important;
-    gap: 1.5rem !important;
-  }
-}
-
-@media (width <= 600px) {
-  .login-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .login-form {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 1rem;
-  }
-}
-</style>
 <template>
-  <AppHeader @login="goToLogin" />
-  <div class="login-container">
-    <div class="login-card">
-      <img src="@/assets/images/logo.png" alt="Logo" class="login-logo" />
-      <h2>Login to DoctorBuddy on doctor side</h2>
+  <div class="min-h-screen flex flex-col">
+    <AppHeader />
+    
+    <main class="flex-1 pt-16 lg:pt-20 flex items-center justify-center bg-gradient-to-br from-medical-primary to-medical-secondary dark:from-gray-900 dark:to-gray-800">
+      <div class="container py-8">
+        <div class="max-w-md mx-auto">
+          <!-- Login Card -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-brand-500 to-teal-500 p-6 text-center text-white">
+              <div class="w-16 h-16 mx-auto mb-4 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                <i class="fas fa-user text-2xl"></i>
+              </div>
+              <h1 class="text-2xl font-bold">Doctor Login</h1>
+              <p class="text-blue-100 mt-2">Access your healthcare portal</p>
+            </div>
 
-      <form @submit.prevent="loginDoctor">
-        <input v-model="email" type="email" placeholder="Email" required />
-        <input v-model="password" type="password" placeholder="Password" required />
-        <button type="submit" class="btn btn--primary btn--large">Log In</button>
-      </form>
+            <!-- Form -->
+            <div class="p-6 lg:p-8">
+              <form @submit.prevent="loginDoctor" class="space-y-6">
+                <!-- Email Input -->
+                <div class="form-group">
+                  <label class="form-label">Email Address</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-envelope text-gray-400"></i>
+                    </div>
+                    <input 
+                      v-model="email" 
+                      type="email" 
+                      required 
+                      class="form-input pl-10 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+                      placeholder="your.email@example.com"
+                      :class="{ 'border-red-300 focus:border-red-500 focus:ring-red-500': emailError }"
+                    />
+                  </div>
+                  <p v-if="emailError" class="mt-1 text-sm text-red-600">{{ emailError }}</p>
+                </div>
 
-      <!-- 🛑 Show error if exists -->
-      <p v-if="error" class="error-message">{{ error }}</p>
+                <!-- Password Input -->
+                <div class="form-group">
+                  <label class="form-label">Password</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-lock text-gray-400"></i>
+                    </div>
+                    <input 
+                      v-model="password" 
+                      :type="showPassword ? 'text' : 'password'" 
+                      required 
+                      class="form-input pl-10 pr-10 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+                      placeholder="Enter your password"
+                      :class="{ 'border-red-300 focus:border-red-500 focus:ring-red-500': passwordError }"
+                    />
+                    <button 
+                      type="button" 
+                      @click="showPassword = !showPassword"
+                      class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      <i :class="[showPassword ? 'fas fa-eye-slash' : 'fas fa-eye', 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300']"></i>
+                    </button>
+                  </div>
+                  <p v-if="passwordError" class="mt-1 text-sm text-red-600">{{ passwordError }}</p>
+                </div>
 
-      <div class="login-footer">
-        <router-link to="/">Back to Home</router-link>
+                <!-- Remember Me & Forgot Password -->
+                <div class="flex items-center justify-between">
+                  <label class="flex items-center">
+                    <input v-model="rememberMe" type="checkbox" class="w-4 h-4 text-brand-500 focus:ring-brand-500 border-gray-300 rounded">
+                    <span class="ml-2 text-sm text-gray-700">Remember me</span>
+                  </label>
+                  <button type="button" @click="showForgotPassword = true" class="text-sm text-brand-600 hover:text-brand-700">
+                    Forgot password?
+                  </button>
+                </div>
+
+                <!-- Error Message -->
+                <div v-if="error" class="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                    <p class="text-sm text-red-700">{{ error }}</p>
+                  </div>
+                </div>
+
+                <!-- Success Message -->
+                <div v-if="successMessage" class="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <div class="flex items-center">
+                    <i class="fas fa-check-circle text-success-500 mr-2"></i>
+                    <p class="text-sm text-green-700">{{ successMessage }}</p>
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <BaseButton type="submit" :loading="isLoading" variant="primary" size="md" :block="true">
+                  <i class="fas fa-sign-in-alt mr-2" v-if="!isLoading"></i>
+                  {{ isLoading ? 'Signing In...' : 'Sign In' }}
+                </BaseButton>
+              </form>
+
+              <!-- Divider -->
+              <div class="mt-8 relative">
+                <div class="absolute inset-0 flex items-center">
+                  <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                  <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">Don't have an account?</span>
+                </div>
+              </div>
+
+              <!-- Sign Up Link -->
+              <div class="mt-6 text-center">
+                <BaseButton @click="$router.push('/doctor-signup')" variant="outline" :block="true">
+                  <i class="fas fa-user-plus mr-2"></i>
+                  Create Doctor Account
+                </BaseButton>
+              </div>
+
+              <!-- Quick Actions -->
+              <div class="mt-6 grid grid-cols-2 gap-4 text-center">
+                <button @click="$router.push('/')" class="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">
+                  <i class="fas fa-home mr-1"></i>
+                  Back to Home
+                </button>
+                <button @click="$router.push('/doctor-login')" class="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">
+                  <i class="fas fa-stethoscope mr-1"></i>
+                  Doctor Login
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Features -->
+          <div class="mt-8 grid grid-cols-3 gap-4 text-center text-white">
+            <div class="space-y-2">
+              <div class="w-10 h-10 mx-auto bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <p class="text-sm text-blue-100">Secure</p>
+            </div>
+            <div class="space-y-2">
+              <div class="w-10 h-10 mx-auto bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                <i class="fas fa-clock"></i>
+              </div>
+              <p class="text-sm text-blue-100">24/7 Access</p>
+            </div>
+            <div class="space-y-2">
+              <div class="w-10 h-10 mx-auto bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                <i class="fas fa-mobile-alt"></i>
+              </div>
+              <p class="text-sm text-blue-100">Mobile Ready</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="login-footer">
-        <router-link to="/doctor-signup">Sign Up</router-link>
+    </main>
+
+    <!-- Forgot Password Modal -->
+    <div v-if="showForgotPassword" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="showForgotPassword = false">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full animate-bounce-in">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+            <i class="fas fa-key text-2xl text-brand-600"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Reset Password</h3>
+          <p class="text-gray-600">Enter your email to receive a password reset link</p>
+        </div>
+
+        <form @submit.prevent="resetPassword" class="space-y-4">
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input 
+              v-model="resetEmail" 
+              type="email" 
+              required 
+              class="form-input dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+              placeholder="your.email@example.com"
+            />
+          </div>
+
+          <div class="flex gap-3">
+            <BaseButton type="button" @click="showForgotPassword = false" variant="outline" class="flex-1">Cancel</BaseButton>
+            <BaseButton type="submit" :loading="isResetting" variant="primary" class="flex-1">
+              <i class="fas fa-paper-plane mr-2" v-if="!isResetting"></i>
+              {{ isResetting ? 'Sending...' : 'Send Reset Link' }}
+            </BaseButton>
+          </div>
+        </form>
       </div>
     </div>
-  </div>
 
-  <AppFooter class="footer-fixed" />
-  <ChatButton />
+    <AppFooter />
+    <ChatButton />
+  </div>
 </template>
 
 <script>
 import AppHeader from '@/views/AppHeader.vue';
-import ChatButton from '@/components/ChatButton.vue';
 import AppFooter from '@/views/AppFooter.vue';
+import ChatButton from '@/components/ChatButton.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
 
 export default {
-  name: 'LoginPage',
-  components: {
-    AppHeader,
-    ChatButton,
-    AppFooter
-  },
+  name: 'DoctorLogin',
+  components: { AppHeader, AppFooter, ChatButton, BaseButton },
   data() {
     return {
       email: '',
       password: '',
-      error: ''
-    };
+      rememberMe: false,
+      showPassword: false,
+      isLoading: false,
+      error: '',
+      successMessage: '',
+      emailError: '',
+      passwordError: '',
+      showForgotPassword: false,
+      resetEmail: '',
+      isResetting: false
+    }
   },
   methods: {
+    validateForm() {
+      this.emailError = '';
+      this.passwordError = '';
+      let isValid = true;
+
+      if (!this.email) {
+        this.emailError = 'Email is required';
+        isValid = false;
+      } else if (!/\S+@\S+\.\S+/.test(this.email)) {
+        this.emailError = 'Please enter a valid email address';
+        isValid = false;
+      }
+
+      if (!this.password) {
+        this.passwordError = 'Password is required';
+        isValid = false;
+      } else if (this.password.length < 6) {
+        this.passwordError = 'Password must be at least 6 characters';
+        isValid = false;
+      }
+
+      return isValid;
+    },
+
     async loginDoctor() {
       this.error = '';
+      this.successMessage = '';
 
-      // ✅ Validate input
-      if (!this.email || !this.password) {
-        this.error = 'Email and password are required.';
+      if (!this.validateForm()) {
         return;
       }
+
+      this.isLoading = true;
 
       const requestBody = {
         email: this.email,
         password: this.password
       };
 
-      console.log('Sending login payload:', requestBody); // Debug
+      console.log('Sending doctor login payload:', requestBody);
 
       const loginUrl = 'http://127.0.0.1:5000/api/doctor/login';
 
@@ -102,7 +274,7 @@ export default {
         });
 
         const responseText = await response.clone().text();
-        console.log('Login response:', {
+        console.log('Doctor login response:', {
           status: response.status,
           statusText: response.statusText,
           body: responseText
@@ -125,89 +297,94 @@ export default {
           throw new Error('No authentication token received');
         }
 
+        // Store authentication data
         localStorage.setItem('token', data.token);
         localStorage.setItem('userType', 'doctor');
+        
+        if (this.rememberMe) {
+          localStorage.setItem('rememberMe', 'true');
+        }
 
-        this.$router.push('/doctor-dashboard');
+        this.successMessage = 'Login successful! Redirecting...';
+        
+        // Redirect after a short delay to show success message
+        setTimeout(() => {
+          this.$router.push('/doctor-dashboard');
+        }, 1000);
+
       } catch (err) {
         this.error = err.message || 'Login failed. Please try again.';
-        console.error('Login error:', err);
+        console.error('Doctor login error:', err);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async resetPassword() {
+      if (!this.resetEmail) {
+        return;
+      }
+
+      this.isResetting = true;
+      
+      try {
+        // Simulate API call for password reset
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        this.showForgotPassword = false;
+        this.successMessage = 'Password reset link sent to your email!';
+        this.resetEmail = '';
+        
+      } catch (error) {
+        this.error = 'Failed to send reset email. Please try again.';
+      } finally {
+        this.isResetting = false;
       }
     }
+  },
+  mounted() {
+    // Check if user is already logged in
+    const token = localStorage.getItem('token');
+    const userType = localStorage.getItem('userType');
+    
+    if (token && userType === 'doctor') {
+      this.$router.push('/doctor-dashboard');
+    }
   }
-};
+}
 </script>
 
 <style scoped>
-.login-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(90deg, #5C9EF0 60%, #C8D67C 100%);
+/* Custom animation for modal */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  70% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.login-card {
-  background: #fff;
-  padding: 2.5rem 2rem;
-  border-radius: 16px;
-  box-shadow: 0 2px 16px rgb(0 0 0 / 8%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 320px;
+.animate-bounce-in {
+  animation: bounceIn 0.6s ease-out;
 }
 
-.login-logo {
-  height: 40px;
-  margin-bottom: 1rem;
-}
-
-h2 {
-  color: #275FD4;
-  margin-bottom: 2rem;
-}
-
-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-input {
-  padding: 0.7rem 1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-.btn {
-  width: 100%;
-}
-
-.login-footer {
-  margin-top: 1.5rem;
-  text-align: center;
-}
-
-.login-footer a {
-  color: #275FD4;
-  text-decoration: underline;
-  font-size: 1rem;
-}
-
-.error-message {
-  margin-top: 1rem;
-  color: red;
-  font-weight: bold;
-}
-
-.footer-fixed {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100vw;
-  z-index: 100;
+/* Responsive adjustments */
+@media (width <= 576px) {
+  .form-input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
 }
 </style>
