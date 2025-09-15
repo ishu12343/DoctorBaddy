@@ -255,14 +255,12 @@
             </button> -->
           </div>
 
-          <div class="relative group overflow-hidden">
-            <button @click="scrollServices('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </button>
+          <div class="overflow-hidden">
             <div ref="servicesContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
               <div
                 v-for="(service, index) in services"
                 :key="service.id"
+                :data-index="index"
                 @click="scrollToServicesStep(index)"
                 class="flex-shrink-0 w-[85vw] sm:w-80 card transition-all duration-500 snap-center border-2 cursor-pointer"
                 :class="servicesIndex === index ? 'transform scale-105 shadow-xl border-medical-primary' : 'border-transparent opacity-80'">
@@ -289,9 +287,17 @@
                 </button>
               </div>
             </div>
-            <button @click="scrollServices('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </button>
+            <!-- Dots for Services -->
+            <div class="flex justify-center mt-4 space-x-2">
+              <button
+                v-for="(service, index) in services"
+                :key="`service-dot-${index}`"
+                @click="scrollToServicesStep(index)"
+                class="w-3 h-3 rounded-full transition-all duration-300"
+                :class="servicesIndex === index ? 'bg-medical-primary scale-125' : 'bg-gray-300 hover:bg-gray-400'"
+                :aria-label="`Go to service ${index + 1}`"
+              ></button>
+            </div>
           </div>
         </div>
       </section>
@@ -314,14 +320,12 @@
             </div>
           </div>
 
-          <div class="relative group overflow-hidden">
-            <button @click="scrollHowItWorks('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </button>
+          <div class="overflow-hidden">
             <div ref="howItWorksContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
               <div
                 v-for="(step, index) in howItWorks[howItWorksView].steps"
                 :key="step.id"
+                :data-index="index"
                 @click="scrollToHowItWorksStep(index)"
                 class="flex-shrink-0 w-80 text-center snap-center p-6 rounded-2xl transition-all duration-500 border-2 cursor-pointer"
                 :class="howItWorksIndex === index ? 'bg-white transform scale-105 shadow-xl border-medical-primary' : 'bg-gray-50 border-transparent'">
@@ -334,9 +338,17 @@
                 <p class="text-gray-600">{{ step.description }}</p>
               </div>
             </div>
-            <button @click="scrollHowItWorks('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </button>
+            <!-- Dots for How It Works -->
+            <div class="flex justify-center mt-4 space-x-2">
+              <button
+                v-for="(step, index) in howItWorks[howItWorksView].steps"
+                :key="`howitworks-dot-${index}`"
+                @click="scrollToHowItWorksStep(index)"
+                class="w-3 h-3 rounded-full transition-all duration-300"
+                :class="howItWorksIndex === index ? 'bg-medical-primary scale-125' : 'bg-gray-300 hover:bg-gray-400'"
+                :aria-label="`Go to step ${index + 1}`"
+              ></button>
+            </div>
           </div>
         </div>
       </section>
@@ -360,17 +372,11 @@
             </button> -->
           </div>
           
-          <div class="relative group overflow-hidden">
-            <!-- Left Arrow -->
-            <button @click="scrollHealthTips('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            
+          <div class="overflow-hidden">
             <!-- Health Tips Container -->
             <div ref="healthTipsContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
               <div v-for="(tip, index) in healthTips" :key="tip.id"
+                   :data-index="index"
                    @click="scrollToHealthTipsStep(index)"
                    class="flex-shrink-0 w-80 bg-white rounded-xl p-6 transform transition-all duration-500 cursor-pointer snap-center border-2"
                    :class="healthTipsIndex === index ? 'scale-105 shadow-xl border-medical-primary' : 'shadow-md border-transparent'">
@@ -407,13 +413,17 @@
                 </button>
               </div>
             </div>
-            
-            <!-- Right Arrow -->
-            <button @click="scrollHealthTips('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            <!-- Dots for Health Tips -->
+            <div class="flex justify-center mt-4 space-x-2">
+              <button
+                v-for="(tip, index) in healthTips"
+                :key="`healthtip-dot-${index}`"
+                @click="scrollToHealthTipsStep(index)"
+                class="w-3 h-3 rounded-full transition-all duration-300"
+                :class="healthTipsIndex === index ? 'bg-medical-primary scale-125' : 'bg-gray-300 hover:bg-gray-400'"
+                :aria-label="`Go to health tip ${index + 1}`"
+              ></button>
+            </div>
           </div>
         </div>
       </section>
@@ -426,14 +436,12 @@
             <p class="text-large text-red-100">Real experiences from our community</p>
           </div>
 
-          <div class="relative group overflow-hidden">
-            <button @click="scrollAllTestimonials('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </button>
+          <div class="overflow-hidden">
             <div ref="allTestimonialsContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
               <div
                 v-for="(story, index) in allTestimonials"
                 :key="story.storyId"
+                :data-index="index"
                 @click="scrollToTestimonialsStep(index)"
                 class="flex-shrink-0 w-[90vw] sm:w-96 card snap-center transition-all duration-500 border-2 cursor-pointer"
                 :class="testimonialsIndex === index ? 'transform scale-105 shadow-2xl border-white' : 'opacity-80 border-transparent'">
@@ -457,9 +465,17 @@
                 </div>
               </div>
             </div>
-            <button @click="scrollAllTestimonials('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </button>
+            <!-- Dots for Testimonials -->
+            <div class="flex justify-center mt-4 space-x-2">
+              <button
+                v-for="(story, index) in allTestimonials"
+                :key="`testimonial-dot-${index}`"
+                @click="scrollToTestimonialsStep(index)"
+                class="w-3 h-3 rounded-full transition-all duration-300"
+                :class="testimonialsIndex === index ? 'bg-white scale-125' : 'bg-red-200 hover:bg-red-300'"
+                :aria-label="`Go to story ${index + 1}`"
+              ></button>
+            </div>
           </div>
         </div>
       </section>
@@ -983,6 +999,52 @@ export default {
         this.$router.push('/patient-login');
       }
     },
+    setupCarouselSyncing() {
+      this.addScrollListener('servicesContainer', 'servicesIndex');
+      this.addScrollListener('howItWorksContainer', 'howItWorksIndex');
+      this.addScrollListener('healthTipsContainer', 'healthTipsIndex');
+      this.addScrollListener('allTestimonialsContainer', 'testimonialsIndex');
+    },
+    addScrollListener(containerRef, indexProp) {
+      const container = this.$refs[containerRef];
+      if (!container) return;
+
+      let scrollTimeout;
+
+      const scrollListener = () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          const children = container.querySelectorAll('[data-index]');
+          if (children.length === 0) return;
+
+          let closestIndex = -1;
+          let minDistance = Infinity;
+          const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+
+          children.forEach(child => {
+            const childCenter = child.offsetLeft + child.offsetWidth / 2;
+            const distance = Math.abs(containerCenter - childCenter);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestIndex = parseInt(child.dataset.index, 10);
+            }
+          });
+
+          if (closestIndex !== -1 && this[indexProp] !== closestIndex) {
+            this[indexProp] = closestIndex;
+            // Reset autoplay timer on manual scroll
+            if (indexProp === 'servicesIndex') this.startServicesRotation();
+            else if (indexProp === 'howItWorksIndex') this.startHowItWorksRotation();
+            else if (indexProp === 'healthTipsIndex') this.startHealthTipsRotation();
+            else if (indexProp === 'testimonialsIndex') this.startTestimonialsRotation();
+          }
+        }, 150);
+      };
+      const listenerProp = `${containerRef}ScrollListener`;
+      if (this[listenerProp]) { container.removeEventListener('scroll', this[listenerProp]); }
+      container.addEventListener('scroll', scrollListener);
+      this[listenerProp] = scrollListener;
+    },
     // Close modal and reset body overflow
     closeModal() {
       this.selectedTip = null;
@@ -1040,19 +1102,6 @@ export default {
       this.startHowItWorksRotation();
     },
 
-    scrollHowItWorks(direction) {
-      const stepsCount = this.howItWorks[this.howItWorksView].steps.length;
-      if (stepsCount === 0) return;
-
-      let newIndex = this.howItWorksIndex;
-      if (direction === 'left') {
-        newIndex = (this.howItWorksIndex - 1 + stepsCount) % stepsCount;
-      } else {
-        newIndex = (this.howItWorksIndex + 1) % stepsCount;
-      }
-      this.scrollToHowItWorksStep(newIndex);
-    },
-
     // --- Services Carousel ---
     startServicesRotation() {
       if (this.servicesInterval) clearInterval(this.servicesInterval);
@@ -1070,15 +1119,6 @@ export default {
       container.children[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       this.servicesIndex = index;
       this.startServicesRotation(); // Reset timer on interaction
-    },
-    scrollServices(direction) {
-      let newIndex = this.servicesIndex;
-      if (direction === 'left') {
-        newIndex = (this.servicesIndex - 1 + this.services.length) % this.services.length;
-      } else {
-        newIndex = (this.servicesIndex + 1) % this.services.length;
-      }
-      this.scrollToServicesStep(newIndex);
     },
 
     // --- Health Tips Carousel ---
@@ -1099,15 +1139,6 @@ export default {
       this.healthTipsIndex = index;
       this.startHealthTipsRotation(); // Reset timer on interaction
     },
-    scrollHealthTips(direction) {
-      let newIndex = this.healthTipsIndex;
-      if (direction === 'left') {
-        newIndex = (this.healthTipsIndex - 1 + this.healthTips.length) % this.healthTips.length;
-      } else {
-        newIndex = (this.healthTipsIndex + 1) % this.healthTips.length;
-      }
-      this.scrollToHealthTipsStep(newIndex);
-    },
 
     // --- Testimonials Carousel ---
     startTestimonialsRotation() {
@@ -1126,15 +1157,6 @@ export default {
       container.children[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       this.testimonialsIndex = index;
       this.startTestimonialsRotation(); // Reset timer on interaction
-    },
-    scrollAllTestimonials(direction) {
-      let newIndex = this.testimonialsIndex;
-      if (direction === 'left') {
-        newIndex = (this.testimonialsIndex - 1 + this.allTestimonials.length) % this.allTestimonials.length;
-      } else {
-        newIndex = (this.testimonialsIndex + 1) % this.allTestimonials.length;
-      }
-      this.scrollToTestimonialsStep(newIndex);
     },
     showAllDoctorsList() {
         this.showSmartDoctorSection = true;
@@ -1180,6 +1202,7 @@ export default {
       this.showLearnMore = true;
       this.$nextTick(() => {
         this.setupObservers(); // Re-run to attach observers to new elements
+        this.setupCarouselSyncing();
         const servicesSectionEl = this.$refs.servicesSection;
         if (servicesSectionEl) {
           servicesSectionEl.scrollIntoView({ behavior: 'smooth' });
@@ -1263,6 +1286,8 @@ export default {
       this.howItWorksIndex = 0;
       this.$nextTick(() => {
         this.scrollToHowItWorksStep(0);
+      // Re-setup the scroll listener for the new set of items
+      this.addScrollListener('howItWorksContainer', 'howItWorksIndex');
       });
     }
   },
@@ -1273,6 +1298,7 @@ export default {
     this.startSubtitleRotation();
     this.fetchTopRatedDoctors();
     this.setupObservers();
+    this.setupCarouselSyncing();
   },
   
   beforeUnmount() {
@@ -1294,6 +1320,18 @@ export default {
     if (this.testimonialsInterval) {
       clearInterval(this.testimonialsInterval);
     }
+
+    const cleanupScrollListener = (containerRef) => {
+      const container = this.$refs[containerRef];
+      const listenerProp = `${containerRef}ScrollListener`;
+      if (container && this[listenerProp]) {
+        container.removeEventListener('scroll', this[listenerProp]);
+      }
+    };
+    cleanupScrollListener('servicesContainer');
+    cleanupScrollListener('howItWorksContainer');
+    cleanupScrollListener('healthTipsContainer');
+    cleanupScrollListener('allTestimonialsContainer');
     if (this.servicesObserver) this.servicesObserver.disconnect();
     if (this.howItWorksObserver) this.howItWorksObserver.disconnect();
     if (this.healthTipsObserver) this.healthTipsObserver.disconnect();
