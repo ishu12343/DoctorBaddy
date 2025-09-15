@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col overflow-x-hidden">
     <AppHeader />
     
     <main class="flex-1 pt-16 lg:pt-20">
@@ -93,9 +93,9 @@
       </section>
 
       <!-- Detailed Services -->
-      <section id="services" ref="servicesSection" class="section bg-white">
+      <section id="services" ref="servicesSection" class="section bg-white overflow-hidden">
         <div class="container">
-          <div class="max-w-6xl mx-auto">
+          <div class="w-full mx-auto px-4">
             <div v-for="(category, categoryKey) in detailedServices" :key="categoryKey" 
                  v-show="activeCategory === categoryKey" class="space-y-12">
               
@@ -104,7 +104,7 @@
                 <p class="text-large text-gray-600 max-w-3xl mx-auto">{{ category.description }}</p>
               </div>
 
-              <div class="grid lg:grid-cols-2 gap-8">
+              <div class="grid md:grid-cols-2 gap-6">
                 <div v-for="(service, index) in category.services" :key="index" 
                      class="group" data-aos="fade-up" :data-aos-delay="index * 100">
                   <div class="h-full bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 group-hover:border-medical-secondary/30">
@@ -584,6 +584,176 @@ export default {
 </script>
 
 <style scoped>
+/* Base styles for all sections */
+.section {
+  @apply w-full py-16 md:py-20;
+}
+
+.section-sm {
+  @apply w-full py-12 md:py-16;
+}
+
+/* Container adjustments */
+.container {
+  @apply w-full px-4 mx-auto;
+  max-width: 1280px;
+}
+
+/* Responsive typography */
+.heading-1 {
+  @apply text-3xl md:text-4xl lg:text-5xl font-bold leading-tight;
+}
+
+.heading-2 {
+  @apply text-2xl md:text-3xl lg:text-4xl font-bold leading-tight;
+}
+
+.text-large {
+  @apply text-base md:text-lg text-gray-600;
+}
+
+/* Button styles */
+.btn {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-300 text-sm sm:text-base;
+}
+
+.btn-primary {
+  @apply bg-medical-primary text-white hover:bg-medical-primary/90;
+}
+
+.btn-secondary {
+  @apply bg-white text-medical-primary border border-medical-primary hover:bg-gray-50;
+}
+
+.btn-outline {
+  @apply border border-gray-300 text-gray-700 hover:bg-gray-50;
+}
+
+/* Card hover effect */
+.service-card {
+  @apply transition-all duration-300 transform hover:-translate-y-1;
+}
+
+/* Responsive grid adjustments */
+@screen sm {
+  .container {
+    @apply px-6;
+  }
+}
+
+@screen lg {
+  .container {
+    @apply px-8;
+  }
+}
+
+/* Emergency banner responsive fixes */
+.emergency-banner {
+  @apply p-4 lg:p-6;
+}
+
+/* Testimonial card fixes */
+.testimonial-card {
+  @apply h-full flex flex-col;
+}
+
+/* Ensure images don't cause overflow */
+img {
+  @apply max-w-full h-auto;
+}
+
+/* Fix for mobile menu if any */
+.mobile-menu {
+  @apply lg:hidden;
+}
+
+/* Ensure full width on mobile */
+.w-full-mobile {
+  @apply w-full sm:w-auto;
+}
+
+/* Prevent horizontal scroll */
+html, body {
+  @apply w-full overflow-x-hidden;
+}
+
+/* Responsive padding for sections */
+.section-padding {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+/* Fix for button full width on mobile */
+.w-full-mobile {
+  @apply w-full sm:w-auto;
+}
+
+/* Ensure proper spacing on small screens */
+.space-y-6 > * + * {
+  @apply mt-6;
+}
+
+/* Responsive grid for services */
+.services-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+/* Ensure proper image scaling */
+.responsive-image {
+  @apply w-full h-auto object-cover rounded-xl;
+}
+
+/* Fix for emergency buttons on mobile */
+.emergency-buttons {
+  @apply flex flex-col sm:flex-row gap-3 w-full sm:w-auto;
+}
+
+.emergency-buttons .btn {
+  @apply w-full sm:w-auto;
+}
+
+/* Ensure proper text wrapping */
+.text-wrap-balance {
+  text-wrap: balance;
+}
+
+/* Fix for long words breaking layout */
+.break-words {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Ensure proper spacing in service cards */
+.service-card-content {
+  @apply p-4 sm:p-6;
+}
+
+/* Responsive typography for service titles */
+.service-title {
+  @apply text-lg sm:text-xl font-semibold;
+}
+
+/* Ensure proper spacing in mobile view */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+  
+  .section {
+    @apply py-12;
+  }
+  
+  .section-sm {
+    @apply py-8;
+  }
+}
+
+/* Fix for iOS viewport height */
+@supports (-webkit-touch-callout: none) {
+  .min-h-screen {
+    min-height: -webkit-fill-available;
+  }
+}
+
 /* Additional smooth transitions */
 .transition-all {
   transition: all 0.3s ease;
