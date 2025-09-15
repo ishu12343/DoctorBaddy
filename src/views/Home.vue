@@ -244,7 +244,7 @@
               <h2 class="heading-2 text-gray-900 mb-2">Our Services</h2>
               <p class="text-large text-gray-600">Comprehensive healthcare for your needs.</p>
             </div>
-            <button 
+            <!-- <button 
               @click="navigateToServices"
               class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group"
             >
@@ -252,7 +252,7 @@
               <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
               </svg>
-            </button>
+            </button> -->
           </div>
 
           <div class="relative group overflow-hidden">
@@ -263,7 +263,8 @@
               <div
                 v-for="(service, index) in services"
                 :key="service.id"
-                class="flex-shrink-0 w-[85vw] sm:w-80 card transition-all duration-500 snap-center border-2"
+                @click="scrollToServicesStep(index)"
+                class="flex-shrink-0 w-[85vw] sm:w-80 card transition-all duration-500 snap-center border-2 cursor-pointer"
                 :class="servicesIndex === index ? 'transform scale-105 shadow-xl border-medical-primary' : 'border-transparent opacity-80'">
                 <div class="card-body text-center">
                   <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-2xl transition-transform duration-300">
@@ -279,6 +280,13 @@
                     </li>
                   </ul>
                 </div>
+              </div>
+              <div class="flex-shrink-0 w-[85vw] sm:w-80 snap-center flex items-center justify-center p-6">
+                <button @click="navigateToServices" class="w-full h-full flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-2xl hover:border-medical-primary hover:bg-blue-50 text-medical-primary transition-all duration-300">
+                    <i class="fas fa-th-large text-4xl mb-4"></i>
+                    <span class="text-xl font-bold">View All Services</span>
+                    <p class="text-sm text-gray-600 mt-1">Explore our full range of offerings.</p>
+                </button>
               </div>
             </div>
             <button @click="scrollServices('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
@@ -314,7 +322,8 @@
               <div
                 v-for="(step, index) in howItWorks[howItWorksView].steps"
                 :key="step.id"
-                class="flex-shrink-0 w-80 text-center snap-center p-6 rounded-2xl transition-all duration-500 border-2"
+                @click="scrollToHowItWorksStep(index)"
+                class="flex-shrink-0 w-80 text-center snap-center p-6 rounded-2xl transition-all duration-500 border-2 cursor-pointer"
                 :class="howItWorksIndex === index ? 'bg-white transform scale-105 shadow-xl border-medical-primary' : 'bg-gray-50 border-transparent'">
                 <div class="relative mb-6">
                   <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
@@ -340,7 +349,7 @@
               <h2 class="heading-2 text-gray-900 mb-2">Health & Wellness Tips</h2>
               <p class="text-large text-gray-600">Expert advice to help you maintain a healthy lifestyle</p>
             </div>
-            <button 
+            <!-- <button 
               @click="navigateToTips"
               class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group"
             >
@@ -348,7 +357,7 @@
               <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
               </svg>
-            </button>
+            </button> -->
           </div>
           
           <div class="relative group overflow-hidden">
@@ -362,6 +371,7 @@
             <!-- Health Tips Container -->
             <div ref="healthTipsContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
               <div v-for="(tip, index) in healthTips" :key="tip.id"
+                   @click="scrollToHealthTipsStep(index)"
                    class="flex-shrink-0 w-80 bg-white rounded-xl p-6 transform transition-all duration-500 cursor-pointer snap-center border-2"
                    :class="healthTipsIndex === index ? 'scale-105 shadow-xl border-medical-primary' : 'shadow-md border-transparent'">
                 <div class="h-48 overflow-hidden rounded-lg mb-4">
@@ -387,6 +397,13 @@
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
                   </svg>
+                </button>
+              </div>
+              <div class="flex-shrink-0 w-80 snap-center flex items-center justify-center p-6">
+                <button @click="navigateToTips" class="w-full h-full flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-2xl hover:border-medical-primary hover:bg-emerald-50 text-medical-primary transition-all duration-300">
+                    <i class="fas fa-book-heart text-4xl mb-4"></i>
+                    <span class="text-xl font-bold">View All Tips</span>
+                    <p class="text-sm text-gray-600 mt-1">Discover more wellness advice.</p>
                 </button>
               </div>
             </div>
@@ -417,7 +434,8 @@
               <div
                 v-for="(story, index) in allTestimonials"
                 :key="story.storyId"
-                class="flex-shrink-0 w-[90vw] sm:w-96 card snap-center transition-all duration-500 border-2"
+                @click="scrollToTestimonialsStep(index)"
+                class="flex-shrink-0 w-[90vw] sm:w-96 card snap-center transition-all duration-500 border-2 cursor-pointer"
                 :class="testimonialsIndex === index ? 'transform scale-105 shadow-2xl border-white' : 'opacity-80 border-transparent'">
                 <div class="card-body">
                   <div class="flex items-center justify-between mb-4">
@@ -546,7 +564,7 @@
               @click="navigateToTips"
               class="px-6 py-2.5 bg-medical-primary text-white rounded-lg hover:bg-medical-secondary transition-colors duration-200 font-medium"
             >
-              View All Tips
+              View All
             </button>
           </div>
         </div>
