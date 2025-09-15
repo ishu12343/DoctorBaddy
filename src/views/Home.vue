@@ -259,7 +259,7 @@
             <button @click="scrollServices('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
             </button>
-            <div ref="servicesContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+            <div ref="servicesContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
               <div
                 v-for="(service, index) in services"
                 :key="service.id"
@@ -318,7 +318,7 @@
             <button @click="scrollHowItWorks('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
             </button>
-            <div ref="howItWorksContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+            <div ref="howItWorksContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
               <div
                 v-for="(step, index) in howItWorks[howItWorksView].steps"
                 :key="step.id"
@@ -369,7 +369,7 @@
             </button>
             
             <!-- Health Tips Container -->
-            <div ref="healthTipsContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+            <div ref="healthTipsContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
               <div v-for="(tip, index) in healthTips" :key="tip.id"
                    @click="scrollToHealthTipsStep(index)"
                    class="flex-shrink-0 w-80 bg-white rounded-xl p-6 transform transition-all duration-500 cursor-pointer snap-center border-2"
@@ -430,7 +430,7 @@
             <button @click="scrollAllTestimonials('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
             </button>
-            <div ref="allTestimonialsContainer" class="flex space-x-8 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+            <div ref="allTestimonialsContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
               <div
                 v-for="(story, index) in allTestimonials"
                 :key="story.storyId"
