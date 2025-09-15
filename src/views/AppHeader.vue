@@ -58,11 +58,10 @@
         <!-- Mobile Menu Button -->
         <button 
           @click="toggleMobileMenu" 
-          class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg text-white hover:bg-medical-secondary transition-colors"
+          class="lg:hidden px-4 py-2 bg-medical-secondary text-white font-bold rounded-lg hover:bg-medical-secondary/90 transition-colors"
           aria-label="Toggle mobile menu"
         >
-          <i class="fas fa-bars text-xl" v-if="!mobileMenuOpen"></i>
-          <i class="fas fa-times text-xl" v-else></i>
+          {{ mobileMenuOpen ? '✕' : '☰' }}
         </button>
       </div>
 
