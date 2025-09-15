@@ -3,7 +3,7 @@
     <AppHeader />
     
     <!-- Main Content with proper spacing for fixed header -->
-    <main class="flex-1 pt-16 lg:pt-20">
+    <main class="flex-1 pt-5 lg:pt-5">
       
       <!-- Hero Section -->
       <section v-if="!showSmartDoctorSection" class="bg-gradient-to-br from-medical-primary via-medical-secondary to-blue-600 text-white section">
@@ -285,16 +285,6 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </button>
           </div>
-
-          <!-- Dots Indicator -->
-          <div class="flex justify-center space-x-2 mt-4">
-            <button v-for="(service, index) in services" :key="'dot-service-'+service.id" 
-                    @click="scrollToServicesStep(index)"
-                    class="w-2.5 h-2.5 rounded-full transition-all duration-300"
-                    :class="servicesIndex === index ? 'bg-medical-primary w-6' : 'bg-gray-300'">
-              <span class="sr-only">Go to service {{ index + 1 }}</span>
-            </button>
-          </div>
         </div>
       </section>
 
@@ -337,16 +327,6 @@
             </div>
             <button @click="scrollHowItWorks('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </button>
-          </div>
-
-          <!-- Dots Indicator -->
-          <div class="flex justify-center space-x-2 mt-4">
-            <button v-for="(step, index) in howItWorks[howItWorksView].steps" :key="'dot-'+step.id" 
-                    @click="scrollToHowItWorksStep(index)"
-                    class="w-2.5 h-2.5 rounded-full transition-all duration-300"
-                    :class="howItWorksIndex === index ? 'bg-medical-primary w-6' : 'bg-gray-300'">
-              <span class="sr-only">Go to step {{ index + 1 }}</span>
             </button>
           </div>
         </div>
@@ -418,16 +398,6 @@
               </svg>
             </button>
           </div>
-          
-          <!-- Dots Indicator -->
-          <div class="flex justify-center space-x-2 mt-8">
-            <button v-for="(tip, index) in healthTips" :key="'dot-'+tip.id" 
-                    @click="scrollToHealthTipsStep(index)"
-                    class="w-2.5 h-2.5 rounded-full transition-all duration-300"
-                    :class="healthTipsIndex === index ? 'bg-medical-primary w-6' : 'bg-gray-300'">
-              <span class="sr-only">Go to tip {{ index + 1 }}</span>
-            </button>
-          </div>
         </div>
       </section>
 
@@ -471,16 +441,6 @@
             </div>
             <button @click="scrollAllTestimonials('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-gray-200 z-10 opacity-0 group-hover:opacity-100">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-medical-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </button>
-          </div>
-
-          <!-- Dots Indicator -->
-          <div class="flex justify-center space-x-2 mt-4">
-            <button v-for="(story, index) in allTestimonials" :key="'dot-testimonial-'+story.storyId" 
-                    @click="scrollToTestimonialsStep(index)"
-                    class="w-2.5 h-2.5 rounded-full transition-all duration-300"
-                    :class="testimonialsIndex === index ? 'bg-white w-6' : 'bg-white/50'">
-              <span class="sr-only">Go to testimonial {{ index + 1 }}</span>
             </button>
           </div>
         </div>

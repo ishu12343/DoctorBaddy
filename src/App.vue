@@ -10,14 +10,18 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 export default {
   name: 'App',
   setup() {
-    onMounted(() => {
-      // Initialize anything you need on app mount
-    });
+    const route = useRoute();
+
+    // On every route change (including initial load), scroll to the top of the page.
+    watch(() => route.fullPath, () => {
+      window.scrollTo(0, 0);
+    }, { immediate: true });
   }
 }
 </script>
