@@ -265,15 +265,22 @@
                 class="flex-shrink-0 w-[85vw] sm:w-80 card transition-all duration-500 snap-center border-2 cursor-pointer"
                 :class="servicesIndex === index ? 'transform scale-105 shadow-xl border-medical-primary' : 'border-transparent opacity-80'">
                 <div class="card-body text-center">
-                  <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-2xl transition-transform duration-300">
-                    <svg v-if="service.iconSvg" v-html="service.iconSvg" class="service-icon"></svg>
-                    <i v-else :class="service.icon" class="service-icon-fallback"></i>
+                  <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white transition-transform duration-300 service-container">
+                    <!-- Test both approaches -->
+                    <div style="font-size: 3rem; line-height: 1;">
+                      <!-- Emoji (should always work) -->
+                      <span v-if="service.emoji">{{ service.emoji }}</span>
+                      <!-- Font Awesome (if emoji doesn't exist) -->
+                      <i v-else :class="service.icon" class="fas" style="font-size: 3rem; font-weight: 900;"></i>
+                      <!-- Text fallback -->
+                      <span v-if="!service.emoji && !service.icon" style="font-size: 1.5rem; font-weight: bold;">{{ service.title.charAt(0) }}</span>
+                    </div>
                   </div>
                   <h3 class="heading-3 text-gray-900 mb-3">{{ service.title }}</h3>
                   <p class="text-gray-600 mb-4">{{ service.description }}</p>
                   <ul class="text-left space-y-2">
                     <li v-for="feature in service.features" :key="feature" class="flex items-center gap-2 text-sm text-gray-600">
-                      <i class="fas fa-check text-green-500"></i>
+                      <i class="fas fa-check text-green-500 text-xs"></i>
                       {{ feature }}
                     </li>
                   </ul>
@@ -818,51 +825,83 @@ export default {
       services: [
         {
           id: 1,
-          title: 'Video Consultations',
-          description: 'Face-to-face consultations with certified doctors from anywhere.',
-          icon: 'fas fa-video',
-          iconSvg: '<path fill="currentColor" d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>',
-          features: ['HD Video Quality', 'Secure & Private', 'Record Sessions', 'Multiple Devices']
+          title: 'Doctor Appointments',
+          description: 'Both In-clinic & Online Consultations. Instant booking, no waiting lines.',
+          icon: 'fas fa-calendar-check',
+          emoji: '📅',
+          features: ['Instant Booking', 'No Waiting Lines', 'In-clinic Visits', 'Online Consultations']
         },
         {
           id: 2,
-          title: 'E-Prescriptions',
-          description: 'Get prescriptions delivered directly to your preferred pharmacy.',
-          icon: 'fas fa-prescription-bottle',
-          iconSvg: '<path fill="currentColor" d="M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6c0 1.66 1.34 3 3 3h14c1.66 0 3-1.34 3-3v-6c0-1.66-1.34-3-3-3zM8 5h8v3H8V5zm11 12H5v-6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v6z"/>',
-          features: ['Digital Prescriptions', 'Pharmacy Integration', 'Medication Reminders', 'Refill Alerts']
+          title: 'Video Consultations',
+          description: 'Safe & secure telemedicine. Patients can connect anytime, anywhere.',
+          icon: 'fas fa-video',
+          emoji: '📹',
+          features: ['HD Video Quality', 'Secure & Private', 'Connect Anywhere', 'Multiple Devices']
         },
         {
           id: 3,
-          title: 'Health Records',
-          description: 'Secure digital health records accessible anytime, anywhere.',
-          icon: 'fas fa-file-medical',
-          iconSvg: '<path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>',
-          features: ['Cloud Storage', 'Easy Sharing', 'Medical History', 'Lab Results']
+          title: 'E-Prescriptions',
+          description: 'Instant digital prescription after consultation. Paperless, easy to store & share.',
+          icon: 'fas fa-prescription-bottle',
+          emoji: '💊',
+          features: ['Instant Digital Rx', 'Paperless System', 'Easy Storage', 'Quick Sharing']
         },
         {
           id: 4,
-          title: 'Specialist Care',
-          description: 'Access to specialists for complex medical conditions.',
-          icon: 'fas fa-stethoscope',
-          iconSvg: '<path fill="currentColor" d="M19 14c1.49-1.46 2.26-3.5 2.26-5.5 0-4.14-3.36-7.5-7.5-7.5S6.24 4.36 6.24 8.5c0 2 .77 4.04 2.26 5.5L8 16l2 2 2-2-1.5-1.5c-.96-.94-1.5-2.25-1.5-3.5 0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.25-.54 2.56-1.5 3.5L16 16l2 2 2-2-1.5-1.5z"/>',
-          features: ['Expert Specialists', 'Second Opinions', 'Treatment Plans', 'Follow-up Care']
+          title: 'Digital Health Records',
+          description: 'Store reports, prescriptions, and past consultations. Access anytime in the app.',
+          icon: 'fas fa-file-medical',
+          emoji: '📋',
+          features: ['Cloud Storage', 'Complete History', 'Easy Access', 'Secure Backup']
         },
         {
           id: 5,
-          title: 'Mental Health',
-          description: 'Professional mental health support and counseling services.',
-          icon: 'fas fa-brain',
-          iconSvg: '<path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>',
-          features: ['Licensed Therapists', 'Confidential Sessions', 'Crisis Support', 'Wellness Programs']
+          title: 'Specialist Doctors',
+          description: 'Cover 20–30+ specialties (Cardiology, Dermatology, Pediatrics, etc.). Find the right doctor quickly.',
+          icon: 'fas fa-stethoscope',
+          emoji: '🩺',
+          features: ['30+ Specialties', 'Expert Doctors', 'Quick Search', 'Verified Specialists']
         },
         {
           id: 6,
-          title: '24/7 Support',
-          description: 'Round-the-clock medical support for urgent health concerns.',
+          title: 'Mental Health Support',
+          description: 'Counseling & therapy services. Confidential, safe space for emotional health.',
+          icon: 'fas fa-brain',
+          emoji: '🧠',
+          features: ['Licensed Therapists', 'Confidential Sessions', 'Safe Environment', 'Emotional Support']
+        },
+        {
+          id: 7,
+          title: '24/7 Availability',
+          description: 'Doctors and emergency support available round the clock. Your health never waits, neither do we.',
           icon: 'fas fa-clock',
-          iconSvg: '<path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/>',
-          features: ['Always Available', 'Emergency Support', 'Quick Response', 'Medical Guidance']
+          emoji: '⏰',
+          features: ['Always Available', 'Emergency Support', 'Round the Clock', 'Instant Response']
+        },
+        {
+          id: 8,
+          title: 'Lab Tests & Diagnostics',
+          description: 'Book blood tests, X-rays, or other diagnostics. At-home sample collection option.',
+          icon: 'fas fa-flask',
+          emoji: '🧪',
+          features: ['Online Booking', 'Home Collection', 'Digital Reports', 'Quick Results']
+        },
+        {
+          id: 9,
+          title: 'Medicine Ordering',
+          description: 'Tie up with pharmacies for prescriptions with doorstep delivery.',
+          icon: 'fas fa-pills',
+          emoji: '💊',
+          features: ['Pharmacy Network', 'Doorstep Delivery', 'Easy Ordering', 'Medicine Tracking']
+        },
+        {
+          id: 10,
+          title: 'Insurance & Payments',
+          description: 'Support insurance coverage & secure payments. Building patient trust with transparency.',
+          icon: 'fas fa-shield-alt',
+          emoji: '🛡️',
+          features: ['Insurance Support', 'Secure Payments', 'Transparent Billing', 'Multiple Options']
         }
       ],
       
@@ -1435,24 +1474,34 @@ export default {
 
 /* Service Icons Styling */
 .service-icon {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   fill: currentColor;
   display: block;
 }
 
 .service-icon-fallback {
-  font-size: 1.5rem;
+  font-size: 3rem !important;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 900 !important;
 }
 
 /* Ensure Font Awesome icons are visible */
 .fas, .far, .fab {
   font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 6 Brands" !important;
-  font-weight: 900;
+  font-weight: 900 !important;
+  font-style: normal !important;
+}
+
+/* Service container icon styling */
+.service-container i {
+  font-size: 3rem !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+  display: inline-block !important;
 }
 
 /* Insurance Partner Icons Styling */
