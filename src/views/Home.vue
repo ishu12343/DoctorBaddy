@@ -86,7 +86,7 @@
                     :style="{ animationDelay: `${index * 0.2}s` }"
                   >
                     <button @click="openDoctorProfileModal(doctor)" class="absolute top-3 right-3 bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center text-gray-600 transition-colors z-10" title="View Profile">
-                      <span style="font-size: 0.75rem;">👁️</span>
+                      <span style="font-size: 2rem;">👁️</span>
                     </button>
 
                     <div class="flex items-start gap-4">
