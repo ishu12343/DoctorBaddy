@@ -29,11 +29,11 @@
               <!-- CTA Buttons -->
               <div class="flex flex-col sm:flex-row gap-4 pt-4">
                 <button @click="showLearnMoreSections" class="btn btn-secondary btn-large">
-                  <i class="fas fa-info-circle mr-2"></i>
+                  <span class="mr-2">ℹ️</span>
                   Learn More
                 </button>
                 <button @click="showAllDoctorsList" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary">
-                  <i class="fas fa-stethoscope mr-2"></i>
+                  <span class="mr-2">🩺</span>
                   Find Specialists
                 </button>
               </div>
@@ -62,7 +62,7 @@
                   <h3 class="text-xl font-semibold text-white">Top Rated Doctors</h3>
                   <div class="flex items-center gap-2">
                     <span class="flex items-center gap-1 text-green-300 text-sm">
-                      <i class="fas fa-circle text-xs"></i>
+                      <span class="w-2 h-2 bg-green-400 rounded-full"></span>
                       Live Now
                     </span>
                     <button @click="showAllDoctorsList" class="btn btn-primary btn-small">Find All Doctors</button>
@@ -86,7 +86,7 @@
                     :style="{ animationDelay: `${index * 0.2}s` }"
                   >
                     <button @click="openDoctorProfileModal(doctor)" class="absolute top-3 right-3 bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center text-gray-600 transition-colors z-10" title="View Profile">
-                      <i class="fas fa-eye text-sm"></i> View
+                      <span style="font-size: 0.75rem;">👁️</span>
                     </button>
 
                     <div class="flex items-start gap-4">
@@ -97,7 +97,7 @@
                             <span class="text-xl font-bold text-gray-500">{{ getInitials(doctor.full_name) }}</span>
                         </div>
                         <div class="absolute -top-2 -right-2 bg-yellow-400 text-white px-2 py-1 rounded-lg shadow-md flex items-center gap-1">
-                            <i class="fas fa-star text-xs"></i>
+                            <span class="text-xs">⭐</span>
                             <span class="font-bold text-sm">{{ doctor.average_rating > 0 ? doctor.average_rating.toFixed(1) : 'New' }}</span>
                         </div>
                       </div>
@@ -107,11 +107,11 @@
                         <p class="text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
                         <div class="text-xs text-gray-500 mt-2 space-y-1">
                             <div class="flex items-center gap-2">
-                                <i class="fas fa-briefcase-medical w-3 text-center text-gray-400"></i>
+                                <span class="w-3 text-center text-gray-400">💼</span>
                                 <span>{{ doctor.experience }} years exp.</span>
                             </div>
                             <div class="flex items-center gap-2" v-if="doctor.languages && doctor.languages.length">
-                                <i class="fas fa-language w-3 text-center text-gray-400"></i>
+                                <span class="w-3 text-center text-gray-400">🌐</span>
                                 <span class="truncate">{{ doctor.languages.join(', ') }}</span>
                             </div>
                         </div>
@@ -128,14 +128,14 @@
                 <!-- Bottom Stats -->
                 <div class="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-white/20">
                   <div class="flex items-center gap-2 text-white">
-                    <i class="fas fa-users text-blue-200"></i>
+                    <span class="text-blue-200 text-lg">👥</span>
                     <div>
                       <div class="font-bold">2.5k+</div>
                       <div class="text-sm opacity-75">Patients Served</div>
                     </div>
                   </div>
                   <div class="flex items-center gap-2 text-white">
-                    <i class="fas fa-clock text-blue-200"></i>
+                    <span class="text-blue-200 text-lg">🕐</span>
                     <div>
                       <div class="font-bold">24/7</div>
                       <div class="text-sm opacity-75">Available</div>
@@ -154,12 +154,12 @@
           <div class="max-w-4xl mx-auto">
             <div class="text-center mb-8">
               <h2 class="heading-2 text-gray-900 mb-4">
-                <i class="fas fa-brain text-medical-secondary mr-3"></i>
+                <span class="text-medical-secondary mr-3 text-3xl">🧠</span>
                 Smart Doctor Recommendations
               </h2>
               <p class="text-large text-gray-600">Based on availability, ratings, and your needs</p>
               <button @click="showSmartDoctorSection = false" class="mt-4 text-medical-secondary hover:text-medical-primary transition-colors">
-                <i class="fas fa-arrow-left mr-2"></i>
+                <span class="mr-2">⬅️</span>
                 Back to Home
               </button>
             </div>
@@ -319,10 +319,10 @@
             <!-- Toggle Buttons -->
             <div class="mt-6 inline-flex rounded-lg shadow-sm">
               <button @click="howItWorksView = 'patient'" :class="['px-6 py-2 rounded-l-lg border border-gray-300 transition-colors', howItWorksView === 'patient' ? 'bg-medical-primary text-white border-medical-primary' : 'bg-white text-gray-700 hover:bg-gray-50']">
-                <i class="fas fa-user mr-2"></i> For Patients
+                <span class="mr-2">🏥</span> For Patients
               </button>
               <button @click="howItWorksView = 'doctor'" :class="['px-6 py-2 rounded-r-lg border border-gray-300 -ml-px transition-colors', howItWorksView === 'doctor' ? 'bg-medical-primary text-white border-medical-primary' : 'bg-white text-gray-700 hover:bg-gray-50']">
-                <i class="fas fa-user-md mr-2"></i> For Doctors
+                <span class="mr-2">👨‍⚕️</span> For Doctors
               </button>
             </div>
           </div>
@@ -337,8 +337,16 @@
                 class="flex-shrink-0 w-80 text-center snap-center p-6 rounded-2xl transition-all duration-500 border-2 cursor-pointer"
                 :class="howItWorksIndex === index ? 'bg-white transform scale-105 shadow-xl border-medical-primary' : 'bg-gray-50 border-transparent'">
                 <div class="relative mb-6">
-                  <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-                    <i :class="step.icon"></i>
+                  <div class="w-24 h-24 mx-auto bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white transition-transform duration-300 shadow-lg">
+                    <!-- Test both approaches - same as services section -->
+                    <div style="font-size: 3rem; line-height: 1;">
+                      <!-- Emoji (should always work) -->
+                      <span v-if="step.emoji">{{ step.emoji }}</span>
+                      <!-- Font Awesome (if emoji doesn't exist) -->
+                      <i v-else :class="step.icon" class="fas" style="font-size: 3rem; font-weight: 900;"></i>
+                      <!-- Text fallback -->
+                      <span v-if="!step.emoji && !step.icon" style="font-size: 1.5rem; font-weight: bold;">{{ step.title.charAt(0) }}</span>
+                    </div>
                   </div>
                 </div>
                 <h3 class="heading-3 text-gray-900 mb-3">{{ step.title }}</h3>
@@ -910,18 +918,18 @@ export default {
           title: 'How It Works for Patients',
           description: 'Simple steps to get the care you need, anytime, anywhere.',
           steps: [
-            { id: 1, icon: 'fas fa-user-plus', title: 'Sign Up', description: 'Create your secure account and complete your medical profile in minutes.' },
-            { id: 2, icon: 'fas fa-search', title: 'Find Your Doctor', description: 'Browse our network of certified doctors and choose the right one for you.' },
-            { id: 3, icon: 'fas fa-video', title: 'Start Consultation', description: 'Begin your video consultation and get the expert care you need instantly.' }
+            { id: 1, icon: 'fas fa-user-plus', emoji: '👤', title: 'Sign Up', description: 'Create your secure account and complete your medical profile in minutes.' },
+            { id: 2, icon: 'fas fa-search', emoji: '🔍', title: 'Find Your Doctor', description: 'Browse our network of certified doctors and choose the right one for you.' },
+            { id: 3, icon: 'fas fa-video', emoji: '📹', title: 'Start Consultation', description: 'Begin your video consultation and get the expert care you need instantly.' }
           ]
         },
         doctor: {
           title: 'How It Works for Doctors',
           description: 'Join our network to expand your practice and connect with patients.',
           steps: [
-            { id: 1, icon: 'fas fa-id-card', title: 'Register & Verify', description: 'Join our platform by completing a simple registration and verification process.' },
-            { id: 2, icon: 'fas fa-calendar-alt', title: 'Set Your Schedule', description: 'Manage your availability and appointments with our flexible scheduling tools.' },
-            { id: 3, icon: 'fas fa-laptop-medical', title: 'Conduct Consultations', description: 'Provide high-quality care to patients through secure video calls.' }
+            { id: 1, icon: 'fas fa-id-card', emoji: '🆔', title: 'Register & Verify', description: 'Join our platform by completing a simple registration and verification process.' },
+            { id: 2, icon: 'fas fa-calendar-alt', emoji: '📅', title: 'Set Your Schedule', description: 'Manage your availability and appointments with our flexible scheduling tools.' },
+            { id: 3, icon: 'fas fa-laptop-medical', emoji: '💻', title: 'Conduct Consultations', description: 'Provide high-quality care to patients through secure video calls.' }
           ]
         }
       },
