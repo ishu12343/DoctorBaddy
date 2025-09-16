@@ -464,6 +464,13 @@
                   </div>
                 </div>
               </div>
+              <div class="flex-shrink-0 w-[90vw] sm:w-96 snap-center flex items-center justify-center p-6">
+                <button @click="navigateToTestimonials" class="w-full h-full flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-2xl hover:border-red-500 hover:bg-red-50 text-red-500 transition-all duration-300">
+                    <i class="fas fa-comments text-4xl mb-4"></i>
+                    <span class="text-xl font-bold">View All Stories</span>
+                    <p class="text-sm text-gray-600 mt-1">Read more from our community.</p>
+                </button>
+              </div>
             </div>
             <!-- Dots for Testimonials -->
             <div class="flex justify-center mt-4 space-x-2">
@@ -1070,6 +1077,10 @@ export default {
       this.$router.push('/services');
     },
     
+    navigateToTestimonials() {
+      this.$router.push('/testimonials');
+    },
+
     startHowItWorksRotation() {
       if (this.howItWorksInterval) {
         clearInterval(this.howItWorksInterval);
