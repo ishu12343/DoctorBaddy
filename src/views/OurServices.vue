@@ -17,11 +17,11 @@
               </p>
               <div class="flex flex-col sm:flex-row gap-4">
                 <button @click="scrollToServices" class="btn bg-white text-medical-primary hover:bg-blue-50">
-                  <i class="fas fa-heart mr-2"></i>
+                  <i class="fas fa-heart mr-2" style="font-size: 1rem;"></i>
                   Explore Services
                 </button>
                 <button @click="$router.push('/contact')" class="btn border-white text-white hover:bg-white/10">
-                  <i class="fas fa-phone mr-2"></i>
+                  <i class="fas fa-phone mr-2" style="font-size: 1rem;"></i>
                   Emergency: 911
                 </button>
               </div>
@@ -65,24 +65,24 @@
           
           <div class="grid md:grid-cols-3 gap-8">
             <div class="text-center bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                <i class="fas fa-shield-alt text-2xl text-white"></i>
+              <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-shield-alt text-white" style="font-size: 1.5rem;"></i>
               </div>
               <h3 class="text-xl font-semibold text-gray-900 mb-2">Secure & Private</h3>
               <p class="text-gray-600">Your health data is protected with enterprise-grade security and HIPAA compliance.</p>
             </div>
             
             <div class="text-center bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
-                <i class="fas fa-clock text-2xl text-white"></i>
+              <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-clock text-white" style="font-size: 1.5rem;"></i>
               </div>
               <h3 class="text-xl font-semibold text-gray-900 mb-2">Available 24/7</h3>
               <p class="text-gray-600">Round-the-clock access to healthcare professionals whenever you need them.</p>
             </div>
             
             <div class="text-center bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-                <i class="fas fa-user-md text-2xl text-white"></i>
+              <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-user-md text-white" style="font-size: 1.5rem;"></i>
               </div>
               <h3 class="text-xl font-semibold text-gray-900 mb-2">Expert Doctors</h3>
               <p class="text-gray-600">Licensed and experienced healthcare professionals across 30+ specialties.</p>
@@ -110,12 +110,12 @@
             >
               <div class="text-center">
                 <!-- Service Icon -->
-                <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
-                  <div style="font-size: 2.5rem; line-height: 1;">
-                    <!-- Use emoji first, then Font Awesome as fallback -->
-                    <span v-if="service.emoji">{{ service.emoji }}</span>
-                    <i v-else-if="service.icon" :class="service.icon" class="fas" style="font-size: 2.5rem; font-weight: 900;"></i>
-                    <span v-else style="font-size: 1.5rem; font-weight: bold;">{{ service.title.charAt(0) }}</span>
+                <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110 shadow-lg">
+                  <!-- Always show emoji if available, with fallback to Font Awesome -->
+                  <div class="flex items-center justify-center w-full h-full">
+                    <span v-if="service.emoji" style="font-size: 2.5rem; line-height: 1; display: block;">{{ service.emoji }}</span>
+                    <i v-else-if="service.icon" :class="service.icon" style="font-size: 2rem; color: white; font-weight: 900;"></i>
+                    <span v-else class="text-2xl font-bold text-white">{{ service.title.charAt(0) }}</span>
                   </div>
                 </div>
 
@@ -142,14 +142,14 @@
                     @click="getStarted(service)"
                     class="btn btn-primary w-full group-hover:shadow-lg transition-all duration-300"
                   >
-                    <i class="fas fa-arrow-right mr-2"></i>
+                    <i class="fas fa-arrow-right mr-2" style="font-size: 0.875rem;"></i>
                     Get Started
                   </button>
                   <button 
                     @click="learnMore(service)"
                     class="btn btn-outline w-full text-sm"
                   >
-                    <i class="fas fa-info-circle mr-2"></i>
+                    <i class="fas fa-info-circle mr-2" style="font-size: 0.875rem;"></i>
                     Learn More
                   </button>
                 </div>
@@ -171,11 +171,11 @@
               </p>
               <div class="flex flex-col sm:flex-row gap-4">
                 <button @click="$router.push('/patient-signup')" class="btn bg-white text-medical-primary hover:bg-blue-50">
-                  <i class="fas fa-user-plus mr-2"></i>
+                  <i class="fas fa-user-plus mr-2" style="font-size: 1rem;"></i>
                   Sign Up as Patient
                 </button>
                 <button @click="$router.push('/doctor-signup')" class="btn border-white text-white hover:bg-white/10">
-                  <i class="fas fa-stethoscope mr-2"></i>
+                  <i class="fas fa-stethoscope mr-2" style="font-size: 1rem;"></i>
                   Join as Doctor
                 </button>
               </div>
@@ -435,5 +435,46 @@ export default {
 .service-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Ensure Font Awesome icons are properly displayed */
+.fas, .fa, .far, .fab {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+  font-weight: 900 !important;
+  display: inline-block;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Service icon specific styles */
+.service-icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fallback for when Font Awesome doesn't load */
+.icon-fallback {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Button icon styles */
+.btn i {
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+}
+
+/* Hero section icon styles */
+.hero-btn i {
+  font-size: 1rem;
+  margin-right: 0.5rem;
 }
 </style>
