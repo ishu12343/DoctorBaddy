@@ -309,6 +309,8 @@ export default {
     };
   },
   mounted() {
+    // Reset body overflow in case coming from a page with modals
+    document.body.style.overflow = '';
     // Smooth scroll behavior
     this.setupSmoothScroll();
   },

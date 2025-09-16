@@ -278,12 +278,19 @@
                   </div>
                   <h3 class="heading-3 text-gray-900 mb-3">{{ service.title }}</h3>
                   <p class="text-gray-600 mb-4">{{ service.description }}</p>
-                  <ul class="text-left space-y-2">
+                  <ul class="text-left space-y-2 mb-4">
                     <li v-for="feature in service.features" :key="feature" class="flex items-center gap-2 text-sm text-gray-600">
                       <i class="fas fa-check text-green-500 text-xs"></i>
                       {{ feature }}
                     </li>
                   </ul>
+                  <!-- Read More Button -->
+                  <button @click="viewServiceDetails(service)" class="text-medical-primary font-medium flex items-center group">
+                    <span class="text-sm">Read More</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
                 </div>
               </div>
               <div class="flex-shrink-0 w-[85vw] sm:w-80 snap-center flex items-center justify-center p-6">
@@ -609,6 +616,90 @@
       </div>
     </div>
 
+    <!-- Service Detail Modal -->
+    <div v-if="selectedService" class="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50" @click.self="closeServiceModal">
+      <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+        <button 
+          @click="closeServiceModal"
+          class="fixed sm:absolute top-4 right-4 bg-white/80 hover:bg-gray-100 rounded-full p-2 shadow-lg text-gray-700 hover:text-gray-900 z-10"
+          aria-label="Close modal"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        
+        <!-- Service Icon Header -->
+        <div class="bg-gradient-to-br from-medical-primary to-medical-secondary p-8 text-center text-white">
+          <div class="w-24 h-24 mx-auto mb-4 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+            <div style="font-size: 3rem; line-height: 1;">
+              <span v-if="selectedService.emoji">{{ selectedService.emoji }}</span>
+              <i v-else-if="selectedService.icon" :class="selectedService.icon" class="fas" style="font-size: 3rem; font-weight: 900; color: white;"></i>
+              <span v-else style="font-size: 2rem; font-weight: bold;">{{ selectedService.title.charAt(0) }}</span>
+            </div>
+          </div>
+          <h2 class="text-2xl font-bold text-white mb-2">{{ selectedService.title }}</h2>
+          <p class="text-blue-100">{{ selectedService.description }}</p>
+        </div>
+        
+        <div class="p-6">
+          <!-- Key Features -->
+          <div class="mb-6">
+            <h3 class="font-semibold text-gray-900 mb-4 text-lg">Key Features & Benefits</h3>
+            <div class="grid md:grid-cols-2 gap-3">
+              <div v-for="feature in selectedService.features" :key="feature" class="flex items-start gap-3">
+                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i class="fas fa-check text-green-600 text-xs"></i>
+                </div>
+                <span class="text-gray-700">{{ feature }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- How It Works -->
+          <div class="bg-blue-50 p-6 rounded-lg mb-6">
+            <h3 class="font-semibold text-blue-800 mb-4">How It Works</h3>
+            <div class="space-y-3">
+              <div v-for="(step, index) in getServiceSteps(selectedService)" :key="index" class="flex items-start gap-3">
+                <div class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                  {{ index + 1 }}
+                </div>
+                <span class="text-blue-800">{{ step }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Detailed Description -->
+          <div class="prose max-w-none text-gray-600 mb-6">
+            <p>{{ getServiceDetailedDescription(selectedService) }}</p>
+          </div>
+          
+          <div class="flex justify-between items-center">
+            <button 
+              @click="closeServiceModal"
+              class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+            >
+              Close
+            </button>
+            <div class="flex gap-3">
+              <button 
+                @click="navigateToServices"
+                class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 font-medium"
+              >
+                View All Services
+              </button>
+              <button 
+                @click="getStartedWithService(selectedService)"
+                class="px-6 py-2.5 bg-medical-primary text-white rounded-lg hover:bg-medical-secondary transition-colors duration-200 font-medium"
+              >
+                Get Started
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Doctor Profile Modal -->
     <div v-if="selectedDoctorProfile" class="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50" @click.self="closeDoctorProfileModal">
       <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-xl animate-fade-in" style="min-height: 300px;">
@@ -688,6 +779,7 @@ export default {
   data() {
     return {
       selectedTip: null,
+      selectedService: null,
       loadingDoctorProfile: false,
       selectedDoctorProfile: null,
       loadingDoctors: false,
@@ -1121,7 +1213,121 @@ export default {
     },
     
     navigateToServices() {
+      // Reset body overflow in case a modal was open
+      document.body.style.overflow = '';
       this.$router.push('/services');
+    },
+    
+    // Service modal methods
+    viewServiceDetails(service) {
+      this.selectedService = { ...service };
+      document.body.style.overflow = 'hidden';
+    },
+    
+    closeServiceModal() {
+      this.selectedService = null;
+      document.body.style.overflow = '';
+    },
+    
+    getServiceSteps(service) {
+      const steps = {
+        'Doctor Appointments': [
+          'Select your preferred doctor and specialty',
+          'Choose your appointment time and type',
+          'Complete booking with secure payment',
+          'Receive confirmation and reminders'
+        ],
+        'Video Consultations': [
+          'Book your video consultation',
+          'Join the secure video call at scheduled time',
+          'Discuss your health concerns with the doctor',
+          'Receive digital prescription and advice'
+        ],
+        'E-Prescriptions': [
+          'Complete your consultation with doctor',
+          'Receive instant digital prescription',
+          'Download or share prescription easily',
+          'Order medicines through our pharmacy partners'
+        ],
+        'Digital Health Records': [
+          'Your health data is automatically stored',
+          'Access records anytime through the app',
+          'Share records with doctors securely',
+          'Keep track of your health history'
+        ],
+        'Specialist Doctors': [
+          'Browse specialists by category',
+          'Read doctor profiles and reviews',
+          'Book appointment with your chosen specialist',
+          'Get expert care for your specific condition'
+        ],
+        'Mental Health Support': [
+          'Book session with licensed therapist',
+          'Join confidential video consultation',
+          'Discuss your concerns in safe environment',
+          'Get ongoing support and treatment plan'
+        ],
+        '24/7 Availability': [
+          'Access doctors anytime, day or night',
+          'Emergency consultations available instantly',
+          'No waiting for clinic hours',
+          'Get immediate medical advice'
+        ],
+        'Lab Tests & Diagnostics': [
+          'Browse and book required tests online',
+          'Schedule home collection if available',
+          'Get tested at partner labs',
+          'Receive digital reports instantly'
+        ],
+        'Medicine Ordering': [
+          'Upload prescription from consultation',
+          'Browse medicines from partner pharmacies',
+          'Place order with home delivery',
+          'Track your order status'
+        ],
+        'Insurance & Payments': [
+          'Add your insurance details to profile',
+          'Check coverage for treatments',
+          'Pay securely through multiple options',
+          'Get transparent billing and receipts'
+        ]
+      };
+      return steps[service.title] || ['Step 1', 'Step 2', 'Step 3'];
+    },
+    
+    getServiceDetailedDescription(service) {
+      const descriptions = {
+        'Doctor Appointments': 'Our comprehensive appointment system allows you to book both in-clinic and online consultations with certified doctors. Skip the waiting rooms and get instant access to quality healthcare.',
+        'Video Consultations': 'Connect with licensed doctors through secure, HD video calls from anywhere. Our telemedicine platform ensures patient privacy while providing convenient access to healthcare.',
+        'E-Prescriptions': 'Receive digital prescriptions instantly after consultations. Our paperless system makes it easy to store, share, and access your prescriptions whenever needed.',
+        'Digital Health Records': 'Securely store all your medical records, test results, and prescriptions in one place. Access your complete health history anytime and share with healthcare providers.',
+        'Specialist Doctors': 'Access a network of 30+ medical specialties including cardiology, dermatology, pediatrics, and more. Find the right expert for your specific health needs.',
+        'Mental Health Support': 'Professional counseling and therapy services with licensed mental health professionals. Get confidential support in a safe, judgment-free environment.',
+        '24/7 Availability': 'Round-the-clock access to healthcare professionals for emergencies and urgent consultations. Your health emergencies don\'t wait for business hours.',
+        'Lab Tests & Diagnostics': 'Book blood tests, imaging, and other diagnostic services online. Many tests offer convenient home sample collection with fast, accurate results.',
+        'Medicine Ordering': 'Order prescribed medications through our partner pharmacy network. Enjoy doorstep delivery and easy tracking of your medicine orders.',
+        'Insurance & Payments': 'Seamless integration with major insurance providers and secure payment processing. Transparent billing with multiple payment options for your convenience.'
+      };
+      return descriptions[service.title] || 'This service provides comprehensive healthcare solutions tailored to your needs.';
+    },
+    
+    getStartedWithService(service) {
+      // Route to specific service pages or general services page
+      const routes = {
+        'Doctor Appointments': '/patient-login',
+        'Video Consultations': '/patient-login',
+        'E-Prescriptions': '/patient-login',
+        'Digital Health Records': '/patient-login',
+        'Specialist Doctors': '/services',
+        'Mental Health Support': '/services',
+        '24/7 Availability': '/patient-login',
+        'Lab Tests & Diagnostics': '/services',
+        'Medicine Ordering': '/services',
+        'Insurance & Payments': '/patient-login'
+      };
+      
+      this.closeServiceModal();
+      this.$router.push(routes[service.title] || '/services');
     },
     
     navigateToTestimonials() {
@@ -1394,6 +1600,9 @@ export default {
     if (this.howItWorksObserver) this.howItWorksObserver.disconnect();
     if (this.healthTipsObserver) this.healthTipsObserver.disconnect();
     if (this.testimonialsObserver) this.testimonialsObserver.disconnect();
+    
+    // Reset body overflow when leaving the page
+    document.body.style.overflow = '';
   }
 }
 </script>
