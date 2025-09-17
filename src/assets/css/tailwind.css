@@ -55,7 +55,7 @@
 @layer components {
   /* Button Components */
   .btn {
-    @apply inline-flex items-center justify-center px-6 py-3 font-medium text-sm rounded-lg transition-all duration-300 cursor-pointer border-0 outline-none;
+    @apply inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 font-medium text-sm sm:text-base rounded-lg transition-all duration-300 cursor-pointer border-0 outline-none min-h-[44px] touch-manipulation;
   }
 
   .btn-primary {
@@ -71,11 +71,26 @@
   }
 
   .btn-large {
-    @apply px-8 py-4 text-base;
+    @apply px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg min-h-[48px];
   }
 
   .btn-small {
-    @apply px-4 py-2 text-sm;
+    @apply px-3 sm:px-4 py-2 text-xs sm:text-sm min-h-[40px];
+  }
+
+  /* Mobile-specific button styles */
+  @media (max-width: 640px) {
+    .btn {
+      @apply w-full sm:w-auto text-center;
+    }
+    
+    .btn-group {
+      @apply flex flex-col space-y-3;
+    }
+    
+    .btn-group-horizontal {
+      @apply flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4;
+    }
   }
 
   /* Card Components */
@@ -104,34 +119,71 @@
     @apply w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
+  /* Mobile-specific container adjustments */
+  @media (max-width: 640px) {
+    .container, .container-sm, .container-fluid {
+      @apply px-3;
+    }
+  }
+
   /* Section Components */
   .section {
-    @apply py-12 sm:py-16 lg:py-20;
+    @apply py-8 sm:py-12 lg:py-16 xl:py-20;
   }
 
   .section-sm {
-    @apply py-8 sm:py-12;
+    @apply py-6 sm:py-8 lg:py-12;
+  }
+
+  /* Mobile-specific section adjustments */
+  @media (max-width: 640px) {
+    .section {
+      @apply py-6;
+    }
+    
+    .section-sm {
+      @apply py-4;
+    }
   }
 
   /* Typography Components */
   .heading-1 {
-    @apply text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight;
+    @apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight;
   }
 
   .heading-2 {
-    @apply text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight;
+    @apply text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight;
   }
 
   .heading-3 {
-    @apply text-xl sm:text-2xl lg:text-3xl font-semibold leading-tight;
+    @apply text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight;
   }
 
   .text-large {
-    @apply text-lg sm:text-xl leading-relaxed;
+    @apply text-base sm:text-lg lg:text-xl leading-relaxed;
   }
 
   .text-highlight {
     @apply text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500;
+  }
+
+  /* Mobile typography adjustments */
+  @media (max-width: 640px) {
+    .heading-1 {
+      @apply text-xl leading-tight;
+    }
+    
+    .heading-2 {
+      @apply text-lg leading-tight;
+    }
+    
+    .heading-3 {
+      @apply text-base leading-tight;
+    }
+    
+    .text-large {
+      @apply text-sm leading-relaxed;
+    }
   }
 
   /* Medical Theme Colors */
@@ -157,16 +209,23 @@
 
   /* Grid System */
   .grid-responsive {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
   }
 
   .grid-cards {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6;
+  }
+
+  /* Mobile-specific grid adjustments */
+  @media (max-width: 640px) {
+    .grid-responsive, .grid-cards {
+      @apply gap-3;
+    }
   }
 
   /* Form Components */
   .form-input {
-    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-secondary focus:border-transparent transition-all duration-200;
+    @apply w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-secondary focus:border-transparent transition-all duration-200 text-base;
   }
 
   .form-label {
@@ -174,7 +233,14 @@
   }
 
   .form-group {
-    @apply mb-6;
+    @apply mb-4 sm:mb-6;
+  }
+
+  /* Mobile form adjustments */
+  @media (max-width: 640px) {
+    .form-input {
+      @apply text-base; /* Prevent zoom on iOS */
+    }
   }
 
   /* Navigation */
@@ -268,6 +334,57 @@
   .aspect-photo {
     aspect-ratio: 4 / 3;
   }
+
+  /* Mobile-specific utilities */
+  .mobile-padding {
+    @apply px-4 py-3;
+  }
+
+  .mobile-margin {
+    @apply m-4;
+  }
+
+  .mobile-text-center {
+    @apply text-center sm:text-left;
+  }
+
+  .mobile-flex-col {
+    @apply flex flex-col sm:flex-row;
+  }
+
+  .mobile-w-full {
+    @apply w-full sm:w-auto;
+  }
+
+  .mobile-max-w-full {
+    @apply max-w-full sm:max-w-none;
+  }
+
+  /* Touch-friendly interactions */
+  .touch-friendly {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  .touch-button {
+    @apply min-h-[48px] px-6 py-3 rounded-lg transition-all duration-200 touch-manipulation;
+  }
+
+  /* Safe area adjustments for mobile devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
 }
 
 /* Keyframe Animations */
@@ -321,6 +438,151 @@
                     radial-gradient(circle at 75% 75%, rgba(255, 81, 47, 0.1) 0%, transparent 50%);
 }
 
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Better spacing for mobile */
+  .section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  /* Improved mobile typography */
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    word-wrap: break-word;
+  }
+  
+  /* Mobile-friendly inputs */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  /* Better mobile buttons */
+  button, .btn {
+    min-height: 44px;
+    min-width: 44px;
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+  
+  /* Mobile-optimized cards */
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  /* Better mobile navigation */
+  .nav-item {
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Mobile-friendly modals */
+  .modal-content {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+  
+  /* Improved mobile forms */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  /* Mobile-specific grid adjustments */
+  .grid {
+    gap: 0.75rem;
+  }
+  
+  /* Better mobile images */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Mobile-friendly tables */
+  table {
+    font-size: 14px;
+  }
+  
+  /* Prevent text selection on mobile UI elements */
+  .btn, .card, .nav-item {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Mobile-optimized animations */
+  .animate-fade-in,
+  .animate-slide-up {
+    animation-duration: 0.3s;
+  }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .grid-responsive {
+    gap: 1.5rem;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Sharper text rendering on high DPI displays */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 640px) and (orientation: landscape) {
+  .section {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .hero-section {
+    min-height: 80vh;
+  }
+}
+
+/* Very small screens (older phones) */
+@media (max-width: 375px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .text-xs {
+    font-size: 0.625rem;
+  }
+  
+  .p-4 {
+    padding: 0.75rem;
+  }
+  
+  .gap-4 {
+    gap: 0.75rem;
+  }
+}
+
 /* Print styles */
 @media print {
   .no-print {
@@ -329,5 +591,14 @@
   
   .print-only {
     display: block !important;
+  }
+  
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .section {
+    page-break-inside: avoid;
   }
 }

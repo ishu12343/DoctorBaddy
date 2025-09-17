@@ -5,13 +5,13 @@
     <main class="flex-1 pt-16 lg:pt-20">
       <!-- Hero Section -->
       <section class="bg-gradient-to-br from-medical-primary to-medical-secondary text-white section-sm">
-        <div class="container text-center">
+        <div class="container text-center px-3 sm:px-4">
           <div class="max-w-3xl mx-auto">
-            <div class="w-16 h-16 mx-auto mb-6 bg-white/20 rounded-full flex items-center justify-center">
-              <i class="fas fa-envelope text-2xl"></i>
+            <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 bg-white/20 rounded-full flex items-center justify-center">
+              <i class="fas fa-envelope text-xl sm:text-2xl"></i>
             </div>
-            <h1 class="heading-2 text-white mb-4">Get in Touch</h1>
-            <p class="text-large text-blue-100">
+            <h1 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-white mb-3 sm:mb-4">Get in Touch</h1>
+            <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-blue-100">
               We're here to help! Choose the most convenient way to reach our support team.
             </p>
           </div>
@@ -20,11 +20,11 @@
 
       <!-- Contact Options -->
       <section class="section bg-white">
-        <div class="container">
-          <div class="grid md:grid-cols-3 gap-8 mb-12">
+        <div class="container px-3 sm:px-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
             <!-- For Patients -->
             <div class="card text-center group hover:shadow-xl transition-all duration-300">
-              <div class="card-body">
+              <div class="card-body p-4 sm:p-6">
                 <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform duration-300">
                   <i class="fas fa-user"></i>
                 </div>
@@ -88,16 +88,16 @@
 
           <!-- Contact Form Section -->
           <div class="max-w-4xl mx-auto" v-if="activeTab">
-            <div class="bg-gray-50 rounded-2xl p-8">
-              <div class="text-center mb-8">
-                <h2 class="heading-3 text-gray-900 mb-2">
+            <div class="bg-gray-50 rounded-2xl p-4 sm:p-6 lg:p-8">
+              <div class="text-center mb-6 sm:mb-8">
+                <h2 class="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight text-gray-900 mb-2">
                   {{ getFormTitle() }}
                 </h2>
-                <p class="text-gray-600">{{ getFormDescription() }}</p>
+                <p class="text-sm sm:text-base text-gray-600">{{ getFormDescription() }}</p>
               </div>
 
-              <form @submit.prevent="submitForm" class="space-y-6">
-                <div class="grid md:grid-cols-2 gap-6">
+              <form @submit.prevent="submitForm" class="space-y-4 sm:space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div class="form-group">
                     <label class="form-label">First Name *</label>
                     <input 
@@ -213,41 +213,41 @@
 
       <!-- Contact Information -->
       <section class="section bg-gray-50">
-        <div class="container">
+        <div class="container px-3 sm:px-4">
           <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-12">
-              <h2 class="heading-2 text-gray-900 mb-4">Other Ways to Reach Us</h2>
-              <p class="text-large text-gray-600">Multiple ways to get the help you need</p>
+            <div class="text-center mb-8 sm:mb-12">
+              <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-gray-900 mb-3 sm:mb-4">Other Ways to Reach Us</h2>
+              <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-gray-600">Multiple ways to get the help you need</p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               <!-- Emergency -->
-              <div class="bg-red-50 rounded-xl p-6 text-center border border-red-200">
-                <div class="w-12 h-12 mx-auto mb-3 bg-red-500 rounded-full flex items-center justify-center text-white">
-                  <i class="fas fa-exclamation-triangle"></i>
+              <div class="bg-red-50 rounded-xl p-4 sm:p-6 text-center border border-red-200">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 bg-red-500 rounded-full flex items-center justify-center text-white">
+                  <i class="fas fa-exclamation-triangle text-sm sm:text-base"></i>
                 </div>
-                <h3 class="font-semibold text-red-800 mb-2">Emergency</h3>
-                <p class="text-sm text-red-600 mb-3">Medical emergencies only</p>
-                <a href="tel:911" class="text-red-600 hover:text-red-800 font-semibold">
+                <h3 class="font-semibold text-red-800 mb-2 text-sm sm:text-base">Emergency</h3>
+                <p class="text-xs sm:text-sm text-red-600 mb-3">Medical emergencies only</p>
+                <a href="tel:911" class="text-red-600 hover:text-red-800 font-semibold text-sm sm:text-base touch-button inline-block">
                   Call 911
                 </a>
               </div>
 
               <!-- Live Chat -->
-              <div class="bg-blue-50 rounded-xl p-6 text-center border border-blue-200">
-                <div class="w-12 h-12 mx-auto mb-3 bg-medical-secondary rounded-full flex items-center justify-center text-white">
-                  <i class="fas fa-comments"></i>
+              <div class="bg-blue-50 rounded-xl p-4 sm:p-6 text-center border border-blue-200">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 bg-medical-secondary rounded-full flex items-center justify-center text-white">
+                  <i class="fas fa-comments text-sm sm:text-base"></i>
                 </div>
-                <h3 class="font-semibold text-blue-800 mb-2">Live Chat</h3>
-                <p class="text-sm text-blue-600 mb-3">Available 24/7</p>
-                <button @click="openChat" class="text-blue-600 hover:text-blue-800 font-semibold">
+                <h3 class="font-semibold text-blue-800 mb-2 text-sm sm:text-base">Live Chat</h3>
+                <p class="text-xs sm:text-sm text-blue-600 mb-3">Available 24/7</p>
+                <button @click="openChat" class="text-blue-600 hover:text-blue-800 font-semibold text-sm sm:text-base touch-button">
                   Start Chat
                 </button>
               </div>
 
               <!-- Email Support -->
-              <div class="bg-green-50 rounded-xl p-6 text-center border border-green-200">
-                <div class="w-12 h-12 mx-auto mb-3 bg-green-500 rounded-full flex items-center justify-center text-white">
+              <div class="bg-green-50 rounded-xl p-4 sm:p-6 text-center border border-green-200">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 bg-green-500 rounded-full flex items-center justify-center text-white">
                   <i class="fas fa-envelope"></i>
                 </div>
                 <h3 class="font-semibold text-green-800 mb-2">Email</h3>

@@ -2,22 +2,22 @@
   <div class="min-h-screen bg-gray-50 flex flex-col">
     <AppHeader />
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-medical-primary to-medical-secondary py-20">
-      <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Health & Wellness Tips</h1>
-        <p class="text-xl text-white/90 max-w-3xl mx-auto">Expert advice and practical tips for a healthier lifestyle</p>
+    <div class="bg-gradient-to-r from-medical-primary to-medical-secondary py-12 sm:py-16 lg:py-20">
+      <div class="container mx-auto px-3 sm:px-4 text-center">
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-3 sm:mb-4">Health & Wellness Tips</h1>
+        <p class="text-base sm:text-lg lg:text-xl text-white/90 max-w-3xl mx-auto">Expert advice and practical tips for a healthier lifestyle</p>
       </div>
     </div>
 
     <!-- Tips Grid -->
-    <div class="container mx-auto px-4 py-16">
+    <div class="container mx-auto px-3 sm:px-4 py-12 sm:py-16">
       <!-- Categories -->
-      <div class="flex flex-wrap justify-center gap-4 mb-12">
+      <div class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8 sm:mb-12">
         <button 
           v-for="category in categories" 
           :key="category.id"
           @click="activeCategory = category.id"
-          class="px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200"
+          class="px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-medium transition-colors duration-200 touch-button"
           :class="activeCategory === category.id 
             ? 'bg-medical-primary text-white' 
             : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'"
@@ -27,16 +27,16 @@
       </div>
 
       <!-- Search Bar -->
-      <div class="max-w-2xl mx-auto mb-12">
+      <div class="max-w-2xl mx-auto mb-8 sm:mb-12">
         <div class="relative">
           <input 
             type="text" 
             v-model="searchQuery"
             placeholder="Search health tips..."
-            class="w-full px-6 py-4 pr-12 rounded-full border border-gray-300 focus:ring-2 focus:ring-medical-primary focus:border-transparent transition-all duration-200 shadow-sm"
+            class="w-full px-4 sm:px-6 py-3 sm:py-4 pr-10 sm:pr-12 rounded-full border border-gray-300 focus:ring-2 focus:ring-medical-primary focus:border-transparent transition-all duration-200 shadow-sm text-base"
           >
           <svg 
-            class="w-6 h-6 text-gray-400 absolute right-4 top-1/2 transform -translate-y-1/2" 
+            class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24" 
@@ -53,43 +53,43 @@
       </div>
 
       <!-- Tips Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         <div 
           v-for="tip in filteredTips" 
           :key="tip.id"
           class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
         >
-          <div class="h-56 overflow-hidden">
+          <div class="h-40 sm:h-48 lg:h-56 overflow-hidden">
             <img 
               :src="tip.image" 
               :alt="tip.title"
               class="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
             >
           </div>
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-3">
-              <span :class="tip.tagClass" class="text-xs font-semibold px-3 py-1 rounded-full">
+          <div class="p-4 sm:p-6">
+            <div class="flex justify-between items-center mb-2 sm:mb-3">
+              <span :class="tip.tagClass" class="text-xs font-semibold px-2 sm:px-3 py-1 rounded-full">
                 {{ tip.tag }}
               </span>
-              <span class="text-sm text-gray-500">{{ formatDate(tip.date) }}</span>
+              <span class="text-xs sm:text-sm text-gray-500">{{ formatDate(tip.date) }}</span>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ tip.title }}</h3>
-            <p class="text-gray-600 mb-4 line-clamp-3">{{ tip.description }}</p>
+            <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">{{ tip.title }}</h3>
+            <p class="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 line-clamp-3">{{ tip.description }}</p>
             <div class="flex justify-between items-center">
               <button 
                 @click="viewTipDetails(tip)"
-                class="text-medical-primary font-medium hover:text-medical-secondary transition-colors duration-200 flex items-center"
+                class="text-medical-primary font-medium hover:text-medical-secondary transition-colors duration-200 flex items-center touch-button text-sm sm:text-base"
               >
                 Read more
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
               </button>
               <div class="flex items-center text-gray-400">
-                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
                 </svg>
-                <span class="text-sm">{{ tip.likes || 0 }}</span>
+                <span class="text-xs sm:text-sm">{{ tip.likes || 0 }}</span>
               </div>
             </div>
           </div>
@@ -97,7 +97,7 @@
       </div>
 
       <!-- Load More Button -->
-      <div class="mt-12 text-center">
+      <div class="mt-8 sm:mt-12 text-center">
         <button 
           v-if="hasMoreTips"
           @click="loadMoreTips"

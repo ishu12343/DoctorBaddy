@@ -7,19 +7,19 @@
       
       <!-- Hero Section -->
       <section v-if="!showSmartDoctorSection" class="bg-gradient-to-br from-medical-primary via-medical-secondary to-blue-600 text-white section">
-        <div class="container mx-auto px-4">
-          <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div class="container mx-auto px-3 sm:px-4">
+          <div class="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
             
             <!-- Hero Text Content -->
-            <div class="text-left space-y-6 animate-fade-in">
-              <h1 class="heading-1 text-blue-100 mb-6">
+            <div class="text-center lg:text-left space-y-4 sm:space-y-6 animate-fade-in">
+              <h1 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight text-blue-100 mb-4 sm:mb-6">
                 <span class="text-highlight">Online doctor visits,</span>
                 <transition-group name="fade" tag="span" class="block">
                   <span :key="currentHeroPhrase" class="inline-block">{{ currentHeroPhrase }}</span>
                 </transition-group>
               </h1>
               
-              <div class="text-large text-blue-100 space-y-2">
+              <div class="text-base sm:text-lg lg:text-xl leading-relaxed text-blue-100 space-y-2">
                 <p class="font-medium">Your health, <span class="text-blue-100 font-bold">your way.</span></p>
                 <transition-group name="fade" tag="div">
                   <p :key="currentSubtitle" class="opacity-90">{{ currentSubtitle }}</p>
@@ -27,85 +27,85 @@
               </div>
               
               <!-- CTA Buttons -->
-              <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                <button @click="showLearnMoreSections" class="btn btn-secondary btn-large">
+              <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 w-full">
+                <button @click="showLearnMoreSections" class="btn btn-secondary btn-large w-full sm:w-auto">
                   <span class="mr-2">ℹ️</span>
                   Learn More
                 </button>
-                <button @click="showAllDoctorsList" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary">
+                <button @click="showAllDoctorsList" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary w-full sm:w-auto">
                   <span class="mr-2">🩺</span>
                   Find Specialists
                 </button>
               </div>
               
               <!-- Stats Row -->
-              <div class="grid grid-cols-3 gap-4 pt-8">
+              <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-6 sm:pt-8">
                 <div class="text-center">
-                  <div class="text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.doctors }}+</div>
-                  <div class="text-sm text-blue-100">Expert Doctors</div>
+                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.doctors }}+</div>
+                  <div class="text-xs sm:text-sm text-blue-100">Expert Doctors</div>
                 </div>
                 <div class="text-center">
-                  <div class="text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.patients }}+</div>
-                  <div class="text-sm text-blue-100">Happy Patients</div>
+                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.patients }}+</div>
+                  <div class="text-xs sm:text-sm text-blue-100">Happy Patients</div>
                 </div>
                 <div class="text-center">
-                  <div class="text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.consultations }}+</div>
-                  <div class="text-sm text-blue-100">Consultations</div>
+                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.consultations }}+</div>
+                  <div class="text-xs sm:text-sm text-blue-100">Consultations</div>
                 </div>
               </div>
             </div>
             
             <!-- Hero Visual Content -->
-            <div class="animate-slide-up">
-              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 shadow-2xl">
-                <div class="flex items-center justify-between mb-6">
-                  <h3 class="text-xl font-semibold text-white">Top Rated Doctors</h3>
-                  <div class="flex items-center gap-2">
+            <div class="animate-slide-up mt-6 lg:mt-0">
+              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-2xl">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+                  <h3 class="text-lg sm:text-xl font-semibold text-white">Top Rated Doctors</h3>
+                  <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
                     <span class="flex items-center gap-1 text-green-300 text-sm">
                       <span class="w-2 h-2 bg-green-400 rounded-full"></span>
                       Live Now
                     </span>
-                    <button @click="showAllDoctorsList" class="btn btn-primary btn-small">Find All Doctors</button>
+                    <button @click="showAllDoctorsList" class="btn btn-primary btn-small w-full sm:w-auto">Find All Doctors</button>
                   </div>
                 </div>
                 
                 <!-- Doctor Cards -->
-                <div class="grid gap-4">
-                  <div v-if="loadingDoctors" class="text-center text-white py-10">
-                    <i class="fas fa-spinner fa-spin text-2xl"></i>
-                    <p class="mt-2">Loading doctors...</p>
+                <div class="space-y-3 sm:space-y-4">
+                  <div v-if="loadingDoctors" class="text-center text-white py-8 sm:py-10">
+                    <i class="fas fa-spinner fa-spin text-xl sm:text-2xl"></i>
+                    <p class="mt-2 text-sm sm:text-base">Loading doctors...</p>
                   </div>
-                  <div v-else-if="topRatedDoctors.length === 0" class="text-center text-white py-10">
-                    <p>No top rated doctors available at the moment.</p>
+                  <div v-else-if="topRatedDoctors.length === 0" class="text-center text-white py-8 sm:py-10">
+                    <p class="text-sm sm:text-base">No top rated doctors available at the moment.</p>
                   </div>
                   <div
                     v-else
                     v-for="(doctor, index) in topRatedDoctors"
                     :key="doctor.id" 
-                    class="relative bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-gray-800"
+                    class="relative bg-white rounded-xl p-3 sm:p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-gray-800"
                     :style="{ animationDelay: `${index * 0.2}s` }"
                   >
-                    <button @click="openDoctorProfileModal(doctor)" class="absolute top-3 right-3 bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center text-gray-600 transition-colors z-10" title="View Profile">
-                      <span style="font-size: 2rem;">👁️</span>
+                    <button @click="openDoctorProfileModal(doctor)" class="absolute top-2 sm:top-3 right-2 sm:right-3 bg-gray-100 hover:bg-gray-200 rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 transition-colors z-10 touch-friendly" title="View Profile">
+                      <span class="text-lg sm:text-xl">👁️</span>
                     </button>
 
-                    <div class="flex items-start gap-4">
+                    <div class="flex items-start gap-3 sm:gap-4">
                       <!-- Avatar -->
                       <div class="relative flex-shrink-0">
-                        <img v-if="doctor.profile_photo" :src="doctor.profile_photo" :alt="doctor.full_name" class="w-16 h-16 rounded-lg object-cover" />
-                        <div v-else class="w-16 h-16 rounded-lg bg-gray-200 flex items-center justify-center">
-                            <span class="text-xl font-bold text-gray-500">{{ getInitials(doctor.full_name) }}</span>
+                        <img v-if="doctor.profile_photo" :src="doctor.profile_photo" :alt="doctor.full_name" class="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover" />
+                        <div v-else class="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gray-200 flex items-center justify-center">
+                            <span class="text-lg sm:text-xl font-bold text-gray-500">{{ getInitials(doctor.full_name) }}</span>
                         </div>
-                        <div class="absolute -top-2 -right-2 bg-yellow-400 text-white px-2 py-1 rounded-lg shadow-md flex items-center gap-1">
+                        <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-yellow-400 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-lg shadow-md flex items-center gap-1">
                             <span class="text-xs">⭐</span>
-                            <span class="font-bold text-sm">{{ doctor.average_rating > 0 ? doctor.average_rating.toFixed(1) : 'New' }}</span>
+                            <span class="font-bold text-xs sm:text-sm">{{ doctor.average_rating > 0 ? doctor.average_rating.toFixed(1) : 'New' }}</span>
                         </div>
                       </div>
                       <!-- Info -->
                       <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-gray-900 truncate">{{ doctor.full_name || doctor.name }}</h4>
-                        <p class="text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
-                        <div class="text-xs text-gray-500 mt-2 space-y-1">
+                        <h4 class="font-bold text-gray-900 truncate text-sm sm:text-base">{{ doctor.full_name || doctor.name }}</h4>
+                        <p class="text-xs sm:text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
+                        <div class="text-xs text-gray-500 mt-1 sm:mt-2 space-y-1">
                             <div class="flex items-center gap-2">
                                 <span class="w-3 text-center text-gray-400">💼</span>
                                 <span>{{ doctor.experience }} years exp.</span>
@@ -117,8 +117,8 @@
                         </div>
                       </div>
                     </div>
-                    <div class="mt-4">
-                        <button @click="bookAppointment(doctor)" class="btn btn-primary w-full btn-small">
+                    <div class="mt-3 sm:mt-4">
+                        <button @click="bookAppointment(doctor)" class="btn btn-primary w-full btn-small touch-button text-xs sm:text-sm">
                             Book Appointment
                         </button>
                     </div>
@@ -126,19 +126,19 @@
                 </div>
                 
                 <!-- Bottom Stats -->
-                <div class="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-white/20">
+                <div class="grid grid-cols-2 gap-3 sm:gap-4 mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-white/20">
                   <div class="flex items-center gap-2 text-white">
-                    <span class="text-blue-200 text-lg">👥</span>
+                    <span class="text-blue-200 text-base sm:text-lg">👥</span>
                     <div>
-                      <div class="font-bold">2.5k+</div>
-                      <div class="text-sm opacity-75">Patients Served</div>
+                      <div class="font-bold text-sm sm:text-base">2.5k+</div>
+                      <div class="text-xs sm:text-sm opacity-75">Patients Served</div>
                     </div>
                   </div>
                   <div class="flex items-center gap-2 text-white">
-                    <span class="text-blue-200 text-lg">🕐</span>
+                    <span class="text-blue-200 text-base sm:text-lg">🕐</span>
                     <div>
-                      <div class="font-bold">24/7</div>
-                      <div class="text-sm opacity-75">Available</div>
+                      <div class="font-bold text-sm sm:text-base">24/7</div>
+                      <div class="text-xs sm:text-sm opacity-75">Available</div>
                     </div>
                   </div>
                 </div>
@@ -150,28 +150,28 @@
 
       <!-- Smart Doctor Recommendations Section -->
       <section v-else class="section bg-gray-50" style="padding-top: 1rem; padding-bottom: 1rem;">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-3 sm:px-4">
           <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-8">
-              <h2 class="heading-2 text-gray-900 mb-4">
-                <span class="text-medical-secondary mr-3 text-3xl">🧠</span>
+            <div class="text-center mb-6 sm:mb-8">
+              <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-gray-900 mb-3 sm:mb-4">
+                <span class="text-medical-secondary mr-2 sm:mr-3 text-2xl sm:text-3xl">🧠</span>
                 Smart Doctor Recommendations
               </h2>
-              <p class="text-large text-gray-600">Based on availability, ratings, and your needs</p>
-              <button @click="showSmartDoctorSection = false" class="mt-4 text-medical-secondary hover:text-medical-primary transition-colors">
+              <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-gray-600">Based on availability, ratings, and your needs</p>
+              <button @click="showSmartDoctorSection = false" class="mt-3 sm:mt-4 text-medical-secondary hover:text-medical-primary transition-colors touch-button">
                 <span class="mr-2">⬅️</span>
                 Back to Home
               </button>
             </div>
 
             <!-- Filter Categories -->
-            <div class="flex flex-wrap justify-center gap-3 mb-8">
+            <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
               <button 
                 v-for="specialty in availableSpecialties" 
                 :key="specialty"
                 @click="currentSpecialty = specialty"
                 :class="[
-                  'flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all duration-200',
+                  'flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full border-2 transition-all duration-200 text-xs sm:text-sm touch-button',
                   currentSpecialty === specialty
                     ? 'bg-medical-secondary text-white border-medical-secondary' 
                     : 'bg-white text-gray-700 border-gray-300 hover:border-medical-secondary'
@@ -182,8 +182,8 @@
             </div>
 
             <!-- Doctor Cards Grid -->
-            <div v-if="loadingAllDoctors" class="text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-medical-primary"></i></div>
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-if="loadingAllDoctors" class="text-center py-8 sm:py-10"><i class="fas fa-spinner fa-spin text-2xl sm:text-3xl text-medical-primary"></i></div>
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               <div 
                 v-for="doctor in filteredDoctors" 
                 :key="doctor.id"
@@ -238,25 +238,16 @@
 
       <!-- Services Section -->
       <section ref="servicesSection" v-if="showLearnMore && !showSmartDoctorSection" class="section bg-slate-50" style="padding-top: 1rem; padding-bottom: 1rem;">
-        <div class="container mx-auto px-4">
-          <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+        <div class="container mx-auto px-3 sm:px-4">
+          <div class="flex flex-col md:flex-row justify-between items-center mb-8 sm:mb-12">
             <div class="text-center md:text-left mb-4 md:mb-0">
-              <h2 class="heading-2 text-gray-900 mb-2">Our Services</h2>
-              <p class="text-large text-gray-600">Comprehensive healthcare for your needs.</p>
+              <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-gray-900 mb-2">Our Services</h2>
+              <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-gray-600">Comprehensive healthcare for your needs.</p>
             </div>
-            <!-- <button 
-              @click="navigateToServices"
-              class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group"
-            >
-              View All Services
-              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-              </svg>
-            </button> -->
           </div>
 
           <div class="overflow-hidden">
-            <div ref="servicesContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
+            <div ref="servicesContainer" class="flex space-x-4 sm:space-x-8 overflow-x-auto py-6 sm:py-8 px-2 sm:px-4 scrollbar-hide snap-x snap-mandatory">
               <div
                 v-for="(service, index) in services"
                 :key="service.id"
@@ -264,40 +255,40 @@
                 @click="scrollToServicesStep(index)"
                 class="flex-shrink-0 w-[85vw] sm:w-80 card transition-all duration-500 snap-center border-2 cursor-pointer"
                 :class="servicesIndex === index ? 'transform scale-105 shadow-xl border-medical-primary' : 'border-transparent opacity-80'">
-                <div class="card-body text-center">
-                  <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white transition-transform duration-300 service-container">
+                <div class="card-body text-center p-4 sm:p-6">
+                  <div class="w-16 h-16 sm:w-24 sm:h-24 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white transition-transform duration-300 service-container">
                     <!-- Test both approaches -->
-                    <div style="font-size: 3rem; line-height: 1;">
+                    <div class="text-2xl sm:text-3xl lg:text-4xl">
                       <!-- Emoji (should always work) -->
                       <span v-if="service.emoji">{{ service.emoji }}</span>
                       <!-- Font Awesome (if emoji doesn't exist) -->
-                      <i v-else :class="service.icon" class="fas" style="font-size: 3rem; font-weight: 900;"></i>
+                      <i v-else :class="service.icon" class="fas" style="font-size: 2rem; font-weight: 900;"></i>
                       <!-- Text fallback -->
-                      <span v-if="!service.emoji && !service.icon" style="font-size: 1.5rem; font-weight: bold;">{{ service.title.charAt(0) }}</span>
+                      <span v-if="!service.emoji && !service.icon" class="text-lg sm:text-xl font-bold">{{ service.title.charAt(0) }}</span>
                     </div>
                   </div>
-                  <h3 class="heading-3 text-gray-900 mb-3">{{ service.title }}</h3>
-                  <p class="text-gray-600 mb-4">{{ service.description }}</p>
-                  <ul class="text-left space-y-2 mb-4">
-                    <li v-for="feature in service.features" :key="feature" class="flex items-center gap-2 text-sm text-gray-600">
+                  <h3 class="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight text-gray-900 mb-2 sm:mb-3">{{ service.title }}</h3>
+                  <p class="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">{{ service.description }}</p>
+                  <ul class="text-left space-y-1 sm:space-y-2 mb-3 sm:mb-4">
+                    <li v-for="feature in service.features" :key="feature" class="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
                       <i class="fas fa-check text-green-500 text-xs"></i>
                       {{ feature }}
                     </li>
                   </ul>
                   <!-- Read More Button -->
-                  <button @click="viewServiceDetails(service)" class="text-medical-primary font-medium flex items-center group">
-                    <span class="text-sm">Read More</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                  <button @click="viewServiceDetails(service)" class="text-medical-primary font-medium flex items-center group justify-center w-full touch-button">
+                    <span class="text-xs sm:text-sm">Read More</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 ml-1 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                   </button>
                 </div>
               </div>
-              <div class="flex-shrink-0 w-[85vw] sm:w-80 snap-center flex items-center justify-center p-6">
-                <button @click="navigateToServices" class="w-full h-full flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-2xl hover:border-medical-primary hover:bg-blue-50 text-medical-primary transition-all duration-300">
-                    <i class="fas fa-th-large text-4xl mb-4"></i>
-                    <span class="text-xl font-bold">View All Services</span>
-                    <p class="text-sm text-gray-600 mt-1">Explore our full range of offerings.</p>
+              <div class="flex-shrink-0 w-[85vw] sm:w-80 snap-center flex items-center justify-center p-4 sm:p-6">
+                <button @click="navigateToServices" class="w-full h-full flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-2xl hover:border-medical-primary hover:bg-blue-50 text-medical-primary transition-all duration-300 touch-button min-h-[200px] sm:min-h-[250px]">
+                    <i class="fas fa-th-large text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
+                    <span class="text-lg sm:text-xl font-bold">View All Services</span>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">Explore our full range of offerings.</p>
                 </button>
               </div>
             </div>
