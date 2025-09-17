@@ -239,7 +239,7 @@
       <!-- Services Section -->
       <section ref="servicesSection" v-if="showLearnMore && !showSmartDoctorSection" class="section bg-slate-50" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container mx-auto px-3 sm:px-4">
-          <div class="flex flex-col md:flex-row justify-between items-center mb-8 sm:mb-12">
+          <div class="flex flex-col md:flex-row justify-between items-center mb-8 sm:mb-4">
             <div class="text-center md:text-left mb-4 md:mb-0">
               <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-gray-900 mb-2">Our Services</h2>
               <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-gray-600">Comprehensive healthcare for your needs.</p>
@@ -247,7 +247,7 @@
           </div>
 
           <div class="overflow-hidden">
-            <div ref="servicesContainer" class="flex space-x-4 sm:space-x-8 overflow-x-auto py-6 sm:py-8 px-2 sm:px-4 scrollbar-hide snap-x snap-mandatory">
+            <div ref="servicesContainer" class="flex space-x-4 sm:space-x-8 overflow-x-auto pt-6 sm:pt-8 pb-4 px-2 sm:px-4 scrollbar-hide snap-x snap-mandatory">
               <div
                 v-for="(service, index) in services"
                 :key="service.id"
@@ -292,17 +292,17 @@
                 </button>
               </div>
             </div>
-            <!-- Dots for Services -->
-            <div class="flex justify-center mt-4 space-x-2">
-              <button
-                v-for="(service, index) in services"
-                :key="`service-dot-${index}`"
-                @click="scrollToServicesStep(index)"
-                class="w-3 h-3 rounded-full transition-all duration-300"
-                :class="servicesIndex === index ? 'bg-medical-primary scale-125' : 'bg-gray-300 hover:bg-gray-400'"
-                :aria-label="`Go to service ${index + 1}`"
-              ></button>
-            </div>
+          </div>
+          <!-- Dots for Services -->
+          <div class="flex justify-center mt-4 space-x-1 sm:space-x-2">
+            <button
+              v-for="(service, index) in services"
+              :key="`service-dot-${index}`"
+              @click="scrollToServicesStep(index)"
+              class="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 dot-indicator"
+              :class="servicesIndex === index ? 'bg-medical-primary dot-active' : 'bg-gray-300 hover:bg-gray-400'"
+              :aria-label="`Go to service ${index + 1}`"
+            ></button>
           </div>
         </div>
       </section>
@@ -310,7 +310,7 @@
       <!-- How It Works Section -->
       <section ref="howItWorksSection" v-if="showLearnMore && !showSmartDoctorSection" class="section bg-white" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container mx-auto px-4">
-          <div class="text-center mb-12">
+          <div class="text-center mb-8">
             <h2 class="heading-2 text-gray-900 mb-4">{{ howItWorks[howItWorksView].title }}</h2>
             <p class="text-large text-gray-600">Simple steps to get started on our platform</p>
             
@@ -326,7 +326,7 @@
           </div>
 
           <div class="overflow-hidden">
-            <div ref="howItWorksContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
+            <div ref="howItWorksContainer" class="flex space-x-8 overflow-x-auto pt-8 pb-4 px-4 scrollbar-hide snap-x snap-mandatory">
               <div
                 v-for="(step, index) in howItWorks[howItWorksView].steps"
                 :key="step.id"
@@ -351,17 +351,17 @@
                 <p class="text-gray-600">{{ step.description }}</p>
               </div>
             </div>
-            <!-- Dots for How It Works -->
-            <div class="flex justify-center mt-4 space-x-2">
-              <button
-                v-for="(step, index) in howItWorks[howItWorksView].steps"
-                :key="`howitworks-dot-${index}`"
-                @click="scrollToHowItWorksStep(index)"
-                class="w-3 h-3 rounded-full transition-all duration-300"
-                :class="howItWorksIndex === index ? 'bg-medical-primary scale-125' : 'bg-gray-300 hover:bg-gray-400'"
-                :aria-label="`Go to step ${index + 1}`"
-              ></button>
-            </div>
+          </div>
+          <!-- Dots for How It Works -->
+          <div class="flex justify-center mt-4 space-x-1 sm:space-x-2">
+            <button
+              v-for="(step, index) in howItWorks[howItWorksView].steps"
+              :key="`howitworks-dot-${index}`"
+              @click="scrollToHowItWorksStep(index)"
+              class="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 dot-indicator"
+              :class="howItWorksIndex === index ? 'bg-medical-primary dot-active' : 'bg-gray-300 hover:bg-gray-400'"
+              :aria-label="`Go to step ${index + 1}`"
+            ></button>
           </div>
         </div>
       </section>
@@ -369,7 +369,7 @@
       <!-- Health Tips Section -->
       <section ref="healthTipsSection" class="section bg-emerald-50" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container mx-auto px-4">
-          <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+          <div class="flex flex-col md:flex-row justify-between items-center mb-8">
             <div class="text-center md:text-left mb-4 md:mb-0">
               <h2 class="heading-2 text-gray-900 mb-2">Health & Wellness Tips</h2>
               <p class="text-large text-gray-600">Expert advice to help you maintain a healthy lifestyle</p>
@@ -387,7 +387,7 @@
           
           <div class="overflow-hidden">
             <!-- Health Tips Container -->
-            <div ref="healthTipsContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
+            <div ref="healthTipsContainer" class="flex space-x-8 overflow-x-auto pt-8 pb-4 px-4 scrollbar-hide snap-x snap-mandatory">
               <div v-for="(tip, index) in healthTips" :key="tip.id"
                    :data-index="index"
                    @click="scrollToHealthTipsStep(index)"
@@ -426,17 +426,17 @@
                 </button>
               </div>
             </div>
-            <!-- Dots for Health Tips -->
-            <div class="flex justify-center mt-4 space-x-2">
-              <button
-                v-for="(tip, index) in healthTips"
-                :key="`healthtip-dot-${index}`"
-                @click="scrollToHealthTipsStep(index)"
-                class="w-3 h-3 rounded-full transition-all duration-300"
-                :class="healthTipsIndex === index ? 'bg-medical-primary scale-125' : 'bg-gray-300 hover:bg-gray-400'"
-                :aria-label="`Go to health tip ${index + 1}`"
-              ></button>
-            </div>
+          </div>
+          <!-- Dots for Health Tips -->
+          <div class="flex justify-center mt-4 space-x-1 sm:space-x-2">
+            <button
+              v-for="(tip, index) in healthTips"
+              :key="`healthtip-dot-${index}`"
+              @click="scrollToHealthTipsStep(index)"
+              class="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 dot-indicator"
+              :class="healthTipsIndex === index ? 'bg-medical-primary dot-active' : 'bg-gray-300 hover:bg-gray-400'"
+              :aria-label="`Go to health tip ${index + 1}`"
+            ></button>
           </div>
         </div>
       </section>
@@ -444,13 +444,13 @@
       <!-- Testimonials Section -->
       <section ref="testimonialsSection" class="section bg-gradient-to-br from-red-500" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container mx-auto px-4">
-          <div class="text-center mb-12">
+          <div class="text-center mb-8">
             <h2 class="heading-2 text-white mb-4">Patient & Doctor Stories</h2>
             <p class="text-large text-red-100">Real experiences from our community</p>
           </div>
 
           <div class="overflow-hidden">
-            <div ref="allTestimonialsContainer" class="flex space-x-8 overflow-x-auto py-8 px-4 scrollbar-hide snap-x snap-mandatory">
+            <div ref="allTestimonialsContainer" class="flex space-x-8 overflow-x-auto pt-8 pb-4 px-4 scrollbar-hide snap-x snap-mandatory">
               <div
                 v-for="(story, index) in allTestimonials"
                 :key="story.storyId"
@@ -485,17 +485,17 @@
                 </button>
               </div>
             </div>
-            <!-- Dots for Testimonials -->
-            <div class="flex justify-center mt-4 space-x-2">
-              <button
-                v-for="(story, index) in allTestimonials"
-                :key="`testimonial-dot-${index}`"
-                @click="scrollToTestimonialsStep(index)"
-                class="w-3 h-3 rounded-full transition-all duration-300"
-                :class="testimonialsIndex === index ? 'bg-white scale-125' : 'bg-red-200 hover:bg-red-300'"
-                :aria-label="`Go to story ${index + 1}`"
-              ></button>
-            </div>
+          </div>
+          <!-- Dots for Testimonials -->
+          <div class="flex justify-center mt-4 space-x-1 sm:space-x-2">
+            <button
+              v-for="(story, index) in allTestimonials"
+              :key="`testimonial-dot-${index}`"
+              @click="scrollToTestimonialsStep(index)"
+              class="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 dot-indicator"
+              :class="testimonialsIndex === index ? 'bg-white dot-active' : 'bg-red-200 hover:bg-red-300'"
+              :aria-label="`Go to story ${index + 1}`"
+            ></button>
           </div>
         </div>
       </section>
@@ -1738,6 +1738,42 @@ export default {
 
 .insurance-partner-fallback:hover {
   opacity: 1;
+}
+
+/* Responsive Navigation Dots */
+.dot-indicator {
+  min-width: 8px;
+  min-height: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.dot-active {
+  transform: scale(1.2);
+}
+
+/* Mobile-specific dot adjustments */
+@media (max-width: 640px) {
+  .dot-indicator {
+    min-width: 6px;
+    min-height: 6px;
+  }
+  
+  .dot-active {
+    transform: scale(1.15);
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .dot-indicator {
+    min-width: 5px;
+    min-height: 5px;
+  }
+  
+  .dot-active {
+    transform: scale(1.1);
+  }
 }
 
 /* Responsive adjustments */
