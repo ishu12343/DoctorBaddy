@@ -13,6 +13,7 @@ import AdminSignUp from '@/components/admin/AdminSignUp.vue'
 import AdminDashboard from '@/components/admin/AdminDashboard.vue'
 import TipsPage from '@/views/TipsPage.vue'
 import Testimonials from '@/views/Testimonials.vue'
+import AllDoctors from '@/views/AllDoctors.vue'
 
 const routes = [
   { path: '/patient-login', name: 'PatientLogin', component: PatientLogin },
@@ -37,7 +38,7 @@ const routes = [
   { path: '/admin-dashboard', name: 'AdminDashboard', component: AdminDashboard },
   { path: '/health-tips', name: 'HealthTips', component: TipsPage },
   { path: '/testimonials', name: 'Testimonials', component: Testimonials },
-
+  { path: '/all-doctors', name: 'AllDoctors', component: AllDoctors },
   // {
   //   path: '/doctor-dashboard/profile',
   //   name: 'DoctorProfilePage',
