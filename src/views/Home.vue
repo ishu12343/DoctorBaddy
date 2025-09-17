@@ -9,54 +9,8 @@
       <section v-if="!showSmartDoctorSection" class="bg-gradient-to-br from-medical-primary via-medical-secondary to-blue-600 text-white section">
         <div class="container mx-auto px-3 sm:px-4">
           <div class="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
-            
-            <!-- Hero Text Content -->
-            <div class="text-center lg:text-left space-y-4 sm:space-y-6 animate-fade-in">
-              <h1 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight text-blue-100 mb-4 sm:mb-6">
-                <span class="text-highlight">Online doctor visits,</span>
-                <transition-group name="fade" tag="span" class="block">
-                  <span :key="currentHeroPhrase" class="inline-block">{{ currentHeroPhrase }}</span>
-                </transition-group>
-              </h1>
-              
-              <div class="text-base sm:text-lg lg:text-xl leading-relaxed text-blue-100 space-y-2">
-                <p class="font-medium">Your health, <span class="text-blue-100 font-bold">your way.</span></p>
-                <transition-group name="fade" tag="div">
-                  <p :key="currentSubtitle" class="opacity-90">{{ currentSubtitle }}</p>
-                </transition-group>
-              </div>
-              
-              <!-- CTA Buttons -->
-              <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 w-full">
-                <button @click="showLearnMoreSections" class="btn btn-secondary btn-large w-full sm:w-auto">
-                  <span class="mr-2">ℹ️</span>
-                  Learn More
-                </button>
-                <button @click="showAllDoctorsList" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary w-full sm:w-auto">
-                  <span class="mr-2">🩺</span>
-                  Find Specialists
-                </button>
-              </div>
-              
-              <!-- Stats Row -->
-              <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-6 sm:pt-8">
-                <div class="text-center">
-                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.doctors }}+</div>
-                  <div class="text-xs sm:text-sm text-blue-100">Expert Doctors</div>
-                </div>
-                <div class="text-center">
-                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.patients }}+</div>
-                  <div class="text-xs sm:text-sm text-blue-100">Happy Patients</div>
-                </div>
-                <div class="text-center">
-                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.consultations }}+</div>
-                  <div class="text-xs sm:text-sm text-blue-100">Consultations</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Hero Visual Content -->
-            <div class="animate-slide-up mt-6 lg:mt-0">
+                        <!-- Hero Visual Content -->
+                        <div class="animate-slide-up mt-6 lg:mt-0">
               <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-2xl">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
                   <h3 class="text-lg sm:text-xl font-semibold text-white">Top Rated Doctors</h3>
@@ -141,6 +95,50 @@
                       <div class="text-xs sm:text-sm opacity-75">Available</div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+            <!-- Hero Text Content -->
+            <div class="text-center lg:text-left space-y-4 sm:space-y-6 animate-fade-in">
+              <h1 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight text-blue-100 mb-4 sm:mb-6">
+                <span class="text-highlight">Online doctor visits,</span>
+                <transition-group name="fade" tag="span" class="block">
+                  <span :key="currentHeroPhrase" class="inline-block">{{ currentHeroPhrase }}</span>
+                </transition-group>
+              </h1>
+              
+              <div class="text-base sm:text-lg lg:text-xl leading-relaxed text-blue-100 space-y-2">
+                <p class="font-medium">Your health, <span class="text-blue-100 font-bold">your way.</span></p>
+                <transition-group name="fade" tag="div">
+                  <p :key="currentSubtitle" class="opacity-90">{{ currentSubtitle }}</p>
+                </transition-group>
+              </div>
+              
+              <!-- CTA Buttons -->
+              <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 w-full">
+                <button @click="showLearnMoreSections" class="btn btn-secondary btn-large w-full sm:w-auto">
+                  <span class="mr-2">ℹ️</span>
+                  Learn More
+                </button>
+                <button @click="showAllDoctorsList" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary w-full sm:w-auto">
+                  <span class="mr-2">🩺</span>
+                  Find Specialists
+                </button>
+              </div>
+              
+              <!-- Stats Row -->
+              <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-6 sm:pt-8">
+                <div class="text-center">
+                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.doctors }}+</div>
+                  <div class="text-xs sm:text-sm text-blue-100">Expert Doctors</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.patients }}+</div>
+                  <div class="text-xs sm:text-sm text-blue-100">Happy Patients</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.consultations }}+</div>
+                  <div class="text-xs sm:text-sm text-blue-100">Consultations</div>
                 </div>
               </div>
             </div>
