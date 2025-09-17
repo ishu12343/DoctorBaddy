@@ -129,15 +129,18 @@
               <!-- Stats Row -->
               <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-6 sm:pt-8">
                 <div class="text-center">
+                  <i class="fas fa-user-md text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
                   <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.doctors }}+</div>
                   <div class="text-xs sm:text-sm text-blue-100">Expert Doctors</div>
                 </div>
                 <div class="text-center">
+                  <i class="fas fa-user text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
                   <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.patients }}+</div>
                   <div class="text-xs sm:text-sm text-blue-100">Happy Patients</div>
                 </div>
                 <div class="text-center">
-                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.consultations }}+</div>
+                  <i class="fas fa-user-friends text-md text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
+                    <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.consultations }}+</div>
                   <div class="text-xs sm:text-sm text-blue-100">Consultations</div>
                 </div>
               </div>

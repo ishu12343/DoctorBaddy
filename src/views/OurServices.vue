@@ -187,18 +187,22 @@
                 <h3 class="text-lg sm:text-2xl font-bold text-white mb-4 sm:mb-6">Join Our Community</h3>
                 <div class="grid grid-cols-2 gap-4 sm:gap-6">
                   <div class="text-center">
+                    <i class="fas fa-user-md text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
                     <div class="text-2xl sm:text-3xl font-bold text-white">98%</div>
                     <div class="text-xs sm:text-sm text-blue-100">Satisfaction Rate</div>
                   </div>
                   <div class="text-center">
+                    <i class="fas fa-clock text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
                     <div class="text-2xl sm:text-3xl font-bold text-white">15min</div>
                     <div class="text-xs sm:text-sm text-blue-100">Avg Wait Time</div>
                   </div>
                   <div class="text-center">
+                    <i class="fas fa-user-friends text-md text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
                     <div class="text-2xl sm:text-3xl font-bold text-white">500k+</div>
                     <div class="text-xs sm:text-sm text-blue-100">Consultations</div>
                   </div>
                   <div class="text-center">
+                    <i class="fas fa-calendar text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
                     <div class="text-2xl sm:text-3xl font-bold text-white">24/7</div>
                     <div class="text-xs sm:text-sm text-blue-100">Support</div>
                   </div>
