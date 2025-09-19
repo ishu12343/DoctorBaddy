@@ -22,26 +22,10 @@
       <section class="section">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
           <div class="max-w-5xl mx-auto">
-            <!-- Filter & Search -->
+            <!-- Search -->
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 sm:p-6 mb-8 sm:mb-12 sticky top-20 z-30">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                <div class="sm:col-span-2">
-                  <label for="specialty-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Specialty</label>
-                  <select 
-                    id="specialty-filter"
-                    v-model="currentSpecialty"
-                    class="form-input w-full"
-                  >
-                    <option 
-                      v-for="specialty in availableSpecialties" 
-                      :key="specialty"
-                      :value="specialty"
-                    >
-                      {{ specialty }}
-                    </option>
-                  </select>
-                </div>
-                <div>
+              <div class="grid grid-cols-1 gap-4 items-center">
+                <div class="w-full">
                   <label for="doctor-search" class="block text-sm font-medium text-gray-700 mb-1">Search by Name</label>
                   <div class="relative">
                     <input 
