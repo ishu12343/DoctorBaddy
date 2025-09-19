@@ -6,7 +6,7 @@
     <main class="flex-1 pt-5 lg:pt-5">
       
       <!-- Hero Section -->
-      <section class="bg-gradient-to-br from-medical-primary via-medical-secondary to-blue-600 text-white section">
+      <section v-if="!showSmartDoctorSection" class="bg-gradient-to-br from-medical-primary via-medical-secondary to-blue-600 text-white section">
         <div class="container mx-auto px-3 sm:px-4">
           <div class="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
                         <!-- Hero Visual Content -->
@@ -149,8 +149,96 @@
         </div>
       </section>
 
+      <!-- Smart Doctor Recommendations Section -->
+      <section v-else class="section bg-gray-50" style="padding-top: 1rem; padding-bottom: 1rem;">
+        <div class="container mx-auto px-3 sm:px-4">
+          <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-6 sm:mb-8">
+              <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-gray-900 mb-3 sm:mb-4">
+                <span class="text-medical-secondary mr-2 sm:mr-3 text-2xl sm:text-3xl">🧠</span>
+                Smart Doctor Recommendations
+              </h2>
+              <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-gray-600">Based on availability, ratings, and your needs</p>
+              <button @click="showSmartDoctorSection = false" class="mt-3 sm:mt-4 text-medical-secondary hover:text-medical-primary transition-colors touch-button">
+                <span class="mr-2">⬅️</span>
+                Back to Home
+              </button>
+            </div>
+
+            <!-- Filter Categories -->
+            <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+              <button 
+                v-for="specialty in availableSpecialties" 
+                :key="specialty"
+                @click="currentSpecialty = specialty"
+                :class="[
+                  'flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full border-2 transition-all duration-200 text-xs sm:text-sm touch-button',
+                  currentSpecialty === specialty
+                    ? 'bg-medical-secondary text-white border-medical-secondary' 
+                    : 'bg-white text-gray-700 border-gray-300 hover:border-medical-secondary'
+                ]"
+              >
+                <span>{{ specialty }}</span>
+              </button>
+            </div>
+
+            <!-- Doctor Cards Grid -->
+            <div v-if="loadingAllDoctors" class="text-center py-8 sm:py-10"><i class="fas fa-spinner fa-spin text-2xl sm:text-3xl text-medical-primary"></i></div>
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div 
+                v-for="doctor in filteredDoctors" 
+                :key="doctor.id"
+                class="card hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <div class="card-body">
+                  <div class="flex items-start gap-4">
+                    <div class="relative flex-shrink-0">
+                      <img v-if="doctor.profile_photo" :src="doctor.profile_photo" :alt="doctor.full_name" class="w-20 h-20 rounded-lg object-cover shadow-md" />
+                      <div v-else class="w-20 h-20 rounded-lg bg-gray-200 flex items-center justify-center">
+                          <span class="text-2xl font-bold text-gray-500">{{ getInitials(doctor.full_name) }}</span>
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex items-start justify-between mb-2">
+                        <div>
+                          <h3 class="font-bold text-gray-900 truncate">{{ doctor.full_name }}</h3>
+                          <p class="text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 mb-2">
+                        <div class="flex items-center gap-1 text-yellow-500">
+                            <i class="fas fa-star"></i>
+                            <span class="font-bold text-gray-800">{{ doctor.average_rating > 0 ? doctor.average_rating.toFixed(1) : 'New' }}</span>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-1">({{ doctor.total_reviews }} reviews)</span>
+                      </div>
+                      <div class="text-xs text-gray-500 space-y-1">
+                          <div class="flex items-center gap-2">
+                              <i class="fas fa-briefcase-medical w-3 text-center text-gray-400"></i>
+                              <span>{{ doctor.experience }} years exp.</span>
+                          </div>
+                          <div class="flex items-center gap-2" v-if="doctor.languages && doctor.languages.length">
+                              <i class="fas fa-language w-3 text-center text-gray-400"></i>
+                              <span class="truncate">{{ doctor.languages.join(', ') }}</span>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4 border-t pt-3 flex items-center justify-between">
+                      <span class="text-lg font-bold text-medical-primary">${{ doctor.consultation_fee || 'N/A' }}</span>
+                      <button @click="bookAppointment(doctor)" class="btn btn-primary btn-small">
+                          Book Now
+                      </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Services Section -->
-      <section ref="servicesSection" v-if="showLearnMore" class="section bg-slate-50" style="padding-top: 1rem; padding-bottom: 1rem;">
+      <section ref="servicesSection" v-if="showLearnMore && !showSmartDoctorSection" class="section bg-slate-50" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container mx-auto px-3 sm:px-4">
           <div class="flex flex-col md:flex-row justify-between items-center mb-8 sm:mb-4">
             <div class="text-center md:text-left mb-4 md:mb-0">
@@ -221,7 +309,7 @@
       </section>
 
       <!-- How It Works Section -->
-      <section ref="howItWorksSection" v-if="showLearnMore" class="section bg-white" style="padding-top: 1rem; padding-bottom: 1rem;">
+      <section ref="howItWorksSection" v-if="showLearnMore && !showSmartDoctorSection" class="section bg-white" style="padding-top: 1rem; padding-bottom: 1rem;">
         <div class="container mx-auto px-4">
           <div class="text-center mb-8">
             <h2 class="heading-2 text-gray-900 mb-4">{{ howItWorks[howItWorksView].title }}</h2>
@@ -687,6 +775,8 @@ export default {
       loadingDoctorProfile: false,
       selectedDoctorProfile: null,
       loadingDoctors: false,
+      loadingAllDoctors: false,
+      allDoctors: [],
       servicesIndex: 0,
       servicesInterval: null,
       healthTipsIndex: 0,
@@ -770,11 +860,14 @@ export default {
       subtitleInterval: null,
       
       // UI state
+      showSmartDoctorSection: false,
       showLearnMore: false,
       currentSuggestionCategory: 'top-rated',
+      currentSpecialty: 'All',
       howItWorksIndex: 0,
       howItWorksInterval: null,
       howItWorksView: 'patient',
+      availableSpecialties: ['All'],
       
       // Animated stats
       animatedStats: {
@@ -975,6 +1068,12 @@ export default {
   },
   
   computed: {
+    filteredDoctors() {
+      if (this.currentSpecialty === 'All') {
+        return this.allDoctors;
+      }
+      return this.allDoctors.filter(doctor => doctor.specialty === this.currentSpecialty);
+    },
     allTestimonials() {
       const patientStories = this.testimonials.map(t => ({ ...t, type: 'Patient', storyId: `p-${t.id}` }));
       const doctorStories = this.doctorTestimonials.map(t => ({ ...t, type: 'Doctor', storyId: `d-${t.id}` }));
@@ -1316,7 +1415,26 @@ export default {
       this.startTestimonialsRotation(); // Reset timer on interaction
     },
     showAllDoctorsList() {
-      this.$router.push('/all-doctors');
+        this.showSmartDoctorSection = true;
+        if (this.allDoctors.length === 0) {
+            this.fetchAllDoctors();
+        }
+    },
+    async fetchAllDoctors() {
+      this.loadingAllDoctors = true;
+      try {
+        const response = await axios.get('http://127.0.0.1:5000/api/patient/doctors');
+        if (response.data && response.data.doctors) {
+          this.allDoctors = response.data.doctors;
+          const specialties = [...new Set(response.data.doctors.map(d => d.specialty).filter(Boolean))];
+          this.availableSpecialties = ['All', ...specialties];
+        }
+      } catch (error) {
+        console.error('Error fetching all doctors:', error);
+        this.allDoctors = [];
+      } finally {
+        this.loadingAllDoctors = false;
+      }
     },
     async fetchTopRatedDoctors() {
       this.loadingDoctors = true;
