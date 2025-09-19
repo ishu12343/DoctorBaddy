@@ -1542,10 +1542,7 @@ export default {
       this.startTestimonialsRotation(); // Reset timer on interaction
     },
     showAllDoctorsList() {
-      this.showSmartDoctorSection = true;
-      if (this.allDoctors.length === 0) {
-        this.fetchAllDoctors();
-      }
+      this.$router.push({ name: 'DoctorsList' });
     },
     async fetchAllDoctors() {
       this.loadingAllDoctors = true;
