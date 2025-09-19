@@ -182,57 +182,144 @@
               </button>
             </div>
 
-            <!-- Doctor Cards Grid -->
-            <div v-if="loadingAllDoctors" class="text-center py-8 sm:py-10"><i class="fas fa-spinner fa-spin text-2xl sm:text-3xl text-medical-primary"></i></div>
-            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <div 
-                v-for="doctor in filteredDoctors" 
-                :key="doctor.id"
-                class="card hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
-              >
-                <div class="card-body">
-                  <div class="flex items-start gap-4">
-                    <div class="relative flex-shrink-0">
-                      <img v-if="doctor.profile_photo" :src="doctor.profile_photo" :alt="doctor.full_name" class="w-20 h-20 rounded-lg object-cover shadow-md" />
-                      <div v-else class="w-20 h-20 rounded-lg bg-gray-200 flex items-center justify-center">
-                          <span class="text-2xl font-bold text-gray-500">{{ getInitials(doctor.full_name) }}</span>
-                      </div>
-                    </div>
-                    <div class="flex-1">
-                      <div class="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 class="font-bold text-gray-900 truncate">{{ doctor.full_name }}</h3>
-                          <p class="text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
-                        </div>
-                      </div>
-                      <div class="flex items-center gap-2 mb-2">
-                        <div class="flex items-center gap-1 text-yellow-500">
-                            <i class="fas fa-star"></i>
-                            <span class="font-bold text-gray-800">{{ doctor.average_rating > 0 ? doctor.average_rating.toFixed(1) : 'New' }}</span>
-                        </div>
-                        <span class="text-xs text-gray-500 ml-1">({{ doctor.total_reviews }} reviews)</span>
-                      </div>
-                      <div class="text-xs text-gray-500 space-y-1">
-                          <div class="flex items-center gap-2">
-                              <i class="fas fa-briefcase-medical w-3 text-center text-gray-400"></i>
-                              <span>{{ doctor.experience }} years exp.</span>
-                          </div>
-                          <div class="flex items-center gap-2" v-if="doctor.languages && doctor.languages.length">
-                              <i class="fas fa-language w-3 text-center text-gray-400"></i>
-                              <span class="truncate">{{ doctor.languages.join(', ') }}</span>
-                          </div>
-                      </div>
-                    </div>
+            <!-- Search and Filter -->
+            <div class="mb-6 bg-white p-4 rounded-lg shadow-sm">
+              <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                  <div class="relative">
+                    <input
+                      v-model="searchQuery"
+                      @input="handleSearch"
+                      type="text"
+                      placeholder="Search by name or specialty..."
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent transition-all duration-200"
+                    >
+                    <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
                   </div>
-                  <div class="mt-4 border-t pt-3 flex items-center justify-between">
-                      <span class="text-lg font-bold text-medical-primary">${{ doctor.consultation_fee || 'N/A' }}</span>
-                      <button @click="bookAppointment(doctor)" class="btn btn-primary btn-small">
-                          Book Now
-                      </button>
+                </div>
+                <div class="w-full md:w-64">
+                  <select 
+                    v-model="currentSpecialty" 
+                    @change="handleSpecialtyChange"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent bg-white"
+                  >
+                    <option v-for="specialty in availableSpecialties" :key="specialty" :value="specialty">
+                      {{ specialty }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Doctor Cards Grid -->
+            <div v-if="loadingAllDoctors" class="text-center py-12">
+              <i class="fas fa-spinner fa-spin text-3xl text-medical-primary"></i>
+              <p class="mt-2 text-gray-600">Loading doctors...</p>
+            </div>
+            <div v-else-if="filteredDoctors.length === 0" class="text-center py-12">
+              <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-circle text-yellow-400 text-xl"></i>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                      No doctors found matching your criteria. Try adjusting your search or filters.
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
+            <template v-else>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div 
+                  v-for="doctor in displayedFilteredDoctors" 
+                  :key="doctor.id"
+                  class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+                >
+                  <div class="card-body">
+                    <div class="p-4">
+                      <div class="flex items-start gap-4">
+                        <div class="relative flex-shrink-0">
+                          <img 
+                            v-if="doctor.profile_photo" 
+                            :src="doctor.profile_photo" 
+                            :alt="doctor.full_name" 
+                            class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover border-2 border-white shadow-md"
+                            onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=DR'"
+                          />
+                          <div v-else class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center shadow-md">
+                            <span class="text-xl sm:text-2xl font-bold text-blue-600">{{ getInitials(doctor.full_name) }}</span>
+                          </div>
+                          <div v-if="doctor.available" class="absolute -bottom-1 -right-1 bg-green-500 rounded-full w-3 h-3 border-2 border-white"></div>
+                        </div>
+                        <div class="flex-1">
+                          <div class="flex items-start justify-between mb-2">
+                            <div>
+                              <h3 class="font-bold text-gray-900 truncate">{{ doctor.full_name }}</h3>
+                              <p class="text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
+                            </div>
+                            <div v-if="doctor.average_rating" class="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
+                              <span class="text-yellow-500 text-sm font-semibold">{{ doctor.average_rating.toFixed(1) }}</span>
+                              <i class="fas fa-star text-yellow-400 ml-1 text-xs"></i>
+                            </div>
+                          </div>
+                          
+                          <div class="mt-2 text-sm text-gray-600 space-y-1">
+                            <div class="flex items-center">
+                              <i class="fas fa-briefcase text-gray-400 w-4 mr-2 text-center"></i>
+                              <span>{{ doctor.experience || '5' }} years experience</span>
+                            </div>
+                            <div v-if="doctor.qualification" class="flex items-center">
+                              <i class="fas fa-graduation-cap text-gray-400 w-4 mr-2 text-center"></i>
+                              <span class="truncate">{{ doctor.qualification }}</span>
+                            </div>
+                            <div v-if="doctor.hospital" class="flex items-center">
+                              <i class="fas fa-hospital text-gray-400 w-4 mr-2 text-center"></i>
+                              <span class="truncate">{{ doctor.hospital }}</span>
+                            </div>
+                          </div>
+                          
+                          <div v-if="doctor.languages && doctor.languages.length" class="mt-2 flex flex-wrap gap-1">
+                            <span v-for="(lang, index) in doctor.languages.slice(0, 2)" :key="index" 
+                                  class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              {{ lang }}
+                            </span>
+                            <span v-if="doctor.languages.length > 2" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                              +{{ doctor.languages.length - 2 }} more
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Action Buttons -->
+                      <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
+                        <button @click="openDoctorProfileModal(doctor)" 
+                                class="text-sm font-medium text-medical-primary hover:text-medical-secondary transition-colors">
+                          <i class="fas fa-eye mr-1"></i> View Profile
+                        </button>
+                        <button @click="bookAppointment(doctor)" 
+                                class="bg-gradient-to-r from-medical-primary to-medical-secondary text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity">
+                          Book Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Load More Button -->
+              <div v-if="hasMoreDoctors" class="flex justify-center mt-6">
+                <button @click="loadMoreDoctors" class="bg-medical-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity">
+                  Load More ({{ filteredDoctors.length - visibleDoctorsCount }} more)
+                </button>
+              </div>
+              
+              <!-- End of doctors list message -->
+              <div v-else-if="filteredDoctors.length > 0" class="text-center py-4 text-gray-500 text-sm">
+                You've reached the end of the list
+              </div>
+            </template>
           </div>
         </div>
       </section>
@@ -777,6 +864,9 @@ export default {
       loadingDoctors: false,
       loadingAllDoctors: false,
       allDoctors: [],
+      displayedDoctors: [],
+      visibleDoctorsCount: 3,
+      searchQuery: '',
       servicesIndex: 0,
       servicesInterval: null,
       healthTipsIndex: 0,
@@ -1069,10 +1159,31 @@ export default {
   
   computed: {
     filteredDoctors() {
-      if (this.currentSpecialty === 'All') {
-        return this.allDoctors;
+      let filtered = [...this.allDoctors];
+      
+      // Filter by specialty
+      if (this.currentSpecialty !== 'All') {
+        filtered = filtered.filter(doctor => doctor.specialty === this.currentSpecialty);
       }
-      return this.allDoctors.filter(doctor => doctor.specialty === this.currentSpecialty);
+      
+      // Filter by search query (name or specialty)
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        filtered = filtered.filter(doctor => 
+          (doctor.full_name && doctor.full_name.toLowerCase().includes(query)) ||
+          (doctor.specialty && doctor.specialty.toLowerCase().includes(query))
+        );
+      }
+      
+      return filtered;
+    },
+    
+    displayedFilteredDoctors() {
+      return this.filteredDoctors.slice(0, this.visibleDoctorsCount);
+    },
+    
+    hasMoreDoctors() {
+      return this.visibleDoctorsCount < this.filteredDoctors.length;
     },
     allTestimonials() {
       const patientStories = this.testimonials.map(t => ({ ...t, type: 'Patient', storyId: `p-${t.id}` }));
@@ -1114,6 +1225,22 @@ export default {
       this.selectedDoctorProfile = null;
       this.loadingDoctorProfile = false;
       document.body.style.overflow = '';
+    },
+    
+    loadMoreDoctors() {
+      this.visibleDoctorsCount += 3;
+    },
+    
+    resetPagination() {
+      this.visibleDoctorsCount = 3;
+    },
+    
+    handleSearch() {
+      this.resetPagination();
+    },
+    
+    handleSpecialtyChange() {
+      this.resetPagination();
     },
     formatAvailability(doctor) {
       if (!doctor) return 'Availability not specified';
@@ -1415,10 +1542,10 @@ export default {
       this.startTestimonialsRotation(); // Reset timer on interaction
     },
     showAllDoctorsList() {
-        this.showSmartDoctorSection = true;
-        if (this.allDoctors.length === 0) {
-            this.fetchAllDoctors();
-        }
+      this.showSmartDoctorSection = true;
+      if (this.allDoctors.length === 0) {
+        this.fetchAllDoctors();
+      }
     },
     async fetchAllDoctors() {
       this.loadingAllDoctors = true;
@@ -1428,6 +1555,7 @@ export default {
           this.allDoctors = response.data.doctors;
           const specialties = [...new Set(response.data.doctors.map(d => d.specialty).filter(Boolean))];
           this.availableSpecialties = ['All', ...specialties];
+          this.resetPagination();
         }
       } catch (error) {
         console.error('Error fetching all doctors:', error);
