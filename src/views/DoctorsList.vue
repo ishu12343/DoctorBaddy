@@ -619,7 +619,7 @@ export default {
     async fetchDoctors() {
       this.loading = true;
       try {
-        const response = await axios.get('${BASE_URL}/api/patient/doctors');
+        const response = await axios.get(`${BASE_URL}/api/patient/doctors`);
         if (response.data && response.data.doctors) {
           this.allDoctors = response.data.doctors;
           
