@@ -83,8 +83,6 @@
             </transition>
           </div>
 
-          <!-- Theme Toggle -->
-          <ThemeToggle />
         </nav>
 
         <!-- Mobile Menu Button -->
@@ -183,11 +181,8 @@
 </template>
 
 <script>
-import ThemeToggle from '@/components/ThemeToggle.vue'
-
 export default {
   name: 'AppHeader',
-  components: { ThemeToggle },
   data() {
     return {
       showDropdown: false,
