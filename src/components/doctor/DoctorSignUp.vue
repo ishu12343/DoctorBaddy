@@ -208,6 +208,7 @@
 
 <script>
 import AppHeader from '@/views/AppHeader.vue';
+import { BASE_URL } from '@/config/api';
 import AppFooter from '@/views/AppFooter.vue';
 import ChatButton from '@/components/ChatButton.vue';
 export default {
@@ -258,7 +259,7 @@ export default {
       photoPath: this.formData.photoPath || null
     };
 
-    const response = await fetch('http://127.0.0.1:5000/api/doctor/register', {
+    const response = await fetch(`${BASE_URL}/api/doctor/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

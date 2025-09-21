@@ -347,6 +347,7 @@
 
 <script>
 import axios from 'axios'
+import { BASE_URL } from '@/config/api';
 
 export default {
   name: 'PatientProfileCard',
@@ -384,7 +385,7 @@ export default {
     async loadProfile() {
       const token = localStorage.getItem('token')
       try {
-        const res = await axios.get('http://127.0.0.1:5000/api/patient/profile', {
+        const res = await axios.get(`${BASE_URL}/api/patient/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (res.data?.patient) {
@@ -447,7 +448,7 @@ export default {
       }
       
       try {
-        await axios.put('http://127.0.0.1:5000/api/patient/updateprofile', formData, {
+        await axios.put(`${BASE_URL}/api/patient/updateprofile`, formData, {
           headers: {
             Authorization: `Bearer ${token}`
           },

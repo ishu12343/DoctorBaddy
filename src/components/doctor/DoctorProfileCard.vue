@@ -447,6 +447,7 @@
 </template>
 
 <script>
+import { BASE_URL } from '@/config/api';
 export default {
   props: {
     onStatusUpdate: {
@@ -472,7 +473,7 @@ export default {
   async mounted() {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch('http://127.0.0.1:5000/api/doctor/profile', {
+      const res = await fetch(`${BASE_URL}/api/doctor/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to fetch profile');
@@ -619,7 +620,7 @@ export default {
         
         console.log('Submitting data:', submitData);
         
-        const response = await fetch('http://127.0.0.1:5000/api/doctor/profile/update', {
+        const response = await fetch(`${BASE_URL}/api/doctor/profile/update`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

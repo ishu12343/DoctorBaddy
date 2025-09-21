@@ -848,6 +848,7 @@
 <script>
 import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
+import config from '@/config/api';
 import ChatButton from '@/components/ChatButton.vue';
 import FloatingActionButton from '@/components/ui/FloatingActionButton.vue';
 import axios from 'axios';
@@ -1207,7 +1208,7 @@ export default {
       document.body.style.overflow = 'hidden';
 
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/api/patient/doctors?doctor_id=${doctor.id}`);
+        const response = await axios.get(`${config.baseURL}/api/patient/doctors?doctor_id=${doctor.id}`);
         if (response.data && response.data.doctors && response.data.doctors.length > 0) {
           this.selectedDoctorProfile = response.data.doctors[0];
         } else {
@@ -1547,7 +1548,7 @@ export default {
     async fetchAllDoctors() {
       this.loadingAllDoctors = true;
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/patient/doctors');
+        const response = await axios.get(`${config.baseURL}/api/patient/doctors`);
         if (response.data && response.data.doctors) {
           this.allDoctors = response.data.doctors;
           const specialties = [...new Set(response.data.doctors.map(d => d.specialty).filter(Boolean))];
@@ -1564,7 +1565,7 @@ export default {
     async fetchTopRatedDoctors() {
       this.loadingDoctors = true;
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/patient/doctors');
+        const response = await axios.get(`${config.baseURL}/api/patient/doctors`);
 
         if (response.data && response.data.doctors) {
             this.topRatedDoctors = response.data.doctors

@@ -519,6 +519,7 @@ import DoctorProfileCard from './DoctorProfileCard.vue';
 import DoctorAppointments from './DoctorAppointments.vue';
 import PatientsList from './PatientsList.vue';
 import ToastNotification from '../ToastNotification.vue';
+import { BASE_URL } from '@/config/api';
 
 import axios from 'axios';
 
@@ -595,7 +596,7 @@ export default {
     async checkDoctorStatus() {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://127.0.0.1:5000/api/doctor/profile', {
+        const response = await axios.get(`${BASE_URL}/api/doctor/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -653,7 +654,7 @@ export default {
       this.showUserDropdown = false; // Close dropdown
       const token = localStorage.getItem('token');
       try {
-        await axios.post('http://127.0.0.1:5000/api/doctor/logout', {}, {
+        await axios.post(`${BASE_URL}/api/doctor/logout`, {}, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (err) {
@@ -740,13 +741,13 @@ export default {
         
         // Fetch appointment stats, patients, and ratings
         const [statsResponse, patientsResponse, ratingsResponse] = await Promise.all([
-          axios.get('http://127.0.0.1:5000/api/doctor/appointments/stats', {
+          axios.get(`${BASE_URL}/api/doctor/appointments/stats`, {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get('http://127.0.0.1:5000/api/doctor/patients', {
+          axios.get(`${BASE_URL}/api/doctor/patients`, {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get('http://127.0.0.1:5000/api/doctor/ratings/summary', {
+          axios.get(`${BASE_URL}/api/doctor/ratings/summary`, {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
@@ -792,7 +793,7 @@ export default {
     async loadRecentActivities() {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://127.0.0.1:5000/api/doctor/recent-activities', {
+        const response = await axios.get(`${BASE_URL}/api/doctor/recent-activities`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         

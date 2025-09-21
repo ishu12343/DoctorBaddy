@@ -474,6 +474,7 @@
 
 <script>
 import axios from 'axios';
+import { BASE_URL } from '@/config/api';
 
 export default {
   name: 'PatientsList',
@@ -561,7 +562,7 @@ export default {
       try {
         const token = localStorage.getItem('token');
         
-        const response = await axios.get('http://127.0.0.1:5000/api/doctor/patients', {
+        const response = await axios.get(`${BASE_URL}/api/doctor/patients`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         

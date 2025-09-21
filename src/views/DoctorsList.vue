@@ -438,6 +438,7 @@
 import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
 import axios from 'axios';
+import { BASE_URL } from '@/config/api';
 
 // Add fade-in animation for modal
 const style = document.createElement('style');
@@ -618,7 +619,7 @@ export default {
     async fetchDoctors() {
       this.loading = true;
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/patient/doctors');
+        const response = await axios.get('${BASE_URL}/api/patient/doctors');
         if (response.data && response.data.doctors) {
           this.allDoctors = response.data.doctors;
           
@@ -645,7 +646,7 @@ export default {
       document.body.style.overflow = 'hidden';
 
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/api/patient/doctors?doctor_id=${doctor.id}`);
+        const response = await axios.get(`${BASE_URL}/api/patient/doctors?doctor_id=${doctor.id}`);
         if (response.data && response.data.doctors && response.data.doctors.length > 0) {
           this.selectedDoctorProfile = response.data.doctors[0];
         } else {

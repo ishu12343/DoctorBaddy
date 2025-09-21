@@ -496,6 +496,7 @@
 
 <script>
 import axios from 'axios'
+import { BASE_URL } from '@/config/api';
 
 export default {
   name: "DoctorAppointments",
@@ -556,7 +557,7 @@ export default {
       console.log('Token for loading appointments:', !!token);
       
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/doctor/appointments', {
+        const response = await axios.get(`${BASE_URL}/api/doctor/appointments`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -588,7 +589,7 @@ export default {
       try {
         console.log('Making API call to approve appointment...');
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/doctor/appointments/${appointmentId}/approve`, 
+          `${BASE_URL}/api/doctor/appointments/${appointmentId}/approve`, 
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -628,7 +629,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/doctor/appointments/${appointmentId}/reject`, 
+          `${BASE_URL}/api/doctor/appointments/${appointmentId}/reject`, 
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -662,7 +663,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/doctor/appointments/${appointmentId}/complete`, 
+          `${BASE_URL}/api/doctor/appointments/${appointmentId}/complete`, 
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -761,7 +762,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/doctor/appointments/${this.selectedAppointment.id}/reschedule`,
+          `${BASE_URL}/api/doctor/appointments/${this.selectedAppointment.id}/reschedule`,
           {
             new_date: this.rescheduleForm.date,
             new_time: this.rescheduleForm.time,

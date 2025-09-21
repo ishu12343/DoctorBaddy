@@ -196,9 +196,11 @@
 
 <script>
 import AppHeader from '@/views/AppHeader.vue';
+import { BASE_URL } from '@/config/api';
 import AppFooter from '@/views/AppFooter.vue';
 import ChatButton from '@/components/ChatButton.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
+
 
 export default {
   name: 'DoctorLogin',
@@ -261,7 +263,7 @@ export default {
 
       console.log('Sending doctor login payload:', requestBody);
 
-      const loginUrl = 'http://127.0.0.1:5000/api/doctor/login';
+      const loginUrl = `${BASE_URL}/api/doctor/login`;
 
       try {
         const response = await fetch(loginUrl, {
