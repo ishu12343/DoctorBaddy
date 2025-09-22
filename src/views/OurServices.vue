@@ -21,7 +21,7 @@
                   <i class="fas fa-search mr-2"></i>
                   Explore Services
                 </button>
-                <button @click="$router.push('/patient-signup')" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary w-full sm:w-auto">
+                <button @click="$router.push('/patient-login')" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary w-full sm:w-auto">
                   <i class="fas fa-user-plus mr-2"></i>
                   Get Started Today
                 </button>
@@ -31,19 +31,19 @@
               <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-2xl">
                 <h3 class="text-lg sm:text-xl font-semibold text-white mb-4 sm:mb-6 text-center">Quick Service Access</h3>
                 <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                  <button @click="$router.push('/patient-signup')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
+                  <button @click="$router.push('/patient-login')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
                     <i class="fas fa-calendar-check text-xl sm:text-2xl text-white mb-2"></i>
                     <p class="text-xs sm:text-sm font-medium text-white">Book Appointment</p>
                   </button>
-                  <button @click="$router.push('/patient-signup')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
+                  <button @click="$router.push('/patient-login')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
                     <i class="fas fa-video text-xl sm:text-2xl text-white mb-2"></i>
                     <p class="text-xs sm:text-sm font-medium text-white">Video Consult</p>
                   </button>
-                  <button @click="$router.push('/patient-signup')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
+                  <button @click="$router.push('/patient-login')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
                     <i class="fas fa-prescription-bottle text-xl sm:text-2xl text-white mb-2"></i>
                     <p class="text-xs sm:text-sm font-medium text-white">E-Prescription</p>
                   </button>
-                  <button @click="$router.push('/patient-signup')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
+                  <button @click="$router.push('/patient-login')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
                     <i class="fas fa-file-medical text-xl sm:text-2xl text-white mb-2"></i>
                     <p class="text-xs sm:text-sm font-medium text-white">Health Records</p>
                   </button>
@@ -172,11 +172,11 @@
                 Sign up today and experience the future of medicine.
               </p>
               <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <button @click="$router.push('/patient-signup')" class="btn bg-white text-medical-primary hover:bg-blue-50 w-full sm:w-auto touch-button">
+                <button @click="$router.push('/patient-login')" class="btn bg-white text-medical-primary hover:bg-blue-50 w-full sm:w-auto touch-button">
                   <i class="fas fa-user-plus mr-2 text-sm sm:text-base"></i>
                   Sign Up as Patient
                 </button>
-                <button @click="$router.push('/doctor-signup')" class="btn border-white text-white hover:bg-white/10 w-full sm:w-auto touch-button">
+                <button @click="$router.push('/doctor-login')" class="btn border-white text-white hover:bg-white/10 w-full sm:w-auto touch-button">
                   <i class="fas fa-stethoscope mr-2 text-sm sm:text-base"></i>
                   Join as Doctor
                 </button>
@@ -335,19 +335,19 @@ export default {
       // Route based on service type
       if (service.id === 1 || service.id === 2 || service.id === 5) {
         // Appointment, Video consultation, or Specialist services
-        this.$router.push('/patient-signup');
+        this.$router.push('/patient-login');
       } else if (service.id === 3 || service.id === 4) {
         // E-prescriptions or Health records
         this.$router.push('/patient-login');
       } else if (service.id === 6) {
         // Mental health support
-        this.$router.push('/patient-signup');
+        this.$router.push('/patient-login');
       } else if (service.id === 8 || service.id === 9) {
         // Lab tests or Medicine ordering
-        this.$router.push('/patient-signup');
+        this.$router.push('/patient-login');
       } else {
         // Default to patient signup
-        this.$router.push('/patient-signup');
+        this.$router.push('/patient-login');
       }
     },
     

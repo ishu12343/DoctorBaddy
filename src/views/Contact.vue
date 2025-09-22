@@ -371,7 +371,7 @@ export default {
     getFormTitle() {
       const titles = {
         patient: 'Patient Support Request',
-        doctor: 'Healthcare Provider Support',
+        doctor: 'Healthcare Doctor Support',
         general: 'General Inquiry'
       };
       return titles[this.activeTab] || 'Contact Form';

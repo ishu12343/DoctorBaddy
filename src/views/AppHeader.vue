@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4">
       <div class="flex items-center justify-between h-16 lg:h-20">
         <!-- Logo -->
-        <router-link to="/" class="flex items-center gap-3 text-white hover:text-gray-200 transition-colors">
+        <router-link to="/" class="flex items-center text-white hover:text-gray-200 transition-colors">
           <img src="@/assets/logo/logo1.png" alt="DoctorBuddy Logo" class="h-8 lg:h-10 w-auto" />
           <span class="text-lg lg:text-xl font-bold">DoctorBuddy</span>
         </router-link>
