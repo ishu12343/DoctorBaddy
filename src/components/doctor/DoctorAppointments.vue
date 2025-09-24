@@ -1,29 +1,3 @@
-<style scoped>
-@media (width <= 900px) {
-  .appointments-container {
-    flex-direction: column !important;
-    padding: 1rem !important;
-    gap: 1.5rem !important;
-  }
-}
-
-@media (width <= 600px) {
-  .appointments-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .appointment-card {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 1rem;
-  }
-}
-</style>
 <template>
   <div class="appointments-container">
     <!-- Header Section -->
@@ -1727,6 +1701,7 @@ export default {
   .header-content {
     flex-direction: column;
     text-align: center;
+    align-items: stretch;
     gap: 1.5rem;
   }
 
@@ -1738,6 +1713,7 @@ export default {
   .filters-container {
     flex-direction: column;
     gap: 1rem;
+    align-items: stretch;
   }
 
   .filter-controls {
@@ -1752,6 +1728,7 @@ export default {
 
   .appointment-header {
     flex-direction: column;
+    align-items: stretch;
     gap: 1rem;
     text-align: center;
   }
@@ -1759,6 +1736,7 @@ export default {
   .patient-info {
     flex-direction: column;
     text-align: center;
+    align-items: center;
   }
 
   .details-grid {
@@ -1766,6 +1744,7 @@ export default {
   }
 
   .appointment-actions {
+    flex-direction: column;
     justify-content: center;
   }
 
@@ -1791,6 +1770,10 @@ export default {
 @media (width <= 480px) {
   .appointments-container {
     padding: 4.5rem 0.5rem 0.5rem;
+  }
+
+  .appointments-header, .filters-container, .appointment-card, .empty-state {
+    padding: 1.5rem;
   }
 
   .appointments-header,

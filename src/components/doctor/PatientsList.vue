@@ -1,29 +1,3 @@
-<style scoped>
-@media (width <= 900px) {
-  .list-container {
-    flex-direction: column !important;
-    padding: 1rem !important;
-    gap: 1.5rem !important;
-  }
-}
-
-@media (width <= 600px) {
-  .list-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .list-item {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 1rem;
-  }
-}
-</style>
 <template>
   <div class="patients-list-container">
     <!-- Header Section -->
@@ -1756,6 +1730,10 @@ export default {
   .stats-section {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .search-filter-section {
+    flex-direction: column;
+  }
 }
 
 @media (width <= 768px) {
@@ -1786,7 +1764,7 @@ export default {
   }
   
   .filter-controls {
-    justify-content: center;
+    justify-content: flex-start;
   }
   
   .patients-grid {
@@ -1842,7 +1820,7 @@ export default {
   }
   
   .stats-section {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
   
   .filter-controls {
