@@ -113,6 +113,12 @@
   font-size: 0.875rem;
 }
 
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  gap: 0.375rem;
+}
+
 .btn-primary {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -250,7 +256,7 @@
             <div class="mb-6 flex justify-between items-center">
               <h1 class="text-2xl font-bold text-gray-900">My Profile</h1>
               <button 
-                class="btn btn-primary" 
+                class="btn btn-primary btn-sm" 
                 @click="toggleProfileEdit"
                 :class="{ 'active': isProfileEditing }"
               >
@@ -3256,7 +3262,7 @@ export default {
 
 .btn-primary,
 .btn-secondary {
-  flex: 1;
+  /* flex: 1; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4419,7 +4425,7 @@ export default {
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.175rem;
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 140px;

@@ -685,7 +685,7 @@ export default {
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
   color: white;
   border: none;
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   border-radius: 16px;
   font-weight: 700;
   cursor: pointer;
@@ -693,7 +693,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 8px 25px rgb(79 70 229 / 30%);
@@ -708,7 +708,7 @@ export default {
   background: transparent;
   color: #64748b;
   border: 2px solid #cbd5e1;
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   border-radius: 16px;
   font-weight: 700;
   cursor: pointer;
@@ -716,7 +716,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
