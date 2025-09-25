@@ -161,6 +161,13 @@
   align-items: center;
 }
 
+/* Responsive flex utility */
+@media (max-width: 768px) {
+  .responsive-flex-column {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
 /* Responsive breakpoints */
 @media (max-width: 1024px) {
   .px-4 {
@@ -197,11 +204,6 @@
   
   .mb-6 {
     margin-bottom: 1rem;
-  }
-  
-  .flex {
-    flex-direction: column;
-    gap: 1rem;
   }
   
   .justify-between {
@@ -252,7 +254,7 @@
       <div class="container mx-auto px-4 py-6">
         <!-- Profile Page - Show only profile when profile is selected -->
         <template v-if="showProfile">
-          <div class="max-w-6xl mx-auto">
+          <div class="max-w-6xl mx-auto responsive-flex-column">
             <div class="mb-6 flex justify-between items-center">
               <h1 class="text-2xl font-bold text-gray-900">My Profile</h1>
               <button 
@@ -272,7 +274,7 @@
 
         <!-- Appointments Page -->
         <template v-else-if="showAppointments">
-          <div class="max-w-6xl mx-auto">
+          <div class="max-w-6xl mx-auto responsive-flex-column">
             <div class="mb-6">
               <h1 class="text-2xl font-bold text-gray-900 mb-2">My Appointments</h1>
               <p class="text-gray-600">Manage your upcoming and past appointments</p>
@@ -462,45 +464,34 @@
               
               <!-- Search and Filter Section -->
               <div class="search-filters">
-                <div class="search-bar">
-                  <div class="search-input-wrapper">
-                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="11" cy="11" r="8"/>
-                      <path d="m21 21-4.35-4.35"/>
-                    </svg>
-                    <input 
-                      v-model="searchQuery"
-                      type="text" 
-                      placeholder="Search doctors by name or specialty..."
-                      class="search-input"
-                      @input="searchDoctors"
-                    />
-                  </div>
+                <div class="search-input-wrapper">
+                  <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                  <input 
+                    v-model="searchQuery"
+                    type="text" 
+                    placeholder="Search doctors by name or specialty..."
+                    class="search-input"
+                    @input="searchDoctors"
+                  />
                 </div>
                 
-                <div class="filter-section">
-                  <select v-model="selectedSpecialty" @change="searchDoctors" class="filter-select">
-                    <option value="">All Specialties</option>
-                    <option value="Cardiology">Cardiology</option>
-                    <option value="Dermatology">Dermatology</option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Pediatrics">Pediatrics</option>
-                    <option value="Orthopedics">Orthopedics</option>
-                    <option value="General Medicine">General Medicine</option>
-                    <option value="Psychiatry">Psychiatry</option>
-                    <option value="Gynecology">Gynecology</option>
-                    <option value="Ophthalmology">Ophthalmology</option>
-                    <option value="ENT">ENT</option>
-                  </select>
-                  
-                  <button class="refresh-btn" @click="loadDoctors" :disabled="loading">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" :class="{ 'spinning': loading }">
-                      <polyline points="23 4 23 10 17 10"/>
-                      <polyline points="1 20 1 14 7 14"/>
-                      <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
-                    </svg>
-                  </button>
-                </div>
+                <select v-model="selectedSpecialty" @change="searchDoctors" class="filter-select">
+                  <option value="">All Specialties</option>
+                  <option v-for="specialty in uniqueSpecialties" :key="specialty" :value="specialty">
+                    {{ specialty }}
+                  </option>
+                </select>
+                
+                <button class="refresh-btn" @click="loadDoctors" :disabled="loading">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" :class="{ 'spinning': loading }">
+                    <polyline points="23 4 23 10 17 10"/>
+                    <polyline points="1 20 1 14 7 14"/>
+                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                  </svg>
+                </button>
               </div>
             </div>
 
@@ -1181,6 +1172,13 @@ export default {
     };
   },
   computed: {
+    uniqueSpecialties() {
+      if (!this.doctors || this.doctors.length === 0) {
+        return [];
+      }
+      const specialties = this.doctors.map(doctor => doctor.specialty || doctor.specialization).filter(Boolean);
+      return [...new Set(specialties)].sort();
+    },
     currentPageName() {
       if (this.showProfile) return 'profile';
       if (this.showAppointments) return 'appointments';
@@ -2563,15 +2561,15 @@ export default {
     inset 0 1px 0 rgb(255 255 255 / 40%);
   margin-bottom: 2.5rem;
   border: 1px solid rgb(255 255 255 / 30%);
-}
-
-.search-bar {
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
 }
 
 .search-input-wrapper {
   position: relative;
-  max-width: 600px;
+  flex-grow: 1;
 }
 
 .search-icon {
@@ -2611,13 +2609,6 @@ export default {
 .search-input::placeholder {
   color: #94a3b8;
   font-weight: 400;
-}
-
-.filter-section {
-  display: flex;
-  gap: 1.25rem;
-  flex-wrap: wrap;
-  align-items: center;
 }
 
 .filter-select {
