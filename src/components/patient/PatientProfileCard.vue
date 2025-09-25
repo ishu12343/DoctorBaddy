@@ -1,29 +1,3 @@
-<style scoped>
-@media (width <= 900px) {
-  .profile-card-container {
-    flex-direction: column !important;
-    padding: 1rem !important;
-    gap: 1.5rem !important;
-  }
-}
-
-@media (width <= 600px) {
-  .profile-card-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .profile-card {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 1rem;
-  }
-}
-</style>
 <template>
   <div class="profile-container">
     <!-- Professional Header Section -->
@@ -42,10 +16,8 @@
     </div> -->
 
     <!-- Scrollable Content Area -->
-    <div class="content-container">
-      <div class="form-container">
+    <div class="form-container">
         <form v-if="form" @submit.prevent="saveProfile" class="profile-form">
-          
           <!-- Personal Information Section -->
           <div class="form-section">
             <div class="section-header">
@@ -340,7 +312,6 @@
           <div class="loading-spinner"></div>
           <p class="loading-text">Loading profile information...</p>
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -499,164 +470,26 @@ export default {
 </script>
 
 <style scoped>
-/* Modern Professional Medical Theme */
+/* Premium Form Container */
 .profile-container {
-  position: fixed;
-  inset: 0 0 0 320px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow: hidden;
-}
-
-/* Professional Header with Glass Morphism */
-.profile-header {
-  position: fixed;
-  top: 6%;
-  left: 320px;
-  right: 0;
-  height: 120px;
-  background: rgb(255 255 255 / 10%);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgb(255 255 255 / 20%);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 3rem;
-  z-index: 100;
-  box-shadow: 0 8px 32px rgb(0 0 0 / 10%);
-}
-
-.header-content {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.profile-avatar {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 2rem;
-  font-weight: 600;
-  border: 4px solid rgb(255 255 255 / 30%);
-  box-shadow: 0 8px 32px rgb(79 70 229 / 30%);
-}
-
-.profile-avatar svg {
-  width: 2rem;
-  height: 2rem;
-}
-
-.header-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.profile-title {
-  color: white;
-  font-size: 2rem;
-  font-weight: 800;
-  margin: 0;
-  text-shadow: 0 4px 8px rgb(0 0 0 / 20%);
-  letter-spacing: -0.5px;
-}
-
-.profile-subtitle {
-  color: rgb(255 255 255 / 90%);
-  font-size: 1.1rem;
-  margin: 0;
-  font-weight: 500;
-  opacity: 0.9;
-}
-
-.header-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-.edit-btn {
-  background: rgb(255 255 255 / 20%);
-  color: white;
-  border: 1px solid rgb(255 255 255 / 30%);
-  padding: 1rem 2rem;
-  border-radius: 16px;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  backdrop-filter: blur(10px);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.edit-btn:hover {
-  background: rgb(255 255 255 / 30%);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgb(0 0 0 / 20%);
-}
-
-.btn-icon {
-  width: 18px;
-  height: 18px;
-}
-
-/* Scrollable Content Container */
-.content-container {
-  position: fixed;
-  inset: 40px 0 0 280px;
-  overflow-y: auto;
-  padding: 2rem 3rem;
-}
-
-/* Custom Medical-themed Scrollbar */
-.content-container::-webkit-scrollbar {
-  width: 12px;
-}
-
-.content-container::-webkit-scrollbar-track {
-  background: rgb(255 255 255 / 10%);
-  border-radius: 6px;
-}
-
-.content-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  border-radius: 6px;
-  border: 2px solid rgb(255 255 255 / 10%);
-}
-
-.content-container::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #3730a3, #6b21a8);
+  width: 100%;
 }
 
 /* Premium Form Container */
 .form-container {
-  background: rgb(255 255 255 / 98%);
+  background: white;
   border-radius: 24px;
-  padding: 3rem;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgb(255 255 255 / 20%);
+  padding: 2rem;
   box-shadow: 0 25px 50px rgb(0 0 0 / 15%);
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 /* Enhanced Form Sections */
 .form-section {
   margin-bottom: 3rem;
-  background: rgb(248 250 252 / 80%);
+  background: #f8fafc;
   border-radius: 20px;
-  padding: 2.5rem;
-  border: 1px solid rgb(226 232 240 / 50%);
+  padding: 2rem;
+  border: 1px solid #e2e8f0;
   box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
   transition: all 0.3s ease;
 }
@@ -675,8 +508,8 @@ export default {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
   border-bottom: 2px solid #e2e8f0;
   position: relative;
 }
@@ -712,7 +545,7 @@ export default {
 
 .section-title {
   color: #1e293b;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 800;
   margin: 0;
   letter-spacing: -0.5px;
@@ -721,7 +554,7 @@ export default {
 /* Responsive Grid System */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
 }
 
@@ -739,7 +572,7 @@ export default {
 .form-label {
   color: #334155;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   display: flex;
@@ -754,7 +587,7 @@ export default {
 
 /* Premium Form Inputs */
 .form-input {
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.25rem;
   border: 2px solid #e2e8f0;
   border-radius: 12px;
   font-size: 1rem;
@@ -786,7 +619,7 @@ export default {
 
 /* Enhanced Display Fields */
 .form-display {
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.25rem;
   background: #f8fafc;
   border: 2px solid #e2e8f0;
   border-radius: 12px;
@@ -809,7 +642,7 @@ export default {
 .form-display.textarea-display {
   min-height: 4rem;
   align-items: flex-start;
-  padding-top: 1.25rem;
+  padding-top: 1rem;
   white-space: pre-wrap;
   line-height: 1.6;
 }
@@ -852,7 +685,7 @@ export default {
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
   color: white;
   border: none;
-  padding: 1.25rem 2.5rem;
+  padding: 1rem 2rem;
   border-radius: 16px;
   font-weight: 700;
   cursor: pointer;
@@ -860,7 +693,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 8px 25px rgb(79 70 229 / 30%);
@@ -875,7 +708,7 @@ export default {
   background: transparent;
   color: #64748b;
   border: 2px solid #cbd5e1;
-  padding: 1.25rem 2.5rem;
+  padding: 1rem 2rem;
   border-radius: 16px;
   font-weight: 700;
   cursor: pointer;
@@ -883,7 +716,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -928,84 +761,34 @@ export default {
 
 /* Responsive Design Enhancements */
 @media (width <= 1024px) {
-  .profile-container {
-    left: 0;
-  }
-  
-  .profile-header {
-    left: 0;
-    padding: 0 2rem;
-  }
-  
-  .content-container {
-    left: 0;
-    padding: 1.5rem 2rem;
-  }
-  
   .form-grid {
     grid-template-columns: 1fr;
   }
   
   .form-container {
-    padding: 2rem;
-  }
-  
-  .profile-title {
-    font-size: 1.75rem;
+    padding: 1.5rem;
   }
 }
 
 @media (width <= 768px) {
-  .profile-header {
-    height: 100px;
-    padding: 0 1.5rem;
-    flex-direction: column;
-    justify-content: center;
-    gap: 1rem;
-  }
-  
-  .content-container {
-    top: 100px;
-    padding: 1rem;
-  }
-  
-  .header-content {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-  }
-  
-  .profile-avatar {
-    width: 60px;
-    height: 60px;
-    font-size: 1.5rem;
-  }
-  
-  .profile-title {
-    font-size: 1.5rem;
-  }
-  
-  .profile-subtitle {
-    font-size: 1rem;
-  }
-  
   .form-container {
-    padding: 1.5rem;
+    padding: 1rem;
     border-radius: 16px;
   }
   
   .form-section {
-    padding: 1.5rem;
+    padding: 1rem;
     border-radius: 16px;
   }
   
   .form-actions {
     flex-direction: column;
+    gap: 1rem;
   }
   
-  .edit-btn, .submit-btn, .cancel-btn {
-    padding: 1rem 1.5rem;
-    font-size: 0.95rem;
+  .submit-btn, .cancel-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -1023,6 +806,10 @@ export default {
   .section-icon {
     width: 2.5rem;
     height: 2.5rem;
+  }
+
+  .form-container {
+    padding: 1rem 0.5rem;
   }
 }
 
@@ -1053,27 +840,5 @@ export default {
 
 .form-input:focus {
   box-shadow: 0 0 0 4px rgb(79 70 229 / 10%), 0 4px 20px rgb(79 70 229 / 15%);
-}
-
-/* Print Optimization */
-@media print {
-  .profile-header {
-    position: static;
-    box-shadow: none;
-  }
-  
-  .header-actions {
-    display: none;
-  }
-  
-  .content-container {
-    position: static;
-  }
-  
-  .form-section {
-    box-shadow: none;
-    border: 1px solid #e2e8f0;
-    break-inside: avoid;
-  }
 }
 </style>
