@@ -1,424 +1,357 @@
-<style scoped>
-@media (width <= 900px) {
-  .dashboard-container {
-    flex-direction: column !important;
-    padding: 1rem !important;
-    gap: 1.5rem !important;
-  }
-}
-
-@media (width <= 600px) {
-  .dashboard-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .dashboard-card {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 1rem;
-  }
-}
-</style>
 <template>
-  <div class="p-6 pt-24">
-    <div class="flex items-center mb-6">
-      <h1 class="text-2xl font-bold">Admin Dashboard</h1>
-      <div class="ml-auto">
-        <button
-          class="bg-red-500 text-white px-4 py-2 rounded"
-          @click="logout"
-        >
-          Logout
-        </button>
-      </div>
-    </div>
-
-    <!-- Doctors Table -->
-    <div class="mb-10">
-      <h2 class="text-xl font-semibold mb-4">Doctors</h2>
-      <div v-if="doctors.length === 0">No doctors found.</div>
-      <table v-else class="min-w-full bg-white rounded-lg shadow-md">
-        <thead>
-          <tr>
-            <th class="px-4 py-2">
-              <input
-                type="checkbox"
-                v-model="selectAllDoctors"
-                @change="toggleSelectAll('doctors')"
-              />
-            </th>
-            <th class="px-4 py-2">Name</th>
-            <th class="px-4 py-2">Email</th>
-            <th class="px-4 py-2">Approved</th>
-            <th class="px-4 py-2">Suspended</th>
-            <th class="px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="doc in doctors" :key="doc.id">
-            <td class="border px-4 py-2">
-              <input
-                type="checkbox"
-                v-model="selectedDoctors"
-                :value="doc.id"
-              />
-            </td>
-            <td class="border px-4 py-2">{{ doc.full_name }}</td>
-            <td class="border px-4 py-2">{{ doc.email }}</td>
-            <td class="border px-4 py-2">
-              <span :class="doc.approved ? 'text-green-600 bg-green-100 px-2 py-1 rounded' : 'text-red-600 bg-red-100 px-2 py-1 rounded'">
-                {{ doc.approved ? 'Approved' : 'Pending' }}
-              </span>
-            </td>
-            <td class="border px-4 py-2">
-              <span :class="doc.suspended ? 'text-red-600 bg-red-100 px-2 py-1 rounded' : 'text-green-600 bg-green-100 px-2 py-1 rounded'">
-                {{ doc.suspended ? 'Suspended' : 'Active' }}
-              </span>
-            </td>
-            <td class="border px-4 py-2 space-x-2">
-              <button
-                class="bg-green-600 text-white px-4 py-1 rounded"
-                @click="approveDoctor(doc.id)"
-                :disabled="doc.approved"
-              >
-                Approve
-              </button>
-              <button
-                class="bg-red-600 text-white px-4 py-1 rounded"
-                @click="rejectDoctor(doc.id)"
-                :disabled="!doc.approved"
-              >
-                Reject
-              </button>
-              <button
-                class="bg-blue-600 text-white px-4 py-1 rounded"
-                @click="viewDoctor(doc.id)"
-              >
-                View
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Patients Table -->
-    <div>
-      <h2 class="text-xl font-semibold mb-4">Patients</h2>
-      <div v-if="patients.length === 0">No patients found.</div>
-      <table v-else class="min-w-full bg-white rounded-lg shadow-md">
-        <thead>
-          <tr>
-            <th class="px-4 py-2">
-              <input
-                type="checkbox"
-                v-model="selectAllPatients"
-                @change="toggleSelectAll('patients')"
-              />
-            </th>
-            <th class="px-4 py-2">Name</th>
-            <th class="px-4 py-2">Email</th>
-            <th class="px-4 py-2">Mobile</th>
-            <th class="px-4 py-2">Status</th>
-            <th class="px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="pat in patients" :key="pat.id">
-            <td class="border px-4 py-2">
-              <input
-                type="checkbox"
-                v-model="selectedPatients"
-                :value="pat.id"
-              />
-            </td>
-            <td class="border px-4 py-2">{{ pat.full_name }}</td>
-            <td class="border px-4 py-2">{{ pat.email }}</td>
-            <td class="border px-4 py-2">{{ pat.mobile }}</td>
-            <td class="border px-4 py-2">{{ pat.is_active ? 'Active' : 'Deactivated' }}</td>
-            <td class="border px-4 py-2">
-              <button
-                class="bg-yellow-600 text-white px-4 py-1 rounded"
-                @click="deactivatePatient(pat.id)"
-                :disabled="!pat.is_active"
-              >
-                Deactivate
-              </button>
-              <button
-                class="bg-green-600 text-white px-4 py-1 rounded"
-                @click="activatePatient(pat.id)"
-                :disabled="pat.is_active"
-              >
-                Activate
-              </button>
-              <button
-                class="bg-blue-600 text-white px-4 py-1 rounded"
-                @click="viewPatient(pat.id)"
-              >
-                View
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <PatientPopup
-      v-if="showPatientPopup"
-      :patient="patientPopupData"
-      @close="closePatientPopup"
+  <div class="admin-layout">
+    <AdminHeader 
+      :current-page="currentView" 
+      :admin-info="adminInfo"
+      @navigate="handleNavigation"
+      @logout="logout"
     />
     
-    <DoctorPopup
-      v-if="showDoctorPopup"
-      :doctor="doctorPopupData"
-      @close="closeDoctorPopup"
-      @approve="handleApproveDoctor"
-      @suspend="handleSuspendDoctor"
-      @unsuspend="handleUnsuspendDoctor"
-    />
+    <main class="main-content">
+      <div class="container mx-auto px-4 py-6">
+        <!-- Dynamic content based on current view -->
+        <div v-if="currentView === 'dashboard'" class="dashboard-view">
+          <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+            <div class="text-sm text-gray-600">
+              Welcome back, <span class="font-semibold text-medical-primary">{{ adminInfo?.username || 'Admin' }}</span>
+            </div>
+          </div>
+          
+          <!-- Dashboard Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+              <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                  <i class="fas fa-user-md text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-gray-500">Total Doctors</p>
+                  <p class="text-2xl font-bold">{{ stats.totalDoctors || 0 }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+              <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-100 text-green-600">
+                  <i class="fas fa-users text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-gray-500">Total Patients</p>
+                  <p class="text-2xl font-bold">{{ stats.totalPatients || 0 }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+              <div class="flex items-center">
+                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                  <i class="fas fa-calendar-check text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-gray-500">Today's Appointments</p>
+                  <p class="text-2xl font-bold">{{ stats.todaysAppointments || 0 }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+              <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                  <i class="fas fa-clock text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-gray-500">Pending Approvals</p>
+                  <p class="text-2xl font-bold">{{ stats.pendingApprovals || 0 }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Recent Activity -->
+          <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold text-gray-800">Recent Activity</h2>
+              <button class="text-sm text-medical-primary hover:text-medical-primary/80">View All</button>
+            </div>
+            <div class="space-y-4">
+              <div v-for="(activity, index) in recentActivities" :key="index" class="flex items-start pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                  <i :class="activity.icon"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm text-gray-700">{{ activity.description }}</p>
+                  <p class="text-xs text-gray-500 mt-1">{{ activity.time }}</p>
+                </div>
+              </div>
+              <div v-if="recentActivities.length === 0" class="text-center py-4 text-gray-500">
+                No recent activities found.
+              </div>
+            </div>
+          </div>
+          
+          <!-- Quick Actions -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <button 
+              @click="currentView = 'doctors'"
+              class="bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:border-medical-primary hover:bg-medical-primary/5 transition-colors text-left"
+            >
+              <div class="flex items-center">
+                <div class="p-2 rounded-full bg-blue-100 text-blue-600">
+                  <i class="fas fa-user-md"></i>
+                </div>
+                <span class="ml-3 font-medium">Manage Doctors</span>
+              </div>
+            </button>
+            
+            <button 
+              @click="currentView = 'patients'"
+              class="bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:border-green-500 hover:bg-green-50 transition-colors text-left"
+            >
+              <div class="flex items-center">
+                <div class="p-2 rounded-full bg-green-100 text-green-600">
+                  <i class="fas fa-users"></i>
+                </div>
+                <span class="ml-3 font-medium">Manage Patients</span>
+              </div>
+            </button>
+            
+            <button 
+              @click="currentView = 'appointments'"
+              class="bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:border-yellow-500 hover:bg-yellow-50 transition-colors text-left"
+            >
+              <div class="flex items-center">
+                <div class="p-2 rounded-full bg-yellow-100 text-yellow-600">
+                  <i class="fas fa-calendar-check"></i>
+                </div>
+                <span class="ml-3 font-medium">View Appointments</span>
+              </div>
+            </button>
+            
+            <button 
+              @click="currentView = 'settings'"
+              class="bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:border-purple-500 hover:bg-purple-50 transition-colors text-left"
+            >
+              <div class="flex items-center">
+                <div class="p-2 rounded-full bg-purple-100 text-purple-600">
+                  <i class="fas fa-cog"></i>
+                </div>
+                <span class="ml-3 font-medium">System Settings</span>
+              </div>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Doctors View -->
+        <DoctorsList 
+          v-else-if="currentView === 'doctors'" 
+          @navigate="handleNavigation"
+        />
+        
+        <!-- Patients View -->
+        <PatientsList 
+          v-else-if="currentView === 'patients'" 
+          @navigate="handleNavigation"
+        />
+        
+        <!-- Placeholder for other views -->
+        <div v-else class="flex flex-col items-center justify-center py-12">
+          <div class="bg-white p-8 rounded-lg shadow-md text-center max-w-md w-full">
+            <div class="text-5xl text-gray-300 mb-4">
+              <i v-if="currentView === 'appointments'" class="fas fa-calendar-check"></i>
+              <i v-else-if="currentView === 'settings'" class="fas fa-cog"></i>
+              <i v-else class="fas fa-folder-open"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">
+              {{ getViewTitle(currentView) }}
+            </h2>
+            <p class="text-gray-500 mb-6">This section is under development.</p>
+            <button 
+              @click="currentView = 'dashboard'"
+              class="px-4 py-2 bg-medical-primary text-white rounded-lg hover:bg-medical-primary/90 transition-colors"
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <AdminFooter @navigate="handleNavigation" />
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import { BASE_URL } from '@/config/api';
-import PatientPopup from './PatientPopup.vue';
-import DoctorPopup from './DoctorPopup.vue';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import AdminHeader from './AdminHeader.vue';
+import AdminFooter from './AdminFooter.vue';
+import DoctorsList from './DoctorsList.vue';
+import PatientsList from './PatientsList.vue';
 
 export default {
   name: 'AdminDashboard',
   components: {
-    PatientPopup,
-    DoctorPopup,
+    AdminHeader,
+    AdminFooter,
+    DoctorsList,
+    PatientsList
   },
-  data() {
-    return {
-      doctors: [],
-      patients: [],
-      selectAllDoctors: false,
-      selectAllPatients: false,
-      selectedDoctors: [],
-      selectedPatients: [],
-      showPatientPopup: false, // Patient popup visibility
-      patientPopupData: null,  // Data for patient popup
-      showDoctorPopup: false,  // Doctor popup visibility
-      doctorPopupData: null,   // Data for doctor popup
+  setup() {
+    const router = useRouter();
+    const currentView = ref('dashboard');
+    
+    // Admin info
+    const adminInfo = ref({
+      username: 'Admin',
+      role: 'Administrator',
+      email: 'admin@doctorbaddy.com',
+      lastLogin: new Date().toLocaleString()
+    });
+    
+    // Dashboard stats
+    const stats = ref({
+      totalDoctors: 0,
+      totalPatients: 0,
+      todaysAppointments: 0,
+      pendingApprovals: 0
+    });
+    
+    // Recent activities
+    const recentActivities = ref([
+      {
+        icon: 'fas fa-user-plus text-green-500',
+        description: 'New doctor registration: Dr. Sarah Johnson',
+        time: '10 minutes ago'
+      },
+      {
+        icon: 'fas fa-calendar-check text-blue-500',
+        description: 'New appointment booked with Dr. Michael Chen',
+        time: '1 hour ago'
+      },
+      {
+        icon: 'fas fa-file-medical text-purple-500',
+        description: 'Medical report uploaded for patient #PAT-10023',
+        time: '3 hours ago'
+      },
+      {
+        icon: 'fas fa-user-md text-yellow-500',
+        description: 'Dr. Robert Wilson updated his profile',
+        time: '5 hours ago'
+      },
+      {
+        icon: 'fas fa-comment-medical text-indigo-500',
+        description: 'New patient review received',
+        time: '1 day ago'
+      }
+    ]);
+    
+    // Navigation handler
+    const handleNavigation = (view) => {
+      currentView.value = view;
     };
-  },
-  methods: {
-    async fetchData() {
+    
+    // Get view title
+    const getViewTitle = (view) => {
+      const titles = {
+        'dashboard': 'Dashboard',
+        'doctors': 'Doctors Management',
+        'patients': 'Patients Management',
+        'appointments': 'Appointments',
+        'settings': 'System Settings'
+      };
+      return titles[view] || 'Page';
+    };
+    
+    // Logout function
+    const logout = () => {
+      // Clear authentication data
+      localStorage.removeItem('adminToken');
+      // Redirect to login page
+      router.push('/admin/login');
+    };
+    
+    // Fetch dashboard data
+    const fetchDashboardData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const headers = {
-          Authorization: `Bearer ${token}`,
+        // Replace with actual API calls
+        // const response = await axios.get(`${BASE_URL}/admin/dashboard`);
+        // stats.value = response.data;
+        
+        // Mock data - remove in production
+        stats.value = {
+          totalDoctors: 42,
+          totalPatients: 1287,
+          todaysAppointments: 24,
+          pendingApprovals: 5
         };
-
-        const [doctorsRes, patientsRes] = await Promise.all([
-          axios.get(`${BASE_URL}/admin/doctors`, { headers }),
-          axios.get(`${BASE_URL}/admin/patients`, { headers }),
-        ]);
-
-        this.doctors = doctorsRes.data;
-        this.patients = patientsRes.data;
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        alert('Failed to fetch dashboard data. Please make sure you are logged in.');
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
       }
-    },
-
-    async approveDoctor(id) {
-      const token = localStorage.getItem('token');
-      await axios.put(`${BASE_URL}/admin/doctors/${id}/approve`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      this.fetchData();
-    },
-
-    async rejectDoctor(id) {
-      const token = localStorage.getItem('token');
-      await axios.put(`${BASE_URL}/admin/doctors/${id}/reject`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      this.fetchData();
-    },
-
-    async deactivatePatient(id) {
-      const token = localStorage.getItem('token');
-      await axios.put(`${BASE_URL}/admin/patients/${id}/deactivate`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      this.fetchData();
-    },
-
-    async activatePatient(id) {
-      const token = localStorage.getItem('token');
-      await axios.put(`${BASE_URL}/admin/patients/${id}/activate`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      this.fetchData();
-    },
-
-    async viewDoctor(id) {
-      try {
-        console.log('View doctor clicked, ID:', id);
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${BASE_URL}/admin/doctors/view?id=${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        
-        console.log('Doctor API Response:', response);
-        
-        const doc = response.data.data ? response.data.data : response.data;
-        console.log('Processed doctor data:', doc);
-        
-        if (!doc || Object.keys(doc).length === 0) {
-          console.error('Doctor details not found or empty');
-          alert('Doctor details not found.');
-          return;
-        }
-        
-        this.doctorPopupData = doc;
-        this.showDoctorPopup = true;
-        console.log('Doctor popup should be visible');
-        
-        await this.$nextTick();
-      } catch (err) {
-        console.error('Error in viewDoctor:', err);
-        alert('Failed to load doctor details.');
-      }
-    },
-
-    async viewPatient(id) {
-      try {
-        console.log('1. View patient clicked, ID:', id);
-        const token = localStorage.getItem('token');
-        console.log('2. Token exists:', !!token);
-        
-        // Log the current state before making the API call
-        console.log('3. Current popup state - showPatientPopup:', this.showPatientPopup);
-        console.log('4. Current popup data - patientPopupData:', this.patientPopupData);
-        
-        const response = await axios.get(`${BASE_URL}/admin/patient/view?id=${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        
-        console.log('5. API Response status:', response.status);
-        console.log('6. API Response data:', response.data);
-        
-        const pat = response.data.data ? response.data.data : response.data;
-        console.log('7. Processed patient data:', pat);
-        
-        if (!pat || Object.keys(pat).length === 0) {
-          console.error('8. Patient details not found or empty');
-          alert('Patient details not found.');
-          return;
-        }
-        
-        // Set the data first
-        this.patientPopupData = pat;
-        console.log('9. Set patientPopupData:', this.patientPopupData);
-        
-        // Then show the popup
-        this.showPatientPopup = true;
-        console.log('10. Set showPatientPopup to true');
-        
-        // Force Vue to update the DOM
-        await this.$nextTick();
-        console.log('11. After $nextTick - popup should be visible');
-      } catch (err) {
-        console.error('Error in viewPatient:', err);
-        alert('Failed to load patient details.');
-      }
-    },
+    };
     
-    closePatientPopup() {
-      console.log('Closing patient popup');
-      this.showPatientPopup = false;
-      this.patientPopupData = null;
-      console.log('Popup state after close - showPatientPopup:', this.showPatientPopup);
-    },
+    // Lifecycle hook
+    onMounted(() => {
+      fetchDashboardData();
+    });
     
-    closeDoctorPopup() {
-      console.log('Closing doctor popup');
-      this.showDoctorPopup = false;
-      this.doctorPopupData = null;
-      console.log('Popup state after close - showDoctorPopup:', this.showDoctorPopup);
-    },
-    
-    async handleApproveDoctor(id) {
-      try {
-        const token = localStorage.getItem('token');
-        await axios.put(`${BASE_URL}/admin/doctors/${id}/approve`, {}, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        this.closeDoctorPopup();
-        this.fetchData();
-      } catch (err) {
-        console.error('Error approving doctor:', err);
-        alert('Failed to approve doctor.');
-      }
-    },
-    
-    async handleSuspendDoctor(id) {
-      try {
-        const token = localStorage.getItem('token');
-        await axios.put(`${BASE_URL}/admin/doctors/${id}/suspend`, {}, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        this.closeDoctorPopup();
-        this.fetchData();
-      } catch (err) {
-        console.error('Error suspending doctor:', err);
-        alert('Failed to suspend doctor.');
-      }
-    },
-    
-    async handleUnsuspendDoctor(id) {
-      try {
-        const token = localStorage.getItem('token');
-        await axios.put(`${BASE_URL}/admin/doctors/${id}/unsuspend`, {}, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        this.closeDoctorPopup();
-        this.fetchData();
-      } catch (err) {
-        console.error('Error unsuspending doctor:', err);
-        alert('Failed to unsuspend doctor.');
-      }
-    },
-    toggleSelectAll(type) {
-      if (type === 'doctors') {
-        this.selectedDoctors = this.selectAllDoctors ? this.doctors.map(doc => doc.id) : [];
-      } else if (type === 'patients') {
-        this.selectedPatients = this.selectAllPatients ? this.patients.map(pat => pat.id) : [];
-      }
-    },
-    async logout() {
-      const token = localStorage.getItem('token');
-      try {
-        await axios.post(`${BASE_URL}/api/admin/logout`, {}, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-      } catch (err) {
-        console.error('Logout API error:', err);
-      }
-      localStorage.removeItem('token');
-      this.$router.replace('/'); // Prevent going back to dashboard
-    },
-  },
-  mounted() {
-    this.fetchData();
-  },
+    return {
+      // State
+      currentView,
+      adminInfo,
+      stats,
+      recentActivities,
+      
+      // Methods
+      handleNavigation,
+      getViewTitle,
+      logout
+    };
+  }
 };
 </script>
 
 <style scoped>
+.admin-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 80px; /* Height of the header */
+  padding-bottom: 60px; /* Height of the footer */
+  background-color: #f5f7fa;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .main-content {
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+  
+  .container {
+    padding: 0.75rem;
+  }
+}
+
+/* Existing styles */
 h1, h2 {
   color: #2c3e50;
 }

@@ -22,7 +22,7 @@ const config = {
 };
 
 export const BASE_URL = config.baseURL;
-export const ENDPOINTS = config.endpoints;
-export const HEADERS = config.headers;
+// export const ENDPOINTS = config.endpoints;
+// export const HEADERS = config.headers;
 
 export default config;
