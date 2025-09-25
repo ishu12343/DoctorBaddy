@@ -274,10 +274,21 @@
 
         <!-- Appointments Page -->
         <template v-else-if="showAppointments">
-          <div class="max-w-6xl mx-auto responsive-flex-column">
-            <div class="mb-6">
-              <h1 class="text-2xl font-bold text-gray-900 mb-2">My Appointments</h1>
-              <p class="text-gray-600">Manage your upcoming and past appointments</p>
+          <div class="max-w-6xl mx-auto">
+            <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+              <div>
+                <h1 class="text-2xl font-bold text-gray-900">My Appointments</h1>
+                <p class="text-gray-600">Manage your upcoming and past appointments</p>
+              </div>
+              <div class="filter-container">
+                <select v-model="selectedAppointmentStatus" class="appointment-filter-select">
+                  <option value="">All Status</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="CONFIRMED">Confirmed</option>
+                  <option value="COMPLETED">Completed</option>
+                  <option value="CANCELLED">Cancelled</option>
+                </select>
+              </div>
             </div>
 
             <!-- Loading State -->
@@ -289,7 +300,7 @@
             <!-- Appointments List -->
             <div v-else class="appointments-list">
               <div 
-                v-for="appointment in appointments" 
+                v-for="appointment in filteredAppointments" 
                 :key="appointment.id" 
                 class="appointment-card"
                 :class="{ 
@@ -433,7 +444,7 @@
             </div>
 
             <!-- Empty State -->
-            <div v-if="!loadingAppointments && appointments.length === 0" class="empty-state">
+            <div v-if="!loadingAppointments && filteredAppointments.length === 0" class="empty-state">
               <div class="empty-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -1128,6 +1139,7 @@ export default {
       // Appointments data
       appointments: [],
       loadingAppointments: false,
+      selectedAppointmentStatus: '',
       cancellingAppointment: null,
       refreshInterval: null, // For auto-refreshing appointments
       
@@ -1183,6 +1195,14 @@ export default {
       if (this.showProfile) return 'profile';
       if (this.showAppointments) return 'appointments';
       return 'dashboard';
+    },
+    filteredAppointments() {
+      if (!this.selectedAppointmentStatus) {
+        return this.appointments;
+      }
+      return this.appointments.filter(
+        appointment => appointment.status === this.selectedAppointmentStatus
+      );
     }
   },
   mounted() {
@@ -5098,6 +5118,21 @@ export default {
   }
 }
 
+/* Appointment Filter Styles */
+.appointment-filter-select {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  font-size: 0.875rem;
+  min-width: 180px;
+}
+
+.appointment-filter-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
 /* Responsive rating modal */
 @media (width <= 768px) {
   .rating-modal {
