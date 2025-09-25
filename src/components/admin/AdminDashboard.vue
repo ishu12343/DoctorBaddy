@@ -186,8 +186,8 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import AdminHeader from './AdminHeader.vue';
 import AdminFooter from './AdminFooter.vue';
-import DoctorsList from './DoctorsList.vue';
-import PatientsList from './PatientsList.vue';
+import DoctorsList from './AdminDoctorsList.vue';
+import PatientsList from './AdminPatientsList.vue';
 
 export default {
   name: 'AdminDashboard',
