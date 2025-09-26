@@ -25,67 +25,69 @@
 }
 </style>
 <template>
-  <div>
+  <div class="min-h-screen flex flex-col">
     <AppHeader />
-    <div class="auth-page">
-      <div class="auth-container">
-        <h2>Admin Registration</h2>
-        <form @submit.prevent="handleSignup" class="auth-form">
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input
-            type="text"
-            id="fullName"
-            v-model="form.full_name"
-            required
-            class="form-control"
-          />
-        </div>
-        
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="form.email"
-            required
-            class="form-control"
-          />
-        </div>
+    <main class="flex-1 pt-16 lg:pt-20 flex items-center justify-center bg-gradient-to-br from-medical-primary to-medical-secondary dark:from-gray-900 dark:to-gray-800">
+      <div class="container py-8">
+        <div class="max-w-md mx-auto">
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-brand-500 to-teal-500 p-6 text-center text-white">
+              <div class="w-16 h-16 mx-auto mb-4 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                <i class="fas fa-user-shield text-2xl"></i>
+              </div>
+              <h1 class="text-2xl font-bold">Admin Registration</h1>
+              <p class="text-blue-100 mt-2">Create a new administrator account</p>
+            </div>
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            v-model="form.password"
-            required
-            minlength="6"
-            class="form-control"
-          />
-        </div>
+            <!-- Form -->
+            <div class="p-6 lg:p-8">
+              <form @submit.prevent="handleSignup" class="space-y-6">
+                <!-- Error/Success Messages -->
+                <div v-if="error" class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700 flex items-center gap-2">
+                  <i class="fas fa-exclamation-circle"></i> {{ error }}
+                </div>
+                <div v-if="success" class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-700 flex items-center gap-2">
+                  <i class="fas fa-check-circle"></i> Registration successful! 🎉
+                </div>
 
-        <div class="form-group">
-          <label for="role">Role</label>
-          <select id="role" v-model="form.role" class="form-control">
-            <option value="ADMIN">Admin</option>
-          </select>
-        </div>
+                <div class="form-group">
+                  <label for="fullName" class="form-label">Full Name</label>
+                  <input type="text" id="fullName" v-model="form.full_name" required class="form-input" />
+                </div>
+                
+                <div class="form-group">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" id="email" v-model="form.email" required class="form-input" />
+                </div>
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" :disabled="isLoading">
-            {{ isLoading ? 'Registering...' : 'Register' }}
-          </button>
-          <p class="login-link">
-            Already have an account? <router-link to="/admin-login">Login here</router-link>
-          </p>
-        </div>
+                <div class="form-group">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" id="password" v-model="form.password" required minlength="6" class="form-input" />
+                </div>
 
-        <p v-if="error" class="error-message">{{ error }}</p>
-        <p v-if="success" class="success-message">Registration successful! 🎉</p>
-        </form>
+                <div class="form-group">
+                  <label for="role" class="form-label">Role</label>
+                  <select id="role" v-model="form.role" class="form-input bg-gray-100" disabled>
+                    <option value="ADMIN">Admin</option>
+                  </select>
+                </div>
+
+                <button type="submit" class="btn-primary w-full" :disabled="isLoading">
+                  <i v-if="isLoading" class="fas fa-spinner fa-spin mr-2"></i>
+                  {{ isLoading ? 'Registering...' : 'Register' }}
+                </button>
+
+                <p class="text-center text-sm text-gray-600">
+                  Already have an account? 
+                  <router-link to="/admin-login" class="font-medium text-brand-600 hover:text-brand-500">Login here</router-link>
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
     <AppFooter />
   </div>
 </template>
@@ -144,143 +146,19 @@ export default {
 </script>
 
 <style scoped>
-.auth-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f5f7fb;
-  padding: 20px;
+.form-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
 }
 
-.auth-container {
-  background: white;
-  padding: 2.5rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
-  width: 100%;
-  max-width: 500px;
-}
-
-h2 {
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 2rem;
-  font-size: 1.8rem;
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-label {
-  font-weight: 500;
-  color: #4a5568;
-  font-size: 0.95rem;
-}
-
-.form-control {
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgb(66 153 225 / 20%);
-}
-
-.radio-group {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 0.25rem;
-}
-
-.radio-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  font-weight: normal;
-}
-
-.radio-label input[type="radio"] {
-  margin: 0;
-}
-
-.btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  text-align: center;
-  width: 100%;
+.form-input {
+  @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500 sm:text-sm py-2.5 px-3 border;
 }
 
 .btn-primary {
-  background-color: #4299e1;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #3182ce;
+  @apply inline-flex justify-center py-2.5 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500;
 }
 
 .btn-primary:disabled {
-  background-color: #a0aec0;
-  cursor: not-allowed;
-}
-
-.form-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.login-link {
-  text-align: center;
-  color: #4a5568;
-  margin-top: 0.5rem;
-}
-
-.login-link a {
-  color: #4299e1;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.login-link a:hover {
-  text-decoration: underline;
-}
-
-.error-message {
-  color: #e53e3e;
-  text-align: center;
-  margin-top: 1rem;
-  font-size: 0.95rem;
-}
-
-.success-message {
-  color: #38a169;
-  text-align: center;
-  margin-top: 1rem;
-  font-size: 0.95rem;
+  @apply bg-gray-400 cursor-not-allowed;
 }
 </style>

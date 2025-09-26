@@ -25,182 +25,163 @@
 }
 </style>
 <template>
-  <div>
+  <div class="min-h-screen flex flex-col">
     <AppHeader />
-    <div class="auth-page">
-      <div class="auth-container">
-        <h2>Doctor Registration</h2>
-        <form @submit.prevent="handleSubmit" class="auth-form">
-        <!-- Error Message -->
-        <div v-if="error" class="alert alert-danger">
-          {{ error }}
-        </div>
-        
-        <!-- Personal Information -->
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" v-model="formData.fullName" required class="form-control" />
-        </div>
+    <main class="flex-1 pt-16 lg:pt-20 flex items-center justify-center bg-gradient-to-br from-medical-primary to-medical-secondary dark:from-gray-900 dark:to-gray-800">
+      <div class="container py-8">
+        <div class="max-w-2xl mx-auto">
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-brand-500 to-teal-500 p-6 text-center text-white">
+              <div class="w-16 h-16 mx-auto mb-4 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                <i class="fas fa-user-md text-2xl"></i>
+              </div>
+              <h1 class="text-2xl font-bold">Doctor Registration</h1>
+              <p class="text-blue-100 mt-2">Join our network of healthcare professionals</p>
+            </div>
 
-        <div class="form-group">
-          <label for="name">Preferred Name</label>
-          <input type="text" id="name" v-model="formData.name" required class="form-control" />
-        </div>
+            <!-- Form -->
+            <div class="p-6 lg:p-8">
+              <form @submit.prevent="handleSubmit" class="space-y-6">
+                <!-- Error Message -->
+                <div v-if="error" class="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                    <p class="text-sm text-red-700">{{ error }}</p>
+                  </div>
+                </div>
 
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="formData.email" required class="form-control" />
-        </div>
+                <!-- Step 1: Personal Information -->
+                <div v-if="step === 1">
+                  <h3 class="text-lg font-semibold text-gray-700 mb-4">Step 1: Personal Information</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                      <label for="fullName" class="form-label">Full Name</label>
+                      <input type="text" id="fullName" v-model="formData.fullName" required class="form-input" />
+                    </div>
+                    <div class="form-group">
+                      <label for="name" class="form-label">Preferred Name</label>
+                      <input type="text" id="name" v-model="formData.name" required class="form-input" />
+                    </div>
+                    <div class="form-group">
+                      <label for="email" class="form-label">Email</label>
+                      <input type="email" id="email" v-model="formData.email" required class="form-input" />
+                    </div>
+                    <div class="form-group">
+                      <label for="mobile" class="form-label">Mobile Number</label>
+                      <input type="tel" id="mobile" v-model="formData.mobile" pattern="[0-9]{10}" title="Please enter a 10-digit mobile number" required class="form-input" />
+                    </div>
+                    <div class="form-group">
+                      <label for="password" class="form-label">Password</label>
+                      <input type="password" id="password" v-model="formData.password" minlength="6" required class="form-input" />
+                    </div>
+                  </div>
+                </div>
 
-        <div class="form-group">
-          <label for="mobile">Mobile Number</label>
-          <input 
-            type="tel" 
-            id="mobile" 
-            v-model="formData.mobile" 
-            pattern="[0-9]{10}" 
-            title="Please enter a 10-digit mobile number"
-            required 
-            class="form-control" 
-          />
-        </div>
+                <!-- Step 2: Professional Information -->
+                <div v-if="step === 2">
+                  <h3 class="text-lg font-semibold text-gray-700 mb-4">Step 2: Professional Information</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                      <label for="registrationNumber" class="form-label">Registration Number</label>
+                      <input type="text" id="registrationNumber" v-model="formData.registrationNumber" required class="form-input" />
+                    </div>
+                    <div class="form-group">
+                      <label for="council" class="form-label">Medical Council</label>
+                      <select id="council" v-model="formData.council" required class="form-input">
+                        <option value="">Select Council</option>
+                        <option value="MCI">MCI (Medical Council of India)</option>
+                        <option value="SMC">State Medical Council</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="specialty" class="form-label">Specialty</label>
+                      <input type="text" id="specialty" v-model="formData.specialty" required class="form-input" />
+                    </div>
+                    <div class="form-group">
+                      <label for="experience" class="form-label">Years of Experience</label>
+                      <input type="number" id="experience" v-model.number="formData.experience" min="0" required class="form-input" />
+                    </div>
+                     <div class="form-group">
+                        <label for="degree" class="form-label">Highest Degree</label>
+                        <input type="text" id="degree" v-model="formData.degree" required class="form-input" />
+                    </div>
+                  </div>
+                </div>
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            v-model="formData.password" 
-            minlength="6" 
-            required 
-            class="form-control" 
-          />
-        </div>
+                <!-- Step 3: Clinic & Documents -->
+                <div v-if="step === 3">
+                  <h3 class="text-lg font-semibold text-gray-700 mb-4">Step 3: Clinic & Documents</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group md:col-span-2">
+                      <label for="clinicName" class="form-label">Clinic Name</label>
+                      <input type="text" id="clinicName" v-model="formData.clinicName" required class="form-input" />
+                    </div>
+                    <div class="form-group md:col-span-2">
+                      <label for="clinicAddress" class="form-label">Clinic Address</label>
+                      <textarea id="clinicAddress" v-model="formData.clinicAddress" required rows="3" class="form-input"></textarea>
+                    </div>
+                    <div class="form-group md:col-span-2">
+                      <label for="location" class="form-label">Location (e.g., City, State)</label>
+                      <input type="text" id="location" v-model="formData.location" required class="form-input" />
+                    </div>
+                    <div class="form-group">
+                      <label for="degreeCertPath" class="form-label">Degree Certificate (Optional)</label>
+                      <input type="file" id="degreeCertPath" @change="handleFileUpload($event, 'degreeCertPath')" class="form-file-input" />
+                    </div>
+                    <div class="form-group">
+                      <label for="idProofPath" class="form-label">ID Proof (Optional)</label>
+                      <input type="file" id="idProofPath" @change="handleFileUpload($event, 'idProofPath')" class="form-file-input" />
+                    </div>
+                    <div class="form-group">
+                      <label for="licensePath" class="form-label">License (Optional)</label>
+                      <input type="file" id="licensePath" @change="handleFileUpload($event, 'licensePath')" class="form-file-input" />
+                    </div>
+                    <div class="form-group">
+                      <label for="photoPath" class="form-label">Profile Photo (Optional)</label>
+                      <input type="file" id="photoPath" @change="handleFileUpload($event, 'photoPath')" class="form-file-input" />
+                    </div>
+                  </div>
+                </div>
 
-        <div class="form-group">
-          <label for="registrationNumber">Registration Number</label>
-          <input 
-            type="text" 
-            id="registrationNumber" 
-            v-model="formData.registrationNumber" 
-            required 
-            class="form-control" 
-          />
-        </div>
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center pt-4">
+                  <button type="button" v-if="step > 1" @click="prevStep" class="btn-secondary">
+                    Back
+                  </button>
+                  <div v-else></div> <!-- Spacer -->
 
-        <div class="form-group">
-          <label for="council">Medical Council</label>
-          <select id="council" v-model="formData.council" required class="form-control">
-            <option value="">Select Council</option>
-            <option value="MCI">MCI (Medical Council of India)</option>
-            <option value="SMC">State Medical Council</option>
-          </select>
-        </div>
+                  <button type="button" v-if="step < 3" @click="nextStep" class="btn-primary">
+                    Next
+                  </button>
 
-        <div class="form-group">
-          <label for="specialty">Specialty</label>
-          <input type="text" id="specialty" v-model="formData.specialty" required class="form-control" />
-        </div>
+                  <button type="submit" v-if="step === 3" class="btn-primary" :disabled="isLoading">
+                    {{ isLoading ? 'Registering...' : 'Register' }}
+                  </button>
+                </div>
 
-        <div class="form-group">
-          <label for="experience">Years of Experience</label>
-          <input 
-            type="number" 
-            id="experience" 
-            v-model.number="formData.experience" 
-            min="0" 
-            required 
-            class="form-control" 
-          />
-        </div>
+                <!-- Divider -->
+                <div class="mt-8 relative">
+                  <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                  </div>
+                  <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">Already have an account?</span>
+                  </div>
+                </div>
 
-        <!-- Clinic Information -->
-        <div class="form-group">
-          <label for="clinicName">Clinic Name</label>
-          <input type="text" id="clinicName" v-model="formData.clinicName" required class="form-control" />
+                <!-- Login Link -->
+                <div class="mt-6 text-center">
+                  <router-link to="/doctor-login" class="font-medium text-brand-600 hover:text-brand-500">
+                    Login here
+                  </router-link>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-
-        <div class="form-group">
-          <label for="clinicAddress">Clinic Address</label>
-          <textarea 
-            id="clinicAddress" 
-            v-model="formData.clinicAddress" 
-            required 
-            rows="3" 
-            class="form-control"
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="location">Location</label>
-          <input type="text" id="location" v-model="formData.location" required class="form-control" />
-        </div>
-
-        <!-- Degree & Docs -->
-        <div class="form-group">
-          <label for="degree">Highest Degree</label>
-          <input type="text" id="degree" v-model="formData.degree" required class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label for="degreeCertPath">Degree Certificate Path (Optional)</label>
-          <input 
-            type="text" 
-            id="degreeCertPath" 
-            v-model="formData.degreeCertPath" 
-            class="form-control" 
-            placeholder="e.g., /path/to/degree.pdf"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="idProofPath">ID Proof Path (Optional)</label>
-          <input 
-            type="text" 
-            id="idProofPath" 
-            v-model="formData.idProofPath" 
-            class="form-control" 
-            placeholder="e.g., /path/to/id_proof.pdf"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="licensePath">License Path (Optional)</label>
-          <input 
-            type="text" 
-            id="licensePath" 
-            v-model="formData.licensePath" 
-            class="form-control" 
-            placeholder="e.g., /path/to/license.pdf"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="photoPath">Photo Path (Optional)</label>
-          <input 
-            type="text" 
-            id="photoPath" 
-            v-model="formData.photoPath" 
-            class="form-control" 
-            placeholder="e.g., /path/to/photo.jpg"
-          />
-        </div>
-
-        <!-- Hidden field for approved status (defaults to false) -->
-        <input type="hidden" v-model="formData.approved" />
-
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" :disabled="isLoading">
-            {{ isLoading ? 'Registering...' : 'Register' }}
-          </button>
-          
-          <p class="login-link">
-            Already have an account? <router-link to="/doctor-login">Login here</router-link>
-          </p>
-        </div>
-        </form>
       </div>
-    </div>
+    </main>
     <AppFooter />
     <ChatButton />
   </div>
@@ -221,6 +202,7 @@ export default {
   data() {
     return {
       isLoading: false,
+      step: 1,
       formData: {
         fullName: '',
         name: '',
@@ -246,6 +228,20 @@ export default {
     }
   },
   methods: {
+    nextStep() {
+      this.step++;
+    },
+    prevStep() {
+      this.step--;
+    },
+    handleFileUpload(event, field) {
+      const file = event.target.files[0];
+      if (file) {
+        // In a real app, you'd upload this file and store the URL.
+        // For this example, we'll just store the file name.
+        this.formData[field] = file.name;
+      }
+    },
   async handleSubmit() {
   this.isLoading = true;
   this.error = '';
@@ -294,112 +290,29 @@ export default {
   }
 }
 </script>
-  
+
 <style scoped>
-  /* Keep your existing style from previous component */
-  .auth-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    padding: 2rem;
-  }
-  
-  .auth-container {
-    background: #fff;
-    padding: 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  h2 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 2rem;
-  }
-  
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #2c3e50;
-  }
-  
-  .form-control {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-  }
-  
-  .form-control:focus {
-    border-color: #3498db;
-    outline: none;
-    box-shadow: 0 0 0 2px rgb(52 152 219 / 20%);
-  }
-  
-  textarea.form-control {
-    min-height: 100px;
-    resize: vertical;
-  }
-  
-  .btn-primary {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s;
-  }
-  
-  .btn-primary:hover:not(:disabled) {
-    background-color: #2980b9;
-  }
-  
-  .btn-primary:disabled {
-    background-color: #bdc3c7;
-    cursor: not-allowed;
-  }
-  
-  .form-actions {
-    margin-top: 2rem;
-    text-align: center;
-  }
-  
-  .login-link {
-    margin-top: 1rem;
-    text-align: center;
-    color: #7f8c8d;
-  }
-  
-  .login-link a {
-    color: #3498db;
-    text-decoration: none;
-  }
-  
-  .login-link a:hover {
-    text-decoration: underline;
-  }
-  
-  @media (width <= 768px) {
-    .auth-container {
-      padding: 1.5rem;
-    }
-  
-    .auth-page {
-      padding: 1rem;
-    }
-  }
-  </style>
-  
+.form-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+}
+
+.form-input {
+  @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500 sm:text-sm py-2.5 px-3 border;
+}
+
+.form-file-input {
+    @apply block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100;
+}
+
+.btn-primary {
+  @apply inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500;
+}
+
+.btn-secondary {
+  @apply inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+}
+
+.btn-primary:disabled {
+  @apply bg-gray-400 cursor-not-allowed;
+}
+</style>
