@@ -1,66 +1,76 @@
 <template>
-  <div class="doctors-list">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold text-gray-800">Doctors Management</h2>
-      <div class="flex items-center gap-4">
-        <div class="relative">
+  <div class="doctors-list px-2 sm:px-4">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Doctors Management</h2>
+      <div class="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div class="relative w-full sm:w-48 md:w-64">
           <input
             type="text"
             v-model="searchQuery"
             placeholder="Search doctors..."
-            class="pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent"
+            class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent text-sm sm:text-base"
           >
-          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
         </div>
         <button 
           @click="showFilters = !showFilters"
-          class="px-4 py-2 border rounded-lg flex items-center gap-2 hover:bg-gray-50"
+          class="w-full sm:w-auto px-4 py-2 border rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 text-sm sm:text-base"
         >
           <i class="fas fa-filter"></i>
-          <span>Filters</span>
+          <span class="whitespace-nowrap">{{ showFilters ? 'Hide' : 'Show' }} Filters</span>
         </button>
       </div>
     </div>
 
     <!-- Filters Panel -->
-    <div v-if="showFilters" class="bg-white p-4 rounded-lg shadow-md mb-6">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-          <select v-model="filters.status" class="w-full p-2 border rounded">
-            <option value="">All Status</option>
-            <option value="approved">Approved</option>
-            <option value="pending">Pending Approval</option>
-            <option value="suspended">Suspended</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
-          <select v-model="filters.specialty" class="w-full p-2 border rounded">
-            <option value="">All Specialties</option>
-            <option v-for="spec in specialties" :key="spec" :value="spec">
-              {{ spec }}
-            </option>
-          </select>
-        </div>
-        <div class="flex items-end">
-          <button 
-            @click="applyFilters"
-            class="px-4 py-2 bg-medical-primary text-white rounded-lg hover:bg-medical-primary/90 transition-colors"
-          >
-            Apply Filters
-          </button>
+    <transition
+      enter-active-class="transition-all duration-200 ease-out"
+      leave-active-class="transition-all duration-150 ease-in"
+      enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-95"
+    >
+      <div v-if="showFilters" class="bg-white p-4 rounded-lg shadow-md mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select v-model="filters.status" class="w-full p-2 border rounded text-sm sm:text-base">
+              <option value="">All Status</option>
+              <option value="approved">Approved</option>
+              <option value="pending">Pending Approval</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
+            <select v-model="filters.specialty" class="w-full p-2 border rounded text-sm sm:text-base">
+              <option value="">All Specialties</option>
+              <option v-for="spec in specialties" :key="spec" :value="spec">
+                {{ spec }}
+              </option>
+            </select>
+          </div>
+          <div class="flex items-end sm:col-span-2 md:col-span-1">
+            <button 
+              @click="applyFilters"
+              class="w-full px-4 py-2 bg-medical-primary text-white rounded-lg hover:bg-medical-primary/90 transition-colors text-sm sm:text-base"
+            >
+              Apply Filters
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
 
     <!-- Doctors Table -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
+        <!-- Desktop Table -->
+        <table class="min-w-full divide-y divide-gray-200 hidden sm:table">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <input 
                   type="checkbox" 
                   v-model="selectAll"
@@ -68,31 +78,31 @@
                   class="h-4 w-4 text-medical-primary rounded border-gray-300 focus:ring-medical-primary"
                 >
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <div class="flex items-center cursor-pointer" @click="sortBy('full_name')">
                   Doctor
                   <i class="fas fa-sort ml-1 text-gray-400"></i>
                 </div>
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                 <div class="flex items-center cursor-pointer" @click="sortBy('email')">
                   Email
                   <i class="fas fa-sort ml-1 text-gray-400"></i>
                 </div>
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
                 <div class="flex items-center cursor-pointer" @click="sortBy('specialty')">
                   Specialty
                   <i class="fas fa-sort ml-1 text-gray-400"></i>
                 </div>
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="doctor in paginatedDoctors" :key="doctor.id" class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">
+              <td class="px-3 sm:px-4 py-4 whitespace-nowrap">
                 <input 
                   type="checkbox" 
                   :value="doctor.id"
@@ -100,7 +110,7 @@
                   class="h-4 w-4 text-medical-primary rounded border-gray-300 focus:ring-medical-primary"
                 >
               </td>
-              <td class="px-6 py-4 whitespace-nowrap">
+              <td class="px-3 sm:px-4 py-4 whitespace-nowrap">
                 <div class="flex items-center">
                   <div class="flex-shrink-0 h-10 w-10">
                     <img 
@@ -109,21 +119,26 @@
                       :alt="doctor.full_name"
                     >
                   </div>
-                  <div class="ml-4">
+                  <div class="ml-2 sm:ml-4">
                     <div class="text-sm font-medium text-gray-900">{{ doctor.full_name }}</div>
-                    <div class="text-sm text-gray-500">{{ doctor.qualification }}</div>
+                    <div class="text-xs sm:text-sm text-gray-500">{{ doctor.qualification }}</div>
+                    <div class="md:hidden text-xs text-gray-500 truncate max-w-[180px]" :title="doctor.email">
+                      {{ doctor.email }}
+                    </div>
                   </div>
                 </div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{ doctor.email }}
+              <td class="px-3 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
+                <div class="truncate max-w-[180px]" :title="doctor.email">
+                  {{ doctor.email }}
+                </div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td class="px-3 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
                 {{ doctor.specialty }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap">
+              <td class="px-3 sm:px-4 py-4 whitespace-nowrap">
                 <span 
-                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
                   :class="{
                     'bg-green-100 text-green-800': doctor.approved && !doctor.suspended,
                     'bg-yellow-100 text-yellow-800': !doctor.approved,
@@ -133,45 +148,45 @@
                   {{ getStatusText(doctor) }}
                 </span>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <div class="flex items-center space-x-2">
+              <td class="px-3 sm:px-4 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex items-center space-x-1 sm:space-x-2">
                   <button 
                     @click="viewDoctor(doctor.id)"
-                    class="text-medical-primary hover:text-medical-primary/80"
+                    class="p-1 sm:p-1.5 text-medical-primary hover:text-medical-primary/80 rounded-full hover:bg-gray-100"
                     title="View Details"
                   >
-                    <i class="fas fa-eye"></i>
+                    <i class="fas fa-eye text-sm sm:text-base"></i>
                   </button>
                   <button 
                     v-if="!doctor.approved"
                     @click="approveDoctor(doctor.id)"
-                    class="text-green-600 hover:text-green-800"
+                    class="p-1 sm:p-1.5 text-green-600 hover:text-green-800 rounded-full hover:bg-green-50"
                     title="Approve Doctor"
                   >
-                    <i class="fas fa-check"></i>
+                    <i class="fas fa-check text-sm sm:text-base"></i>
                   </button>
                   <button 
                     v-if="!doctor.suspended && doctor.approved"
                     @click="suspendDoctor(doctor.id)"
-                    class="text-yellow-600 hover:text-yellow-800"
+                    class="p-1 sm:p-1.5 text-yellow-600 hover:text-yellow-800 rounded-full hover:bg-yellow-50"
                     title="Suspend Account"
                   >
-                    <i class="fas fa-pause"></i>
+                    <i class="fas fa-pause text-sm sm:text-base"></i>
                   </button>
                   <button 
                     v-if="doctor.suspended"
                     @click="unsuspendDoctor(doctor.id)"
-                    class="text-blue-600 hover:text-blue-800"
+                    class="p-1 sm:p-1.5 text-blue-600 hover:text-blue-800 rounded-full hover:bg-blue-50"
                     title="Unsuspend Account"
                   >
-                    <i class="fas fa-play"></i>
+                    <i class="fas fa-play text-sm sm:text-base"></i>
                   </button>
                   <button 
                     @click="deleteDoctor(doctor.id)"
-                    class="text-red-600 hover:text-red-800"
+                    class="p-1 sm:p-1.5 text-red-600 hover:text-red-800 rounded-full hover:bg-red-50"
                     title="Delete Doctor"
                   >
-                    <i class="fas fa-trash"></i>
+                    <i class="fas fa-trash text-sm sm:text-base"></i>
                   </button>
                 </div>
               </td>
@@ -183,17 +198,113 @@
             </tr>
           </tbody>
         </table>
+
+        <!-- Mobile Cards -->
+        <div class="sm:hidden space-y-3 p-3">
+          <div v-for="doctor in paginatedDoctors" :key="'mobile-' + doctor.id" class="bg-white rounded-lg shadow p-4 border border-gray-100">
+            <div class="flex justify-between items-start">
+              <div class="flex items-center space-x-3">
+                <input 
+                  type="checkbox" 
+                  :value="doctor.id"
+                  v-model="selectedDoctors"
+                  class="h-5 w-5 text-medical-primary rounded border-gray-300 focus:ring-medical-primary"
+                >
+                <img 
+                  class="h-12 w-12 rounded-full" 
+                  :src="doctor.profile_image || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(doctor.full_name) + '&background=random'" 
+                  :alt="doctor.full_name"
+                >
+                <div>
+                  <div class="font-medium text-gray-900">{{ doctor.full_name }}</div>
+                  <div class="text-sm text-gray-500">{{ doctor.qualification }}</div>
+                </div>
+              </div>
+              <span 
+                class="px-2 py-1 text-xs font-semibold rounded-full"
+                :class="{
+                  'bg-green-100 text-green-800': doctor.approved && !doctor.suspended,
+                  'bg-yellow-100 text-yellow-800': !doctor.approved,
+                  'bg-red-100 text-red-800': doctor.suspended
+                }"
+              >
+                {{ getStatusText(doctor) }}
+              </span>
+            </div>
+            <div class="mt-3 text-sm text-gray-600 space-y-1">
+              <div class="flex items-center">
+                <i class="fas fa-envelope text-gray-400 w-5"></i>
+                <span class="truncate ml-2">{{ doctor.email }}</span>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-stethoscope text-gray-400 w-5"></i>
+                <span class="ml-2">{{ doctor.specialty || 'N/A' }}</span>
+              </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-gray-100 flex justify-between">
+              <button 
+                @click="viewDoctor(doctor.id)"
+                class="text-medical-primary hover:text-medical-primary/80 text-sm font-medium px-2 py-1 rounded hover:bg-gray-50"
+              >
+                View
+              </button>
+              <div class="flex space-x-2">
+                <button 
+                  v-if="!doctor.approved"
+                  @click="approveDoctor(doctor.id)"
+                  class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-50"
+                  title="Approve Doctor"
+                >
+                  <i class="fas fa-check"></i>
+                </button>
+                <button 
+                  v-if="!doctor.suspended && doctor.approved"
+                  @click="suspendDoctor(doctor.id)"
+                  class="text-yellow-600 hover:text-yellow-800 p-1 rounded-full hover:bg-yellow-50"
+                  title="Suspend Account"
+                >
+                  <i class="fas fa-pause"></i>
+                </button>
+                <button 
+                  v-if="doctor.suspended"
+                  @click="unsuspendDoctor(doctor.id)"
+                  class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50"
+                  title="Unsuspend Account"
+                >
+                  <i class="fas fa-play"></i>
+                </button>
+                <button 
+                  @click="deleteDoctor(doctor.id)"
+                  class="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-50"
+                  title="Delete Doctor"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-if="filteredDoctors.length === 0" class="text-center py-6 text-gray-500">
+            No doctors found matching your criteria.
+          </div>
+        </div>
+
       </div>
 
       <!-- Bulk Actions -->
-      <div v-if="selectedDoctors.length > 0" class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
-        <div class="text-sm text-gray-700">
+      <div v-if="selectedDoctors.length > 0" class="bg-gray-50 px-3 sm:px-6 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-gray-200">
+        <div class="text-sm text-gray-700 flex items-center">
+          <input 
+            type="checkbox" 
+            :checked="selectedDoctors.length > 0"
+            @change="selectAll = !selectAll; toggleSelectAll()"
+            class="h-4 w-4 text-medical-primary rounded border-gray-300 focus:ring-medical-primary mr-2"
+          >
           <span class="font-medium">{{ selectedDoctors.length }}</span> selected
         </div>
-        <div class="flex space-x-2">
+        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
           <button 
             @click="bulkAction('approve')"
-            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            class="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex-1 sm:flex-none"
           >
             <i class="fas fa-check mr-1"></i> Approve
           </button>
@@ -802,5 +913,56 @@ export default {
 </script>
 
 <style scoped>
-/* Add any custom styles here */
+/* Responsive table styles */
+@media (max-width: 767px) {
+  .doctors-list {
+    padding: 0 0.5rem;
+  }
+  
+  .doctors-list h2 {
+    font-size: 1.25rem;
+  }
+  
+  .doctors-list .relative input {
+    width: 100%;
+  }
+}
+
+/* Touch-friendly buttons */
+button {
+  touch-action: manipulation;
+  min-height: 2.5rem;
+  min-width: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure icons are properly sized on mobile */
+.fa, .fas {
+  font-size: 1rem;
+}
+
+/* Better spacing for mobile cards */
+@media (max-width: 639px) {
+  .doctors-list {
+    padding: 0 0.25rem;
+  }
+  
+  .doctors-list h2 {
+    font-size: 1.1rem;
+  }
+  
+  .doctors-list .relative {
+    width: 100%;
+  }
+  
+  .doctors-list button {
+    padding: 0.5rem;
+  }
+  
+  .fa, .fas {
+    font-size: 0.875rem;
+  }
+}
 </style>
