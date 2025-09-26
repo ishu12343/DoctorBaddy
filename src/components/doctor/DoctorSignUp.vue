@@ -106,6 +106,19 @@
                         <label for="degree" class="form-label">Highest Degree</label>
                         <input type="text" id="degree" v-model="formData.degree" required class="form-input" />
                     </div>
+                    <div class="form-group">
+                      <label for="gender" class="form-label">Gender</label>
+                      <select id="gender" v-model="formData.gender" required class="form-input">
+                        <option value="">Select Gender</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="licenseNumber" class="form-label">License Number</label>
+                      <input type="text" id="licenseNumber" v-model="formData.licenseNumber" required class="form-input" />
+                    </div>
                   </div>
                 </div>
 
@@ -209,7 +222,9 @@ export default {
         email: '',
         mobile: '',
         password: '',
+        gender: '',
         registrationNumber: '',
+        licenseNumber: '',
         council: '',
         specialty: '',
         experience: 0,
@@ -248,11 +263,28 @@ export default {
 
   try {
     const requestData = {
-      ...this.formData,
-      degreeCertPath: this.formData.degreeCertPath || null,
-      idProofPath: this.formData.idProofPath || null,
-      licensePath: this.formData.licensePath || null,
-      photoPath: this.formData.photoPath || null
+      full_name: this.formData.fullName,
+      name: this.formData.name,
+      email: this.formData.email,
+      mobile: this.formData.mobile,
+      password: this.formData.password,
+      gender: this.formData.gender,
+      registration_number: this.formData.registrationNumber,
+      license_number: this.formData.licenseNumber,
+      council: this.formData.council,
+      specialty: this.formData.specialty,
+      experience: this.formData.experience,
+      degree: this.formData.degree,
+      clinic_name: this.formData.clinicName,
+      clinic_address: this.formData.clinicAddress,
+      location: this.formData.location,
+      role: this.formData.role,
+      profile_photo: this.formData.photoPath || null,
+      documents: JSON.stringify({
+        degreeCert: this.formData.degreeCertPath || null,
+        idProof: this.formData.idProofPath || null,
+        license: this.formData.licensePath || null
+      })
     };
 
     const response = await fetch(`${BASE_URL}/api/doctor/register`, {
