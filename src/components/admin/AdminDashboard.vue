@@ -268,7 +268,7 @@ export default {
       // Clear authentication data
       localStorage.removeItem('adminToken');
       // Redirect to login page
-      router.push('/admin/login');
+      router.push('/admin-login');
     };
     
     // Fetch dashboard data
