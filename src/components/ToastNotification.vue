@@ -110,9 +110,9 @@ export default {
   align-items: flex-start;
   padding: 16px;
   border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgb(0 0 0 / 10%);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgb(255 255 255 / 20%);
 }
 
 .toast.success {
@@ -164,7 +164,7 @@ export default {
   padding: 2px;
   border: none;
   background: none;
-  color: currentColor;
+  color: currentcolor;
   cursor: pointer;
   border-radius: 4px;
   opacity: 0.7;

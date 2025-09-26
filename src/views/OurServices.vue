@@ -1,1446 +1,488 @@
-<style scoped>
-.service-img-right img,
-.hero-animation img,
-.service-animation img,
-.icon-card img {
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
-  display: block;
-}
-
-.services-container, .service-card, .service-img-right {
-  width: 100vw;
-  max-width: 100vw;
-  box-sizing: border-box;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (max-width: 900px) {
-  .services-container, .service-card, .service-img-right {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-}
-@media (max-width: 600px) {
-  .services-container, .service-card, .service-img-right {
-    padding-left: 0.2rem;
-    padding-right: 0.2rem;
-  }
-}
-</style>
-<style scoped>
-@media (max-width: 900px) {
-  .services-container {
-    flex-direction: column !important;
-    padding: 1rem !important;
-    gap: 1.5rem !important;
-  }
-}
-@media (max-width: 600px) {
-  .services-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-  .service-card {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 1rem;
-  }
-}
-</style>
 <template>
-  <div class="our-services-root">
-    <AppHeader @login="goToLogin" />
-    <div class="our-services-content">
-      <!-- Animated Hero Section -->
-      <div class="services-hero">
-        <div class="hero-content" data-aos="fade-right">
-        
-          <div class="modern-services-grid">
+  <div class="min-h-screen flex flex-col">
+    <AppHeader />
+    
+    <main class="flex-1 pt-16 lg:pt-20">
+      <!-- Hero Section -->
+      <section class="bg-gradient-to-br from-medical-primary via-medical-secondary to-blue-600 text-white section-sm">
+        <div class="container mx-auto px-3 sm:px-4">
+          <div class="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+            <div class="text-center lg:text-left space-y-4 sm:space-y-6 animate-fade-in">
+              <h1 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight text-white mb-4 sm:mb-6">
+                Healthcare Services <span class="text-blue-200">You Can Trust</span>
+              </h1>
+              <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-blue-100">
+                From routine check-ups to specialized treatments, we're here to provide 
+                comprehensive healthcare solutions tailored to your needs.
+              </p>
+              <!-- CTA Buttons -->
+              <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
+                <button @click="scrollToServices" class="btn btn-secondary btn-large w-full sm:w-auto">
+                  <i class="fas fa-search mr-2"></i>
+                  Explore Services
+                </button>
+                <button @click="$router.push('/patient-login')" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary w-full sm:w-auto">
+                  <i class="fas fa-user-plus mr-2"></i>
+                  Get Started Today
+                </button>
+              </div>
+            </div>
+            <div class="animate-slide-up mt-6 lg:mt-0">
+              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-2xl">
+                <h3 class="text-lg sm:text-xl font-semibold text-white mb-4 sm:mb-6 text-center">Quick Service Access</h3>
+                <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                  <button @click="$router.push('/patient-login')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
+                    <i class="fas fa-calendar-check text-xl sm:text-2xl text-white mb-2"></i>
+                    <p class="text-xs sm:text-sm font-medium text-white">Book Appointment</p>
+                  </button>
+                  <button @click="$router.push('/patient-login')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
+                    <i class="fas fa-video text-xl sm:text-2xl text-white mb-2"></i>
+                    <p class="text-xs sm:text-sm font-medium text-white">Video Consult</p>
+                  </button>
+                  <button @click="$router.push('/patient-login')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
+                    <i class="fas fa-prescription-bottle text-xl sm:text-2xl text-white mb-2"></i>
+                    <p class="text-xs sm:text-sm font-medium text-white">E-Prescription</p>
+                  </button>
+                  <button @click="$router.push('/patient-login')" class="bg-white/20 hover:bg-white/30 p-3 sm:p-4 rounded-lg transition-all duration-300 text-center touch-button">
+                    <i class="fas fa-file-medical text-xl sm:text-2xl text-white mb-2"></i>
+                    <p class="text-xs sm:text-sm font-medium text-white">Health Records</p>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services Overview -->
+      <section class="section bg-gray-50">
+        <div class="container mx-auto px-3 sm:px-4">
+          <div class="text-center mb-8 sm:mb-12">
+            <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-gray-900 mb-3 sm:mb-4">Why Choose Our Services?</h2>
+            <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-gray-600 max-w-3xl mx-auto">
+              We combine advanced technology with compassionate care to deliver healthcare 
+              that's accessible, reliable, and tailored to your needs.
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            <div class="text-center bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-shield-alt text-white text-lg sm:text-xl"></i>
+              </div>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Secure & Private</h3>
+              <p class="text-sm sm:text-base text-gray-600">Your health data is protected with enterprise-grade security and HIPAA compliance.</p>
+            </div>
+            
+            <div class="text-center bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-clock text-white text-lg sm:text-xl"></i>
+              </div>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Available 24/7</h3>
+              <p class="text-sm sm:text-base text-gray-600">Round-the-clock access to healthcare professionals whenever you need them.</p>
+            </div>
+            
+            <div class="text-center bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-user-md text-white" style="font-size: 1.5rem;"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">Expert Doctors</h3>
+              <p class="text-gray-600">Licensed and experienced healthcare professionals across 30+ specialties.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- All Services Section -->
+      <section id="services" ref="servicesSection" class="section bg-white">
+        <div class="container mx-auto px-3 sm:px-4">
+          <div class="text-center mb-8 sm:mb-12">
+            <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-gray-900 mb-3 sm:mb-4">All Our Services</h2>
+            <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-gray-600 max-w-3xl mx-auto">
+              Complete healthcare solutions at your fingertips. Choose from our comprehensive range of medical services.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             <div
-              v-if="services.length > 0"
-              :key="activeService"
-              class="modern-service-block"
-              :class="services[activeService].class"
-              data-aos="fade-up"
+              v-for="(service, index) in services"
+              :key="service.id"
+              class="group bg-white rounded-2xl border border-gray-200 p-4 sm:p-6 hover:shadow-xl hover:border-medical-primary/30 transition-all duration-300 transform hover:-translate-y-1"
+              :class="{ 'sm:col-span-2 lg:col-span-1': index === 9 && services.length % 3 === 1 }"
             >
-              <div class="service-icon active">
-                <img :src="services[activeService].icon" :alt="services[activeService].title + ' icon'" style="width:48px;height:48px;object-fit:contain;" />
+              <div class="text-center">
+                <!-- Service Icon -->
+                <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110 shadow-lg">
+                  <!-- Always show emoji if available, with fallback to Font Awesome -->
+                  <div class="flex items-center justify-center w-full h-full">
+                    <span v-if="service.emoji" class="text-2xl sm:text-3xl">{{ service.emoji }}</span>
+                    <i v-else-if="service.icon" :class="service.icon" class="text-xl sm:text-2xl text-white"></i>
+                    <span v-else class="text-xl sm:text-2xl font-bold text-white">{{ service.title.charAt(0) }}</span>
+                  </div>
+                </div>
+
+                <!-- Service Title -->
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">{{ service.title }}</h3>
+                
+                <!-- Service Description -->
+                <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 leading-relaxed">{{ service.description }}</p>
+                
+                <!-- Service Features -->
+                <div class="text-left mb-4 sm:mb-6">
+                  <h4 class="text-xs sm:text-sm font-semibold text-gray-900 mb-2 sm:mb-3 uppercase tracking-wide">Key Features:</h4>
+                  <ul class="space-y-1 sm:space-y-2">
+                    <li v-for="feature in service.features" :key="feature" class="flex items-start gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
+                      <i class="fas fa-check text-green-500 text-xs mt-0.5 sm:mt-1 flex-shrink-0"></i>
+                      <span>{{ feature }}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-2 sm:gap-3">
+                  <button 
+                    @click="getStarted(service)"
+                    class="btn btn-primary w-full group-hover:shadow-lg transition-all duration-300 touch-button"
+                  >
+                    <i class="fas fa-arrow-right mr-2 text-xs sm:text-sm"></i>
+                    Get Started
+                  </button>
+                  <button 
+                    @click="learnMore(service)"
+                    class="btn btn-outline w-full text-xs sm:text-sm touch-button"
+                  >
+                    <i class="fas fa-info-circle mr-2 text-xs sm:text-sm"></i>
+                    Learn More
+                  </button>
+                </div>
               </div>
-              <h3>{{ services[activeService].title }}</h3>
-              <ul>
-                <li v-for="(feature, i) in services[activeService].features" :key="i">
-                  <i class="fas fa-check"></i> {{ feature }}
-                </li>
-              </ul>
-              <div class="service-animation">
-                <img :src="services[activeService].animation" :alt="services[activeService].title + ' animation'" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="section bg-gradient-to-r from-medical-primary to-medical-secondary text-white">
+        <div class="container mx-auto px-3 sm:px-4">
+          <div class="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+            <div class="text-center lg:text-left">
+              <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-white mb-3 sm:mb-4">Ready to Get Started?</h2>
+              <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-blue-100 mb-6 sm:mb-8">
+                Join thousands of patients who trust us with their healthcare needs. 
+                Sign up today and experience the future of medicine.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <button @click="$router.push('/patient-login')" class="btn bg-white text-medical-primary hover:bg-blue-50 w-full sm:w-auto touch-button">
+                  <i class="fas fa-user-plus mr-2 text-sm sm:text-base"></i>
+                  Sign Up as Patient
+                </button>
+                <button @click="$router.push('/doctor-login')" class="btn border-white text-white hover:bg-white/10 w-full sm:w-auto touch-button">
+                  <i class="fas fa-stethoscope mr-2 text-sm sm:text-base"></i>
+                  Join as Doctor
+                </button>
               </div>
-              <button class="service-cta" @click="navigateTo(services[activeService].ctaLink)">
-                {{ services[activeService].ctaText }}
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left:8px;vertical-align:middle;">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
+            </div>
+            <div class="text-center mt-6 lg:mt-0">
+              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8">
+                <h3 class="text-lg sm:text-2xl font-bold text-white mb-4 sm:mb-6">Join Our Community</h3>
+                <div class="grid grid-cols-2 gap-4 sm:gap-6">
+                  <div class="text-center">
+                    <i class="fas fa-user-md text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
+                    <div class="text-2xl sm:text-3xl font-bold text-white">98%</div>
+                    <div class="text-xs sm:text-sm text-blue-100">Satisfaction Rate</div>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-clock text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
+                    <div class="text-2xl sm:text-3xl font-bold text-white">15min</div>
+                    <div class="text-xs sm:text-sm text-blue-100">Avg Wait Time</div>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-user-friends text-md text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
+                    <div class="text-2xl sm:text-3xl font-bold text-white">500k+</div>
+                    <div class="text-xs sm:text-sm text-blue-100">Consultations</div>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-calendar text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
+                    <div class="text-2xl sm:text-3xl font-bold text-white">24/7</div>
+                    <div class="text-xs sm:text-sm text-blue-100">Support</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="hero-animation" data-aos="fade-left">
-          <img src="https://media.giphy.com/media/3oKIPEqDGUULpEU0aQ/giphy.gif" alt="Doctor and Healthcare" />
-        </div>
-      </div>
-      
-  <!-- Removed duplicate services grid section -->
+      </section>
+    </main>
 
-      <!-- Emergency Banner -->
-      <div class="emergency-banner" data-aos="fade-up" data-aos-delay="200">
-        <div class="banner-content">
-          <div class="hospital-icon-section" style="display: flex; justify-content: flex-start; align-items: center; height: 100%;">
-            <img src="@/assets/icons/telephone.gif" alt="Hospital Icon" style="width:38px;height:40px;object-fit:contain;" />
-          </div>
-           <!-- Animated Road with Medicine Icon Running to Phone -->
-          <div class="road-animation-container">
-            <svg class="road-svg" viewBox="0 0 1100 80" width="100%" height="80">
-              <!-- Road -->
-              <rect x="0" y="35" width="1100" height="10" rx="5" fill="#444" />
-              <!-- Road dashed line -->
-              <rect x="0" y="39" width="1100" height="2" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="32,18" />
-            </svg>
-            <div class="banner-text" style="flex:1;">
-              <h3>24/7 Emergency Support</h3>
-              <p>Immediate assistance when you need it most</p>
-            </div>
-            <div class="hospital-icon-section" style="justify-content: flex-end; align-items: center; flex:0 0 60px; margin-left: 24px;">
-              <img src="@/assets/icons/clinic.gif" alt="Hospital Icon" style="margin-top:10px;width:38px;height:40px;object-fit:contain;" />
-            </div>
-            <img
-              src="@/assets/icons/medicine.svg"
-              alt="Medicine Icon"
-              class="medicine-on-road"
-            />
-          </div>
-         
-        </div>
-      </div>
-
-     
-
-      <!-- Back to Top Button -->
-      <button 
-        class="back-to-top" 
-        @click="scrollToTop"
-        :class="{ 'visible': showBackToTop }"
-        aria-label="Back to top"
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
     <AppFooter />
-    <ChatButton />
   </div>
 </template>
 
 <script>
-import AppHeader from '@/views/AppHeader.vue';
-import ChatButton from '@/components/ChatButton.vue';
-import AppFooter from '@/views/AppFooter.vue';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AppHeader from './AppHeader.vue';
+import AppFooter from './AppFooter.vue';
 
 export default {
   name: 'OurServices',
   components: {
     AppHeader,
-    ChatButton,
     AppFooter
   },
   data() {
     return {
-  activeService: 0,
-  showBackToTop: false,
-  showServices: false,
-  stats: [
-        { number: '500', label: 'Expert Doctors' },
-        { number: '10K', label: 'Happy Patients' },
-        { number: '24/7', label: 'Support' },
-        { number: '50+', label: 'Specialties' }
-      ],
       services: [
         {
-          class: 'patient',
-          icon: require('@/assets/icons/medicine.svg'),
-          title: 'Patient Services',
-          features: [
-            'Book in-clinic & online consultations',
-            'Verified doctors directory',
-            'Digital health records',
-            'Appointment reminders'
-          ],
-          ctaText: 'Book Appointment',
-          ctaLink: '/patient-login',
-          animation: require('@/assets/images/10.webp')
+          id: 1,
+          title: 'Doctor Appointments',
+          description: 'Both In-clinic & Online Consultations. Instant booking, no waiting lines.',
+          icon: 'fas fa-calendar-check',
+          emoji: '📅',
+          features: ['Instant Booking', 'No Waiting Lines', 'In-clinic Visits', 'Online Consultations']
         },
         {
-          class: 'doctor',
-          icon: require('@/assets/icons/visiting.svg'),
-          title: 'Doctor Services',
-          features: [
-            'Profile management',
-            'Appointment scheduling',
-            'Video consultations',
-            'Earnings dashboard'
-          ],
-          ctaText: 'Join as Doctor',
-          ctaLink: '/doctor-login',
-          animation: require('@/assets/icons/Prescriptions.svg')
+          id: 2,
+          title: 'Video Consultations',
+          description: 'Safe & secure telemedicine. Patients can connect anytime, anywhere.',
+          icon: 'fas fa-video',
+          emoji: '📹',
+          features: ['HD Video Quality', 'Secure & Private', 'Connect Anywhere', 'Multiple Devices']
         },
         {
-          class: 'common',
-          icon: require('@/assets/icons/Always Available.svg'),
-          title: 'Common Services',
-          features: [
-            'Secure payments',
-            '24/7 support',
-            'Mobile access',
-            'Trusted platform'
-          ],
-          ctaText: 'Learn More',
-          ctaLink: '/contact',
-          animation: require('@/assets/images/Footer1.svg')
+          id: 3,
+          title: 'E-Prescriptions',
+          description: 'Instant digital prescription after consultation. Paperless, easy to store & share.',
+          icon: 'fas fa-prescription-bottle',
+          emoji: '💊',
+          features: ['Instant Digital Rx', 'Paperless System', 'Easy Storage', 'Quick Sharing']
+        },
+        {
+          id: 4,
+          title: 'Digital Health Records',
+          description: 'Store reports, prescriptions, and past consultations. Access anytime in the app.',
+          icon: 'fas fa-file-medical',
+          emoji: '📋',
+          features: ['Cloud Storage', 'Complete History', 'Easy Access', 'Secure Backup']
+        },
+        {
+          id: 5,
+          title: 'Specialist Doctors',
+          description: 'Cover 20–30+ specialties (Cardiology, Dermatology, Pediatrics, etc.). Find the right doctor quickly.',
+          icon: 'fas fa-stethoscope',
+          emoji: '🩺',
+          features: ['30+ Specialties', 'Expert Doctors', 'Quick Search', 'Verified Specialists']
+        },
+        {
+          id: 6,
+          title: 'Mental Health Support',
+          description: 'Counseling & therapy services. Confidential, safe space for emotional health.',
+          icon: 'fas fa-brain',
+          emoji: '🧠',
+          features: ['Licensed Therapists', 'Confidential Sessions', 'Safe Environment', 'Emotional Support']
+        },
+        {
+          id: 7,
+          title: '24/7 Availability',
+          description: 'Doctors and emergency support available round the clock. Your health never waits, neither do we.',
+          icon: 'fas fa-clock',
+          emoji: '⏰',
+          features: ['Always Available', 'Emergency Support', 'Round the Clock', 'Instant Response']
+        },
+        {
+          id: 8,
+          title: 'Lab Tests & Diagnostics',
+          description: 'Book blood tests, X-rays, or other diagnostics. At-home sample collection option.',
+          icon: 'fas fa-flask',
+          emoji: '🧪',
+          features: ['Online Booking', 'Home Collection', 'Digital Reports', 'Quick Results']
+        },
+        {
+          id: 9,
+          title: 'Medicine Ordering',
+          description: 'Tie up with pharmacies for prescriptions with doorstep delivery.',
+          icon: 'fas fa-pills',
+          emoji: '💊',
+          features: ['Pharmacy Network', 'Doorstep Delivery', 'Easy Ordering', 'Medicine Tracking']
+        },
+        {
+          id: 10,
+          title: 'Insurance & Payments',
+          description: 'Support insurance coverage & secure payments. Building patient trust with transparency.',
+          icon: 'fas fa-shield-alt',
+          emoji: '🛡️',
+          features: ['Insurance Support', 'Secure Payments', 'Transparent Billing', 'Multiple Options']
         }
       ]
-    }
+    };
   },
   mounted() {
-    AOS.init({
-      duration: 800,
-      easing: 'ease-in-out',
-      once: true,
-      mirror: false
-    });
-    window.addEventListener('scroll', this.handleScroll);
-    // Auto-swap carousel for services
-    this.carouselInterval = setInterval(() => {
-      this.activeService = (this.activeService + 1) % this.services.length;
-    }, 3000);
+    // Reset body overflow in case coming from a page with modals
+    document.body.style.overflow = '';
+    // Smooth scroll behavior
+    this.setupSmoothScroll();
   },
   methods: {
-    handleScroll() {
-      this.showBackToTop = window.scrollY > 500;
+    scrollToServices() {
+      const servicesSection = this.$refs.servicesSection;
+      if (servicesSection) {
+        servicesSection.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
     },
     
-    scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+    getStarted(service) {
+      // Route based on service type
+      if (service.id === 1 || service.id === 2 || service.id === 5) {
+        // Appointment, Video consultation, or Specialist services
+        this.$router.push('/patient-login');
+      } else if (service.id === 3 || service.id === 4) {
+        // E-prescriptions or Health records
+        this.$router.push('/patient-login');
+      } else if (service.id === 6) {
+        // Mental health support
+        this.$router.push('/patient-login');
+      } else if (service.id === 8 || service.id === 9) {
+        // Lab tests or Medicine ordering
+        this.$router.push('/patient-login');
+      } else {
+        // Default to patient signup
+        this.$router.push('/patient-login');
+      }
+    },
+    
+    learnMore(service) {
+      // Scroll to service section or show more info
+      this.scrollToServices();
+      
+      // You can add a toast notification or modal here
+      this.$nextTick(() => {
+        // Optional: Highlight the specific service
+        const serviceElements = document.querySelectorAll('.group');
+        serviceElements.forEach((el, index) => {
+          if (index === service.id - 1) {
+            el.classList.add('ring-2', 'ring-medical-primary', 'ring-opacity-50');
+            setTimeout(() => {
+              el.classList.remove('ring-2', 'ring-medical-primary', 'ring-opacity-50');
+            }, 3000);
+          }
+        });
       });
     },
     
-    callEmergency() {
-      window.location.href = 'tel:101';
-    },
-    
-    navigateTo(route) {
-      this.$router.push(route);
-    },
-    
-    getListOfAllDoctors() {
-      // Implementation here
-    },
-    learnMore(service) {
-      // Smooth scroll to the selected service section
-      const element = document.querySelector(`.service-box.${service}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-      // You can add more specific logic for each service
-      switch(service) {
-        case 'appointment':
-          // Handle appointment specific logic
-          break;
-        case 'online':
-          // Handle online visit logic
-          break;
-        // Add more cases as needed
-      }
-    },
-    goToLogin() {
-      this.$router.push({ name: 'Login' });
-      },
-
-      seeMoreStats() {
-        this.showServices = true;
-        this.$nextTick(() => {
-          const section = this.$refs.servicesSection;
-          if (section && section.scrollIntoView) {
-            section.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      }
-  },
-  beforeUnmount() {
-    AOS.refresh();
-    window.removeEventListener('scroll', this.handleScroll);
-    if (this.carouselInterval) {
-      clearInterval(this.carouselInterval);
+    setupSmoothScroll() {
+      // Add smooth scrolling for better UX
+      document.documentElement.style.scrollBehavior = 'smooth';
     }
   }
-}
+};
 </script>
 
 <style scoped>
-:root {
-  --primary: #275FD4;
-  --primary-light: #5C9EF0;
-  --secondary: #4CAF50;
-  --accent: #FF9800;
-  --text: #ffffff;
-  --light-bg: #f8f9fa;
-  --white: #ffffff;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+.animate-fade-in {
+  animation: fadeIn 1s ease-in-out;
 }
 
-.our-services-root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--light-bg);
+.animate-slide-up {
+  animation: slideUp 1s ease-out;
 }
 
-.our-services-content {
-  flex: 1;
-  padding: 2rem 5%;
-  max-width: 1400px;
-  margin: 0 auto;
-  width: 100%;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.see-more-btn {
-  margin-top: 1.5rem;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.7rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(39, 95, 212, 0.08);
-  transition: background 0.2s, transform 0.2s;
-}
-.see-more-btn:hover {
-  background: var(--primary-light);
-  transform: translateY(-2px);
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Hero Section */
-.services-hero {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 3rem 0 2rem;
-  gap: 3rem;
-}
-
-.hero-content {
-  flex: 1;
-  max-width: 600px;
-}
-
-.hero-content h1 {
-  font-size: 3rem;
-  color: var(--text);
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
-}
-
-.hero-content h1 .highlight {
-  color: var(--primary);
-  position: relative;
-  display: inline-block;
-}
-
-.hero-content h1 .highlight::after {
-  content: '';
-  position: absolute;
-  bottom: 5px;
-  left: 0;
-  width: 100%;
-  height: 8px;
-  background: linear-gradient(90deg, var(--primary-light), transparent);
-  z-index: -1;
-  border-radius: 4px;
-}
-
-.hero-content .subtitle {
-  font-size: 1.2rem;
-  color: #ffffff;
-  margin-bottom: 2rem;
-  line-height: 1.6;
-}
-
-.hero-animation {
-  flex: 1;
-  max-width: 500px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  animation: float 6s ease-in-out infinite;
-}
-
-.hero-animation img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.hero-stats {
-  display: flex;
-  gap: 2rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
-}
-
-.stat {
-  text-align: center;
-  padding: 1rem;
-  background: var(--white);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  min-width: 120px;
-  transition: transform 0.3s ease;
-}
-
-.stat:hover {
-  transform: translateY(-5px);
-}
-
-.stat-number {
-  display: block;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 0.5rem;
-}
-
-.stat-label {
-  font-size: 0.9rem;
-  color: #ffffff;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
-}
-
-/* Section Header */
-.section-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.section-header h2 {
-  font-size: 2.2rem;
-  color: var(--text);
-  margin-bottom: 1rem;
-  position: relative;
-  display: inline-block;
-}
-
-.section-header h2::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 4px;
-  background: var(--primary);
-  border-radius: 2px;
-}
-
-.section-header p {
-  color: #ffffff;
-  font-size: 1.1rem;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-/* Modern Services Grid */
-.modern-services-grid {
-  /* display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin: 3rem 0; */
-}
-
-.modern-service-block {
-  background: #fff;
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.modern-service-block:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-}
-
-.service-icon {
-  width: 70px;
-  height: 70px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  font-size: 1.8rem;
-  color: white;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 1;
-}
-
-.service-icon::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: inherit;
-  border-radius: inherit;
-  opacity: 0.15;
-  z-index: -1;
-  transition: all 0.3s ease;
-}
-
-.service-icon.active {
-  transform: rotateY(180deg);
-}
-
-.patient .service-icon {
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-}
-
-.doctor .service-icon {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-}
-
-.common .service-icon {
-  background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
-}
-
-.modern-service-block h3 {
-  font-size: 1.5rem;
-  color: var(--text);
-  margin-bottom: 1.2rem;
-  font-weight: 600;
-}
-
-.modern-service-block ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
-}
-
-.modern-service-block li {
-  margin-bottom: 0.8rem;
-  color: #555;
-  display: flex;
-  align-items: flex-start;
-  line-height: 1.5;
-  font-size: 1rem;
-}
-
-.modern-service-block li i {
-  color: var(--primary);
-  margin-right: 10px;
-  margin-top: 4px;
-  font-size: 0.8rem;
-}
-
-.service-animation {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 120px;
-  height: 120px;
-  opacity: 0.1;
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
-
-.modern-service-block:hover .service-animation {
-  opacity: 0.2;
+.group:hover .service-icon {
   transform: scale(1.1);
 }
 
-.service-animation img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+/* Scrollbar hide for better mobile experience */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.service-cta {
-  display: inline-flex;
-  align-items: center;
-  background: transparent;
-  border: none;
-  color: var(--primary);
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  padding: 0.5rem 0;
-  transition: all 0.3s ease;
-  position: relative;
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
-.service-cta::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transition: width 0.3s ease;
-}
-
-.service-cta:hover {
-  padding-left: 10px;
-}
-
-.service-cta:hover::after {
-  width: 100%;
-}
-
-.service-cta i {
-  margin-left: 8px;
-  transition: transform 0.3s ease;
-}
-
-.service-cta:hover i {
-  transform: translateX(5px);
-}
-
-/* Emergency Banner */
-.emergency-banner {
-  background: linear-gradient(135deg, #ff4b4b 0%, #ff6b6b 100%);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  /* margin: 4rem 0; */
-  color: white;
-  box-shadow: 0 10px 30px rgba(255, 75, 75, 0.2);
-  overflow: hidden;
-  position: relative;
-}
-
-.road-animation-container {
-  position: relative;
-  width: 100%;
-  /* max-width: 600px;
-  margin: 0 auto 2.5rem auto; */
-  height: 90px;
-  display: flex;
-  /* align-items: flex-end; */
-  justify-content: flex-start;
-}
-.road-svg {
-  position: absolute;
-  left: 0;
-  top: 19px;
-  /* width: 100%;
-  height: 80px; */
-  z-index: 0;
-}
-.medicine-on-road {
-  position: absolute;
-  left: 0;
-  top: 10px;
-  width: 48px;
-  height: 48px;
-  z-index: 2;
-  animation: medicine-move 3.5s linear infinite;
-  filter: drop-shadow(0 2px 8px #275fd4aa);
-}
-@keyframes medicine-move {
-  0% { left: 0; }
-  90% { left: calc(100% - 70px); }
-  100% { left: 0; }
-}
-.phone-destination {
-  position: absolute;
-  right: 0;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 3;
-}
-.phone-label {
-  color: #275FD4;
-  font-size: 0.95rem;
-  margin-top: 2px;
-  font-weight: 600;
-}
-
-.emergency-banner::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif') no-repeat;
-  background-size: cover;
-  opacity: 0.05;
-  pointer-events: none;
-}
-
-.banner-content {
-  display: flex;
-  align-items: center;
-  /* justify-content: space-between;
-  position: relative;
-  z-index: 1;
-  flex-wrap: wrap;
-  gap: 1.5rem; */
-  height: 60px;
-}
-
-.banner-text h3 {
-  font-size: 2.0rem;
-  margin-bottom: 1.0rem;
-  font-weight: 600;
-}
-
-.banner-text p {
-  opacity: 0.9;
-  font-size: 1rem;
-  margin: 0;
-}
-
-.emergency-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid white;
-  color: white;
-  padding: 0.7rem 1.5rem;
-  border-radius: 50px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
-}
-
-.emergency-btn:hover {
-  background: white;
-  color: #ff4b4b;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.pulse-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
-  }
-  70% {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-  }
-}
-
-/* Back to Top Button */
-.back-to-top {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--primary);
-  color: white;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  box-shadow: 0 5px 20px rgba(39, 95, 212, 0.3);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(20px);
-  transition: all 0.3s ease;
-  z-index: 1000;
-}
-
-.back-to-top.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.back-to-top:hover {
-  background: var(--primary-light);
-  transform: translateY(-3px) !important;
-  box-shadow: 0 8px 25px rgba(39, 95, 212, 0.4);
-}
-
-/* Responsive Adjustments */
+/* Ensure proper spacing and responsive design */
 @media (max-width: 768px) {
-  .banner-content {
-    flex-direction: column;
-    text-align: center;
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   
-  .emergency-btn {
-    width: 100%;
-    justify-content: center;
+  .grid {
+    gap: 1.5rem;
   }
-  
-  .pulse-icon {
-    margin: 0 auto;
-  }
-  
-  .back-to-top {
-    width: 45px;
-    height: 45px;
-    font-size: 1rem;
-    bottom: 1.5rem;
-    right: 1.5rem;
-  }
-}
-@media (max-width: 1100px) {
-  .modern-services-grid {
-    flex-direction: column;
-    gap: 2rem;
-    align-items: stretch;
-  }
-  .modern-service-block {
-    max-width: 100%;
-    min-width: 0;
-  }
-}
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
 }
 
-.our-services-root {
-  min-height: 100vh;
+/* Custom styling for service cards */
+.service-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Ensure Font Awesome icons are properly displayed */
+.fas, .fa, .far, .fab {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+  font-weight: 900 !important;
+  display: inline-block;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Service icon specific styles */
+.service-icon-container {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  background-color: #f8f9fa;
-}
-
-.our-services-content {
-  flex: 1;
-  padding: 2rem 5%;
-  max-width: 1400px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.services-intro {
-  text-align: center;
-  margin: 2rem 0 4rem;
-  padding: 0 1rem;
-}
-
-.services-intro h1 {
-  font-size: 2.8rem;
-  color: #275FD4;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  background: linear-gradient(45deg, #275FD4, #5C9EF0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.services-intro .subtitle {
-  font-size: 1.2rem;
-  color: #ffffff;
-  max-width: 700px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-.services-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-bottom: 4rem;
-}
-
-.service-box {
-  display: flex;
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  min-height: 300px;
-}
-
-.service-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-}
-
-.service-content {
-  flex: 1;
-  padding: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.service-content h3 {
-  font-size: 1.8rem;
-  margin: 1rem 0;
-  color: #2c3e50;
-}
-
-.service-content p {
-  color: #ffffff;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
-}
-
-.service-icon {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  font-size: 1.8rem;
-  color: white;
-  margin-bottom: 1rem;
-}
-
-.service-icon.appointment { background: #5C9EF0; }
-.service-icon.online { background: #4CAF50; }
-.service-icon.medicine { background: #FF9800; }
-.service-icon.insurance { background: #9C27B0; }
-
-.service-img-right {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  min-height: 300px;
-}
-
-.service-gif {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
 }
 
-.service-box:hover .service-gif {
-  transform: scale(1.05);
-}
-
-.learn-more-btn {
-  align-self: flex-start;
-  background: none;
-  border: none;
-  color: #275FD4;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0.5rem 0;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.learn-more-btn:hover {
-  color: #1a4a9e;
-  transform: translateX(5px);
-}
-
-.emergency-note {
-  background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
-  border-left: 5px solid #f44336;
-  padding: 1.5rem 2rem;
-  border-radius: 10px;
-  margin: 3rem auto;
-  max-width: 800px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  animation: pulse 2s infinite;
-}
-
-.pulse-icon {
-  background: #f44336;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Fallback for when Font Awesome doesn't load */
+.icon-fallback {
+  font-size: 2rem;
+  font-weight: bold;
   color: white;
-  font-size: 1.5rem;
-  animation: bounce 2s infinite;
-}
-
-.emergency-note p {
-  margin: 0;
-  font-size: 1.1rem;
-  color: #d32f2f;
-  font-weight: 500;
-}
-
-.emergency-note strong {
-  font-weight: 700;
-}
-
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
-}
-
-/* Responsive Design */
-@media (max-width: 992px) {
-  .service-box {
-    flex-direction: column;
-  }
-  
-  .service-img-right {
-    order: -1;
-    min-height: 200px;
-  }
-  
-  .services-intro h1 {
-    font-size: 2.2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .our-services-content {
-    padding: 1rem;
-  }
-  
-  .services-intro h1 {
-    font-size: 1.8rem;
-  }
-  
-  .service-content {
-    padding: 1.5rem;
-  }
-  
-  .service-content h3 {
-    font-size: 1.5rem;
-  }
-  
-  .emergency-note {
-    flex-direction: column;
-    text-align: center;
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .services-intro h1 {
-    font-size: 1.6rem;
-  }
-  
-  .service-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 1.5rem;
-  }
-  
-  .emergency-note p {
-    font-size: 1rem;
-  }
-}
-/* Header styles */
-.header {
-  /* background: #275FD4; */
-  color: #fff;
-  padding: 0.5rem 0;
-}
-.header__container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-.header__logo {
-  height: 40px;
-}
-.header__nav {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-}
-.header__nav a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 500;
-}
-.btn--primary {
-  background: #5C9EF0;
-  color: #fff;
-  border-radius: 6px;
-  border: none;
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-left: 0.5rem;
-}
-.btn--small { font-size: 0.9rem; padding: 0.4rem 1rem; }
-.btn--large { font-size: 1.2rem; padding: 0.8rem 2rem; }
-.btn--medium { font-size: 1rem; padding: 0.7rem 1.5rem; }
-
-/* Masthead styles */
-.masthead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(90deg, #5C9EF0 60%, #fff 100%);
-  padding: 2.5rem 0;
-  max-width: 1100px;
-  margin: 0 auto;
-  border-radius: 16px;
-  margin-top: 2rem;
-}
-.masthead__content {
-  flex: 1;
-  padding-left: 2rem;
-}
-.masthead__content h1 {
-  font-size: 2.5rem;
-  color: #002B5C;
-  margin-bottom: 1rem;
-}
-.masthead__content p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  color: #333;
-}
-.masthead__image img {
-  width: 400px;
-  border-radius: 16px;
-}
-
-/* Icon card row styles */
-.icon-card-row {
-  background: #f7f7f7;
-  padding: 2rem 0;
-  margin-top: 2rem;
-}
-.icon-card-row h2 {
-  text-align: center;
-  font-size: 2rem;
-  color: #275FD4;
-  margin-bottom: 2rem;
-}
-.icon-card-row__cards {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.icon-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  padding: 1.5rem;
-  min-width: 220px;
-  max-width: 240px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.icon-card img {
-  width: 57px;
-  margin-bottom: 1rem;
-}
-.icon-card h3 {
-  color: #275FD4;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-.icon-card p {
-  color: #333;
-  font-size: 1rem;
-}
-
-/* Testimonials styles */
-.testimonials {
-  background: #fff;
-  padding: 2rem 0;
-  margin-top: 2rem;
-}
-.testimonials h2 {
-  text-align: center;
-  color: #275FD4;
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-.testimonials__cards {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.testimonial-card {
-  background: #f7f7f7;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  padding: 1.5rem;
-  min-width: 260px;
-  max-width: 300px;
-  text-align: left;
-}
-.testimonial-card blockquote {
-  font-style: italic;
-  color: #275FD4;
-  margin-bottom: 1rem;
-}
-.testimonial-card strong {
-  color: #002B5C;
-  font-size: 1.1rem;
-}
-.testimonial-card div {
-  color: #333;
-  font-size: 1rem;
-}
-
-/* CTA Footer styles */
-.cta-footer {
-  margin-top: 2rem;
-}
-.cta-footer__bg {
-  background: linear-gradient(90deg, #5C9EF0 60%, #C8D67E 100%);
-  border-radius: 16px;
-  padding: 2rem 0;
-  position: relative;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-.cta-footer__container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-}
-.cta-footer__icon {
-  width: 80px;
-  height: 80px;
-}
-.cta-footer__text h2 {
-  color: #002B5C;
-  font-size: 1.6rem;
-  margin-bottom: 0.5rem;
-}
-.cta-footer__text div {
-  color: #333;
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-}
-.cta-footer__button .btn {
-  background: #275FD4;
-  color: #fff;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  padding: 0.8rem 2rem;
 }
 
-/* Existing styles for home container, subtitle, actions, smart search, specialties, top doctors */
-.services-fixed-container {
-  background: #f9fbff;
-  padding-bottom: 2rem;
+/* Button icon styles */
+.btn i {
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
 }
-.services-page {
-  max-width: 1100px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 1vw;
-  box-sizing: border-box;
-}
-.services-list {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-.service-box {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
-  border-radius: 14px;
-  padding: 1.5rem 2rem;
-  box-shadow: 0 2px 8px rgba(44,62,80,0.07);
-  font-size: 1.08rem;
-  margin-bottom: 0.5rem;
-  background: #f7f7f7;
-  border-left: 7px solid #275FD4;
-  width: 100%;
-  min-width: 0;
-  transition: 
-    transform 0.18s cubic-bezier(.4,0,.2,1),
-    box-shadow 0.18s cubic-bezier(.4,0,.2,1),
-    background 0.18s cubic-bezier(.4,0,.2,1),
-    border-color 0.18s cubic-bezier(.4,0,.2,1);
-  will-change: transform, box-shadow, background, border-color;
-}
-.service-box:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 24px rgba(44,62,80,0.14);
-  background: #f0f8ff;
-  border-left-color: #1565c0;
-  cursor: pointer;
-}
-.service-box strong {
-  color: #275FD4;
-  font-size: 1.18rem;
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-.service-box.appointment { border-left-color: #5C9EF0; background: #eaf3fc; }
-.service-box.appointment:hover { background: #d6eafd; border-left-color: #1565c0; }
-.service-box.online { border-left-color: #4CAF50; background: #eafaf1; }
-.service-box.online:hover { background: #d2f5e3; border-left-color: #388e3c; }
-.service-box.medicine { border-left-color: #FF9800; background: #fff6e5; }
-.service-box.medicine:hover { background: #ffe2b8; border-left-color: #f57c00; }
-.service-box.insurance { border-left-color: #9C27B0; background: #f3eafc; }
-.service-box.insurance:hover { background: #e3d6f7; border-left-color: #6d1b7b; }
-.service-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-}
-.service-icon {
-  flex-shrink: 0;
-  font-size: 2.1rem;
-  margin-bottom: 0.2rem;
-  color: #5C9EF0;
-  background: #fff;
-  border-radius: 50%;
-  padding: 0.4rem 0.6rem;
-  box-shadow: 0 2px 8px rgba(44,62,80,0.07);
-  border: 1.5px solid #e3eafc;
-  transition: color 0.2s;
-}
-.service-img-right {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-left: 1.2rem;
-}
-.service-img-right img {
-  width: 90px;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 18px;
-  border: 2px solid #e3eafc;
-  box-shadow: 0 2px 8px rgba(44,62,80,0.07);
-}
-@media (max-width: 1200px) {
-  .services-page {
-    max-width: 98vw;
-    padding: 0 1vw;
-  }
-}
-@media (max-width: 900px) {
-  .services-page {
-    max-width: 100vw;
-    padding: 0 0.5vw;
-  }
-  .service-box {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-  }
-  .service-img-right {
-    margin-left: 0;
-    margin-top: 1rem;
-    justify-content: flex-start;
-  }
-  .service-img-right img {
-    width: 70px;
-    height: 70px;
-    border-radius: 14px;
-  }
-}
-@media (max-width: 600px) {
-  .service-box {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .service-img-right {
-    margin-left: 0;
-    margin-top: 1rem;
-    justify-content: flex-start;
-  }
-}
-/* Ensure footer stays at the bottom */
-.our-services-root {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: #764ba2;
-}
-.our-services-content {
-  flex: 1 0 auto;
+
+/* Hero section icon styles */
+.hero-btn i {
+  font-size: 1rem;
+  margin-right: 0.5rem;
 }
 </style>
-

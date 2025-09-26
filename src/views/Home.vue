@@ -1,823 +1,932 @@
-/* Responsive image and section styles for Home.vue */
-.masthead__image img,
-.doctor-mini-avatar img,
-.doctor-avatar-large img,
-.doctor-avatar-img,
-.step-image img,
-.author-avatar img {
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
-  display: block;
-}
-
-.main-content, .masthead, .suggestions-container, .reviews-grid, .cta-section {
-  width: 100vw;
-  max-width: 100vw;
-  box-sizing: border-box;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (max-width: 900px) {
-  .main-content, .masthead, .suggestions-container, .reviews-grid, .cta-section {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-}
-@media (max-width: 600px) {
-  .main-content, .masthead, .suggestions-container, .reviews-grid, .cta-section {
-    padding-left: 0.2rem;
-    padding-right: 0.2rem;
-  }
-}
-/* Extra responsive improvements for Home.vue */
-@media (max-width: 1200px) {
-  .masthead__content, .suggestions-container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
-@media (max-width: 900px) {
-  .masthead__content, .suggestions-container {
-    flex-direction: column;
-    gap: 2rem;
-    padding: 0 0.5rem;
-  }
-  .doctors-carousel {
-    flex-direction: column;
-    gap: 1rem;
-  }
-}
-@media (max-width: 600px) {
-  .masthead, .main-content, .suggestions-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-  .doctor-mini-card, .suggestion-card {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .stats-row, .showcase-stats {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .cta-buttons {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
 <template>
-  <div class="layout-container">
-    <div class="layout-content">
-      <AppHeader @login="goToLogin" />
-      <div class="main-content">
-        <!-- Hero/Masthead or Smart Doctor Recommendations -->
-        <section v-if="!showSmartDoctorSection" class="masthead">
-          <div class="masthead__content">
-            <div class="masthead__text">
-              <h1 class="animated-title dynamic-hero-title">
-                <span class="highlight">Online doctor visits,</span>
-                <transition-group name="swap-fade" tag="span">
-                  <span :key="currentHeroPhrase" class="swap-phrase">{{ currentHeroPhrase }}</span>
-                </transition-group>
-              </h1>
-              <div class="masthead-subtitle stylish-paragraph">
-                <span class="fade-in-text">
-                  <span class="subtitle-main">Your health, <span class="subtitle-highlight">your way.</span></span>
-                  <span class="subtitle-animated">
-                    <transition-group name="swap-fade" tag="span">
-                      <span :key="currentSubtitle" class="subtitle-swap">{{ currentSubtitle }}</span>
-                    </transition-group>
-                  </span>
-                </span>
-              </div>
-              <div class="cta-buttons">
-                <button @click="showLearnMoreSections" class="btn btn--secondary btn--large">
-                  <i class="fas fa-info-circle"></i>
-                  Learn More
-                </button>
-              </div>
-              <div class="stats-row">
-                <div class="stat-item">
-                  <div class="stat-number">{{ animatedStats.doctors }}+</div>
-                  <div class="stat-label">Expert Doctors</div>
+  <div class="min-h-screen flex flex-col">
+    <AppHeader />
+    
+    <!-- Main Content with proper spacing for fixed header -->
+    <main class="flex-1 pt-5 lg:pt-5">
+      
+      <!-- Hero Section -->
+      <section v-if="!showSmartDoctorSection" class="bg-gradient-to-br from-medical-primary via-medical-secondary to-blue-600 text-white section">
+        <div class="container mx-auto px-3 sm:px-4">
+          <div class="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
+                        <!-- Hero Visual Content -->
+                        <div class="animate-slide-up mt-6 lg:mt-0">
+              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-2xl">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+                  <h3 class="text-lg sm:text-xl font-semibold text-white">Top Rated Doctors</h3>
+                  <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+                    <span class="flex items-center gap-1 text-green-300 text-sm">
+                      <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+                      Live Now
+                    </span>
+                    <button @click="showAllDoctorsList" class="btn btn-primary btn-small w-full sm:w-auto">Find All Doctors</button>
+                  </div>
                 </div>
-                <div class="stat-item">
-                  <div class="stat-number">{{ animatedStats.patients }}+</div>
-                  <div class="stat-label">Happy Patients</div>
+                
+                <!-- Doctor Cards -->
+                <div class="space-y-3 sm:space-y-4">
+                  <div v-if="loadingDoctors" class="text-center text-white py-8 sm:py-10">
+                    <i class="fas fa-spinner fa-spin text-xl sm:text-2xl"></i>
+                    <p class="mt-2 text-sm sm:text-base">Loading doctors...</p>
+                  </div>
+                  <div v-else-if="topRatedDoctors.length === 0" class="text-center text-white py-8 sm:py-10">
+                    <p class="text-sm sm:text-base">No top rated doctors available at the moment.</p>
+                  </div>
+                  <div
+                    v-else
+                    v-for="(doctor, index) in topRatedDoctors"
+                    :key="doctor.id" 
+                    class="relative bg-white rounded-xl p-3 sm:p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-gray-800"
+                    :style="{ animationDelay: `${index * 0.2}s` }"
+                  >
+                    <button @click="openDoctorProfileModal(doctor)" class="absolute top-2 sm:top-3 right-2 sm:right-3 bg-gray-100 hover:bg-gray-200 rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 transition-colors z-10 touch-friendly" title="View Profile">
+                      <span class="text-lg sm:text-xl">👁️</span>
+                    </button>
+
+                    <div class="flex items-start gap-3 sm:gap-4">
+                      <!-- Avatar -->
+                      <div class="relative flex-shrink-0">
+                        <img v-if="doctor.profile_photo" :src="doctor.profile_photo" :alt="doctor.full_name" class="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover" />
+                        <div v-else class="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gray-200 flex items-center justify-center">
+                            <span class="text-lg sm:text-xl font-bold text-gray-500">{{ getInitials(doctor.full_name) }}</span>
+                        </div>
+                        <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-yellow-400 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-lg shadow-md flex items-center gap-1">
+                            <span class="text-xs">⭐</span>
+                            <span class="font-bold text-xs sm:text-sm">{{ doctor.average_rating > 0 ? doctor.average_rating.toFixed(1) : 'New' }}</span>
+                        </div>
+                      </div>
+                      <!-- Info -->
+                      <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-gray-900 truncate text-sm sm:text-base">{{ doctor.full_name || doctor.name }}</h4>
+                        <p class="text-xs sm:text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
+                        <div class="text-xs text-gray-500 mt-1 sm:mt-2 space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 text-center text-gray-400">💼</span>
+                                <span>{{ doctor.experience }} years exp.</span>
+                            </div>
+                            <div class="flex items-center gap-2" v-if="doctor.languages && doctor.languages.length">
+                                <span class="w-3 text-center text-gray-400">🌐</span>
+                                <span class="truncate">{{ doctor.languages.join(', ') }}</span>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-3 sm:mt-4">
+                        <button @click="bookAppointment(doctor)" class="btn btn-primary w-full btn-small touch-button text-xs sm:text-sm">
+                            Book Appointment
+                        </button>
+                    </div>
+                  </div>
                 </div>
-                <div class="stat-item">
-                  <div class="stat-number">{{ animatedStats.consultations }}+</div>
-                  <div class="stat-label">Consultations</div>
+                
+                <!-- Bottom Stats -->
+                <div class="grid grid-cols-2 gap-3 sm:gap-4 mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-white/20">
+                  <div class="flex items-center gap-2 text-white">
+                    <span class="text-blue-200 text-base sm:text-lg">👥</span>
+                    <div>
+                      <div class="font-bold text-sm sm:text-base">2.5k+</div>
+                      <div class="text-xs sm:text-sm opacity-75">Patients Served</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 text-white">
+                    <span class="text-blue-200 text-base sm:text-lg">🕐</span>
+                    <div>
+                      <div class="font-bold text-sm sm:text-base">24/7</div>
+                      <div class="text-xs sm:text-sm opacity-75">Available</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="masthead__image">
-              <div class="hero-visual-container">
-                <div class="top-doctors-showcase">
-                  <div class="showcase-header">
-                    <div class="showcase-header-row">
-                      <h3 class="showcase-title">Top Rated Doctors</h3>
-                      <div class="header-actions">
-                        <span class="live-badge">
-                          <i class="fas fa-circle"></i>
-                          Live Now
-                        </span>
-                        <button @click="showSmartDoctorSection = true" class="unique-doctor-btn">
-                          <span class="btn-inner">
-                            <span class="btn-icon">
-                              <i class="fas fa-stethoscope"></i>
+            <!-- Hero Text Content -->
+            <div class="text-center lg:text-left space-y-4 sm:space-y-6 animate-fade-in">
+              <h1 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight text-blue-100 mb-4 sm:mb-6">
+                <span class="text-highlight">Online doctor visits,</span>
+                <transition-group name="fade" tag="span" class="block">
+                  <span :key="currentHeroPhrase" class="inline-block">{{ currentHeroPhrase }}</span>
+                </transition-group>
+              </h1>
+              
+              <div class="text-base sm:text-lg lg:text-xl leading-relaxed text-blue-100 space-y-2">
+                <p class="font-medium">Your health, <span class="text-blue-100 font-bold">your way.</span></p>
+                <transition-group name="fade" tag="div">
+                  <p :key="currentSubtitle" class="opacity-90">{{ currentSubtitle }}</p>
+                </transition-group>
+              </div>
+              
+              <!-- CTA Buttons -->
+              <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 w-full">
+                <button @click="showLearnMoreSections" class="btn btn-secondary btn-large w-full sm:w-auto">
+                  <span class="mr-2">ℹ️</span>
+                  Learn More
+                </button>
+                <button @click="showAllDoctorsList" class="btn btn-outline btn-large text-white border-white hover:bg-white hover:text-medical-primary w-full sm:w-auto">
+                  <span class="mr-2">🩺</span>
+                  Find Specialists
+                </button>
+              </div>
+              
+              <!-- Stats Row -->
+              <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-6 sm:pt-8">
+                <div class="text-center">
+                  <i class="fas fa-user-md text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
+                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.doctors }}+</div>
+                  <div class="text-xs sm:text-sm text-blue-100">Expert Doctors</div>
+                </div>
+                <div class="text-center">
+                  <i class="fas fa-user text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
+                  <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.patients }}+</div>
+                  <div class="text-xs sm:text-sm text-blue-100">Happy Patients</div>
+                </div>
+                <div class="text-center">
+                  <i class="fas fa-user-friends text-md text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
+                    <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.consultations }}+</div>
+                  <div class="text-xs sm:text-sm text-blue-100">Consultations</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Smart Doctor Recommendations Section -->
+      <section v-else class="section bg-gray-50" style="padding-top: 1rem; padding-bottom: 1rem;">
+        <div class="container mx-auto px-3 sm:px-4">
+          <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-6 sm:mb-8">
+              <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-gray-900 mb-3 sm:mb-4">
+                <span class="text-medical-secondary mr-2 sm:mr-3 text-2xl sm:text-3xl">🧠</span>
+                Smart Doctor Recommendations
+              </h2>
+              <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-gray-600">Based on availability, ratings, and your needs</p>
+              <button @click="showSmartDoctorSection = false" class="mt-3 sm:mt-4 text-medical-secondary hover:text-medical-primary transition-colors touch-button">
+                <span class="mr-2">⬅️</span>
+                Back to Home
+              </button>
+            </div>
+
+            <!-- Filter Categories -->
+            <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+              <button 
+                v-for="specialty in availableSpecialties" 
+                :key="specialty"
+                @click="currentSpecialty = specialty"
+                :class="[
+                  'flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full border-2 transition-all duration-200 text-xs sm:text-sm touch-button',
+                  currentSpecialty === specialty
+                    ? 'bg-medical-secondary text-white border-medical-secondary' 
+                    : 'bg-white text-gray-700 border-gray-300 hover:border-medical-secondary'
+                ]"
+              >
+                <span>{{ specialty }}</span>
+              </button>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="mb-6 bg-white p-4 rounded-lg shadow-sm">
+              <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                  <div class="relative">
+                    <input
+                      v-model="searchQuery"
+                      @input="handleSearch"
+                      type="text"
+                      placeholder="Search by name or specialty..."
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent transition-all duration-200"
+                    >
+                    <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                  </div>
+                </div>
+                <div class="w-full md:w-64">
+                  <select 
+                    v-model="currentSpecialty" 
+                    @change="handleSpecialtyChange"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent bg-white"
+                  >
+                    <option v-for="specialty in availableSpecialties" :key="specialty" :value="specialty">
+                      {{ specialty }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Doctor Cards Grid -->
+            <div v-if="loadingAllDoctors" class="text-center py-12">
+              <i class="fas fa-spinner fa-spin text-3xl text-medical-primary"></i>
+              <p class="mt-2 text-gray-600">Loading doctors...</p>
+            </div>
+            <div v-else-if="filteredDoctors.length === 0" class="text-center py-12">
+              <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-circle text-yellow-400 text-xl"></i>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                      No doctors found matching your criteria. Try adjusting your search or filters.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <template v-else>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div 
+                  v-for="doctor in displayedFilteredDoctors" 
+                  :key="doctor.id"
+                  class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+                >
+                  <div class="card-body">
+                    <div class="p-4">
+                      <div class="flex items-start gap-4">
+                        <div class="relative flex-shrink-0">
+                          <img 
+                            v-if="doctor.profile_photo" 
+                            :src="doctor.profile_photo" 
+                            :alt="doctor.full_name" 
+                            class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover border-2 border-white shadow-md"
+                            onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=DR'"
+                          />
+                          <div v-else class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center shadow-md">
+                            <span class="text-xl sm:text-2xl font-bold text-blue-600">{{ getInitials(doctor.full_name) }}</span>
+                          </div>
+                          <div v-if="doctor.available" class="absolute -bottom-1 -right-1 bg-green-500 rounded-full w-3 h-3 border-2 border-white"></div>
+                        </div>
+                        <div class="flex-1">
+                          <div class="flex items-start justify-between mb-2">
+                            <div>
+                              <h3 class="font-bold text-gray-900 truncate">{{ doctor.full_name }}</h3>
+                              <p class="text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
+                            </div>
+                            <div v-if="doctor.average_rating" class="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
+                              <span class="text-yellow-500 text-sm font-semibold">{{ doctor.average_rating.toFixed(1) }}</span>
+                              <i class="fas fa-star text-yellow-400 ml-1 text-xs"></i>
+                            </div>
+                          </div>
+                          
+                          <div class="mt-2 text-sm text-gray-600 space-y-1">
+                            <div class="flex items-center">
+                              <i class="fas fa-briefcase text-gray-400 w-4 mr-2 text-center"></i>
+                              <span>{{ doctor.experience || '5' }} years experience</span>
+                            </div>
+                            <div v-if="doctor.qualification" class="flex items-center">
+                              <i class="fas fa-graduation-cap text-gray-400 w-4 mr-2 text-center"></i>
+                              <span class="truncate">{{ doctor.qualification }}</span>
+                            </div>
+                            <div v-if="doctor.hospital" class="flex items-center">
+                              <i class="fas fa-hospital text-gray-400 w-4 mr-2 text-center"></i>
+                              <span class="truncate">{{ doctor.hospital }}</span>
+                            </div>
+                          </div>
+                          
+                          <div v-if="doctor.languages && doctor.languages.length" class="mt-2 flex flex-wrap gap-1">
+                            <span v-for="(lang, index) in doctor.languages.slice(0, 2)" :key="index" 
+                                  class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              {{ lang }}
                             </span>
-                            <span class="btn-text">Find Your Specialist <i class="fas fa-arrow-right btn-arrow-icon"></i></span>
-                          </span>
+                            <span v-if="doctor.languages.length > 2" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                              +{{ doctor.languages.length - 2 }} more
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Action Buttons -->
+                      <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
+                        <button @click="openDoctorProfileModal(doctor)" 
+                                class="text-sm font-medium text-medical-primary hover:text-medical-secondary transition-colors">
+                          <i class="fas fa-eye mr-1"></i> View Profile
+                        </button>
+                        <button @click="bookAppointment(doctor)" 
+                                class="bg-gradient-to-r from-medical-primary to-medical-secondary text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity">
+                          Book Now
                         </button>
                       </div>
                     </div>
                   </div>
-                  <div class="doctors-carousel">
-                    <div 
-                      v-for="(doctor, index) in topRatedDoctors.slice(0, 3)" 
-                      :key="doctor.id"
-                      class="doctor-mini-card"
-                      :style="{ animationDelay: `${index * 0.2}s` }">
-                      <div class="doctor-mini-avatar">
-                        <img :src="doctor.image" :alt="doctor.name" />
-                        <div class="rating-badge">
-                          <i class="fas fa-star"></i>
-                          {{ doctor.rating }}
-                        </div>
-                      </div>
-                      <div class="doctor-mini-info">
-                        <h4>{{ doctor.name }}</h4>
-                        <p>{{ doctor.specialty }}</p>
-                        <div class="consultation-info">
-                          <span class="price">${{ doctor.consultationFee }}</span>
-                          <button class="quick-book-btn">
-                            <i class="fas fa-video"></i>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="showcase-stats">
-                    <div class="stat-mini">
-                      <div class="stat-icon">
-                        <i class="fas fa-users"></i>
-                      </div>
-                      <div class="stat-text">
-                        <span class="number">2.5k+</span>
-                        <span class="label">Patients Served</span>
-                      </div>
-                    </div>
-                    <div class="stat-mini">
-                      <div class="stat-icon">
-                        <i class="fas fa-clock"></i>
-                      </div>
-                      <div class="stat-text">
-                        <span class="number">24/7</span>
-                        <span class="label">Available</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section v-else class="smart-suggestions smart-suggestions--main">
-          <div class="suggestions-container">
-            <div class="suggestions-header">
-              <div class="header-content">
-                <h2 class="suggestions-title">
-                  <i class="fas fa-brain"></i>
-                  Smart Doctor Recommendations
-                </h2>
-                <p class="suggestions-subtitle">Based on availability, ratings, and your needs</p>
-              </div>
-              <button @click="showSmartDoctorSection = false" class="back-btn stylish-back-btn">
-                <span class="back-icon-wrapper">
-                  <i class="fas fa-arrow-left"></i>
-                </span>
-                <span class="back-text">Back</span>
-              </button>
-            </div>
-            <div class="suggestion-categories">
-              <div class="category-tabs">
-                <button 
-                  v-for="category in suggestionCategories" 
-                  :key="category.id"
-                  @click="currentSuggestionCategory = category.id"
-                  :class="['category-tab', { active: currentSuggestionCategory === category.id }]">
-                  <i :class="category.icon"></i>
-                  {{ category.name }}
-                  <span class="count">{{ category.count }}</span>
-                </button>
-              </div>
-            </div>
-            <div class="suggestions-grid">
-              <div 
-                v-for="doctor in currentSuggestions" 
-                :key="doctor.id"
-                class="suggestion-card"
-                @click="selectDoctorForConsultation(doctor)">
-                <div class="suggestion-badge">
-                  <span v-if="doctor.isTopRated" class="badge top-rated">
-                    <i class="fas fa-crown"></i>
-                    Top Rated
-                  </span>
-                  <span v-if="doctor.isOnline" class="badge available">
-                    <i class="fas fa-circle"></i>
-                    Available Now
-                  </span>
-                  <span v-if="doctor.isSpecialist" class="badge specialist">
-                    <i class="fas fa-star"></i>
-                    Specialist
-                  </span>
-                </div>
-                <div class="doctor-suggestion-info">
-                  <div class="doctor-avatar-large">
-                    <img :src="doctor.image" :alt="doctor.name" />
-                    <div class="availability-indicator" :class="{ online: doctor.isOnline }"></div>
-                  </div>
-                  <div class="doctor-details-extended">
-                    <h3>{{ doctor.name }}</h3>
-                    <p class="specialty-detail">{{ doctor.specialty }}</p>
-                    <div class="experience-rating">
-                      <span class="experience">{{ doctor.experience }}+ years</span>
-                      <div class="rating-stars">
-                        <i v-for="star in 5" :key="star" 
-                          :class="['fas fa-star', { filled: star <= Math.floor(doctor.rating) }]"></i>
-                        <span class="rating-number">{{ doctor.rating }}</span>
-                      </div>
-                    </div>
-                    <div class="consultation-options-extended">
-                      <div class="option video-option">
-                        <i class="fas fa-video"></i>
-                        <span>Video Call</span>
-                        <span class="price">${{ doctor.consultationFee }}</span>
-                      </div>
-                      <div class="option chat-option">
-                        <i class="fas fa-comments"></i>
-                        <span>Chat</span>
-                        <span class="price">${{ doctor.consultationFee - 20 }}</span>
-                      </div>
-                    </div>
-                    <div class="quick-stats">
-                      <div class="stat">
-                        <i class="fas fa-users"></i>
-                        <span>{{ doctor.totalPatients }}+ patients</span>
-                      </div>
-                      <div class="stat">
-                        <i class="fas fa-clock"></i>
-                        <span>{{ doctor.isOnline ? 'Available now' : doctor.nextAvailable }}</span>
-                      </div>
-                    </div>
-                    <button class="book-now-btn" @click.stop="bookConsultation(doctor)">
-                      <i class="fas fa-calendar-check"></i>
-                      Book Consultation
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="suggestions-footer">
-              <button @click="showAllDoctors" class="btn btn--outline">
-                <i class="fas fa-th-large"></i>
-                View All Doctors
-              </button>
-              <button @click="emergencyContact" class="btn btn--emergency">
-                <i class="fas fa-exclamation-triangle"></i>
-                Emergency? Call 911
-              </button>
-            </div>
-          </div>
-        </section>
-      
-      <!-- Smart Doctor Suggestions -->
-      <section class="smart-suggestions" v-if="showSuggestions">
-        <div class="suggestions-container">
-          <div class="suggestions-header">
-            <div class="header-content">
-              <h2 class="suggestions-title">
-                <i class="fas fa-brain"></i>
-                Smart Doctor Recommendations
-              </h2>
-              <p class="suggestions-subtitle">Based on availability, ratings, and your needs</p>
-            </div>
-            <button @click="closeSuggestions" class="close-btn">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          
-          <div class="suggestion-categories">
-            <div class="category-tabs">
-              <button 
-                v-for="category in suggestionCategories" 
-                :key="category.id"
-                @click="currentSuggestionCategory = category.id"
-                :class="['category-tab', { active: currentSuggestionCategory === category.id }]">
-                <i :class="category.icon"></i>
-                {{ category.name }}
-                <span class="count">{{ category.count }}</span>
-              </button>
-            </div>
-          </div>
-          
-          <div class="suggestions-grid">
-            <div 
-              v-for="doctor in currentSuggestions" 
-              :key="doctor.id"
-              class="suggestion-card"
-              @click="selectDoctorForConsultation(doctor)">
-              <div class="suggestion-badge">
-                <span v-if="doctor.isTopRated" class="badge top-rated">
-                  <i class="fas fa-crown"></i>
-                  Top Rated
-                </span>
-                <span v-if="doctor.isOnline" class="badge available">
-                  <i class="fas fa-circle"></i>
-                  Available Now
-                </span>
-                <span v-if="doctor.isSpecialist" class="badge specialist">
-                  <i class="fas fa-star"></i>
-                  Specialist
-                </span>
               </div>
               
-              <div class="doctor-suggestion-info">
-                <div class="doctor-avatar-large">
-                  <img :src="doctor.image" :alt="doctor.name" />
-                  <div class="availability-indicator" :class="{ online: doctor.isOnline }"></div>
-                </div>
-                
-                <div class="doctor-details-extended">
-                  <h3>{{ doctor.name }}</h3>
-                  <p class="specialty-detail">{{ doctor.specialty }}</p>
-                  <div class="experience-rating">
-                    <span class="experience">{{ doctor.experience }}+ years</span>
-                    <div class="rating-stars">
-                      <i v-for="star in 5" :key="star" 
-                         :class="['fas fa-star', { filled: star <= Math.floor(doctor.rating) }]"></i>
-                      <span class="rating-number">{{ doctor.rating }}</span>
+              <!-- Load More Button -->
+              <div v-if="hasMoreDoctors" class="flex justify-center mt-6">
+                <button @click="loadMoreDoctors" class="bg-medical-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity">
+                  Load More ({{ filteredDoctors.length - visibleDoctorsCount }} more)
+                </button>
+              </div>
+              
+              <!-- End of doctors list message -->
+              <div v-else-if="filteredDoctors.length > 0" class="text-center py-4 text-gray-500 text-sm">
+                You've reached the end of the list
+              </div>
+            </template>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services Section -->
+      <section ref="servicesSection" v-if="showLearnMore && !showSmartDoctorSection" class="section bg-slate-50" style="padding-top: 1rem; padding-bottom: 1rem;">
+        <div class="container mx-auto px-3 sm:px-4">
+          <div class="flex flex-col md:flex-row justify-between items-center mb-8 sm:mb-4">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+              <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-gray-900 mb-2">Our Services</h2>
+              <p class="text-base sm:text-lg lg:text-xl leading-relaxed text-gray-600">Comprehensive healthcare for your needs.</p>
+            </div>
+          </div>
+
+          <div class="overflow-hidden">
+            <div ref="servicesContainer" class="flex space-x-4 sm:space-x-8 overflow-x-auto pt-6 sm:pt-8 pb-4 px-2 sm:px-4 scrollbar-hide snap-x snap-mandatory">
+              <div
+                v-for="(service, index) in services"
+                :key="service.id"
+                :data-index="index"
+                @click="scrollToServicesStep(index)"
+                class="flex-shrink-0 w-[85vw] sm:w-80 card transition-all duration-500 snap-center border-2 cursor-pointer"
+                :class="servicesIndex === index ? 'transform scale-105 shadow-xl border-medical-primary' : 'border-transparent opacity-80'">
+                <div class="card-body text-center p-4 sm:p-6">
+                  <div class="w-16 h-16 sm:w-24 sm:h-24 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white transition-transform duration-300 service-container">
+                    <!-- Test both approaches -->
+                    <div class="text-2xl sm:text-3xl lg:text-4xl">
+                      <!-- Emoji (should always work) -->
+                      <span v-if="service.emoji">{{ service.emoji }}</span>
+                      <!-- Font Awesome (if emoji doesn't exist) -->
+                      <i v-else :class="service.icon" class="fas" style="font-size: 2rem; font-weight: 900;"></i>
+                      <!-- Text fallback -->
+                      <span v-if="!service.emoji && !service.icon" class="text-lg sm:text-xl font-bold">{{ service.title.charAt(0) }}</span>
                     </div>
                   </div>
-                  
-                  <div class="consultation-options-extended">
-                    <div class="option video-option">
-                      <i class="fas fa-video"></i>
-                      <span>Video Call</span>
-                      <span class="price">${{ doctor.consultationFee }}</span>
-                    </div>
-                    <div class="option chat-option">
-                      <i class="fas fa-comments"></i>
-                      <span>Chat</span>
-                      <span class="price">${{ doctor.consultationFee - 20 }}</span>
-                    </div>
-                  </div>
-                  
-                  <div class="quick-stats">
-                    <div class="stat">
-                      <i class="fas fa-users"></i>
-                      <span>{{ doctor.totalPatients }}+ patients</span>
-                    </div>
-                    <div class="stat">
-                      <i class="fas fa-clock"></i>
-                      <span>{{ doctor.isOnline ? 'Available now' : doctor.nextAvailable }}</span>
-                    </div>
-                  </div>
-                  
-                  <button class="book-now-btn" @click.stop="bookConsultation(doctor)">
-                    <i class="fas fa-calendar-check"></i>
-                    Book Consultation
+                  <h3 class="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight text-gray-900 mb-2 sm:mb-3">{{ service.title }}</h3>
+                  <p class="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">{{ service.description }}</p>
+                  <ul class="text-left space-y-1 sm:space-y-2 mb-3 sm:mb-4">
+                    <li v-for="feature in service.features" :key="feature" class="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                      <i class="fas fa-check text-green-500 text-xs"></i>
+                      {{ feature }}
+                    </li>
+                  </ul>
+                  <!-- Read More Button -->
+                  <button @click="viewServiceDetails(service)" class="text-medical-primary font-medium flex items-center group justify-center w-full touch-button">
+                    <span class="text-xs sm:text-sm">Read More</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 ml-1 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
                   </button>
                 </div>
               </div>
+              <div class="flex-shrink-0 w-[85vw] sm:w-80 snap-center flex items-center justify-center p-4 sm:p-6">
+                <button @click="navigateToServices" class="w-full h-full flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-2xl hover:border-medical-primary hover:bg-blue-50 text-medical-primary transition-all duration-300 touch-button min-h-[200px] sm:min-h-[250px]">
+                    <i class="fas fa-th-large text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
+                    <span class="text-lg sm:text-xl font-bold">View All Services</span>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">Explore our full range of offerings.</p>
+                </button>
+              </div>
             </div>
           </div>
-          
-          <div class="suggestions-footer">
-            <button @click="showAllDoctors" class="btn btn--outline">
-              <i class="fas fa-th-large"></i>
-              View All Doctors
-            </button>
-            <button @click="emergencyContact" class="btn btn--emergency">
-              <i class="fas fa-exclamation-triangle"></i>
-              Emergency? Call 911
-            </button>
+          <!-- Dots for Services -->
+          <div class="flex justify-center mt-4 space-x-1 sm:space-x-2">
+            <button
+              v-for="(service, index) in services"
+              :key="`service-dot-${index}`"
+              @click="scrollToServicesStep(index)"
+              class="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 dot-indicator"
+              :class="servicesIndex === index ? 'bg-medical-primary dot-active' : 'bg-gray-300 hover:bg-gray-400'"
+              :aria-label="`Go to service ${index + 1}`"
+            ></button>
           </div>
         </div>
       </section>
-      
-      <!-- <h3>Prescriptions</h3>
-      <p>Prescriptions are sent electronically to the pharmacy of your choice.</p> -->
-      <!-- Available Doctors List -->
-      <section class="doctors-list slide-up" v-if="showTestimonials">
-        <h2 class="section-title">Available Doctors</h2>
-        <p class="section-subtitle">Choose from our qualified medical professionals</p>
+
+      <!-- How It Works Section -->
+      <section ref="howItWorksSection" v-if="showLearnMore && !showSmartDoctorSection" class="section bg-white" style="padding-top: 1rem; padding-bottom: 1rem;">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-8">
+            <h2 class="heading-2 text-gray-900 mb-4">{{ howItWorks[howItWorksView].title }}</h2>
+            <p class="text-large text-gray-600">Simple steps to get started on our platform</p>
+            
+            <!-- Toggle Buttons -->
+            <div class="mt-6 inline-flex rounded-lg shadow-sm">
+              <button @click="howItWorksView = 'patient'" :class="['px-6 py-2 rounded-l-lg border border-gray-300 transition-colors', howItWorksView === 'patient' ? 'bg-medical-primary text-white border-medical-primary' : 'bg-white text-gray-700 hover:bg-gray-50']">
+                <span class="mr-2">🏥</span> For Patients
+              </button>
+              <button @click="howItWorksView = 'doctor'" :class="['px-6 py-2 rounded-r-lg border border-gray-300 -ml-px transition-colors', howItWorksView === 'doctor' ? 'bg-medical-primary text-white border-medical-primary' : 'bg-white text-gray-700 hover:bg-gray-50']">
+                <span class="mr-2">👨‍⚕️</span> For Doctors
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden">
+            <div ref="howItWorksContainer" class="flex space-x-8 overflow-x-auto pt-8 pb-4 px-4 scrollbar-hide snap-x snap-mandatory">
+              <div
+                v-for="(step, index) in howItWorks[howItWorksView].steps"
+                :key="step.id"
+                :data-index="index"
+                @click="scrollToHowItWorksStep(index)"
+                class="flex-shrink-0 w-80 text-center snap-center p-6 rounded-2xl transition-all duration-500 border-2 cursor-pointer"
+                :class="howItWorksIndex === index ? 'bg-white transform scale-105 shadow-xl border-medical-primary' : 'bg-gray-50 border-transparent'">
+                <div class="relative mb-6">
+                  <div class="w-24 h-24 mx-auto bg-gradient-to-br from-medical-secondary to-blue-600 rounded-full flex items-center justify-center text-white transition-transform duration-300 shadow-lg">
+                    <!-- Test both approaches - same as services section -->
+                    <div style="font-size: 3rem; line-height: 1;">
+                      <!-- Emoji (should always work) -->
+                      <span v-if="step.emoji">{{ step.emoji }}</span>
+                      <!-- Font Awesome (if emoji doesn't exist) -->
+                      <i v-else :class="step.icon" class="fas" style="font-size: 3rem; font-weight: 900;"></i>
+                      <!-- Text fallback -->
+                      <span v-if="!step.emoji && !step.icon" style="font-size: 1.5rem; font-weight: bold;">{{ step.title.charAt(0) }}</span>
+                    </div>
+                  </div>
+                </div>
+                <h3 class="heading-3 text-gray-900 mb-3">{{ step.title }}</h3>
+                <p class="text-gray-600">{{ step.description }}</p>
+              </div>
+            </div>
+          </div>
+          <!-- Dots for How It Works -->
+          <div class="flex justify-center mt-4 space-x-1 sm:space-x-2">
+            <button
+              v-for="(step, index) in howItWorks[howItWorksView].steps"
+              :key="`howitworks-dot-${index}`"
+              @click="scrollToHowItWorksStep(index)"
+              class="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 dot-indicator"
+              :class="howItWorksIndex === index ? 'bg-medical-primary dot-active' : 'bg-gray-300 hover:bg-gray-400'"
+              :aria-label="`Go to step ${index + 1}`"
+            ></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Health Tips Section -->
+      <section ref="healthTipsSection" class="section bg-emerald-50" style="padding-top: 1rem; padding-bottom: 1rem;">
+        <div class="container mx-auto px-4">
+          <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+              <h2 class="heading-2 text-gray-900 mb-2">Health & Wellness Tips</h2>
+              <p class="text-large text-gray-600">Expert advice to help you maintain a healthy lifestyle</p>
+            </div>
+            <!-- <button 
+              @click="navigateToTips"
+              class="flex items-center text-medical-primary hover:text-medical-secondary font-medium transition-colors duration-200 group"
+            >
+              View All Health Tips
+              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button> -->
+          </div>
+          
+          <div class="overflow-hidden">
+            <!-- Health Tips Container -->
+            <div ref="healthTipsContainer" class="flex space-x-8 overflow-x-auto pt-8 pb-4 px-4 scrollbar-hide snap-x snap-mandatory">
+              <div v-for="(tip, index) in healthTips" :key="tip.id"
+                   :data-index="index"
+                   @click="scrollToHealthTipsStep(index)"
+                   class="flex-shrink-0 w-80 bg-white rounded-xl p-6 transform transition-all duration-500 cursor-pointer snap-center border-2"
+                   :class="healthTipsIndex === index ? 'scale-105 shadow-xl border-medical-primary' : 'shadow-md border-transparent'">
+                <div class="h-48 overflow-hidden rounded-lg mb-4">
+                  <img 
+                    :src="tip.image" 
+                    :alt="tip.title" 
+                    class="w-full h-full object-cover transition-transform duration-700"
+                    :class="{ 'scale-110': healthTipsIndex === index }"
+                  />
+                </div>
+                <div class="flex items-center mb-3">
+                  <div :class="tip.tagClass">{{ tip.tag }}</div>
+                  <div v-if="healthTipsIndex === index" class="ml-auto text-medical-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">{{ tip.title }}</h3>
+                <p class="text-gray-600 mb-4">{{ tip.description }}</p>
+                <button @click="viewTipDetails(tip)" class="text-medical-primary font-medium flex items-center group">
+                  Read More
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+              <div class="flex-shrink-0 w-80 snap-center flex items-center justify-center p-6">
+                <button @click="navigateToTips" class="w-full h-full flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-2xl hover:border-medical-primary hover:bg-emerald-50 text-medical-primary transition-all duration-300">
+                    <i class="fas fa-book-heart text-4xl mb-4"></i>
+                    <span class="text-xl font-bold">View All Tips</span>
+                    <p class="text-sm text-gray-600 mt-1">Discover more wellness advice.</p>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Dots for Health Tips -->
+          <div class="flex justify-center mt-4 space-x-1 sm:space-x-2">
+            <button
+              v-for="(tip, index) in healthTips"
+              :key="`healthtip-dot-${index}`"
+              @click="scrollToHealthTipsStep(index)"
+              class="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 dot-indicator"
+              :class="healthTipsIndex === index ? 'bg-medical-primary dot-active' : 'bg-gray-300 hover:bg-gray-400'"
+              :aria-label="`Go to health tip ${index + 1}`"
+            ></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section -->
+      <section ref="testimonialsSection" class="section bg-gradient-to-br from-red-500" style="padding-top: 1rem; padding-bottom: 1rem;">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-8">
+            <h2 class="heading-2 text-white mb-4">Patient & Doctor Stories</h2>
+            <p class="text-large text-red-100">Real experiences from our community</p>
+          </div>
+
+          <div class="overflow-hidden">
+            <div ref="allTestimonialsContainer" class="flex space-x-8 overflow-x-auto pt-8 pb-4 px-4 scrollbar-hide snap-x snap-mandatory">
+              <div
+                v-for="(story, index) in allTestimonials"
+                :key="story.storyId"
+                :data-index="index"
+                @click="scrollToTestimonialsStep(index)"
+                class="flex-shrink-0 w-[90vw] sm:w-96 card snap-center transition-all duration-500 border-2 cursor-pointer"
+                :class="testimonialsIndex === index ? 'transform scale-105 shadow-2xl border-white' : 'opacity-80 border-transparent'">
+                <div class="card-body">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-1 text-yellow-500">
+                      <i v-for="star in 5" :key="star" class="fas fa-star"></i>
+                    </div>
+                    <span class="text-xs font-semibold px-3 py-1 rounded-full" :class="story.type === 'Patient' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'">
+                      {{ story.type }} Story
+                    </span>
+                  </div>
+                  <p class="text-gray-600 mb-4 italic">"{{ story.text }}"</p>
+                  <div class="flex items-center gap-3">
+                    <img :src="story.avatar" :alt="story.name" class="w-12 h-12 rounded-full object-cover" />
+                    <div>
+                      <div class="font-semibold text-gray-900">{{ story.name }}</div>
+                      <div class="text-sm text-gray-500">{{ story.location || story.specialty }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-shrink-0 w-[90vw] sm:w-96 snap-center flex items-center justify-center p-6">
+                <button @click="navigateToTestimonials" class="w-full h-full flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-2xl hover:border-red-500 hover:bg-red-50 text-red-500 transition-all duration-300">
+                    <i class="fas fa-comments text-4xl mb-4"></i>
+                    <span class="text-xl font-bold">View All Stories</span>
+                    <p class="text-sm text-gray-600 mt-1">Read more from our community.</p>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Dots for Testimonials -->
+          <div class="flex justify-center mt-4 space-x-1 sm:space-x-2">
+            <button
+              v-for="(story, index) in allTestimonials"
+              :key="`testimonial-dot-${index}`"
+              @click="scrollToTestimonialsStep(index)"
+              class="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 dot-indicator"
+              :class="testimonialsIndex === index ? 'bg-white dot-active' : 'bg-red-200 hover:bg-red-300'"
+              :aria-label="`Go to story ${index + 1}`"
+            ></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="section bg-gradient-to-r from-medical-primary to-medical-secondary text-white">
+        <div class="container mx-auto px-4">
+          <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="text-center lg:text-left">
+              <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Ready to Get Started?</h2>
+              <p class="text-base text-blue-100">
+                Join thousands of patients who trust DoctorBuddy for their healthcare needs.
+              </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <button @click="$router.push('/patient-login')" class="btn btn-secondary group">
+                <i class="fas fa-user-plus mr-2"></i>
+                Sign Up as Patient
+                <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform duration-200"></i>
+              </button>
+              <button @click="$router.push('/doctor-login')" class="btn btn-outline text-white border-white hover:bg-white hover:text-medical-primary group">
+                <i class="fas fa-stethoscope mr-2"></i>
+                Join as Doctor
+                <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform duration-200"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <AppFooter />
+    <ChatButton @open-chat="openChat" />
+    <FloatingActionButton @click="$router.push('/patient-login')" />
+    <FloatingActionButton @click="$router.push('/doctor-login')" />
+    
+    <!-- Tip Detail Modal -->
+    <div v-if="selectedTip" class="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50" @click.self="closeModal">
+      <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+        <button 
+          @click="closeModal"
+          class="fixed sm:absolute top-4 right-4 bg-white/80 hover:bg-gray-100 rounded-full p-2 shadow-lg text-gray-700 hover:text-gray-900 z-10"
+          aria-label="Close modal"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
         
-        <div class="doctors-filter">
-          <div class="filter-tabs">
+        <div class="h-64 overflow-hidden">
+          <img 
+            :src="selectedTip.image" 
+            :alt="selectedTip.title"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <span :class="selectedTip.tagClass" class="text-xs font-semibold px-3 py-1 rounded-full">
+              {{ selectedTip.tag }}
+            </span>
+            <span class="text-sm text-gray-500">Today</span>
+          </div>
+          
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ selectedTip.title }}</h2>
+          
+          <div class="prose max-w-none text-gray-600 mb-6">
+            <p class="mb-4">{{ selectedTip.description }}</p>
+            
+            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+              <h3 class="font-semibold text-blue-800 mb-2">Key Benefits</h3>
+              <ul class="space-y-2">
+                <li v-for="(benefit, index) in ['Improved health', 'Better lifestyle', 'Increased energy']" 
+                    :key="index" 
+                    class="flex items-start">
+                  <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" 
+                       fill="none" 
+                       viewBox="0 0 24 24" 
+                       stroke="currentColor">
+                    <path stroke-linecap="round" 
+                          stroke-linejoin="round" 
+                          stroke-width="2" 
+                          d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{{ benefit }}</span>
+                </li>
+              </ul>
+            </div>
+            
+            <p class="text-gray-700">For more detailed information and personalized advice, please consult with our healthcare professionals.</p>
+          </div>
+          
+          <div class="flex justify-between items-center">
             <button 
-              v-for="specialty in availableSpecialties" 
-              :key="specialty"
-              @click="currentSpecialty = specialty"
-              :class="['filter-tab', { active: currentSpecialty === specialty }]">
-              {{ specialty }}
+              @click="closeModal"
+              class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+            >
+              Close
+            </button>
+            <button 
+              @click="navigateToTips"
+              class="px-6 py-2.5 bg-medical-primary text-white rounded-lg hover:bg-medical-secondary transition-colors duration-200 font-medium"
+            >
+              View All
             </button>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="doctors-grid">
-          <div 
-            v-for="doctor in filteredDoctors" 
-            :key="doctor.id"
-            class="doctor-card"
-            @click="selectDoctor(doctor)">
-            <div class="doctor-status">
-              <div :class="['status-indicator', doctor.isOnline ? 'online' : 'offline']"></div>
-              <span class="status-text">{{ doctor.isOnline ? 'Available Now' : 'Offline' }}</span>
-            </div>
-            
-            <div class="doctor-avatar-section">
-              <img :src="doctor.image" :alt="doctor.name" class="doctor-avatar-img" />
-              <div class="doctor-rating">
-                <i class="fas fa-star"></i>
-                <span>{{ doctor.rating }}</span>
-              </div>
-            </div>
-            
-            <div class="doctor-info-section">
-              <h3 class="doctor-name">{{ doctor.name }}</h3>
-              <p class="doctor-specialty">{{ doctor.specialty }}</p>
-              <p class="doctor-experience">{{ doctor.experience }} years experience</p>
-              
-              <div class="consultation-price">
-                <span class="price-label">Consultation:</span>
-                <span class="price-amount">${{ doctor.consultationFee }}</span>
-              </div>
-              
-              <div class="quick-actions">
-                <button class="btn btn--primary btn--small">
-                  <i class="fas fa-video"></i>
-                  Video Call
-                </button>
-                <button class="btn btn--secondary btn--small">
-                  <i class="fas fa-calendar"></i>
-                  Schedule
-                </button>
-              </div>
+    <!-- Service Detail Modal -->
+    <div v-if="selectedService" class="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50" @click.self="closeServiceModal">
+      <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+        <button 
+          @click="closeServiceModal"
+          class="fixed sm:absolute top-4 right-4 bg-white/80 hover:bg-gray-100 rounded-full p-2 shadow-lg text-gray-700 hover:text-gray-900 z-10"
+          aria-label="Close modal"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        
+        <!-- Service Icon Header -->
+        <div class="bg-gradient-to-br from-medical-primary to-medical-secondary p-8 text-center text-white">
+          <div class="w-24 h-24 mx-auto mb-4 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+            <div style="font-size: 3rem; line-height: 1;">
+              <span v-if="selectedService.emoji">{{ selectedService.emoji }}</span>
+              <i v-else-if="selectedService.icon" :class="selectedService.icon" class="fas" style="font-size: 3rem; font-weight: 900; color: white;"></i>
+              <span v-else style="font-size: 2rem; font-weight: bold;">{{ selectedService.title.charAt(0) }}</span>
             </div>
           </div>
+          <h2 class="text-2xl font-bold text-white mb-2">{{ selectedService.title }}</h2>
+          <p class="text-blue-100">{{ selectedService.description }}</p>
         </div>
         
-        <div class="load-more-section" v-if="hasMoreDoctors">
-          <button @click="loadMoreDoctors" class="btn btn--outline">
-            <i class="fas fa-plus"></i>
-            Load More Doctors
-          </button>
-        </div>
-      </section>
-      <!-- Benefits Icon Cards and How it Works Section, shown only after Learn More -->
-      <section v-if="showLearnMore" class="benefits-showcase slide-up">
-        <h2 class="section-title">Why Choose DoctorBuddy?</h2>
-        <div class="benefits-horizontal">
-          <div class="benefit-item">
-            <div class="benefit-icon-circle">
-              <i class="fas fa-globe-americas"></i>
-            </div>
-            <div class="benefit-content">
-              <h4>Visit Anywhere</h4>
-              <p>Global Access</p>
+        <div class="p-6">
+          <!-- Key Features -->
+          <div class="mb-6">
+            <h3 class="font-semibold text-gray-900 mb-4 text-lg">Key Features & Benefits</h3>
+            <div class="grid md:grid-cols-2 gap-3">
+              <div v-for="feature in selectedService.features" :key="feature" class="flex items-start gap-3">
+                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i class="fas fa-check text-green-600 text-xs"></i>
+                </div>
+                <span class="text-gray-700">{{ feature }}</span>
+              </div>
             </div>
           </div>
-          <div class="benefit-separator"></div>
-          <div class="benefit-item">
-            <div class="benefit-icon-circle">
-              <i class="fas fa-clock"></i>
-            </div>
-            <div class="benefit-content">
-              <h4>24/7 Available</h4>
-              <p>Round the Clock</p>
-            </div>
-          </div>
-          <div class="benefit-separator"></div>
-          <div class="benefit-item">
-            <div class="benefit-icon-circle">
-              <i class="fas fa-prescription-bottle-alt"></i>
-            </div>
-            <div class="benefit-content">
-              <h4>Prescriptions</h4>
-              <p>Direct to Pharmacy</p>
-            </div>
-          </div>
-          <div class="benefit-separator"></div>
-          <div class="benefit-item">
-            <div class="benefit-icon-circle">
-              <i class="fas fa-pills"></i>
-            </div>
-            <div class="benefit-content">
-              <h4>Medicine Delivery</h4>
-              <p>To Your Door</p>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      <section v-if="showLearnMore" class="how-it-works">
-        <div class="container">
-          <h2 class="section-title">Get Expert Care in 4 Simple Steps</h2>
-          <p class="section-subtitle">From sign-up to treatment - experience healthcare made simple</p>
           
-          <div class="process-timeline">
-            <div class="timeline-step">
-              <div class="step-visual">
-                <div class="step-image">
-                  <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=300&h=200&fit=crop" 
-                       alt="Sign up process" />
+          <!-- How It Works -->
+          <div class="bg-blue-50 p-6 rounded-lg mb-6">
+            <h3 class="font-semibold text-blue-800 mb-4">How It Works</h3>
+            <div class="space-y-3">
+              <div v-for="(step, index) in getServiceSteps(selectedService)" :key="index" class="flex items-start gap-3">
+                <div class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                  {{ index + 1 }}
                 </div>
-                <div class="step-number">01</div>
-              </div>
-              <div class="step-content">
-                <h3>Quick Sign Up</h3>
-                <p>Create your secure account in under 2 minutes. Add your basic health information and insurance details.</p>
-                <ul class="step-features">
-                  <li><i class="fas fa-check"></i> HIPAA compliant security</li>
-                  <li><i class="fas fa-check"></i> Insurance verification</li>
-                  <li><i class="fas fa-check"></i> Medical history upload</li>
-                </ul>
-                <div class="time-estimate">
-                  <i class="fas fa-clock"></i>
-                  <span>Takes 2 minutes</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="timeline-step reverse">
-              <div class="step-visual">
-                <div class="step-image">
-                  <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=200&fit=crop" 
-                       alt="Choose doctor" />
-                </div>
-                <div class="step-number">02</div>
-              </div>
-              <div class="step-content">
-                <h3>Choose Your Doctor</h3>
-                <p>Browse our network of board-certified doctors. Filter by specialty, availability, and patient ratings.</p>
-                <ul class="step-features">
-                  <li><i class="fas fa-check"></i> 500+ certified doctors</li>
-                  <li><i class="fas fa-check"></i> Real patient reviews</li>
-                  <li><i class="fas fa-check"></i> Instant availability</li>
-                </ul>
-                <div class="time-estimate">
-                  <i class="fas fa-clock"></i>
-                  <span>Find doctor in 1 minute</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="timeline-step">
-              <div class="step-visual">
-                <div class="step-image">
-                  <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300&h=200&fit=crop" 
-                       alt="Video consultation" />
-                </div>
-                <div class="step-number">03</div>
-              </div>
-              <div class="step-content">
-                <h3>Start Consultation</h3>
-                <p>Connect via HD video call from any device. Discuss symptoms, get diagnosis, and receive treatment plan.</p>
-                <ul class="step-features">
-                  <li><i class="fas fa-check"></i> HD video & audio</li>
-                  <li><i class="fas fa-check"></i> Screen sharing</li>
-                  <li><i class="fas fa-check"></i> Real-time notes</li>
-                </ul>
-                <div class="time-estimate">
-                  <i class="fas fa-clock"></i>
-                  <span>Average 15-20 minutes</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="timeline-step reverse">
-              <div class="step-visual">
-                <div class="step-image">
-                  <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=300&h=200&fit=crop" 
-                       alt="Get treatment" />
-                </div>
-                <div class="step-number">04</div>
-              </div>
-              <div class="step-content">
-                <h3>Receive Treatment</h3>
-                <p>Get e-prescriptions sent to your pharmacy, treatment plans, and follow-up care recommendations.</p>
-                <ul class="step-features">
-                  <li><i class="fas fa-check"></i> E-prescriptions</li>
-                  <li><i class="fas fa-check"></i> Treatment summary</li>
-                  <li><i class="fas fa-check"></i> Follow-up reminders</li>
-                </ul>
-                <div class="time-estimate">
-                  <i class="fas fa-clock"></i>
-                  <span>Instant delivery</span>
-                </div>
+                <span class="text-blue-800">{{ step }}</span>
               </div>
             </div>
           </div>
-
-          <div class="cta-section">
-            <div class="cta-content">
-              <h3>Ready to experience better healthcare?</h3>
-              <p>Join thousands of satisfied patients who chose convenience without compromising quality.</p>
-              <router-link to="/patient-login" class="cta-button">
-                <span class="cta-button__icon">
-                  <i class="fas fa-stethoscope"></i>
-                </span>
-                <span class="cta-button__text">Start with your health Consultation</span>
-                <span class="cta-button__arrow">→</span>
-              </router-link>
-              <div class="guarantee">
-                <i class="fas fa-shield-check"></i>
-                <span>30-day money-back guarantee</span>
-              </div>
+          
+          <!-- Detailed Description -->
+          <div class="prose max-w-none text-gray-600 mb-6">
+            <p>{{ getServiceDetailedDescription(selectedService) }}</p>
+          </div>
+          
+          <div class="flex justify-between items-center">
+            <button 
+              @click="closeServiceModal"
+              class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+            >
+              Close
+            </button>
+            <div class="flex gap-3">
+              <button 
+                @click="navigateToServices"
+                class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 font-medium"
+              >
+                View All Services
+              </button>
+              <button 
+                @click="getStartedWithService(selectedService)"
+                class="px-6 py-2.5 bg-medical-primary text-white rounded-lg hover:bg-medical-secondary transition-colors duration-200 font-medium"
+              >
+                Get Started
+              </button>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
 
-      <!-- Patient Reviews Section -->
-      <section>
-        <transition name="fade" mode="out-in">
-          <div v-if="showDoctorTestimonials" key="doctors">
-            <section class="patient-reviews">
-              <div class="container">
-                <h2 class="section-title">What Our Doctors Say</h2>
-                <div class="reviews-grid">
-                  <div class="review-card">
-                    <div class="review-content">
-                      <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                      </div>
-                      <p>"I love being able to help patients from anywhere. The platform makes consultations easy and effective!"</p>
-                    </div>
-                    <div class="review-author">
-                      <div class="author-avatar">
-                        <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=60&h=60&fit=crop&crop=face" alt="Dr. Sarah Johnson" />
-                      </div>
-                      <div class="author-info">
-                        <h4>Dr. Sarah Johnson</h4>
-                        <span>Family Medicine</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="review-card">
-                    <div class="review-content">
-                      <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                      </div>
-                      <p>"The technology allows me to reach more patients and provide timely care. It's truly rewarding."</p>
-                    </div>
-                    <div class="review-author">
-                      <div class="author-avatar">
-                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=60&h=60&fit=crop&crop=face" alt="Dr. Michael Chen" />
-                      </div>
-                      <div class="author-info">
-                        <h4>Dr. Michael Chen</h4>
-                        <span>Cardiology</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="review-card">
-                    <div class="review-content">
-                      <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                      </div>
-                      <p>"Virtual care is the future. I can support my patients and their families better than ever before."</p>
-                    </div>
-                    <div class="review-author">
-                      <div class="author-avatar">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&h=60&fit=crop&crop=face" alt="Dr. Emily Rodriguez" />
-                      </div>
-                      <div class="author-info">
-                        <h4>Dr. Emily Rodriguez</h4>
-                        <span>Dermatology</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+    <!-- Doctor Profile Modal -->
+    <div v-if="selectedDoctorProfile" class="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50" @click.self="closeDoctorProfileModal">
+      <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-xl animate-fade-in" style="min-height: 300px;">
+        <!-- Loading Spinner -->
+        <div v-if="loadingDoctorProfile" class="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-2xl z-20">
+          <i class="fas fa-spinner fa-spin text-4xl text-medical-primary"></i>
+        </div>
+        
+        <template v-else-if="selectedDoctorProfile.id">
+          <!-- Close Button -->
+          <button @click="closeDoctorProfileModal" class="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 rounded-full p-2 z-10">
+            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+
+          <!-- Modal Content -->
+          <div class="p-6">
+            <!-- Header -->
+            <div class="flex items-start gap-4 mb-6">
+              <img v-if="selectedDoctorProfile.profile_photo" :src="selectedDoctorProfile.profile_photo" :alt="selectedDoctorProfile.full_name" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md" />
+              <div v-else class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center border-4 border-white shadow-md">
+                <span class="text-3xl font-bold text-gray-500">{{ getInitials(selectedDoctorProfile.full_name) }}</span>
               </div>
-            </section>
-          </div>
-          <div v-else key="patients">
-            <section class="patient-reviews">
-              <div class="container">
-                <h2 class="section-title">What Our Patients Say</h2>
-                <div class="reviews-grid">
-                  <div class="review-card">
-                    <div class="review-content">
-                      <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                      </div>
-                      <p>"Amazing experience! Got consultation at 2 AM when my fever spiked. Doctor was very professional and caring."</p>
-                    </div>
-                    <div class="review-author">
-                      <div class="author-avatar">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face" alt="Sarah M." />
-                      </div>
-                      <div class="author-info">
-                        <h4>Sarah M.</h4>
-                        <span>Mother of 2</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="review-card">
-                    <div class="review-content">
-                      <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                      </div>
-                      <p>"Saved me a trip to the ER! Quick diagnosis and prescription delivered to my door. Highly recommend!"</p>
-                    </div>
-                    <div class="review-author">
-                      <div class="author-avatar">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face" alt="Michael R." />
-                      </div>
-                      <div class="author-info">
-                        <h4>Michael R.</h4>
-                        <span>Business Executive</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="review-card">
-                    <div class="review-content">
-                      <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                      </div>
-                      <p>"Perfect for busy parents. No waiting rooms, no exposure to other illnesses. Just quality healthcare!"</p>
-                    </div>
-                    <div class="review-author">
-                      <div class="author-avatar">
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" alt="Emily C." />
-                      </div>
-                      <div class="author-info">
-                        <h4>Emily C.</h4>
-                        <span>Working Mom</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="pt-2">
+                <h2 class="text-2xl font-bold text-gray-900">{{ selectedDoctorProfile.full_name }}</h2>
+                <p class="text-md text-medical-secondary font-semibold">{{ selectedDoctorProfile.specialty }}</p>
+                <p class="text-sm text-gray-500">{{ selectedDoctorProfile.degree }}</p>
               </div>
-            </section>
+            </div>
+
+            <!-- Details & Rating -->
+            <div class="space-y-4 border-t pt-4 mt-6">
+                <dl class="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-4 text-sm">
+                    <dt class="font-semibold text-gray-500">Experience</dt>
+                    <dd class="sm:col-span-2 text-gray-800">{{ selectedDoctorProfile.experience }}+ Years Experience</dd>
+
+                    <dt class="font-semibold text-gray-500">Languages</dt>
+                    <dd class="sm:col-span-2 text-gray-800">{{ selectedDoctorProfile.languages.join(', ') }}</dd>
+
+                    <dt class="font-semibold text-gray-500">Clinic/City</dt>
+                    <dd class="sm:col-span-2 text-gray-800">{{ selectedDoctorProfile.clinic_name }}, {{ selectedDoctorProfile.city }}</dd>
+
+                    <dt class="font-semibold text-gray-500">Availability</dt>
+                    <dd class="sm:col-span-2 text-gray-800">{{ formatAvailability(selectedDoctorProfile) }}</dd>
+                    
+                    <dt class="font-semibold text-gray-500">Rating</dt>
+                    <dd class="sm:col-span-2 flex items-center gap-2">
+                        <div class="flex items-center gap-0.5"><i v-for="star in 5" :key="star" class="fas fa-star" :class="star <= Math.round(selectedDoctorProfile.average_rating || 0) ? 'text-yellow-400' : 'text-gray-300'"></i></div>
+                        <span class="font-bold text-gray-800">{{ selectedDoctorProfile.average_rating > 0 ? selectedDoctorProfile.average_rating.toFixed(1) : 'New' }}</span>
+                    </dd>
+
+                    <dt class="font-semibold text-gray-500">Reviewed patients</dt>
+                    <dd class="sm:col-span-2 text-gray-800">{{ selectedDoctorProfile.total_reviews }} reviews</dd>
+                </dl>
+            </div>
           </div>
-        </transition>
-      </section>
-      </div> <!-- Close main-content -->
-      
-    </div> <!-- Close layout-content -->
-  </div> <!-- Close layout-container -->
-  <AppFooter />
-  
-  <ChatButton />
+
+          <!-- Footer with CTA -->
+          <div class="bg-gray-50 p-4 rounded-b-2xl">
+            <button @click="bookAppointment(selectedDoctorProfile)" class="btn btn-primary w-full">Book Appointment</button>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
+import config from '@/config/api';
 import ChatButton from '@/components/ChatButton.vue';
+import FloatingActionButton from '@/components/ui/FloatingActionButton.vue';
+import axios from 'axios';
 
 export default {
   name: 'DoctorHome',
-  components: { AppHeader, AppFooter, ChatButton },
-  props: {
-    msg: String
-  },
+  components: { AppHeader, AppFooter, ChatButton, FloatingActionButton },
   data() {
     return {
+      selectedTip: null,
+      selectedService: null,
+      loadingDoctorProfile: false,
+      selectedDoctorProfile: null,
+      loadingDoctors: false,
+      loadingAllDoctors: false,
+      allDoctors: [],
+      displayedDoctors: [],
+      visibleDoctorsCount: 3,
+      searchQuery: '',
+      servicesIndex: 0,
+      servicesInterval: null,
+      healthTipsIndex: 0,
+      healthTipsInterval: null,
+      servicesObserver: null,
+      howItWorksObserver: null,
+      healthTipsObserver: null,
+      testimonialsObserver: null,
+      testimonialsIndex: 0,
+      testimonialsInterval: null,
+      healthTips: [
+        {
+          id: 1,
+          title: 'Eat a Balanced Diet',
+          description: 'Incorporate a variety of fruits, vegetables, whole grains, and lean proteins into your meals for optimal health.',
+          image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+          tag: 'NUTRITION',
+          tagClass: 'bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full',
+          isHovered: false
+        },
+        {
+          id: 2,
+          title: 'Stay Active Daily',
+          description: 'Aim for at least 30 minutes of moderate exercise most days of the week to maintain good health.',
+          image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+          tag: 'FITNESS',
+          tagClass: 'bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full',
+          isHovered: false
+        },
+        {
+          id: 3,
+          title: 'Manage Stress',
+          description: 'Practice mindfulness, meditation, or deep breathing exercises to reduce stress and improve mental health.',
+          image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+          tag: 'WELLBEING',
+          tagClass: 'bg-purple-100 text-purple-800 text-xs font-semibold px-3 py-1 rounded-full',
+          isHovered: false
+        },
+        {
+          id: 4,
+          title: 'Stay Hydrated',
+          description: 'Drink at least 8 glasses of water daily to maintain proper body function and energy levels.',
+          image: 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+          tag: 'HYDRATION',
+          tagClass: 'bg-cyan-100 text-cyan-800 text-xs font-semibold px-3 py-1 rounded-full',
+          isHovered: false
+        },
+        {
+          id: 5,
+          title: 'Quality Sleep',
+          description: 'Get 7-9 hours of quality sleep each night to support overall health and well-being.',
+          image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+          tag: 'SLEEP',
+          tagClass: 'bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full',
+          isHovered: false
+        }
+      ],
+      
+      // Hero content
       heroPhrases: [
         '24/7',
         'Instant Care',
@@ -829,6 +938,7 @@ export default {
       currentHeroPhrase: '24/7',
       heroPhraseIndex: 0,
       heroPhraseInterval: null,
+      
       subtitlePhrases: [
         'Caring, expert medical advice whenever you need it, from the comfort of your home.',
         'Connect instantly with trusted doctors for any health concern.',
@@ -839,13 +949,18 @@ export default {
       currentSubtitle: 'Caring, expert medical advice whenever you need it, from the comfort of your home.',
       subtitleIndex: 0,
       subtitleInterval: null,
-  showSmartDoctorSection: false,
-  showLearnMore: false,
-  showDoctorTestimonials: true, // true = show doctors, false = show patients
-      showSuggestions: false,
-      currentSpecialty: 'All',
+      
+      // UI state
+      showSmartDoctorSection: false,
+      showLearnMore: false,
       currentSuggestionCategory: 'top-rated',
-      hasMoreDoctors: true,
+      currentSpecialty: 'All',
+      howItWorksIndex: 0,
+      howItWorksInterval: null,
+      howItWorksView: 'patient',
+      availableSpecialties: ['All'],
+      
+      // Animated stats
       animatedStats: {
         doctors: 0,
         patients: 0,
@@ -856,6 +971,8 @@ export default {
         patients: 10000,
         consultations: 50000
       },
+      
+      // Categories
       suggestionCategories: [
         {
           id: 'top-rated',
@@ -882,184 +999,633 @@ export default {
           count: 6
         }
       ],
-      availableSpecialties: [
-        'All',
-        'Family Medicine',
-        'Cardiology',
-        'Dermatology',
-        'Pediatrics',
-        'Neurology',
-        'Orthopedics',
-        'Psychiatry'
-      ],
-      allDoctors: [
+      
+      // Mock data
+      topRatedDoctors: [],
+      
+      
+      
+      services: [
         {
           id: 1,
-          name: 'Dr. Sarah Johnson',
-          specialty: 'Family Medicine',
-          experience: 15,
-          rating: 4.9,
-          consultationFee: 49,
-          isOnline: true,
-          isTopRated: true,
-          isSpecialist: false,
-          totalPatients: 2500,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face'
+          title: 'Doctor Appointments',
+          description: 'Both In-clinic & Online Consultations. Instant booking, no waiting lines.',
+          icon: 'fas fa-calendar-check',
+          emoji: '📅',
+          features: ['Instant Booking', 'No Waiting Lines', 'In-clinic Visits', 'Online Consultations']
         },
         {
           id: 2,
-          name: 'Dr. Michael Chen',
-          specialty: 'Cardiology',
-          experience: 20,
-          rating: 4.8,
-          consultationFee: 75,
-          isOnline: true,
-          isTopRated: true,
-          isSpecialist: true,
-          totalPatients: 3200,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face'
+          title: 'Video Consultations',
+          description: 'Safe & secure telemedicine. Patients can connect anytime, anywhere.',
+          icon: 'fas fa-video',
+          emoji: '📹',
+          features: ['HD Video Quality', 'Secure & Private', 'Connect Anywhere', 'Multiple Devices']
         },
         {
           id: 3,
-          name: 'Dr. Emily Rodriguez',
-          specialty: 'Dermatology',
-          experience: 12,
-          rating: 4.9,
-          consultationFee: 65,
-          isOnline: false,
-          isTopRated: true,
-          isSpecialist: true,
-          totalPatients: 1800,
-          nextAvailable: '2:00 PM',
-          image: 'https://images.unsplash.com/photo-1594824804732-ca8db5ac6d34?w=150&h=150&fit=crop&crop=face'
+          title: 'E-Prescriptions',
+          description: 'Instant digital prescription after consultation. Paperless, easy to store & share.',
+          icon: 'fas fa-prescription-bottle',
+          emoji: '💊',
+          features: ['Instant Digital Rx', 'Paperless System', 'Easy Storage', 'Quick Sharing']
         },
         {
           id: 4,
-          name: 'Dr. David Kim',
-          specialty: 'Pediatrics',
-          experience: 18,
-          rating: 4.7,
-          consultationFee: 55,
-          isOnline: true,
-          isTopRated: false,
-          isSpecialist: true,
-          totalPatients: 2100,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face'
+          title: 'Digital Health Records',
+          description: 'Store reports, prescriptions, and past consultations. Access anytime in the app.',
+          icon: 'fas fa-file-medical',
+          emoji: '📋',
+          features: ['Cloud Storage', 'Complete History', 'Easy Access', 'Secure Backup']
         },
         {
           id: 5,
-          name: 'Dr. Lisa Thompson',
-          specialty: 'Neurology',
-          experience: 22,
-          rating: 4.8,
-          consultationFee: 85,
-          isOnline: true,
-          isTopRated: true,
-          isSpecialist: true,
-          totalPatients: 2800,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=150&h=150&fit=crop&crop=face'
+          title: 'Specialist Doctors',
+          description: 'Cover 20–30+ specialties (Cardiology, Dermatology, Pediatrics, etc.). Find the right doctor quickly.',
+          icon: 'fas fa-stethoscope',
+          emoji: '🩺',
+          features: ['30+ Specialties', 'Expert Doctors', 'Quick Search', 'Verified Specialists']
         },
         {
           id: 6,
-          name: 'Dr. Robert Wilson',
-          specialty: 'Orthopedics',
-          experience: 25,
-          rating: 4.6,
-          consultationFee: 80,
-          isOnline: false,
-          isTopRated: false,
-          isSpecialist: true,
-          totalPatients: 3500,
-          nextAvailable: '4:30 PM',
-          image: 'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=150&h=150&fit=crop&crop=face'
+          title: 'Mental Health Support',
+          description: 'Counseling & therapy services. Confidential, safe space for emotional health.',
+          icon: 'fas fa-brain',
+          emoji: '🧠',
+          features: ['Licensed Therapists', 'Confidential Sessions', 'Safe Environment', 'Emotional Support']
         },
         {
           id: 7,
-          name: 'Dr. Maria Garcia',
-          specialty: 'Psychiatry',
-          experience: 16,
-          rating: 4.9,
-          consultationFee: 70,
-          isOnline: true,
-          isTopRated: true,
-          isSpecialist: true,
-          totalPatients: 1900,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1594824804732-ca8db5ac6d34?w=150&h=150&fit=crop&crop=face'
+          title: '24/7 Availability',
+          description: 'Doctors and emergency support available round the clock. Your health never waits, neither do we.',
+          icon: 'fas fa-clock',
+          emoji: '⏰',
+          features: ['Always Available', 'Emergency Support', 'Round the Clock', 'Instant Response']
         },
         {
           id: 8,
-          name: 'Dr. James Lee',
-          specialty: 'Family Medicine',
-          experience: 14,
-          rating: 4.7,
-          consultationFee: 45,
-          isOnline: true,
-          isTopRated: false,
-          isSpecialist: false,
-          totalPatients: 2200,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face'
+          title: 'Lab Tests & Diagnostics',
+          description: 'Book blood tests, X-rays, or other diagnostics. At-home sample collection option.',
+          icon: 'fas fa-flask',
+          emoji: '🧪',
+          features: ['Online Booking', 'Home Collection', 'Digital Reports', 'Quick Results']
+        },
+        {
+          id: 9,
+          title: 'Medicine Ordering',
+          description: 'Tie up with pharmacies for prescriptions with doorstep delivery.',
+          icon: 'fas fa-pills',
+          emoji: '💊',
+          features: ['Pharmacy Network', 'Doorstep Delivery', 'Easy Ordering', 'Medicine Tracking']
+        },
+        {
+          id: 10,
+          title: 'Insurance & Payments',
+          description: 'Support insurance coverage & secure payments. Building patient trust with transparency.',
+          icon: 'fas fa-shield-alt',
+          emoji: '🛡️',
+          features: ['Insurance Support', 'Secure Payments', 'Transparent Billing', 'Multiple Options']
         }
       ],
-      specialties: [
-        'Cardiology',
-        'Dermatology',
-        'Pediatrics',
-        'Neurology',
-        'Orthopedics',
-        'Psychiatry'
-      ],
-      searchIssue: '',
-      searchSpecialist: '',
-      searchLocation: '',
-      topRatedDoctors: [
-        { 
+      
+      howItWorks: {
+        patient: {
+          title: 'How It Works for Patients',
+          description: 'Simple steps to get the care you need, anytime, anywhere.',
+          steps: [
+            { id: 1, icon: 'fas fa-user-plus', emoji: '👤', title: 'Sign Up', description: 'Create your secure account and complete your medical profile in minutes.' },
+            { id: 2, icon: 'fas fa-search', emoji: '🔍', title: 'Find Your Doctor', description: 'Browse our network of certified doctors and choose the right one for you.' },
+            { id: 3, icon: 'fas fa-video', emoji: '📹', title: 'Start Consultation', description: 'Begin your video consultation and get the expert care you need instantly.' }
+          ]
+        },
+        doctor: {
+          title: 'How It Works for Doctors',
+          description: 'Join our network to expand your practice and connect with patients.',
+          steps: [
+            { id: 1, icon: 'fas fa-id-card', emoji: '🆔', title: 'Register & Verify', description: 'Join our platform by completing a simple registration and verification process.' },
+            { id: 2, icon: 'fas fa-calendar-alt', emoji: '📅', title: 'Set Your Schedule', description: 'Manage your availability and appointments with our flexible scheduling tools.' },
+            { id: 3, icon: 'fas fa-laptop-medical', emoji: '💻', title: 'Conduct Consultations', description: 'Provide high-quality care to patients through secure video calls.' }
+          ]
+        }
+      },
+      
+      testimonials: [
+        {
           id: 1,
-          name: 'Dr. Sarah Johnson', 
-          specialty: 'Family Medicine', 
-          rating: 4.9,
-          consultationFee: 49,
-          image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face'
+          name: 'Sarah Williams',
+          location: 'New York',
+          text: 'Amazing service! Got consultation within minutes and received excellent care.',
+          avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b589?w=60&h=60&fit=crop&crop=face'
         },
-        { 
+        {
           id: 2,
-          name: 'Dr. Michael Chen', 
-          specialty: 'Cardiology', 
-          rating: 4.8,
-          consultationFee: 75,
-          image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=80&h=80&fit=crop&crop=face'
+          name: 'John Martinez',
+          location: 'California',
+          text: 'The doctors are professional and the platform is so easy to use.',
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face'
         },
-        { 
+        {
           id: 3,
-          name: 'Dr. Emily Rodriguez', 
-          specialty: 'Dermatology', 
-          rating: 4.9,
-          consultationFee: 65,
-          image: 'https://images.unsplash.com/photo-1594824804732-ca8db5ac6d34?w=80&h=80&fit=crop&crop=face'
+          name: 'Emily Chen',
+          location: 'Texas',
+          text: 'Saved me a trip to the ER! Quick diagnosis and prescription delivered.',
+          avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face'
+        }
+      ],
+      doctorTestimonials: [
+        {
+          id: 1,
+          name: 'Dr. John Doe',
+          specialty: 'Cardiology',
+          text: 'DoctorBuddy has revolutionized how I connect with my patients. It\'s efficient, secure, and incredibly user-friendly.',
+          avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=60&h=60&fit=crop&crop=face'
         },
-        { 
-          id: 4,
-          name: 'Dr. James Wilson', 
-          specialty: 'Pediatrics', 
-          rating: 4.7,
-          consultationFee: 55,
-          image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=80&h=80&fit=crop&crop=face'
+        {
+          id: 2,
+          name: 'Dr. Jane Smith',
+          specialty: 'Pediatrics',
+          text: 'The platform allows me to provide quality care to children and their families, no matter where they are. A game-changer for pediatric medicine.',
+          avatar: 'https://images.unsplash.com/photo-1537368910025-7003507965b6?w=60&h=60&fit=crop&crop=face'
+        },
+        {
+          id: 3,
+          name: 'Dr. Alex Richards',
+          specialty: 'Dermatology',
+          text: 'I can now consult with more patients and provide timely advice, which is crucial in dermatology. Highly recommended!',
+          avatar: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=60&h=60&fit=crop&crop=face'
         }
       ]
     }
   },
-  methods: {
-    openChat() {
-      // Add your chat opening logic here
-      alert('Chat feature will open here!');
-      // You can integrate with your chat component or service
-      // Example: this.$emit('open-chat');
+  
+  computed: {
+    filteredDoctors() {
+      let filtered = [...this.allDoctors];
+      
+      // Filter by specialty
+      if (this.currentSpecialty !== 'All') {
+        filtered = filtered.filter(doctor => doctor.specialty === this.currentSpecialty);
+      }
+      
+      // Filter by search query (name or specialty)
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        filtered = filtered.filter(doctor => 
+          (doctor.full_name && doctor.full_name.toLowerCase().includes(query)) ||
+          (doctor.specialty && doctor.specialty.toLowerCase().includes(query))
+        );
+      }
+      
+      return filtered;
     },
+    
+    displayedFilteredDoctors() {
+      return this.filteredDoctors.slice(0, this.visibleDoctorsCount);
+    },
+    
+    hasMoreDoctors() {
+      return this.visibleDoctorsCount < this.filteredDoctors.length;
+    },
+    allTestimonials() {
+      const patientStories = this.testimonials.map(t => ({ ...t, type: 'Patient', storyId: `p-${t.id}` }));
+      const doctorStories = this.doctorTestimonials.map(t => ({ ...t, type: 'Doctor', storyId: `d-${t.id}` }));
+      
+      // Interleave them for a mixed view
+      const combined = [];
+      const maxLength = Math.max(patientStories.length, doctorStories.length);
+      for (let i = 0; i < maxLength; i++) {
+        if (patientStories[i]) combined.push(patientStories[i]);
+        if (doctorStories[i]) combined.push(doctorStories[i]);
+      }
+      return combined;
+    }
+  },
+  
+  methods: {
+    async openDoctorProfileModal(doctor) {
+      this.selectedDoctorProfile = {}; // Open modal shell
+      this.loadingDoctorProfile = true;
+      document.body.style.overflow = 'hidden';
+
+      try {
+        const response = await axios.get(`${config.baseURL}/api/patient/doctors?doctor_id=${doctor.id}`);
+        if (response.data && response.data.doctors && response.data.doctors.length > 0) {
+          this.selectedDoctorProfile = response.data.doctors[0];
+        } else {
+          console.error('Doctor not found');
+          this.closeDoctorProfileModal();
+        }
+      } catch (error) {
+        console.error('Error fetching doctor details:', error);
+        this.closeDoctorProfileModal();
+      } finally {
+        this.loadingDoctorProfile = false;
+      }
+    },
+    closeDoctorProfileModal() {
+      this.selectedDoctorProfile = null;
+      this.loadingDoctorProfile = false;
+      document.body.style.overflow = '';
+    },
+    
+    loadMoreDoctors() {
+      this.visibleDoctorsCount += 3;
+    },
+    
+    resetPagination() {
+      this.visibleDoctorsCount = 3;
+    },
+    
+    handleSearch() {
+      this.resetPagination();
+    },
+    
+    handleSpecialtyChange() {
+      this.resetPagination();
+    },
+    formatAvailability(doctor) {
+      if (!doctor) return 'Availability not specified';
+      const days = doctor.available_days || 'Not specified';
+      if (doctor.available_from && doctor.available_to) {
+        return `Available ${days}, ${doctor.available_from}–${doctor.available_to}`;
+      }
+      return `Available on ${days}`;
+    },
+    getInitials(name) {
+      if (!name) return '';
+      return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    },
+    bookAppointment(doctor) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        console.log(`Booking appointment with ${doctor.full_name}`);
+        this.$router.push(`/patient-dashboard`); // Or a specific booking page
+      } else {
+        // User not logged in, redirect to login
+        this.$router.push('/patient-login');
+      }
+    },
+    setupCarouselSyncing() {
+      this.addScrollListener('servicesContainer', 'servicesIndex');
+      this.addScrollListener('howItWorksContainer', 'howItWorksIndex');
+      this.addScrollListener('healthTipsContainer', 'healthTipsIndex');
+      this.addScrollListener('allTestimonialsContainer', 'testimonialsIndex');
+    },
+    addScrollListener(containerRef, indexProp) {
+      const container = this.$refs[containerRef];
+      if (!container) return;
+
+      let scrollTimeout;
+
+      const scrollListener = () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          const children = container.querySelectorAll('[data-index]');
+          if (children.length === 0) return;
+
+          let closestIndex = -1;
+          let minDistance = Infinity;
+          const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+
+          children.forEach(child => {
+            const childCenter = child.offsetLeft + child.offsetWidth / 2;
+            const distance = Math.abs(containerCenter - childCenter);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestIndex = parseInt(child.dataset.index, 10);
+            }
+          });
+
+          if (closestIndex !== -1 && this[indexProp] !== closestIndex) {
+            this[indexProp] = closestIndex;
+            // Reset autoplay timer on manual scroll
+            if (indexProp === 'servicesIndex') this.startServicesRotation();
+            else if (indexProp === 'howItWorksIndex') this.startHowItWorksRotation();
+            else if (indexProp === 'healthTipsIndex') this.startHealthTipsRotation();
+            else if (indexProp === 'testimonialsIndex') this.startTestimonialsRotation();
+          }
+        }, 150);
+      };
+      const listenerProp = `${containerRef}ScrollListener`;
+      if (this[listenerProp]) { container.removeEventListener('scroll', this[listenerProp]); }
+      container.addEventListener('scroll', scrollListener);
+      this[listenerProp] = scrollListener;
+    },
+    // Close modal and reset body overflow
+    closeModal() {
+      this.selectedTip = null;
+      document.body.style.overflow = '';
+    },
+    
+    // Method to view tip details
+    viewTipDetails(tip) {
+      this.selectedTip = { ...tip };
+      document.body.style.overflow = 'hidden';
+    },
+    
+    // Navigate to tips page
+    navigateToTips() {
+      // Close modal if open when navigating to tips page
+      if (this.selectedTip) {
+        this.closeModal();
+      }
+      this.$router.push('/health-tips');
+    },
+    
+    navigateToServices() {
+      // Reset body overflow in case a modal was open
+      document.body.style.overflow = '';
+      this.$router.push('/services');
+    },
+    
+    // Service modal methods
+    viewServiceDetails(service) {
+      this.selectedService = { ...service };
+      document.body.style.overflow = 'hidden';
+    },
+    
+    closeServiceModal() {
+      this.selectedService = null;
+      document.body.style.overflow = '';
+    },
+    
+    getServiceSteps(service) {
+      const steps = {
+        'Doctor Appointments': [
+          'Select your preferred doctor and specialty',
+          'Choose your appointment time and type',
+          'Complete booking with secure payment',
+          'Receive confirmation and reminders'
+        ],
+        'Video Consultations': [
+          'Book your video consultation',
+          'Join the secure video call at scheduled time',
+          'Discuss your health concerns with the doctor',
+          'Receive digital prescription and advice'
+        ],
+        'E-Prescriptions': [
+          'Complete your consultation with doctor',
+          'Receive instant digital prescription',
+          'Download or share prescription easily',
+          'Order medicines through our pharmacy partners'
+        ],
+        'Digital Health Records': [
+          'Your health data is automatically stored',
+          'Access records anytime through the app',
+          'Share records with doctors securely',
+          'Keep track of your health history'
+        ],
+        'Specialist Doctors': [
+          'Browse specialists by category',
+          'Read doctor profiles and reviews',
+          'Book appointment with your chosen specialist',
+          'Get expert care for your specific condition'
+        ],
+        'Mental Health Support': [
+          'Book session with licensed therapist',
+          'Join confidential video consultation',
+          'Discuss your concerns in safe environment',
+          'Get ongoing support and treatment plan'
+        ],
+        '24/7 Availability': [
+          'Access doctors anytime, day or night',
+          'Emergency consultations available instantly',
+          'No waiting for clinic hours',
+          'Get immediate medical advice'
+        ],
+        'Lab Tests & Diagnostics': [
+          'Browse and book required tests online',
+          'Schedule home collection if available',
+          'Get tested at partner labs',
+          'Receive digital reports instantly'
+        ],
+        'Medicine Ordering': [
+          'Upload prescription from consultation',
+          'Browse medicines from partner pharmacies',
+          'Place order with home delivery',
+          'Track your order status'
+        ],
+        'Insurance & Payments': [
+          'Add your insurance details to profile',
+          'Check coverage for treatments',
+          'Pay securely through multiple options',
+          'Get transparent billing and receipts'
+        ]
+      };
+      return steps[service.title] || ['Step 1', 'Step 2', 'Step 3'];
+    },
+    
+    getServiceDetailedDescription(service) {
+      const descriptions = {
+        'Doctor Appointments': 'Our comprehensive appointment system allows you to book both in-clinic and online consultations with certified doctors. Skip the waiting rooms and get instant access to quality healthcare.',
+        'Video Consultations': 'Connect with licensed doctors through secure, HD video calls from anywhere. Our telemedicine platform ensures patient privacy while providing convenient access to healthcare.',
+        'E-Prescriptions': 'Receive digital prescriptions instantly after consultations. Our paperless system makes it easy to store, share, and access your prescriptions whenever needed.',
+        'Digital Health Records': 'Securely store all your medical records, test results, and prescriptions in one place. Access your complete health history anytime and share with healthcare providers.',
+        'Specialist Doctors': 'Access a network of 30+ medical specialties including cardiology, dermatology, pediatrics, and more. Find the right expert for your specific health needs.',
+        'Mental Health Support': 'Professional counseling and therapy services with licensed mental health professionals. Get confidential support in a safe, judgment-free environment.',
+        '24/7 Availability': 'Round-the-clock access to healthcare professionals for emergencies and urgent consultations. Your health emergencies don\'t wait for business hours.',
+        'Lab Tests & Diagnostics': 'Book blood tests, imaging, and other diagnostic services online. Many tests offer convenient home sample collection with fast, accurate results.',
+        'Medicine Ordering': 'Order prescribed medications through our partner pharmacy network. Enjoy doorstep delivery and easy tracking of your medicine orders.',
+        'Insurance & Payments': 'Seamless integration with major insurance providers and secure payment processing. Transparent billing with multiple payment options for your convenience.'
+      };
+      return descriptions[service.title] || 'This service provides comprehensive healthcare solutions tailored to your needs.';
+    },
+    
+    getStartedWithService(service) {
+      // Route to specific service pages or general services page
+      const routes = {
+        'Doctor Appointments': '/patient-login',
+        'Video Consultations': '/patient-login',
+        'E-Prescriptions': '/patient-login',
+        'Digital Health Records': '/patient-login',
+        'Specialist Doctors': '/services',
+        'Mental Health Support': '/services',
+        '24/7 Availability': '/patient-login',
+        'Lab Tests & Diagnostics': '/services',
+        'Medicine Ordering': '/services',
+        'Insurance & Payments': '/patient-login'
+      };
+      
+      this.closeServiceModal();
+      this.$router.push(routes[service.title] || '/services');
+    },
+    
+    navigateToTestimonials() {
+      this.$router.push('/testimonials');
+    },
+
+    startHowItWorksRotation() {
+      if (this.howItWorksInterval) {
+        clearInterval(this.howItWorksInterval);
+      }
+      this.howItWorksInterval = setInterval(() => {
+        this.advanceHowItWorksStep();
+      }, 5000); // Swap every 5 seconds
+    },
+
+    advanceHowItWorksStep() {
+      const stepsCount = this.howItWorks[this.howItWorksView].steps.length;
+      if (stepsCount === 0) return;
+      const newIndex = (this.howItWorksIndex + 1) % stepsCount;
+      this.scrollToHowItWorksStep(newIndex);
+    },
+
+    scrollToHowItWorksStep(index) {
+      const container = this.$refs.howItWorksContainer;
+      if (!container || !container.children[index]) return;
+
+      const card = container.children[index];
+      card.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+      this.howItWorksIndex = index;
+      
+      // Reset the timer on manual interaction
+      this.startHowItWorksRotation();
+    },
+
+    // --- Services Carousel ---
+    startServicesRotation() {
+      if (this.servicesInterval) clearInterval(this.servicesInterval);
+      this.servicesInterval = setInterval(() => {
+        this.advanceServicesStep();
+      }, 5000);
+    },
+    advanceServicesStep() {
+      const newIndex = (this.servicesIndex + 1) % this.services.length;
+      this.scrollToServicesStep(newIndex);
+    },
+    scrollToServicesStep(index) {
+      const container = this.$refs.servicesContainer;
+      if (!container || !container.children[index]) return;
+      container.children[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      this.servicesIndex = index;
+      this.startServicesRotation(); // Reset timer on interaction
+    },
+
+    // --- Health Tips Carousel ---
+    startHealthTipsRotation() {
+      if (this.healthTipsInterval) clearInterval(this.healthTipsInterval);
+      this.healthTipsInterval = setInterval(() => {
+        this.advanceHealthTipsStep();
+      }, 5000);
+    },
+    advanceHealthTipsStep() {
+      const newIndex = (this.healthTipsIndex + 1) % this.healthTips.length;
+      this.scrollToHealthTipsStep(newIndex);
+    },
+    scrollToHealthTipsStep(index) {
+      const container = this.$refs.healthTipsContainer;
+      if (!container || !container.children[index]) return;
+      container.children[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      this.healthTipsIndex = index;
+      this.startHealthTipsRotation(); // Reset timer on interaction
+    },
+
+    // --- Testimonials Carousel ---
+    startTestimonialsRotation() {
+      if (this.testimonialsInterval) clearInterval(this.testimonialsInterval);
+      this.testimonialsInterval = setInterval(() => {
+        this.advanceTestimonialsStep();
+      }, 5000);
+    },
+    advanceTestimonialsStep() {
+      const newIndex = (this.testimonialsIndex + 1) % this.allTestimonials.length;
+      this.scrollToTestimonialsStep(newIndex);
+    },
+    scrollToTestimonialsStep(index) {
+      const container = this.$refs.allTestimonialsContainer;
+      if (!container || !container.children[index]) return;
+      container.children[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      this.testimonialsIndex = index;
+      this.startTestimonialsRotation(); // Reset timer on interaction
+    },
+    showAllDoctorsList() {
+      this.$router.push({ name: 'DoctorsList' });
+    },
+    async fetchAllDoctors() {
+      this.loadingAllDoctors = true;
+      try {
+        const response = await axios.get(`${config.baseURL}/api/patient/doctors`);
+        if (response.data && response.data.doctors) {
+          this.allDoctors = response.data.doctors;
+          const specialties = [...new Set(response.data.doctors.map(d => d.specialty).filter(Boolean))];
+          this.availableSpecialties = ['All', ...specialties];
+          this.resetPagination();
+        }
+      } catch (error) {
+        console.error('Error fetching all doctors:', error);
+        this.allDoctors = [];
+      } finally {
+        this.loadingAllDoctors = false;
+      }
+    },
+    async fetchTopRatedDoctors() {
+      this.loadingDoctors = true;
+      try {
+        const response = await axios.get(`${config.baseURL}/api/patient/doctors`);
+
+        if (response.data && response.data.doctors) {
+            this.topRatedDoctors = response.data.doctors
+                .sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0))
+                .slice(0, 3);
+        }
+      } catch (error) {
+        console.error('Error fetching top rated doctors:', error);
+        // This error is expected for unauthenticated users. The UI will gracefully fall back to the empty state.
+        this.topRatedDoctors = [];
+      } finally {
+        this.loadingDoctors = false;
+      }
+    },
+    showLearnMoreSections() {
+      this.showLearnMore = true;
+      this.$nextTick(() => {
+        this.setupObservers(); // Re-run to attach observers to new elements
+        this.setupCarouselSyncing();
+        const servicesSectionEl = this.$refs.servicesSection;
+        if (servicesSectionEl) {
+          servicesSectionEl.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    },
+    
+    selectDoctorForConsultation(doctor) {
+      console.log('Selected doctor for consultation:', doctor);
+      alert(`Starting consultation with ${doctor.name}`);
+      // Add navigation logic here
+    },
+    
+    setupObservers() {
+      const options = { threshold: 0.1 };
+
+      const initObserver = (refName, startFn, intervalProp, observerProp) => {
+        if (this[observerProp]) this[observerProp].disconnect();
+        const section = this.$refs[refName];
+        if (section) {
+          this[observerProp] = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+              startFn();
+            } else {
+              if (this[intervalProp]) clearInterval(this[intervalProp]);
+            }
+          }, options);
+          this[observerProp].observe(section);
+        }
+      };
+
+      initObserver('servicesSection', this.startServicesRotation, 'servicesInterval', 'servicesObserver');
+      initObserver('howItWorksSection', this.startHowItWorksRotation, 'howItWorksInterval', 'howItWorksObserver');
+      initObserver('healthTipsSection', this.startHealthTipsRotation, 'healthTipsInterval', 'healthTipsObserver');
+      initObserver('testimonialsSection', this.startTestimonialsRotation, 'testimonialsInterval', 'testimonialsObserver');
+    },
+
+    openChat() {
+      alert('Chat feature will open here!');
+    },
+    
     animateStats() {
       const duration = 2000;
       const stepTime = 50;
@@ -1080,539 +1646,138 @@ export default {
         }, stepTime);
       });
     },
-    showDoctorSuggestions() {
-      this.showSmartDoctorSection = true;
-      // Optionally scroll to the section
-      setTimeout(() => {
-        const element = document.querySelector('.smart-suggestions--main');
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
+    
+    startHeroPhraseRotation() {
+      this.heroPhraseInterval = setInterval(() => {
+        this.heroPhraseIndex = (this.heroPhraseIndex + 1) % this.heroPhrases.length;
+        this.currentHeroPhrase = this.heroPhrases[this.heroPhraseIndex];
+      }, 3000);
     },
-    closeSuggestions() {
-      this.showSuggestions = false;
-    },
-    selectDoctorForConsultation(doctor) {
-      console.log('Selected doctor for consultation:', doctor);
-      // Add logic to handle doctor selection for consultation
-      alert(`Starting consultation with ${doctor.name}`);
-    },
-    bookConsultation(doctor) {
-      console.log('Booking consultation with:', doctor);
-      // Add logic to book consultation
-      alert(`Booking consultation with ${doctor.name} - $${doctor.consultationFee}`);
-    },
-    showAllDoctors() {
-      this.showTestimonials = true;
-      this.showSuggestions = false;
-      setTimeout(() => {
-        const element = document.querySelector('.doctors-list');
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    },
-    emergencyContact() {
-      alert('For immediate emergency, call 911 or visit your nearest emergency room!');
-    },
-    showLearnMoreSections() {
-      this.showLearnMore = true;
+    
+    startSubtitleRotation() {
+      this.subtitleInterval = setInterval(() => {
+        this.subtitleIndex = (this.subtitleIndex + 1) % this.subtitlePhrases.length;
+        this.currentSubtitle = this.subtitlePhrases[this.subtitleIndex];
+      }, 5000);
+    }
+  },
+  
+  watch: {
+    howItWorksView() {
+      // Reset the carousel when the user toggles between Patient/Doctor views
+      this.howItWorksIndex = 0;
       this.$nextTick(() => {
-        // Scroll to the benefits section after it appears
-        const el = document.querySelector('.benefits-showcase');
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }
+        this.scrollToHowItWorksStep(0);
+      // Re-setup the scroll listener for the new set of items
+      this.addScrollListener('howItWorksContainer', 'howItWorksIndex');
       });
-    },
-    selectDoctor(doctor) {
-      console.log('Selected doctor:', doctor);
-      // Add logic to handle doctor selection
-      // For example, navigate to booking page or open modal
-    },
-    loadMoreDoctors() {
-      // Simulate loading more doctors
-      console.log('Loading more doctors...');
-      // In a real app, this would make an API call
-      // For now, we'll just set hasMoreDoctors to false after first click
-      this.hasMoreDoctors = false;
-    },
-    getListOfAllDoctors() {
+    }
+  },
 
-    },
-    getStarted() {
-      // Logic for Get Started button
-      // e.g., navigate to registration or doctor search
-    },
-    learnMore() {
-      // Logic for Learn More button
-      // e.g., show modal or navigate to info page
-    },
-    findSpecialist() {
-      // Logic to suggest specialist based on searchIssue
-      // e.g., call API or match keywords
-    },
-    searchDoctors() {
-      // Logic to search doctors by name, condition, location
-      // e.g., call API or filter list
-    },
-    goToLogin() {
-      this.$router.push({ name: 'Login' });
-    }
-  },
   mounted() {
-    // Auto swap testimonials every 7 seconds
-    this.testimonialInterval = setInterval(() => {
-      this.showDoctorTestimonials = !this.showDoctorTestimonials;
-    }, 7000);
-    // Start stat animations when component mounts
-    setTimeout(() => {
-      this.animateStats();
-    }, 500);
-    // Start hero phrase swap animation
-    this.heroPhraseInterval = setInterval(() => {
-      this.heroPhraseIndex = (this.heroPhraseIndex + 1) % this.heroPhrases.length;
-      this.currentHeroPhrase = this.heroPhrases[this.heroPhraseIndex];
-    }, 2200);
-    // Start subtitle swap animation
-    this.subtitleInterval = setInterval(() => {
-      this.subtitleIndex = (this.subtitleIndex + 1) % this.subtitlePhrases.length;
-      this.currentSubtitle = this.subtitlePhrases[this.subtitleIndex];
-    }, 3200);
+    this.animateStats();
+    this.startHeroPhraseRotation();
+    this.startSubtitleRotation();
+    this.fetchTopRatedDoctors();
+    this.setupObservers();
+    this.setupCarouselSyncing();
   },
+  
   beforeUnmount() {
-  if (this.testimonialInterval) clearInterval(this.testimonialInterval);
-    if (this.heroPhraseInterval) clearInterval(this.heroPhraseInterval);
-    if (this.subtitleInterval) clearInterval(this.subtitleInterval);
-  },
-  emits: [],
-  computed: {
-    filteredDoctors() {
-      if (this.currentSpecialty === 'All') {
-        return this.allDoctors;
-      }
-      return this.allDoctors.filter(doctor => doctor.specialty === this.currentSpecialty);
-    },
-    currentSuggestions() {
-      switch (this.currentSuggestionCategory) {
-        case 'top-rated':
-          return this.allDoctors.filter(doctor => doctor.isTopRated).slice(0, 6);
-        case 'available-now':
-          return this.allDoctors.filter(doctor => doctor.isOnline).slice(0, 6);
-        case 'specialists':
-          return this.allDoctors.filter(doctor => doctor.isSpecialist).slice(0, 6);
-        case 'recommended':
-          // Show a mix of top-rated and available doctors
-          return this.allDoctors
-            .filter(doctor => doctor.isTopRated || doctor.isOnline)
-            .sort((a, b) => b.rating - a.rating)
-            .slice(0, 6);
-        default:
-          return this.allDoctors.slice(0, 6);
-      }
+    if (this.heroPhraseInterval) {
+      clearInterval(this.heroPhraseInterval);
     }
+    if (this.subtitleInterval) {
+      clearInterval(this.subtitleInterval);
+    }
+    if (this.howItWorksInterval) {
+      clearInterval(this.howItWorksInterval);
+    }
+    if (this.servicesInterval) {
+      clearInterval(this.servicesInterval);
+    }
+    if (this.healthTipsInterval) {
+      clearInterval(this.healthTipsInterval);
+    }
+    if (this.testimonialsInterval) {
+      clearInterval(this.testimonialsInterval);
+    }
+
+    const cleanupScrollListener = (containerRef) => {
+      const container = this.$refs[containerRef];
+      const listenerProp = `${containerRef}ScrollListener`;
+      if (container && this[listenerProp]) {
+        container.removeEventListener('scroll', this[listenerProp]);
+      }
+    };
+    cleanupScrollListener('servicesContainer');
+    cleanupScrollListener('howItWorksContainer');
+    cleanupScrollListener('healthTipsContainer');
+    cleanupScrollListener('allTestimonialsContainer');
+    if (this.servicesObserver) this.servicesObserver.disconnect();
+    if (this.howItWorksObserver) this.howItWorksObserver.disconnect();
+    if (this.healthTipsObserver) this.healthTipsObserver.disconnect();
+    if (this.testimonialsObserver) this.testimonialsObserver.disconnect();
+    
+    // Reset body overflow when leaving the page
+    document.body.style.overflow = '';
   }
 }
 </script>
 
 <style scoped>
-/* Showcase Header Styles */
-.showcase-header {
-  margin-bottom: 1.25rem;
-  width: 100%;
+/* Custom scrollbar for horizontal containers */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  height: 8px;
 }
 
-.showcase-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  gap: 1rem;
-  flex-wrap: nowrap;
-  min-width: 0;
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.showcase-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1e293b;
-  white-space: nowrap;
-  flex-shrink: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 4px;
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-shrink: 0;
-  flex-wrap: nowrap;
-  white-space: nowrap;
+.scrollbar-hide::-webkit-scrollbar-track {
+  background-color: #f3f4f6;
+  border-radius: 4px;
 }
 
-.live-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  background: rgba(239, 68, 68, 0.08);
-  color: #ef4444;
-  padding: 0.35rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.live-badge i {
-  color: #ef4444;
-  font-size: 0.5rem;
-  animation: pulse 1.5s infinite;
-  margin-bottom: 0.1rem;
-}
-
-/* Unique Doctor Button Styles */
-.unique-doctor-btn {
-  --primary-color: #4f46e5;
-  --secondary-color: #7c3aed;
-  --accent-color: #00ff95;
-  position: relative;
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  outline-offset: 3px;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 12px rgba(79, 70, 229, 0.2);
-  height: 38px;
-  flex-shrink: 0;
-}
-
-.unique-doctor-btn:hover {
-  transform: translateY(-2px);
-}
-
-.unique-doctor-btn:active {
-  transform: translateY(0);
-}
-
-.unique-doctor-btn .btn-inner {
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  height: 100%;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: white;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  position: relative;
-  z-index: 2;
-  transition: all 0.2s ease;
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-}
-
-.unique-doctor-btn:hover .btn-inner {
-  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-  box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.unique-doctor-btn .btn-icon {
-  margin-right: 8px;
-  font-size: 1rem;
-  color: var(--accent-color);
-  transition: transform 0.2s ease;
-  text-shadow: 0 0 6px rgba(0, 255, 149, 0.5);
-}
-
-.unique-doctor-btn:hover .btn-icon {
-  transform: rotate(-10deg) scale(1.1);
-  animation: pulse 1.5s infinite;
-}
-
-.unique-doctor-btn .btn-text {
-  position: relative;
-  z-index: 1;
-  letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.unique-doctor-btn .btn-arrow-icon {
-  font-size: 0.8em;
-  transition: transform 0.2s ease;
-  margin-left: 2px;
-}
-
-.unique-doctor-btn:hover .btn-arrow-icon {
-  transform: translateX(3px);
-}
-
-.unique-doctor-btn .btn-particles {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  overflow: hidden;
-  border-radius: 10px;
-}
-
-.unique-doctor-btn .btn-particles::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-  opacity: 0;
-  transform: scale(0);
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-.unique-doctor-btn:hover .btn-particles::before {
-  opacity: 0.3;
-  transform: scale(1);
-  animation: particles 6s linear infinite;
-}
-
-@keyframes particles {
-  0% { transform: rotate(0deg) scale(1); }
-  100% { transform: rotate(360deg) scale(1); }
-}
-
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .header-actions {
-    gap: 0.5rem;
-  }
-  
-  .showcase-title {
-    font-size: 1.15rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .header-actions {
-    gap: 0.4rem;
-    flex-shrink: 1;
-    min-width: 0;
-  }
-  
-  .unique-doctor-btn .btn-text {
-    display: none;
-  }
-  
-  .unique-doctor-btn .btn-icon {
-    margin-right: 0;
-    font-size: 1rem;
-  }
-  
-  .unique-doctor-btn .btn-inner {
-    padding: 0 12px;
-    width: 38px;
-    justify-content: center;
-  }
-  
-  .unique-doctor-btn {
-    height: 36px;
-    flex-shrink: 0;
-  }
-  
-  .showcase-title {
-    font-size: 1.1rem;
-  }
-  
-  .live-badge {
-    padding: 0.25rem 0.6rem;
-    font-size: 0.75rem;
-    flex-shrink: 0;
-  }
-}
-
-@media (max-width: 640px) {
-  .showcase-header-row {
-    gap: 0.5rem;
-  }
-  
-  .header-actions {
-    gap: 0.3rem;
-  }
-  
-  .showcase-title {
-    font-size: 1rem;
-    flex: 1;
-    min-width: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .showcase-header-row {
-    align-items: flex-start;
-  }
-  
-  .header-actions {
-    gap: 0.25rem;
-  }
-  
-  .showcase-title {
-    font-size: 0.95rem;
-  }
-  
-  .live-badge {
-    padding: 0.2rem 0.5rem;
-    font-size: 0.7rem;
-  }
-  
-  .live-badge i {
-    font-size: 0.45rem;
-  }
-  
-  .unique-doctor-btn {
-    height: 32px;
-  }
-  
-  .unique-doctor-btn .btn-inner {
-    padding: 0 10px;
-    width: 32px;
-  }
-}
-
-/* Floating Chat Button Styles */
-.floating-chat-btn {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(67, 97, 238, 0.3);
-  z-index: 1000;
+/* Health Tips hover effect */
+.health-tip-card {
   transition: all 0.3s ease;
-  user-select: none;
 }
 
-.floating-chat-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 25px rgba(67, 97, 238, 0.4);
+.health-tip-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-.floating-chat-btn:active {
-  transform: scale(0.95);
+/* Custom scrollbar for insurance partners */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
-.floating-chat-btn .pulse-animation {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: inherit;
-  border-radius: 50%;
-  z-index: -1;
-  opacity: 0.7;
-  transform: scale(1);
-  animation: pulse 2s infinite;
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  70% {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0;
-  }
+/* Transition animations */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.8s ease-in-out;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .floating-chat-btn {
-    width: 56px;
-    height: 56px;
-    font-size: 22px;
-    bottom: 20px;
-    right: 15px;
-  }
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 
-/* Stylish and dynamic back button for Smart Doctor Recommendations */
-.stylish-back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-  border: none;
-  border-radius: 30px;
-  padding: 0.7rem 1.6rem 0.7rem 1.2rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.18);
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
-  position: relative;
-  overflow: hidden;
-  outline: none;
-  margin-right: 10px;
-}
-.stylish-back-btn:hover, .stylish-back-btn:focus {
-  background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
-  transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.28);
-}
-.back-icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.13);
-  border-radius: 50%;
-  width: 2.1rem;
-  height: 2.1rem;
-  margin-right: 0.2rem;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.12);
-  transition: background 0.2s;
-}
-.stylish-back-btn:hover .back-icon-wrapper {
-  background: rgba(255,255,255,0.22);
-}
-.back-icon-wrapper i {
-  font-size: 1.2rem;
-  color: #fff;
-  transition: color 0.2s;
-}
-.back-text {
-  letter-spacing: 0.5px;
-  font-weight: 600;
-  font-size: 1.08rem;
-  transition: color 0.2s;
-}
-/* Import Font Awesome for icons */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
-
-/* Animation keyframes */
-@keyframes fadeInUp {
+/* Custom animations */
+@keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(30px);
@@ -1623,2477 +1788,135 @@ export default {
   }
 }
 
-@keyframes slideInLeft {
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateX(-50px);
+    transform: translateY(50px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out;
 }
 
-@keyframes slideDownFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-50px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.animate-slide-up {
+  animation: slideUp 1s ease-out 0.3s both;
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes floatingIcon {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-10px) rotate(5deg);
-  }
-  75% {
-    transform: translateY(10px) rotate(-5deg);
-  }
-}
-
-@keyframes typing {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-/* Modern masthead styles */
-.masthead {
-  padding: 2rem 0rem 0rem;
-  background: linear-gradient(135deg, #6d25b7 0%, #540c1f 100%);
-  /* Fixed background color, no animation */
-  background-size: cover;
-  /* animation: slideDownFadeIn 1.2s ease-out; */
-  position: relative;
-  overflow: hidden;
-  margin-top: 20px;
-  transition: all 0.3s ease;
-}
-
-.masthead:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  animation-play-state: paused;
-}
-
-/* Dynamic Background Elements */
-.dynamic-bg-elements {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.floating-element {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  animation: floatingIcon 8s infinite ease-in-out;
-}
-
-.element-1 {
-  width: 80px;
-  height: 80px;
-  top: 10%;
-  left: 10%;
-  background: rgba(255, 107, 107, 0.2);
-  animation-delay: 0s;
-  animation-duration: 6s;
-}
-
-.element-2 {
-  width: 120px;
-  height: 120px;
-  top: 20%;
-  right: 15%;
-  background: rgba(254, 202, 87, 0.2);
-  animation-delay: 1s;
-  animation-duration: 8s;
-}
-
-.element-3 {
-  width: 60px;
-  height: 60px;
-  bottom: 30%;
-  left: 20%;
-  background: rgba(79, 172, 254, 0.2);
-  animation-delay: 2s;
-  animation-duration: 7s;
-}
-
-.element-4 {
-  width: 100px;
-  height: 100px;
-  bottom: 10%;
-  right: 10%;
-  background: rgba(102, 126, 234, 0.2);
-  animation-delay: 0.5s;
-  animation-duration: 9s;
-}
-
-/* Particle effects */
-.floating-element::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  animation: pulse 3s infinite;
-}
-
-.floating-element:hover {
-  transform: scale(1.2);
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.masthead::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  opacity: 0.3;
-}
-
-.masthead__content {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  /* gap: 4rem; */
-  position: relative;
-  z-index: 2;
-  transform: translateY(0);
-  transition: all 0.3s ease;
-}
-
-.masthead__content:hover {
-  transform: translateY(-5px);
-}
-
-.masthead__text {
-  /* margin-top: -12rem; */
-  flex: 1;
-  animation: slideInLeft 1s ease-out;
-  position: relative;
-}
-
-.masthead__text::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -20px;
-  width: 4px;
-  height: 100%;
-  background: linear-gradient(to bottom, #ff6b6b, #feca57);
-  border-radius: 2px;
-  opacity: 0;
-  animation: slideInLeft 1.5s ease-out 0.5s both;
-}
-
-.animated-title.dynamic-hero-title {
-  font-size: 3.2rem;
-  margin-bottom: 2rem;
-  color: #fff;
-  line-height: 1.2;
-  font-weight: 700;
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  max-width: 600px;
-  white-space: normal;
-  word-break: break-word;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
-}
-
-.animated-title .highlight {
+/* Service Icons Styling */
+.service-icon {
+  width: 48px;
+  height: 48px;
+  fill: currentColor;
   display: block;
-  background: linear-gradient(45deg, #ff6b6b, #feca57);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: #fff;
 }
 
-.swap-phrase {
-  display: inline-block;
-  color: #fff;
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-left: 0.5rem;
-  min-width: 120px;
-  transition: color 0.3s;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
-}
-
-@media (max-width: 900px) {
-  .animated-title.dynamic-hero-title {
-    font-size: 2.1rem;
-  }
-  .swap-phrase {
-    font-size: 1.3rem;
-    min-width: 80px;
-  }
-}
-
-@media (max-width: 600px) {
-  .animated-title.dynamic-hero-title {
-    font-size: 1.3rem;
-    max-width: 95vw;
-  }
-  .swap-phrase {
-    font-size: 1rem;
-    min-width: 60px;
-  }
-}
-
-/* Swap animation */
-.swap-fade-enter-active, .swap-fade-leave-active {
-  transition: opacity 0.5s, transform 0.5s;
-}
-.swap-fade-enter-from, .swap-fade-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
-}
-.swap-fade-enter-to, .swap-fade-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.masthead-subtitle.stylish-paragraph {
-  position: relative;
-  background: rgba(255,255,255,0.07);
-  border-radius: 18px;
-  padding: 1.1rem 2rem 1.1rem 1.5rem;
-  margin-bottom: 1.7rem;
-  box-shadow: 0 4px 24px 0 rgba(102,126,234,0.10);
-  overflow: hidden;
-  min-height: 3.2em;
+.service-icon-fallback {
+  font-size: 3rem !important;
+  line-height: 1;
   display: flex;
   align-items: center;
-  border-left: 5px solid #feca57;
-  animation: fadeInUp 1s;
-}
-.subtitle-main {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #fff;
-  margin-right: 1.1rem;
-  letter-spacing: 0.5px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.13);
-}
-.subtitle-highlight {
-  background: linear-gradient(45deg, #feca57, #ff6b6b);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-.subtitle-animated {
-  display: inline-block;
-  min-width: 180px;
-  margin-left: 0.5rem;
-  vertical-align: middle;
-}
-.subtitle-swap {
-  color: #fff;
-  font-size: 1.08rem;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.10);
-  animation: fadeInUp 0.7s;
-}
-@media (max-width: 900px) {
-  .masthead-subtitle.stylish-paragraph {
-    font-size: 1rem;
-    padding: 0.8rem 1.1rem 0.8rem 1rem;
-  }
-  .subtitle-main {
-    font-size: 1.05rem;
-  }
-  .subtitle-animated {
-    min-width: 100px;
-  }
-}
-@media (max-width: 600px) {
-  .masthead-subtitle.stylish-paragraph {
-    font-size: 0.95rem;
-    padding: 0.7rem 0.7rem 0.7rem 0.7rem;
-    min-height: 2.2em;
-  }
-  .subtitle-main {
-    font-size: 0.95rem;
-  }
-  .subtitle-animated {
-    min-width: 60px;
-  }
+  justify-content: center;
+  font-weight: 900 !important;
 }
 
-.fade-in-text {
-  font-size: 1.3rem;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 3rem;
-  line-height: 1.7;
-  animation: fadeInUp 1s ease-out 0.5s both;
+/* Ensure Font Awesome icons are visible */
+.fas, .far, .fab {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 6 Brands" !important;
+  font-weight: 900 !important;
+  font-style: normal !important;
 }
 
-.cta-buttons {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-  animation: fadeInUp 1s ease-out 0.8s both;
+/* Service container icon styling */
+.service-container i {
+  font-size: 3rem !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+  display: inline-block !important;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1.1rem;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.btn--primary {
-  background: linear-gradient(45deg, #ff6b6b, #ff8e53);
-  color: white;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-}
-
-.btn--primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
-}
-
-.btn--secondary {
-  background: transparent;
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-}
-
-.btn--secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px);
-}
-
-.btn--outline {
-  background: transparent;
-  color: #667eea;
-  border: 2px solid #667eea;
-}
-
-.btn--outline:hover {
-  background: #667eea;
-  color: white;
-}
-
-.btn--large {
-  font-size: 1.2rem;
-  padding: 1.2rem 2.5rem;
-}
-
-.btn--small {
-  font-size: 0.9rem;
-  padding: 0.8rem 1.5rem;
-}
-
-.btn--compact {
-  font-size: 0.85rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: 20px;
-  margin-top: 0.5rem;
-  min-width: auto;
-  flex-shrink: 0;
-}
-
-.pulse-animation {
-  animation: pulse 2s infinite;
-}
-
-.stats-row {
-  display: flex;
-  gap: 3rem;
-  animation: fadeInUp 1s ease-out 1.2s both;
-}
-
-.stat-item {
-  text-align: center;
-}
-
-.stat-number {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #feca57;
-  margin-bottom: 0.5rem;
-}
-
-.stat-label {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.masthead__image {
-  flex: 1;
-  animation: slideInRight 1s ease-out 0.3s both;
-}
-
-/* Realistic Hero Visual Container */
-.hero-visual-container {
-  position: relative;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Top Doctors Showcase */
-.top-doctors-showcase {
-  background: white;
-  border-radius: 25px;
-  padding: 2rem 1.5rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  /* animation: float 6s ease-in-out infinite; */
-  position: relative;
-  overflow: hidden;
-}
-
-.top-doctors-showcase::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  border-radius: 25px 25px 0 0;
-}
-
-.showcase-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #f8f9fa;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-}
-
-.showcase-header h3 {
-  color: #2c3e50;
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-.live-badge {
-  background: linear-gradient(45deg, #00d4aa, #4facfe);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
-}
-
-.live-badge i {
-  animation: pulse 2s infinite;
-  font-size: 0.6rem;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-}
-
-.doctors-carousel {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.doctor-mini-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-radius: 15px;
-  transition: all 0.3s ease;
-  animation: slideInRight 0.6s ease-out both;
-  border: 1px solid rgba(102, 126, 234, 0.1);
-}
-
-.doctor-mini-card:hover {
-  transform: translateX(5px);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-}
-
-.doctor-mini-avatar {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.doctor-mini-avatar img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.rating-badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: linear-gradient(45deg, #feca57, #ff9ff3);
-  color: white;
-  padding: 0.2rem 0.5rem;
-  border-radius: 10px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-  box-shadow: 0 2px 10px rgba(254, 202, 87, 0.4);
-}
-
-.doctor-mini-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.doctor-mini-info h4 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 0.25rem 0;
-  color: inherit;
-}
-
-.doctor-mini-info p {
-  font-size: 0.8rem;
-  margin: 0 0 0.5rem 0;
+/* Insurance Partner Icons Styling */
+.insurance-partner-icon {
+  width: 48px;
+  height: 48px;
+  fill: currentColor;
+  display: block;
   opacity: 0.8;
-  color: inherit;
+  transition: opacity 0.3s ease;
 }
 
-.consultation-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.insurance-partner-icon:hover {
+  opacity: 1;
 }
 
-.consultation-info .price {
-  font-weight: 700;
-  font-size: 1rem;
-  color: #667eea;
-}
-
-.doctor-mini-card:hover .consultation-info .price {
-  color: white;
-}
-
-.quick-book-btn {
-  background: linear-gradient(45deg, #ff6b6b, #ff8e53);
-  color: white;
-  border: none;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
+.insurance-partner-fallback {
+  font-size: 3rem;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
 }
 
-.quick-book-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+.insurance-partner-fallback:hover {
+  opacity: 1;
 }
 
-.showcase-stats {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.stat-mini {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: rgba(102, 126, 234, 0.1);
-  border-radius: 15px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-}
-
-.stat-icon {
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.stat-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-text .number {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #667eea;
-  line-height: 1.2;
-}
-
-.stat-text .label {
-  font-size: 0.75rem;
-  color: #6c757d;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.trust-indicators {
-  position: absolute;
-  top: -15px;
-  right: -20px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  z-index: 10;
-}
-
-.trust-badge {
-  background: linear-gradient(45deg, #ff6b6b, #feca57);
-  color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  box-shadow: 0 6px 15px rgba(255, 107, 107, 0.3);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-  animation: fadeInUp 1s ease-out both;
-}
-
-.floating-badge-1 {
-  animation-delay: 0.5s;
-  background: linear-gradient(45deg, #00d4aa, #4facfe);
-}
-
-.floating-badge-2 {
-  animation-delay: 1s;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-}
-
-.floating-badge-3 {
-  animation-delay: 1.5s;
-  background: linear-gradient(45deg, #feca57, #ff9ff3);
-}
-
-.doctor-consultation-card {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-  padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(20px);
-  animation: float 6s ease-in-out infinite;
-}
-
-.consultation-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.doctor-info {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.doctor-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 3px solid #00d4aa;
-  object-fit: cover;
-}
-
-.doctor-details h4 {
-  color: #2c3e50;
-  font-size: 1rem;
-  margin: 0 0 0.25rem 0;
-  font-weight: 600;
-}
-
-.specialty {
-  color: #667eea;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-.status-live {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #00d4aa;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-top: 0.25rem;
-}
-
-.live-indicator {
-  width: 8px;
-  height: 8px;
-  background: #00d4aa;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-.consultation-time {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #6c757d;
-  font-size: 0.8rem;
-}
-
-.video-consultation-demo {
-  position: relative;
-  border-radius: 15px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
-
-.consultation-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.video-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-}
-
-.play-button {
-  width: 60px;
-  height: 60px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #667eea;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.play-button:hover {
-  transform: scale(1.1);
-  background: white;
-}
-
-.consultation-info {
-  text-align: center;
-}
-
-.consultation-type {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.consultation-duration {
-  font-size: 0.8rem;
-  opacity: 0.9;
-}
-
-.consultation-features {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.feature-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  color: #667eea;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.feature-item i {
-  font-size: 1.2rem;
-  color: #00d4aa;
-}
-
-.trust-indicators {
-  position: absolute;
-  top: -20px;
-  right: -30px;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.trust-badge {
-  background: linear-gradient(45deg, #ff6b6b, #feca57);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 25px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
-  animation: fadeInUp 1s ease-out both;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
-}
-
-.trust-badge i {
-  font-size: 0.9rem;
-}
-
-/* Section titles */
-.section-title {
-  text-align: center;
-  font-size: 2.5rem;
-  color: #2c3e50;
-  margin-bottom: 3rem;
-  position: relative;
-}
-
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  border-radius: 2px;
-}
-
-/* Smart Doctor Suggestions */
-.smart-suggestions {
-  padding: 4rem 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
-
-.suggestions-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
-}
-
-.suggestions-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.header-content {
-  flex: 1;
-}
-
-.suggestions-title {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: white;
-}
-
-.suggestions-title i {
-  background: linear-gradient(45deg, #ff6b6b, #feca57);
-  color: white;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
-}
-
-.suggestions-subtitle {
-  font-size: 1.2rem;
-  opacity: 0.9;
-  margin: 0;
-}
-
-.close-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
-}
-
-.suggestion-categories {
-  margin-bottom: 3rem;
-}
-
-.category-tabs {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.category-tab {
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 30px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  backdrop-filter: blur(10px);
-  font-size: 1rem;
-}
-
-.category-tab:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-}
-
-.category-tab.active {
-  background: linear-gradient(45deg, #ff6b6b, #feca57);
-  border-color: transparent;
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
-}
-
-.category-tab .count {
-  background: rgba(255, 255, 255, 0.3);
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.category-tab.active .count {
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.suggestions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-.suggestion-card {
-  background: white;
-  border-radius: 25px;
-  padding: 2rem;
-  color: #2c3e50;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  transition: all 0.4s ease;
+/* Responsive Navigation Dots */
+.dot-indicator {
+  min-width: 8px;
+  min-height: 8px;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.suggestion-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-}
-
-.suggestion-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-}
-
-.suggestion-badge {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.badge {
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.badge.top-rated {
-  background: linear-gradient(45deg, #feca57, #ff9ff3);
-  color: white;
-}
-
-.badge.available {
-  background: linear-gradient(45deg, #00d4aa, #4facfe);
-  color: white;
-}
-
-.badge.specialist {
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  color: white;
-}
-
-.doctor-suggestion-info {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.doctor-avatar-large {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.doctor-avatar-large img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #f8f9fa;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.availability-indicator {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #dc3545;
-  border: 3px solid white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.availability-indicator.online {
-  background: #00d4aa;
-  animation: pulse 2s infinite;
-}
-
-.doctor-details-extended {
-  flex: 1;
-  min-width: 0;
-}
-
-.doctor-details-extended h3 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #2c3e50;
-}
-
-.specialty-detail {
-  color: #667eea;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  font-size: 1rem;
-}
-
-.experience-rating {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  background: #f8f9fa;
-  border-radius: 15px;
-}
-
-.experience {
-  color: #6c757d;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.rating-stars {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.rating-stars i {
-  color: #ddd;
-  font-size: 0.9rem;
-}
-
-.rating-stars i.filled {
-  color: #feca57;
-}
-
-.rating-number {
-  margin-left: 0.5rem;
-  font-weight: 700;
-  color: #2c3e50;
-}
-
-.consultation-options-extended {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.option {
-  flex: 1;
-  padding: 0.75rem;
-  background: rgba(102, 126, 234, 0.1);
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-  transition: all 0.3s ease;
-}
-
-.option:hover {
-  background: rgba(102, 126, 234, 0.2);
-  transform: translateY(-2px);
-}
-
-.option i {
-  color: #667eea;
-  font-size: 1.1rem;
-}
-
-.option span:first-of-type {
-  flex: 1;
-  font-weight: 600;
-  color: #2c3e50;
-}
-
-.option .price {
-  font-weight: 700;
-  color: #667eea;
-}
-
-.quick-stats {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #6c757d;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.stat i {
-  color: #667eea;
-}
-
-.cta-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(90deg, #4CAF50 0%, #45a049 100%);
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  text-decoration: none;
-  margin: 1.5rem 0;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.cta-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.25);
-  background: linear-gradient(90deg, #45a049 0%, #4CAF50 100%);
-}
-
-.cta-button:active {
-  transform: translateY(1px);
-}
-
-.cta-button__icon {
-  margin-right: 10px;
-  font-size: 1.2rem;
-  transition: transform 0.3s ease;
-}
-
-.cta-button:hover .cta-button__icon {
+.dot-active {
   transform: scale(1.2);
 }
 
-.cta-button__arrow {
-  margin-left: 8px;
-  transition: transform 0.3s ease;
-  display: inline-block;
-}
-
-.cta-button:hover .cta-button__arrow {
-  transform: translateX(5px);
-}
-
-.btn--primary {
-  background-color: #4b6cb7;
-  color: white;
-  border: none;
-  padding: 0.8rem 1.8rem;
-  border-radius: 50px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.suggestions-footer {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.btn--emergency {
-  background: linear-gradient(45deg, #dc3545, #e74c3c);
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 25px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-}
-
-.btn--emergency:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(220, 53, 69, 0.5);
-}
-
-/* Enhanced doctor list section */
-.doctors-list {
-  padding: 6rem 2rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-}
-
-.doctors-filter {
-  max-width: 1200px;
-  margin: 0 auto 3rem;
-}
-
-.filter-tabs {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.filter-tab {
-  background: white;
-  border: 2px solid #e9ecef;
-  color: #6c757d;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.filter-tab:hover {
-  border-color: #667eea;
-  color: #667eea;
-  transform: translateY(-2px);
-}
-
-.filter-tab.active {
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  border-color: #667eea;
-  color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.doctors-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.doctor-card {
-  background: white;
-  border-radius: 20px;
-  padding: 1.5rem;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.doctor-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-  border-color: #667eea;
-}
-
-.doctor-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.doctor-card:hover::before {
-  transform: scaleX(1);
-}
-
-.doctor-status {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.status-indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-.status-indicator.online {
-  background: #00d4aa;
-}
-
-.status-indicator.offline {
-  background: #dc3545;
-  animation: none;
-}
-
-.status-text {
-  color: #6c757d;
-}
-
-.doctor-card:hover .status-text {
-  color: #667eea;
-}
-
-.doctor-avatar-section {
-  text-align: center;
-  margin-bottom: 1rem;
-  position: relative;
-}
-
-.doctor-avatar-img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #f8f9fa;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.doctor-card:hover .doctor-avatar-img {
-  border-color: #667eea;
-  transform: scale(1.05);
-}
-
-.doctor-rating {
-  position: absolute;
-  top: -5px;
-  right: 20px;
-  background: linear-gradient(45deg, #feca57, #ff9ff3);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  box-shadow: 0 4px 15px rgba(254, 202, 87, 0.3);
-}
-
-.doctor-info-section {
-  text-align: center;
-}
-
-.doctor-name {
-  color: #2c3e50;
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-
-.doctor-specialty {
-  color: #667eea;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
-}
-
-.doctor-experience {
-  color: #6c757d;
-  font-size: 0.85rem;
-  margin-bottom: 1rem;
-}
-
-.consultation-price {
-  background: rgba(102, 126, 234, 0.1);
-  padding: 0.75rem;
-  border-radius: 15px;
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.price-label {
-  color: #6c757d;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.price-amount {
-  color: #667eea;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.quick-actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-}
-
-.quick-actions .btn {
-  flex: 1;
-  font-size: 0.85rem;
-  padding: 0.6rem 1rem;
-}
-
-.load-more-section {
-  text-align: center;
-  margin-top: 3rem;
-}
-
-.load-more-section .btn {
-  background: transparent;
-  color: #667eea;
-  border: 2px solid #667eea;
-  padding: 1rem 2rem;
-  border-radius: 25px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.load-more-section .btn:hover {
-  background: #667eea;
-  color: white;
-  transform: translateY(-2px);
-}
-
-/* Remove old testimonials styles and replace with new ones */
-
-.section-subtitle {
-  text-align: center;
-  color: #6c757d;
-  font-size: 1.2rem;
-  margin-bottom: 3rem;
-  font-weight: 400;
-}
-
-/* Modern benefits section */
-.benefits-showcase {
-  padding: 0rem 1rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.benefits-showcase::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23e0e0e0" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-  opacity: 0.1;
-}
-
-.benefits-horizontal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-width: 1400px;
-  margin: 0 auto;
-  /* padding: 2rem; */
-  background: white;
-  border-radius: 25px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 1;
-  flex-wrap: wrap;
-  /* gap: 1rem; */
-  border: 2px solid rgba(102, 126, 234, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.benefits-horizontal::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(135deg, #667eea, #764ba2, #ff6b6b, #feca57);
-  border-radius: 27px;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.benefits-horizontal:hover::before {
-  opacity: 0.1;
-}
-
-.benefit-item {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-  padding: 1.5rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 15px;
-  cursor: pointer;
-  position: relative;
-  flex: 1;
-  min-width: 250px;
-  overflow: hidden;
-}
-
-.benefit-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.05), transparent);
-  transition: left 0.6s ease;
-}
-
-.benefit-item:hover::before {
-  left: 100%;
-}
-
-.benefit-item:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
-  background: rgba(102, 126, 234, 0.02);
-}
-
-.benefit-icon-circle {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.5rem;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-  flex-shrink: 0;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s ease;
-}
-
-.benefit-icon-circle::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transform: rotate(-45deg);
-  transition: all 0.6s ease;
-  opacity: 0;
-}
-
-.benefit-item:hover .benefit-icon-circle::before {
-  opacity: 1;
-  transform: rotate(-45deg) translate(50%, 50%);
-}
-
-.benefit-item:hover .benefit-icon-circle {
-  transform: rotate(360deg) scale(1.1);
-  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
-}
-
-.benefit-content {
-  flex: 1;
-}
-
-.benefit-content h4 {
-  color: #2c3e50;
-  font-size: 1.1rem;
-  margin: 0 0 0.3rem 0;
-  font-weight: 700;
-}
-
-.benefit-content p {
-  color: #6c757d;
-  font-size: 0.9rem;
-  margin: 0;
-  font-weight: 500;
-}
-
-.benefit-separator {
-  width: 2px;
-  height: 60px;
-  background: linear-gradient(to bottom, transparent, #e9ecef, transparent);
-  flex-shrink: 0;
-  position: relative;
-}
-
-.benefit-separator::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent, rgba(102, 126, 234, 0.3), transparent);
-  border-radius: 3px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.benefits-horizontal:hover .benefit-separator::before {
-  opacity: 1;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .masthead {
-    padding: 4rem 1rem 3rem;
-    margin-top: 10px;
+/* Mobile-specific dot adjustments */
+@media (max-width: 640px) {
+  .dot-indicator {
+    min-width: 6px;
+    min-height: 6px;
   }
   
-  .masthead__content {
-    flex-direction: column;
-    text-align: center;
-    gap: 2rem;
+  .dot-active {
+    transform: scale(1.15);
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .dot-indicator {
+    min-width: 5px;
+    min-height: 5px;
   }
   
-  .masthead__content:hover {
-    transform: none;
+  .dot-active {
+    transform: scale(1.1);
   }
-  
-  .floating-element {
-    display: none;
-  }
-  
-  .animated-title {
-    font-size: 2.5rem;
-  }
-  
-  .cta-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .stats-row {
-    gap: 1.5rem;
-  }
-  
-  .doctors-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .suggestions-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .suggestions-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-  }
-  
-  .suggestions-title {
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .heading-1 {
     font-size: 2rem;
-    justify-content: center;
+    line-height: 1.2;
   }
   
-  .category-tabs {
-    gap: 0.5rem;
+  .text-large {
+    font-size: 1rem;
   }
   
-  .category-tab {
+  .btn {
     padding: 0.75rem 1.5rem;
     font-size: 0.9rem;
   }
-  
-  .doctor-suggestion-info {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .consultation-options-extended {
-    flex-direction: column;
-  }
-  
-  .suggestions-footer {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .benefits-horizontal {
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.5rem;
-  }
-  
-  .benefit-separator {
-    width: 80%;
-    height: 2px;
-    background: linear-gradient(to right, transparent, #e9ecef, transparent);
-  }
-  
-  .benefit-item {
-    min-width: auto;
-    justify-content: center;
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .animated-title {
-    font-size: 2rem;
-  }
-  
-  .fade-in-text {
-    font-size: 1.1rem;
-  }
-  
-  .floating-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
-  }
-}
-
-/* CTA Footer enhancements */
-.cta-footer {
-  margin-top: 0;
-}
-
-.cta-footer__bg {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 0;
-  padding: 4rem 2rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.cta-footer__container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.cta-footer__text h2 {
-  color: white;
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
-
-.cta-footer__text div {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  line-height: 1.6;
-}
-
-.cta-footer__button .btn {
-  background: linear-gradient(45deg, #ff6b6b, #ff8e53);
-  color: white;
-  border-radius: 50px;
-  font-size: 1.2rem;
-  padding: 1.2rem 2.5rem;
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
-  transition: all 0.3s ease;
-}
-
-.cta-footer__button .btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
-}
-
-/* Enhanced How it Works Section */
-.how-it-works {
-  /* padding: 6rem 2rem; */
-  background: white;
-}
-
-.process-timeline {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.timeline-step {
-  display: flex;
-  align-items: center;
-  gap: 3rem;
-  margin-bottom: 4rem;
-  position: relative;
-}
-
-.timeline-step.reverse {
-  flex-direction: row-reverse;
-}
-
-.timeline-step:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: -2rem;
-  transform: translateX(-50%);
-  width: 2px;
-  height: 2rem;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-}
-
-.step-visual {
-  flex: 1;
-  position: relative;
-  max-width: 350px;
-}
-
-.step-image {
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-  position: relative;
-}
-
-.step-image img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.timeline-step:hover .step-image img {
-  transform: scale(1.05);
-}
-
-.step-number {
-  position: absolute;
-  top: -15px;
-  right: -15px;
-  background: linear-gradient(45deg, #ff6b6b, #feca57);
-  color: white;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1.2rem;
-  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
-  z-index: 2;
-}
-
-.step-content {
-  flex: 1;
-  max-width: 400px;
-}
-
-.step-content h3 {
-  color: #2c3e50;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
-}
-
-.step-content p {
-  color: #6c757d;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
-  font-size: 1.1rem;
-}
-
-.step-features {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 1rem;
-}
-
-.step-features li {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-  color: #495057;
-  font-weight: 500;
-}
-
-.step-features i {
-  color: #00d4aa;
-  font-size: 0.9rem;
-  background: rgba(0, 212, 170, 0.1);
-  padding: 0.25rem;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.time-estimate {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #667eea;
-  font-weight: 600;
-  background: rgba(102, 126, 234, 0.1);
-  padding: 0.5rem 1rem;
-  border-radius: 25px;
-  width: fit-content;
-}
-
-.time-estimate i {
-  color: #667eea;
-}
-
-.cta-section {
-  text-align: center;
-  margin-top: 4rem;
-  padding: 0.5rem 0rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 25px;
-  color: white;
-}
-
-.cta-content h3 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
-}
-
-.cta-content p {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-  opacity: 0.9;
-  line-height: 1.6;
-}
-
-.guarantee {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9rem;
-}
-
-.guarantee i {
-  color: #00d4aa;
-}
-
-/* Patient Reviews Section */
-.patient-reviews {
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.patient-reviews .section-title {
-  color: white;
-}
-
-.patient-reviews .section-title::after {
-  background: linear-gradient(45deg, #ff6b6b, #feca57);
-}
-
-.reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
-  margin-top: 4rem;
-}
-
-.review-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
-}
-
-.review-card:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.review-content .stars {
-  color: #feca57;
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-}
-
-.review-content p {
-  color: rgba(255, 255, 255, 0.9);
-  font-style: italic;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
-  font-size: 1.1rem;
-}
-
-.review-author {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.author-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.author-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.author-info h4 {
-  color: white;
-  font-size: 1.1rem;
-  margin-bottom: 0.3rem;
-}
-
-.author-info span {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-}
-
-/* Enhanced CTA Footer */
-.cta-footer__icon {
-  background: linear-gradient(45deg, #ff6b6b, #feca57);
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
-  animation: pulse 2s infinite;
-}
-
-/* Enhanced responsive improvements */
-@media (max-width: 768px) {
-  .masthead {
-    padding: 6rem 1rem 4rem;
-  }
-  
-  .masthead__content {
-    flex-direction: column;
-    text-align: center;
-    gap: 2rem;
-  }
-  
-  .animated-title {
-    font-size: 2.5rem;
-  }
-  
-  .cta-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .stats-row {
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-  
-  .doctors-showcase {
-    grid-template-columns: 1fr;
-  }
-  
-  .doctors-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .filter-tabs {
-    gap: 0.5rem;
-  }
-  
-  .filter-tab {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-  }
-  
-  .benefits-horizontal {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
-  .benefit-item {
-    flex-direction: column;
-    text-align: center;
-    min-width: auto;
-    gap: 0.8rem;
-  }
-  
-  .benefit-separator {
-    display: none;
-  }
-  
-  .trust-indicators {
-    position: static;
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 2rem;
-    gap: 0.5rem;
-  }
-  
-  .top-doctors-showcase {
-    margin: 0 1rem;
-    padding: 1.5rem 1rem;
-  }
-  
-  .showcase-header h3 {
-    font-size: 1.2rem;
-  }
-  
-  .header-actions {
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
-  }
-  
-  .header-actions .btn--compact {
-    font-size: 0.8rem;
-    padding: 0.5rem 1rem;
-    width: 100%;
-  }
-  
-  .showcase-stats {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .trust-badge {
-    font-size: 0.65rem;
-    padding: 0.3rem 0.6rem;
-  }
-  
-  .timeline-step, .timeline-step.reverse {
-    flex-direction: column;
-    text-align: center;
-    gap: 2rem;
-  }
-  
-  .timeline-step:not(:last-child)::after {
-    left: 50%;
-    width: 2px;
-    height: 2rem;
-  }
-  
-  .consultation-options {
-    flex-direction: column;
-  }
-  
-  .hero-visual-container {
-    order: 1;
-  }
-  
-  .masthead__text {
-    order: 2;
-  }
-  
-  .cta-section {
-    padding: 2rem 1rem;
-  }
-  
-  .cta-content h3 {
-    font-size: 1.5rem;
-  }
-  
-  .steps-container {
-    flex-direction: column;
-  }
-  
-  .step-connector {
-    display: none;
-  }
-  
-  .reviews-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .cta-footer__container {
-    flex-direction: column;
-    text-align: center;
-    gap: 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .animated-title {
-    font-size: 2rem;
-  }
-  
-  .fade-in-text {
-    font-size: 1.1rem;
-  }
-  
-  .trust-badge {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.7rem;
-  }
-  
-  .doctor-consultation-card {
-    padding: 1rem;
-  }
-  
-  .consultation-features {
-    gap: 0.5rem;
-  }
-  
-  .feature-item {
-    font-size: 0.7rem;
-  }
-  
-  .step-content h3 {
-    font-size: 1.4rem;
-  }
-  
-  .step-content p {
-    font-size: 1rem;
-  }
-  
-  .doctor-profile-card {
-    padding: 1.5rem;
-  }
-  
-  .trust-indicators {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .top-doctors-showcase {
-    margin: 0 0.5rem;
-    padding: 1rem;
-  }
-  
-  .showcase-header {
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
-  }
-  
-  .doctor-mini-card {
-    padding: 0.5rem;
-  }
-  
-  .doctor-mini-info h4 {
-    font-size: 0.9rem;
-  }
-  
-  .doctor-mini-info p {
-    font-size: 0.75rem;
-  }
-  
-  .stat-mini {
-    padding: 0.75rem;
-  }
-  
-  .stat-text .number {
-    font-size: 1rem;
-  }
-}
-
-/* Layout fixes */
-.layout-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.layout-content {
-  flex: 1;
-}
-
-.main-content {
-  padding-top: 0;
-  margin-top: 40px;
 }
 </style>

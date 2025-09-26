@@ -1,27 +1,3 @@
-<style scoped>
-@media (max-width: 900px) {
-  .appointments-container {
-    flex-direction: column !important;
-    padding: 1rem !important;
-    gap: 1.5rem !important;
-  }
-}
-@media (max-width: 600px) {
-  .appointments-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-  .appointment-card {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 1rem;
-  }
-}
-</style>
 <template>
   <div class="appointments-container">
     <!-- Header Section -->
@@ -494,6 +470,7 @@
 
 <script>
 import axios from 'axios'
+import { BASE_URL } from '@/config/api';
 
 export default {
   name: "DoctorAppointments",
@@ -554,7 +531,7 @@ export default {
       console.log('Token for loading appointments:', !!token);
       
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/doctor/appointments', {
+        const response = await axios.get(`${BASE_URL}/api/doctor/appointments`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -586,7 +563,7 @@ export default {
       try {
         console.log('Making API call to approve appointment...');
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/doctor/appointments/${appointmentId}/approve`, 
+          `${BASE_URL}/api/doctor/appointments/${appointmentId}/approve`, 
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -626,7 +603,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/doctor/appointments/${appointmentId}/reject`, 
+          `${BASE_URL}/api/doctor/appointments/${appointmentId}/reject`, 
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -660,7 +637,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/doctor/appointments/${appointmentId}/complete`, 
+          `${BASE_URL}/api/doctor/appointments/${appointmentId}/complete`, 
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -759,7 +736,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/doctor/appointments/${this.selectedAppointment.id}/reschedule`,
+          `${BASE_URL}/api/doctor/appointments/${this.selectedAppointment.id}/reschedule`,
           {
             new_date: this.rescheduleForm.date,
             new_time: this.rescheduleForm.time,
@@ -916,8 +893,8 @@ export default {
   border-radius: 20px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 40px rgb(0 0 0 / 10%);
+  border: 1px solid rgb(255 255 255 / 20%);
   backdrop-filter: blur(10px);
 }
 
@@ -933,9 +910,9 @@ export default {
   font-weight: 700;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   background-clip: text;
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.5rem;
 }
 
 .header-info .page-subtitle {
@@ -956,31 +933,31 @@ export default {
   border-radius: 16px;
   text-align: center;
   min-width: 120px;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgb(102 126 234 / 30%);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 15px 35px rgb(102 126 234 / 40%);
 }
 
 .stat-card.pending {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  box-shadow: 0 8px 25px rgba(245, 87, 108, 0.3);
+  box-shadow: 0 8px 25px rgb(245 87 108 / 30%);
 }
 
 .stat-card.pending:hover {
-  box-shadow: 0 15px 35px rgba(245, 87, 108, 0.4);
+  box-shadow: 0 15px 35px rgb(245 87 108 / 40%);
 }
 
 .stat-card.confirmed {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+  box-shadow: 0 8px 25px rgb(79 172 254 / 30%);
 }
 
 .stat-card.confirmed:hover {
-  box-shadow: 0 15px 35px rgba(79, 172, 254, 0.4);
+  box-shadow: 0 15px 35px rgb(79 172 254 / 40%);
 }
 
 .stat-number {
@@ -1007,7 +984,7 @@ export default {
   background: white;
   padding: 1.5rem;
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgb(0 0 0 / 10%);
 }
 
 .search-bar {
@@ -1043,7 +1020,7 @@ export default {
   outline: none;
   border-color: #667eea;
   background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgb(102 126 234 / 10%);
 }
 
 .filter-controls {
@@ -1066,7 +1043,7 @@ export default {
   outline: none;
   border-color: #667eea;
   background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgb(102 126 234 / 10%);
 }
 
 .refresh-btn {
@@ -1084,7 +1061,7 @@ export default {
 
 .refresh-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgb(102 126 234 / 30%);
 }
 
 .refresh-btn:disabled {
@@ -1115,7 +1092,7 @@ export default {
   padding: 4rem 2rem;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgb(0 0 0 / 10%);
 }
 
 .loading-spinner {
@@ -1143,7 +1120,7 @@ export default {
   padding: 3rem;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgb(0 0 0 / 10%);
 }
 
 .error-message {
@@ -1181,7 +1158,7 @@ export default {
 
 .retry-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgb(102 126 234 / 30%);
 }
 
 /* Appointments List */
@@ -1194,7 +1171,7 @@ export default {
   background: white;
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgb(0 0 0 / 10%);
   border-left: 6px solid #e5e7eb;
   transition: all 0.3s ease;
   position: relative;
@@ -1208,32 +1185,32 @@ export default {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgb(102 126 234 / 20%), transparent);
 }
 
 .appointment-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 40px rgb(0 0 0 / 15%);
 }
 
 .appointment-card.pending {
   border-left-color: #f59e0b;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, white 100%);
+  background: linear-gradient(135deg, rgb(245 158 11 / 5%) 0%, white 100%);
 }
 
 .appointment-card.confirmed {
   border-left-color: #10b981;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, white 100%);
+  background: linear-gradient(135deg, rgb(16 185 129 / 5%) 0%, white 100%);
 }
 
 .appointment-card.completed {
   border-left-color: #6366f1;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, white 100%);
+  background: linear-gradient(135deg, rgb(99 102 241 / 5%) 0%, white 100%);
 }
 
 .appointment-card.cancelled {
   border-left-color: #ef4444;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, white 100%);
+  background: linear-gradient(135deg, rgb(239 68 68 / 5%) 0%, white 100%);
 }
 
 /* Appointment Header */
@@ -1263,11 +1240,11 @@ export default {
   color: white;
   font-weight: 600;
   font-size: 1.2rem;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgb(102 126 234 / 30%);
 }
 
 .patient-details h3 {
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.25rem;
   color: #374151;
   font-size: 1.3rem;
   font-weight: 600;
@@ -1294,27 +1271,27 @@ export default {
 }
 
 .status-badge.pending {
-  background: rgba(245, 158, 11, 0.1);
+  background: rgb(245 158 11 / 10%);
   color: #d97706;
-  border: 2px solid rgba(245, 158, 11, 0.2);
+  border: 2px solid rgb(245 158 11 / 20%);
 }
 
 .status-badge.confirmed {
-  background: rgba(16, 185, 129, 0.1);
+  background: rgb(16 185 129 / 10%);
   color: #059669;
-  border: 2px solid rgba(16, 185, 129, 0.2);
+  border: 2px solid rgb(16 185 129 / 20%);
 }
 
 .status-badge.completed {
-  background: rgba(99, 102, 241, 0.1);
+  background: rgb(99 102 241 / 10%);
   color: #4f46e5;
-  border: 2px solid rgba(99, 102, 241, 0.2);
+  border: 2px solid rgb(99 102 241 / 20%);
 }
 
 .status-badge.cancelled {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgb(239 68 68 / 10%);
   color: #dc2626;
-  border: 2px solid rgba(239, 68, 68, 0.2);
+  border: 2px solid rgb(239 68 68 / 20%);
 }
 
 /* Appointment Details */
@@ -1401,7 +1378,7 @@ export default {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 30%), transparent);
   transition: left 0.5s ease;
 }
 
@@ -1426,67 +1403,67 @@ export default {
 .approve-btn {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 15px rgb(16 185 129 / 30%);
 }
 
 .approve-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 8px 25px rgb(16 185 129 / 40%);
 }
 
 .reject-btn {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 15px rgb(239 68 68 / 30%);
 }
 
 .reject-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 8px 25px rgb(239 68 68 / 40%);
 }
 
 .reschedule-btn {
   background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 15px rgb(139 92 246 / 30%);
 }
 
 .reschedule-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 8px 25px rgb(139 92 246 / 40%);
 }
 
 .complete-btn {
   background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 15px rgb(99 102 241 / 30%);
 }
 
 .complete-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 8px 25px rgb(99 102 241 / 40%);
 }
 
 .contact-btn {
   background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+  box-shadow: 0 4px 15px rgb(6 182 212 / 30%);
 }
 
 .contact-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);
+  box-shadow: 0 8px 25px rgb(6 182 212 / 40%);
 }
 
 .chat-btn {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 15px rgb(16 185 129 / 30%);
 }
 
 .chat-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 8px 25px rgb(16 185 129 / 40%);
 }
 
 /* Empty State */
@@ -1495,7 +1472,7 @@ export default {
   padding: 4rem 2rem;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgb(0 0 0 / 10%);
 }
 
 .empty-state-icon {
@@ -1539,17 +1516,14 @@ export default {
 
 .clear-filters-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgb(102 126 234 / 30%);
 }
 
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  inset: 0;
+  background: rgb(0 0 0 / 60%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1562,7 +1536,7 @@ export default {
   border-radius: 20px;
   width: 90%;
   max-width: 500px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 25px 50px rgb(0 0 0 / 20%);
   transform: scale(0.9);
   animation: modalOpen 0.3s ease forwards;
 }
@@ -1621,7 +1595,7 @@ export default {
 }
 
 .patient-summary h4 {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.5rem;
   color: #374151;
 }
 
@@ -1666,7 +1640,7 @@ export default {
   outline: none;
   border-color: #667eea;
   background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgb(102 126 234 / 10%);
 }
 
 .form-textarea {
@@ -1694,7 +1668,7 @@ export default {
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgb(102 126 234 / 30%);
 }
 
 .submit-btn:disabled {
@@ -1719,7 +1693,7 @@ export default {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .appointments-container {
     padding: 5rem 1rem 1rem;
   }
@@ -1727,6 +1701,7 @@ export default {
   .header-content {
     flex-direction: column;
     text-align: center;
+    align-items: stretch;
     gap: 1.5rem;
   }
 
@@ -1738,6 +1713,7 @@ export default {
   .filters-container {
     flex-direction: column;
     gap: 1rem;
+    align-items: stretch;
   }
 
   .filter-controls {
@@ -1752,6 +1728,7 @@ export default {
 
   .appointment-header {
     flex-direction: column;
+    align-items: stretch;
     gap: 1rem;
     text-align: center;
   }
@@ -1759,6 +1736,7 @@ export default {
   .patient-info {
     flex-direction: column;
     text-align: center;
+    align-items: center;
   }
 
   .details-grid {
@@ -1766,6 +1744,7 @@ export default {
   }
 
   .appointment-actions {
+    flex-direction: column;
     justify-content: center;
   }
 
@@ -1788,9 +1767,13 @@ export default {
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .appointments-container {
     padding: 4.5rem 0.5rem 0.5rem;
+  }
+
+  .appointments-header, .filters-container, .appointment-card, .empty-state {
+    padding: 1.5rem;
   }
 
   .appointments-header,
@@ -1816,11 +1799,8 @@ export default {
 /* Chat Modal Styles */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1837,7 +1817,7 @@ export default {
   max-height: 700px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px rgb(0 0 0 / 25%);
   overflow: hidden;
 }
 
@@ -1861,7 +1841,7 @@ export default {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255 255 255 / 20%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1887,7 +1867,7 @@ export default {
 }
 
 .close-btn {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
   border: none;
   border-radius: 8px;
   width: 40px;
@@ -1901,7 +1881,7 @@ export default {
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255 255 255 / 20%);
   transform: scale(1.05);
 }
 
@@ -1914,7 +1894,7 @@ export default {
   flex: 1;
   padding: 1.5rem;
   overflow-y: auto;
-  background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+  background: linear-gradient(to bottom, #f8fafc 0%, #fff 100%);
 }
 
 .chat-welcome {
@@ -1998,7 +1978,7 @@ export default {
   background: white;
   padding: 0.75rem 1rem;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
   font-size: 0.875rem;
   line-height: 1.5;
   color: #1e293b;
@@ -2044,7 +2024,7 @@ export default {
 
 .message-input:focus {
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgb(102 126 234 / 10%);
 }
 
 .send-btn {
@@ -2064,7 +2044,7 @@ export default {
 
 .send-btn:hover:not(:disabled) {
   transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgb(102 126 234 / 30%);
 }
 
 .send-btn:disabled {
@@ -2083,6 +2063,7 @@ export default {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -2090,7 +2071,7 @@ export default {
 }
 
 /* Responsive Chat Modal */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .chat-modal {
     width: 95vw;
     height: 90vh;

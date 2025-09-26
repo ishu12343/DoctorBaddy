@@ -1,182 +1,294 @@
 <style scoped>
-@media (max-width: 900px) {
-  .dashboard-container {
-    flex-direction: column !important;
-    padding: 1rem !important;
-    gap: 1.5rem !important;
+/* Base layout styles */
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+.bg-gray-50 {
+  background-color: #f9fafb;
+}
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
   }
 }
-@media (max-width: 600px) {
-  .dashboard-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
   }
-  .dashboard-card {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+}
+
+/* Spacing utilities */
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.pt-16 {
+  padding-top: 4rem;
+}
+
+.pb-12 {
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .lg\:pt-20 {
+    padding-top: 5rem;
+  }
+}
+
+.max-w-6xl {
+  max-width: 72rem;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+/* Button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  gap: 0.375rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Typography */
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-gray-900 {
+  color: #111827;
+}
+
+.text-gray-600 {
+  color: #4b5563;
+}
+
+/* Layout alignment */
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+/* Responsive flex utility */
+@media (max-width: 768px) {
+  .responsive-flex-column {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+/* Responsive breakpoints */
+@media (max-width: 1024px) {
+  .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .py-6 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pt-16 {
+    padding-top: 5rem;
+  }
+  
+  .px-4 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  
+  .max-w-6xl {
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .mb-6 {
     margin-bottom: 1rem;
+  }
+  
+  .justify-between {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .pt-16 {
+    padding-top: 4.5rem;
+  }
+  
+  .px-4 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .py-6 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    width: 100%;
+  }
+  
+  .text-2xl {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
   }
 }
 </style>
 <template>
-  <div class="dashboard-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="brand">
-          <div class="brand-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-            </svg>
-          </div>
-          <span class="brand-text">PatientBuddy</span>
-        </div>
-      </div>
-
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <ul class="nav-list">
-            <li class="nav-item">
-              <button 
-                class="nav-btn" 
-                :class="{ 'active': showHome }"
-                @click="goHome"
-              >
-                <div class="nav-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                    <polyline points="9,22 9,12 15,12 15,22"/>
-                  </svg>
-                </div>
-                <span class="nav-text">Dashboard</span>
-                <div class="nav-indicator"></div>
-              </button>
-            </li>
-
-            <li class="nav-item">
-              <button 
-                class="nav-btn"
-                :class="{ 'active': showAppointments }"
-                @click="goToAppointments"
-              >
-                <div class="nav-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                  </svg>
-                </div>
-                <span class="nav-text">Appointments</span>
-                <div class="nav-indicator"></div>
-              </button>
-            </li>
-
-            <li class="nav-item">
-              <button class="nav-btn">
-                <div class="nav-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                    <polyline points="14,2 14,8 20,8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <polyline points="10,9 9,9 8,9"/>
-                  </svg>
-                </div>
-                <span class="nav-text">Medical Records</span>
-                <div class="nav-indicator"></div>
-              </button>
-            </li>
-
-            <li class="nav-item">
-              <button class="nav-btn">
-                <div class="nav-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
-                  </svg>
-                </div>
-                <span class="nav-text">Settings</span>
-                <div class="nav-indicator"></div>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </aside>
+  <div class="min-h-screen flex flex-col bg-gray-50">
+    <!-- Header -->
+    <PatientHeader 
+      :patient-info="patientInfo" 
+      :current-page="currentPageName"
+      @navigate="handleNavigation"
+      @logout="handleLogout"
+    />
 
     <!-- Main Content -->
-    <main class="main-content">
-      <!-- Top Header with User Profile -->
-      <header class="top-header">
-        <div class="header-left">
-          <span class="dashboard-title">Patient Dashboard</span>
-          <!-- Edit Profile Button in Navbar -->
-          <button 
-            v-if="showProfile" 
-            class="navbar-edit-btn" 
-            @click="toggleProfileEdit"
-            :class="{ 'active': isProfileEditing }"
-          >
-            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-            </svg>
-            Edit Profile
-          </button>
-        </div>
-        <div class="header-right">
-          <div class="header-user-profile" @click="toggleUserDropdown" :class="{ 'dropdown-open': showUserDropdown }">
-            <div class="header-user-info">
-              <span class="header-user-name">{{ patientInfo?.full_name || 'Patient' }}</span>
-              <span class="header-user-specialty">{{ getPatientDisplayInfo() }}</span>
-            </div>
-            <div class="header-user-avatar">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-              </svg>
-            </div>
-            <div class="dropdown-arrow">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-            
-            <!-- Dropdown Menu -->
-            <div v-if="showUserDropdown" class="user-dropdown-menu">
-              <button @click="goProfile" class="dropdown-menu-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                <span>View Profile</span>
-              </button>
-              <div class="dropdown-divider"></div>
-              <button @click="logout" class="dropdown-signout-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
-                </svg>
-                <span>Sign Out</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <main class="flex-1 pt-16 lg:pt-20 pb-12">
 
-      <div class="content-wrapper">
+      <div class="container mx-auto px-4 py-6">
         <!-- Profile Page - Show only profile when profile is selected -->
         <template v-if="showProfile">
-          <PatientProfileCard ref="profileCard" :is-editing-prop="isProfileEditing" @update:editing="isProfileEditing = $event" />
+          <div class="max-w-6xl mx-auto responsive-flex-column">
+            <div class="mb-6 flex justify-between items-center">
+              <h1 class="text-2xl font-bold text-gray-900">My Profile</h1>
+              <button 
+                class="btn btn-primary btn-sm" 
+                @click="toggleProfileEdit"
+                :class="{ 'active': isProfileEditing }"
+              >
+                <svg class="btn-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                {{ isProfileEditing ? 'Cancel Edit' : 'Edit Profile' }}
+              </button>
+            </div>
+            <PatientProfileCard ref="profileCard" :is-editing-prop="isProfileEditing" @update:editing="isProfileEditing = $event" />
+          </div>
         </template>
 
         <!-- Appointments Page -->
         <template v-else-if="showAppointments">
-          <div class="appointments-container">
-            <div class="appointments-header">
-              <h2 class="page-title">My Appointments</h2>
-              <p class="page-subtitle">Manage your upcoming and past appointments</p>
+          <div class="max-w-6xl mx-auto">
+            <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+              <div>
+                <h1 class="text-2xl font-bold text-gray-900">My Appointments</h1>
+                <p class="text-gray-600">Manage your upcoming and past appointments</p>
+              </div>
+              <div class="filter-container">
+                <select v-model="selectedAppointmentStatus" class="appointment-filter-select">
+                  <option value="">All Status</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="CONFIRMED">Confirmed</option>
+                  <option value="COMPLETED">Completed</option>
+                  <option value="CANCELLED">Cancelled</option>
+                </select>
+              </div>
             </div>
 
             <!-- Loading State -->
@@ -188,7 +300,7 @@
             <!-- Appointments List -->
             <div v-else class="appointments-list">
               <div 
-                v-for="appointment in appointments" 
+                v-for="appointment in filteredAppointments" 
                 :key="appointment.id" 
                 class="appointment-card"
                 :class="{ 
@@ -332,7 +444,7 @@
             </div>
 
             <!-- Empty State -->
-            <div v-if="!loadingAppointments && appointments.length === 0" class="empty-state">
+            <div v-if="!loadingAppointments && filteredAppointments.length === 0" class="empty-state">
               <div class="empty-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -363,45 +475,34 @@
               
               <!-- Search and Filter Section -->
               <div class="search-filters">
-                <div class="search-bar">
-                  <div class="search-input-wrapper">
-                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="11" cy="11" r="8"/>
-                      <path d="m21 21-4.35-4.35"/>
-                    </svg>
-                    <input 
-                      v-model="searchQuery"
-                      type="text" 
-                      placeholder="Search doctors by name or specialty..."
-                      class="search-input"
-                      @input="searchDoctors"
-                    />
-                  </div>
+                <div class="search-input-wrapper">
+                  <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                  <input 
+                    v-model="searchQuery"
+                    type="text" 
+                    placeholder="Search doctors by name or specialty..."
+                    class="search-input"
+                    @input="searchDoctors"
+                  />
                 </div>
                 
-                <div class="filter-section">
-                  <select v-model="selectedSpecialty" @change="searchDoctors" class="filter-select">
-                    <option value="">All Specialties</option>
-                    <option value="Cardiology">Cardiology</option>
-                    <option value="Dermatology">Dermatology</option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Pediatrics">Pediatrics</option>
-                    <option value="Orthopedics">Orthopedics</option>
-                    <option value="General Medicine">General Medicine</option>
-                    <option value="Psychiatry">Psychiatry</option>
-                    <option value="Gynecology">Gynecology</option>
-                    <option value="Ophthalmology">Ophthalmology</option>
-                    <option value="ENT">ENT</option>
-                  </select>
-                  
-                  <button class="refresh-btn" @click="loadDoctors" :disabled="loading">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" :class="{ 'spinning': loading }">
-                      <polyline points="23 4 23 10 17 10"/>
-                      <polyline points="1 20 1 14 7 14"/>
-                      <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
-                    </svg>
-                  </button>
-                </div>
+                <select v-model="selectedSpecialty" @change="searchDoctors" class="filter-select">
+                  <option value="">All Specialties</option>
+                  <option v-for="specialty in uniqueSpecialties" :key="specialty" :value="specialty">
+                    {{ specialty }}
+                  </option>
+                </select>
+                
+                <button class="refresh-btn" @click="loadDoctors" :disabled="loading">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" :class="{ 'spinning': loading }">
+                    <polyline points="23 4 23 10 17 10"/>
+                    <polyline points="1 20 1 14 7 14"/>
+                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                  </svg>
+                </button>
               </div>
             </div>
 
@@ -997,16 +1098,24 @@
         </div>
       </div>
     </main>
-  </div>
-</template>
 
-<script>
+    <!-- Footer -->
+    <PatientFooter 
+      @navigate="handleNavigation"
+    />
+  </div>
+</template><script>
 import axios from 'axios';
+import { BASE_URL } from '@/config/api';
 import PatientProfileCard from './PatientProfileCard.vue';
+import PatientHeader from './PatientHeader.vue';
+import PatientFooter from './PatientFooter.vue';
 
 export default {
   components: {
-    PatientProfileCard
+    PatientProfileCard,
+    PatientHeader,
+    PatientFooter
   },
   data() {
     return {
@@ -1030,6 +1139,7 @@ export default {
       // Appointments data
       appointments: [],
       loadingAppointments: false,
+      selectedAppointmentStatus: '',
       cancellingAppointment: null,
       refreshInterval: null, // For auto-refreshing appointments
       
@@ -1073,6 +1183,28 @@ export default {
       submittingRating: false
     };
   },
+  computed: {
+    uniqueSpecialties() {
+      if (!this.doctors || this.doctors.length === 0) {
+        return [];
+      }
+      const specialties = this.doctors.map(doctor => doctor.specialty || doctor.specialization).filter(Boolean);
+      return [...new Set(specialties)].sort();
+    },
+    currentPageName() {
+      if (this.showProfile) return 'profile';
+      if (this.showAppointments) return 'appointments';
+      return 'dashboard';
+    },
+    filteredAppointments() {
+      if (!this.selectedAppointmentStatus) {
+        return this.appointments;
+      }
+      return this.appointments.filter(
+        appointment => appointment.status === this.selectedAppointmentStatus
+      );
+    }
+  },
   mounted() {
     // Add click outside listener for dropdown
     document.addEventListener('click', this.handleClickOutside);
@@ -1096,7 +1228,7 @@ export default {
       this.showUserDropdown = false; // Close dropdown
       const token = localStorage.getItem('token');
       try {
-        await axios.post('http://127.0.0.1:5000/api/patient/logout', {}, {
+        await axios.post(`${BASE_URL}/api/patient/logout`, {}, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (err) {
@@ -1115,6 +1247,27 @@ export default {
       if (dropdown && !dropdown.contains(event.target)) {
         this.showUserDropdown = false;
       }
+    },
+    
+    // Navigation methods for header
+    handleNavigation(page) {
+      this.resetViews();
+      switch (page) {
+        case 'dashboard':
+          this.showHome = true;
+          break;
+        case 'appointments':
+          this.showAppointments = true;
+          this.fetchAppointments();
+          break;
+        case 'profile':
+          this.showProfile = true;
+          break;
+      }
+    },
+    
+    handleLogout() {
+      this.logout();
     },
     
     // Navigation methods
@@ -1145,7 +1298,7 @@ export default {
     async fetchPatientInfo() {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/patient/profile', {
+        const response = await axios.get(`${BASE_URL}/api/patient/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -1200,7 +1353,7 @@ export default {
         if (this.selectedCity) params.append('city', this.selectedCity);
         if (this.searchQuery) params.append('search', this.searchQuery);
         
-        const response = await axios.get(`http://127.0.0.1:5000/api/patient/doctors?${params}`, {
+        const response = await axios.get(`${BASE_URL}/api/patient/doctors?${params}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -1272,7 +1425,7 @@ export default {
       const token = localStorage.getItem('token');
       
       try {
-        const response = await axios.post('http://127.0.0.1:5000/api/patient/appointments/book', {
+        const response = await axios.post(`${BASE_URL}/api/patient/appointments/book`, {
           doctor_id: this.selectedDoctor.id,
           appointment_date: this.bookingForm.date,
           appointment_time: this.bookingForm.time,
@@ -1304,7 +1457,7 @@ export default {
       const token = localStorage.getItem('token');
       
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/patient/appointments', {
+        const response = await axios.get(`${BASE_URL}/api/patient/appointments`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -1326,7 +1479,7 @@ export default {
       const token = localStorage.getItem('token');
       
       try {
-        const response = await axios.put(`http://127.0.0.1:5000/api/patient/appointments/${appointmentId}/cancel`, {}, {
+        const response = await axios.put(`${BASE_URL}/api/patient/appointments/${appointmentId}/cancel`, {}, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -1369,7 +1522,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/patient/appointments/${this.selectedAppointment.id}/reschedule`,
+          `${BASE_URL}/api/patient/appointments/${this.selectedAppointment.id}/reschedule`,
           {
             new_date: this.rescheduleForm.date,
             new_time: this.rescheduleForm.time,
@@ -1721,7 +1874,7 @@ export default {
       try {
         const token = localStorage.getItem('token');
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/patient/appointments/${this.selectedAppointmentForRating.id}/rate`,
+          `${BASE_URL}/api/patient/appointments/${this.selectedAppointmentForRating.id}/rate`,
           {
             rating: this.selectedRating,
             review: this.reviewText.trim()
@@ -1765,14 +1918,14 @@ export default {
   display: flex;
   min-height: 100vh;
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Sidebar Styling */
 .sidebar {
   width: 320px;
   background: linear-gradient(180deg, #1e40af 0%, #1d4ed8 50%, #2563eb 100%);
-  box-shadow: 4px 0 20px rgba(30, 64, 175, 0.15);
+  box-shadow: 4px 0 20px rgb(30 64 175 / 15%);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -1784,7 +1937,7 @@ export default {
 
 .sidebar-header {
   padding: 2rem 1.5rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
 }
 
 .brand {
@@ -1796,7 +1949,7 @@ export default {
 .brand-icon {
   width: 2.5rem;
   height: 2.5rem;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgb(255 255 255 / 15%);
   border-radius: 0.75rem;
   display: flex;
   align-items: center;
@@ -1846,7 +1999,7 @@ export default {
   padding: 0.875rem 1rem;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgb(255 255 255 / 80%);
   border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1857,15 +2010,15 @@ export default {
 }
 
 .nav-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
   color: white;
   transform: translateX(4px);
 }
 
 .nav-btn.active {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  background: linear-gradient(135deg, rgb(255 255 255 / 20%), rgb(255 255 255 / 10%));
   color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
 }
 
 .nav-btn.active .nav-indicator {
@@ -1914,9 +2067,9 @@ export default {
 
 /* Top Header */
 .top-header {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+  border-bottom: 1px solid rgb(229 231 235 / 80%);
   padding: 0 2rem;
   height: 70px;
   display: flex;
@@ -1927,7 +2080,7 @@ export default {
   left: 320px;
   right: 0;
   z-index: 999;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
   transition: all 0.3s ease;
 }
 
@@ -1965,7 +2118,7 @@ export default {
 
 .navbar-edit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 8px 25px rgb(79 70 229 / 30%);
   background: linear-gradient(135deg, #3730a3, #6b21a8);
 }
 
@@ -1994,19 +2147,19 @@ export default {
   border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(229, 231, 235, 0.8);
+  background: rgb(255 255 255 / 80%);
+  border: 1px solid rgb(229 231 235 / 80%);
 }
 
 .header-user-profile:hover {
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: rgb(255 255 255 / 100%);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   transform: translateY(-1px);
 }
 
 .header-user-profile.dropdown-open {
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: rgb(255 255 255 / 100%);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
 }
 
 .header-user-info {
@@ -2068,9 +2221,9 @@ export default {
   top: calc(100% + 0.5rem);
   right: 0;
   background: white;
-  border: 1px solid rgba(229, 231, 235, 0.8);
+  border: 1px solid rgb(229 231 235 / 80%);
   border-radius: 0.75rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgb(0 0 0 / 15%);
   min-width: 200px;
   overflow: hidden;
   z-index: 1000;
@@ -2082,6 +2235,7 @@ export default {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -2145,13 +2299,13 @@ export default {
 }
 
 .welcome-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgb(255 255 255 / 20%);
   border-radius: 1.5rem;
   padding: 3rem;
   text-align: center;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgb(0 0 0 / 10%);
   max-width: 600px;
   width: 100%;
 }
@@ -2211,12 +2365,12 @@ export default {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+  box-shadow: 0 4px 12px rgb(14 165 233 / 30%);
 }
 
 .quick-action-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+  box-shadow: 0 8px 20px rgb(14 165 233 / 40%);
 }
 
 .quick-action-btn svg {
@@ -2225,14 +2379,14 @@ export default {
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .doctors-grid {
     grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
     gap: 1.5rem;
   }
 }
 
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .sidebar {
     width: 280px;
   }
@@ -2254,7 +2408,7 @@ export default {
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .sidebar {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -2322,7 +2476,7 @@ export default {
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .content-wrapper {
     padding: 1rem;
     padding-top: 90px;
@@ -2397,7 +2551,7 @@ export default {
   font-size: 2.75rem;
   font-weight: 900;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 1rem;
@@ -2417,25 +2571,25 @@ export default {
 }
 
 .search-filters {
-  background: rgba(255, 255, 255, 0.98);
+  background: rgb(255 255 255 / 98%);
   backdrop-filter: blur(20px);
   border-radius: 1.5rem;
   padding: 2rem;
   box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    0 10px 40px rgb(0 0 0 / 8%),
+    0 4px 12px rgb(0 0 0 / 5%),
+    inset 0 1px 0 rgb(255 255 255 / 40%);
   margin-bottom: 2.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.search-bar {
-  margin-bottom: 1.5rem;
+  border: 1px solid rgb(255 255 255 / 30%);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
 }
 
 .search-input-wrapper {
   position: relative;
-  max-width: 600px;
+  flex-grow: 1;
 }
 
 .search-icon {
@@ -2457,18 +2611,18 @@ export default {
   border-radius: 1.25rem;
   font-size: 1rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(255 255 255 / 90%);
   backdrop-filter: blur(10px);
   font-weight: 500;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgb(0 0 0 / 5%);
 }
 
 .search-input:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 
-    0 0 0 4px rgba(102, 126, 234, 0.15),
-    0 8px 25px rgba(0, 0, 0, 0.1);
+    0 0 0 4px rgb(102 126 234 / 15%),
+    0 8px 25px rgb(0 0 0 / 10%);
   background: white;
 }
 
@@ -2477,25 +2631,18 @@ export default {
   font-weight: 400;
 }
 
-.filter-section {
-  display: flex;
-  gap: 1.25rem;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
 .filter-select {
   padding: 1rem 1.25rem;
   border: 2px solid #e2e8f0;
   border-radius: 1rem;
   font-size: 0.9rem;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(255 255 255 / 90%);
   backdrop-filter: blur(10px);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 180px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgb(0 0 0 / 5%);
   color: #475569;
 }
 
@@ -2503,14 +2650,14 @@ export default {
   outline: none;
   border-color: #667eea;
   box-shadow: 
-    0 0 0 4px rgba(102, 126, 234, 0.15),
-    0 8px 25px rgba(0, 0, 0, 0.1);
+    0 0 0 4px rgb(102 126 234 / 15%),
+    0 8px 25px rgb(0 0 0 / 10%);
   background: white;
 }
 
 .filter-select:hover {
   border-color: #cbd5e1;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 8%);
 }
 
 .refresh-btn {
@@ -2520,7 +2667,7 @@ export default {
   border-radius: 1rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgb(102 126 234 / 30%);
   color: white;
   display: flex;
   align-items: center;
@@ -2529,7 +2676,7 @@ export default {
 
 .refresh-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 30px rgb(102 126 234 / 40%);
 }
 
 .refresh-btn:disabled {
@@ -2556,14 +2703,14 @@ export default {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgb(0 0 0 / 5%);
 }
 
 .clear-filters-btn:hover {
   background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
   border-color: #cbd5e1;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 10%);
 }
 
 /* ===== DOCTORS GRID & CARDS ===== */
@@ -2576,15 +2723,15 @@ export default {
 }
 
 .doctor-card {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+  background: linear-gradient(145deg, rgb(255 255 255 / 95%), rgb(255 255 255 / 85%));
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgb(255 255 255 / 30%);
   border-radius: 1.5rem;
   padding: 1.75rem;
   box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.08),
-    0 4px 20px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    0 10px 40px rgb(0 0 0 / 8%),
+    0 4px 20px rgb(0 0 0 / 4%),
+    inset 0 1px 0 rgb(255 255 255 / 60%);
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   position: relative;
   overflow: hidden;
@@ -2608,9 +2755,9 @@ export default {
 .doctor-card:hover {
   transform: translateY(-8px) scale(1.01);
   box-shadow: 
-    0 25px 60px rgba(0, 0, 0, 0.12),
-    0 10px 30px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 25px 60px rgb(0 0 0 / 12%),
+    0 10px 30px rgb(0 0 0 / 8%),
+    inset 0 1px 0 rgb(255 255 255 / 80%);
 }
 
 /* Card Header */
@@ -2626,8 +2773,8 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  background: rgb(34 197 94 / 10%);
+  border: 1px solid rgb(34 197 94 / 20%);
   border-radius: 2rem;
   backdrop-filter: blur(10px);
 }
@@ -2637,13 +2784,13 @@ export default {
   height: 8px;
   border-radius: 50%;
   background: #22C55E;
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 0 0 2px rgb(34 197 94 / 30%);
   position: relative;
 }
 
 .status-indicator.offline {
   background: #EF4444;
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 0 2px rgb(239 68 68 / 30%);
 }
 
 .status-indicator::before {
@@ -2676,15 +2823,15 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(248, 250, 252, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgb(248 250 252 / 80%);
+  border: 1px solid rgb(148 163 184 / 20%);
   border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .card-favorite:hover {
-  background: rgba(59, 130, 246, 0.1);
+  background: rgb(59 130 246 / 10%);
   border-color: #3B82F6;
   transform: scale(1.1);
 }
@@ -2718,7 +2865,7 @@ export default {
   justify-content: center;
   position: relative;
   flex-shrink: 0;
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 8px 25px rgb(59 130 246 / 30%);
 }
 
 .avatar-background {
@@ -2734,7 +2881,7 @@ export default {
   color: white;
   font-weight: 800;
   font-size: 1.25rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 4px rgb(0 0 0 / 20%);
   z-index: 2;
 }
 
@@ -2747,7 +2894,7 @@ export default {
   background: #22C55E;
   border: 2px solid white;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 .doctor-details {
@@ -2772,8 +2919,8 @@ export default {
   font-weight: 600;
   margin-bottom: 0.75rem;
   padding: 0.375rem 0.75rem;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  background: rgb(59 130 246 / 10%);
+  border: 1px solid rgb(59 130 246 / 20%);
   border-radius: 1.5rem;
   backdrop-filter: blur(10px);
 }
@@ -2793,8 +2940,8 @@ export default {
   font-weight: 600;
   margin-bottom: 0.5rem;
   padding: 0.25rem 0.5rem;
-  background: rgba(5, 150, 105, 0.1);
-  border: 1px solid rgba(5, 150, 105, 0.2);
+  background: rgb(5 150 105 / 10%);
+  border: 1px solid rgb(5 150 105 / 20%);
   border-radius: 1rem;
 }
 
@@ -2812,8 +2959,8 @@ export default {
   font-weight: 500;
   margin-bottom: 0.5rem;
   padding: 0.25rem 0.5rem;
-  background: rgba(124, 58, 237, 0.1);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  background: rgb(124 58 237 / 10%);
+  border: 1px solid rgb(124 58 237 / 20%);
   border-radius: 1rem;
 }
 
@@ -2835,8 +2982,8 @@ export default {
 .availability-info {
   margin-bottom: 1.25rem;
   padding: 1rem;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-  border: 1px solid rgba(59, 130, 246, 0.1);
+  background: linear-gradient(135deg, rgb(59 130 246 / 5%) 0%, rgb(139 92 246 / 5%) 100%);
+  border: 1px solid rgb(59 130 246 / 10%);
   border-radius: 0.875rem;
   backdrop-filter: blur(10px);
 }
@@ -2881,7 +3028,7 @@ export default {
   color: #059669;
   font-weight: 700;
   padding: 0.125rem 0.5rem;
-  background: rgba(5, 150, 105, 0.1);
+  background: rgb(5 150 105 / 10%);
   border-radius: 0.375rem;
 }
 
@@ -2946,8 +3093,8 @@ export default {
   gap: 1rem;
   margin-bottom: 1.5rem;
   padding: 1.25rem;
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%);
-  border: 1px solid rgba(148, 163, 184, 0.1);
+  background: linear-gradient(135deg, rgb(248 250 252 / 80%) 0%, rgb(241 245 249 / 80%) 100%);
+  border: 1px solid rgb(148 163 184 / 10%);
   border-radius: 1rem;
   backdrop-filter: blur(10px);
 }
@@ -2971,17 +3118,17 @@ export default {
 
 .stat-icon.experience {
   background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 4px 15px rgb(59 130 246 / 25%);
 }
 
 .stat-icon.patients {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+  box-shadow: 0 4px 15px rgb(16 185 129 / 25%);
 }
 
 .stat-icon.location {
   background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25);
+  box-shadow: 0 4px 15px rgb(139 92 246 / 25%);
 }
 
 .stat-icon svg {
@@ -3018,8 +3165,8 @@ export default {
   align-items: center;
   margin-bottom: 1.5rem;
   padding: 1.25rem;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
-  border: 1px solid rgba(34, 197, 94, 0.1);
+  background: linear-gradient(135deg, rgb(34 197 94 / 5%) 0%, rgb(6 182 212 / 5%) 100%);
+  border: 1px solid rgb(34 197 94 / 10%);
   border-radius: 1rem;
   backdrop-filter: blur(10px);
 }
@@ -3060,7 +3207,7 @@ export default {
   border-radius: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 2px 8px rgb(239 68 68 / 30%);
 }
 
 .availability-section {
@@ -3087,8 +3234,8 @@ export default {
 .contact-summary {
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(148, 163, 184, 0.1);
+  background: rgb(255 255 255 / 60%);
+  border: 1px solid rgb(148 163 184 / 10%);
   border-radius: 1rem;
   backdrop-filter: blur(10px);
 }
@@ -3126,7 +3273,7 @@ export default {
 
 .btn-primary,
 .btn-secondary {
-  flex: 1;
+  /* flex: 1; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3145,23 +3292,23 @@ export default {
 .btn-primary {
   background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 15px rgb(59 130 246 / 30%);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8px 25px rgb(59 130 246 / 40%);
 }
 
 .btn-secondary {
-  background: rgba(59, 130, 246, 0.1);
+  background: rgb(59 130 246 / 10%);
   color: #3B82F6;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid rgb(59 130 246 / 20%);
   backdrop-filter: blur(10px);
 }
 
 .btn-secondary:hover {
-  background: rgba(59, 130, 246, 0.15);
+  background: rgb(59 130 246 / 15%);
   border-color: #3B82F6;
   transform: translateY(-2px);
 }
@@ -3207,7 +3354,7 @@ export default {
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .doctors-grid {
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     gap: 2rem;
@@ -3231,7 +3378,7 @@ export default {
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .doctors-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -3297,7 +3444,7 @@ export default {
 /* ===== RESPONSIVE DESIGN ===== */
 
 /* Large Tablets and Small Laptops */
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .doctors-grid {
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 1.5rem;
@@ -3324,7 +3471,7 @@ export default {
 }
 
 /* Tablets */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .doctors-grid {
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.25rem;
@@ -3397,7 +3544,7 @@ export default {
 }
 
 /* Mobile Phones */
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .doctors-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -3572,7 +3719,7 @@ export default {
 }
 
 /* Extra Small Phones */
-@media (max-width: 360px) {
+@media (width <= 360px) {
   .doctor-card {
     padding: 0.875rem;
   }
@@ -3595,7 +3742,7 @@ export default {
 
 /* Enhanced Animations and Micro-interactions */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
+  0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-3px); }
 }
 
@@ -3618,7 +3765,7 @@ export default {
 .doctor-card:hover .doctor-name {
   background: linear-gradient(135deg, #3B82F6, #8B5CF6, #06B6D4);
   background-size: 200% auto;
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: shimmer 2s linear infinite;
@@ -3626,7 +3773,7 @@ export default {
 
 .doctor-card:hover .doctor-avatar {
   animation: float 2s ease-in-out infinite;
-  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 12px 35px rgb(59 130 246 / 40%);
 }
 
 .doctor-card:hover .stat-icon {
@@ -3662,12 +3809,12 @@ export default {
 
 .doctor-card:hover .metric-icon {
   transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 8px 25px rgb(102 126 234 / 50%);
 }
 
 .doctor-card:hover .doctor-specialty-badge {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
-  border-color: rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, rgb(102 126 234 / 20%) 0%, rgb(118 75 162 / 20%) 100%);
+  border-color: rgb(102 126 234 / 40%);
   transform: scale(1.05);
 }
 
@@ -3684,14 +3831,14 @@ export default {
 /* Focus states for accessibility */
 .book-appointment-btn:focus,
 .contact-btn:focus {
-  outline: 3px solid rgba(102, 126, 234, 0.3);
+  outline: 3px solid rgb(102 126 234 / 30%);
   outline-offset: 2px;
 }
 
 /* Advanced glassmorphism effects */
 .doctor-contact-info .contact-row:hover {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(102, 126, 234, 0.2);
+  background: rgb(255 255 255 / 80%);
+  border-color: rgb(102 126 234 / 20%);
   transform: translateX(5px);
 }
 
@@ -3741,7 +3888,7 @@ export default {
 
 .book-appointment-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8px 25px rgb(59 130 246 / 40%);
 }
 
 .contact-btn {
@@ -3749,7 +3896,7 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.875rem 1rem;
-  background: rgba(59, 130, 246, 0.1);
+  background: rgb(59 130 246 / 10%);
   color: #3b82f6;
   border: 2px solid #3b82f6;
   border-radius: 0.75rem;
@@ -3793,7 +3940,7 @@ export default {
   border-top: 4px solid #667eea;
   border-radius: 50%;
   animation: spin 1.2s linear infinite;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 4px 15px rgb(102 126 234 / 20%);
 }
 
 .loading-spinner p {
@@ -3814,12 +3961,12 @@ export default {
 }
 
 .error-message {
-  background: rgba(255, 255, 255, 0.98);
+  background: rgb(255 255 255 / 98%);
   backdrop-filter: blur(20px);
   border-radius: 1.5rem;
   padding: 3rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 40px rgb(0 0 0 / 8%);
+  border: 1px solid rgb(255 255 255 / 30%);
   max-width: 500px;
 }
 
@@ -3853,12 +4000,12 @@ export default {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgb(102 126 234 / 30%);
 }
 
 .retry-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 30px rgb(102 126 234 / 40%);
 }
 
 /* Empty States */
@@ -3876,7 +4023,7 @@ export default {
   height: 5rem;
   color: #cbd5e1;
   margin-bottom: 2rem;
-  background: rgba(203, 213, 225, 0.1);
+  background: rgb(203 213 225 / 10%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -3914,7 +4061,7 @@ export default {
 
 .cta-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8px 25px rgb(59 130 246 / 40%);
 }
 
 /* Appointments Page Styles */
@@ -3930,12 +4077,12 @@ export default {
 }
 
 .appointment-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgb(255 255 255 / 20%);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 8%);
   position: relative;
 }
 
@@ -4068,7 +4215,7 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
-  background: rgba(59, 130, 246, 0.1);
+  background: rgb(59 130 246 / 10%);
   color: #3b82f6;
   border: 2px solid #3b82f6;
   border-radius: 0.5rem;
@@ -4088,7 +4235,7 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
-  background: rgba(16, 185, 129, 0.1);
+  background: rgb(16 185 129 / 10%);
   color: #10b981;
   border: 2px solid #10b981;
   border-radius: 0.5rem;
@@ -4108,7 +4255,7 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
-  background: rgba(59, 130, 246, 0.1);
+  background: rgb(59 130 246 / 10%);
   color: #3b82f6;
   border: 2px solid #3b82f6;
   border-radius: 0.5rem;
@@ -4126,11 +4273,8 @@ export default {
 /* Booking Modal Styles */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -4142,7 +4286,7 @@ export default {
 .booking-modal {
   background: white;
   border-radius: 1.25rem;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px rgb(0 0 0 / 25%);
   max-width: 500px;
   width: 100%;
   max-height: 90vh;
@@ -4218,7 +4362,7 @@ export default {
   color: #059669;
   margin-top: 0.5rem;
   padding: 0.25rem 0.5rem;
-  background: rgba(5, 150, 105, 0.1);
+  background: rgb(5 150 105 / 10%);
   border-radius: 0.375rem;
 }
 
@@ -4256,7 +4400,7 @@ export default {
 .form-textarea:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 10%);
 }
 
 .form-textarea {
@@ -4292,7 +4436,7 @@ export default {
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.175rem;
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 140px;
@@ -4301,7 +4445,7 @@ export default {
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 12px rgb(59 130 246 / 40%);
 }
 
 .submit-btn:disabled {
@@ -4314,7 +4458,7 @@ export default {
 .reschedule-modal {
   background: white;
   border-radius: 1.25rem;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px rgb(0 0 0 / 25%);
   max-width: 500px;
   width: 100%;
   max-height: 90vh;
@@ -4396,7 +4540,7 @@ export default {
 .reschedule-modal .form-textarea:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 10%);
 }
 
 .reschedule-modal .form-textarea {
@@ -4447,7 +4591,7 @@ export default {
 
 .reschedule-modal .submit-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 12px rgb(59 130 246 / 40%);
 }
 
 .reschedule-modal .submit-btn:disabled {
@@ -4466,7 +4610,7 @@ export default {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px rgb(0 0 0 / 25%);
 }
 
 .chat-header {
@@ -4476,7 +4620,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
 }
 
 .chat-doctor-info {
@@ -4489,7 +4633,7 @@ export default {
   position: relative;
   width: 48px;
   height: 48px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255 255 255 / 20%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -4668,7 +4812,7 @@ export default {
 
 .chat-input-container:focus-within {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 10%);
 }
 
 .attachment-btn,
@@ -4788,7 +4932,7 @@ export default {
 }
 
 /* Responsive Design for Chat */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .chat-modal {
     width: 95%;
     height: 80vh;
@@ -4831,8 +4975,8 @@ export default {
   max-width: 500px;
   max-height: 90vh;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 20%);
+  border: 1px solid rgb(255 255 255 / 30%);
   animation: modalSlide 0.3s ease-out;
 }
 
@@ -4860,7 +5004,7 @@ export default {
 
 .star-btn:hover {
   transform: scale(1.1);
-  background: rgba(59, 130, 246, 0.1);
+  background: rgb(59 130 246 / 10%);
 }
 
 .star-btn.active {
@@ -4892,12 +5036,12 @@ export default {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+  box-shadow: 0 4px 12px rgb(251 191 36 / 30%);
 }
 
 .rate-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(251, 191, 36, 0.4);
+  box-shadow: 0 8px 20px rgb(251 191 36 / 40%);
 }
 
 .rating-completed {
@@ -4905,9 +5049,9 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background: rgba(16, 185, 129, 0.1);
+  background: rgb(16 185 129 / 10%);
   color: #059669;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid rgb(16 185 129 / 20%);
   border-radius: 0.75rem;
   font-weight: 600;
   font-size: 0.875rem;
@@ -4919,8 +5063,78 @@ export default {
   color: #fbbf24;
 }
 
-/* Responsive rating modal */
+/* Mobile responsive updates for doctors grid and appointments */
 @media (max-width: 768px) {
+  .doctors-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    padding: 0 0.5rem !important;
+  }
+  
+  .doctor-card {
+    margin-bottom: 1rem !important;
+    padding: 1rem !important;
+  }
+  
+  .appointments-list {
+    gap: 1rem !important;
+    padding: 0 0.5rem !important;
+  }
+  
+  .appointment-card {
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .search-filters {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  .search-bar {
+    width: 100% !important;
+  }
+  
+  .filter-section {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .doctors-header, .appointments-header {
+    padding: 0 0.5rem !important;
+    text-align: center !important;
+  }
+  
+  .page-title {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .page-subtitle {
+    font-size: 0.875rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* Appointment Filter Styles */
+.appointment-filter-select {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  font-size: 0.875rem;
+  min-width: 180px;
+}
+
+.appointment-filter-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+/* Responsive rating modal */
+@media (width <= 768px) {
   .rating-modal {
     width: 95%;
     max-width: none;

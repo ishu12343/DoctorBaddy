@@ -89,29 +89,32 @@ export default {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(30,40,90,0.18);
+  background: rgb(30 40 90 / 18%);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
 }
+
 .role-modal {
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 4px 32px rgba(44,100,200,0.18);
-  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  box-shadow: 0 4px 32px rgb(44 100 200 / 18%);
+  padding: 2rem 1.5rem 1.5rem;
   min-width: 260px;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
 }
+
 .role-modal h3 {
   margin-bottom: 1.2rem;
   color: #223a5e;
   font-size: 1.2rem;
   font-weight: 700;
 }
+
 .role-btn {
   width: 180px;
   margin: 0.3rem 0;
@@ -122,22 +125,27 @@ export default {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-  box-shadow: 0 2px 8px rgba(44,100,200,0.10);
+  box-shadow: 0 2px 8px rgb(44 100 200 / 10%);
 }
+
 .doctor-btn {
   background: linear-gradient(90deg, #5C9EF0 0%, #3b5998 100%);
   color: #fff;
 }
+
 .doctor-btn:hover {
   background: linear-gradient(90deg, #3b5998 0%, #5C9EF0 100%);
 }
+
 .patient-btn {
   background: linear-gradient(90deg, #f0a35c 0%, #f05c7a 100%);
   color: #fff;
 }
+
 .patient-btn:hover {
   background: linear-gradient(90deg, #f05c7a 0%, #f0a35c 100%);
 }
+
 .close-modal-btn {
   position: absolute;
   top: 0.5rem;
@@ -149,6 +157,7 @@ export default {
   cursor: pointer;
   transition: color 0.2s;
 }
+
 .close-modal-btn:hover {
   color: #223a5e;
 }
@@ -159,7 +168,7 @@ export default {
 .footer-singleline {
   width: 100%;
   background: linear-gradient(90deg, #1a2746 0%, #223a5e 100%);
-  box-shadow: 0 2px 12px 0 rgba(30, 40, 90, 0.10);
+  box-shadow: 0 2px 12px 0 rgb(30 40 90 / 10%);
   border-top: 2px solid #2b3a5e;
   padding: 0;
   display: flex;
@@ -169,6 +178,7 @@ export default {
   position: relative;
   z-index: 2;
 }
+
 .footer-singleline__container {
   display: flex;
   flex-direction: row;
@@ -180,14 +190,17 @@ export default {
   gap: 0.7rem;
   box-sizing: border-box;
 }
+
 .footer-logo-image-single {
   width: 28px;
   max-height: 14px;
 }
+
 .footer-social-links-single {
   display: flex;
   gap: 0.3rem;
 }
+
 .footer-social-icon-link-single {
   width: 1.2rem;
   height: 1.2rem;
@@ -196,38 +209,45 @@ export default {
   align-items: center;
   justify-content: center;
   color: #5C9EF0;
-  background: rgba(255,255,255,0.10);
+  background: rgb(255 255 255 / 10%);
   border-radius: 50%;
   transition: background 0.2s, color 0.2s;
 }
+
 .footer-social-icon-link-single:hover {
   background: #5C9EF0;
   color: #fff;
 }
+
 .footer-social-icon-single {
   width: 0.9rem;
   height: 0.9rem;
-  fill: currentColor;
+  fill: currentcolor;
 }
+
 .footer-utility-links-single {
   display: flex;
   gap: 0.4rem;
   font-size: 0.78rem;
 }
+
 .footer-utility-link-single {
   color: #b0b8c9;
   text-decoration: none;
   transition: color 0.2s;
 }
+
 .footer-utility-link-single:hover {
   color: #fff;
 }
+
 .footer-copyright-single {
   font-size: 0.7rem;
   color: #b0b8c9;
   margin: 0 0.2rem;
   white-space: nowrap;
 }
+
 .footer-cta-btn-single {
   font-size: 0.85rem !important;
   padding: 0.3rem 0.9rem !important;
@@ -239,42 +259,49 @@ export default {
   gap: 0.3rem;
 }
 
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .footer-singleline__container {
     max-width: 100vw;
     padding: 0 0.3rem;
     gap: 0.3rem;
   }
+
   .footer-logo-image-single {
     width: 22px;
     max-height: 11px;
   }
 }
-@media (max-width: 700px) {
+
+@media (width <= 700px) {
   .footer-singleline__container {
     flex-wrap: wrap;
     gap: 0.2rem;
     padding: 0 0.1rem;
   }
+
   .footer-logo-image-single {
     width: 18px;
     max-height: 9px;
   }
+
   .footer-copyright-single {
     font-size: 0.62rem;
   }
+
   .footer-cta-btn-single {
     font-size: 0.7rem !important;
     padding: 0.2rem 0.6rem !important;
   }
 }
-@media (max-width: 500px) {
+
+@media (width <= 500px) {
   .footer-singleline__container {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.1rem;
-    padding: 0.05rem 0.05rem;
+    padding: 0.05rem;
   }
+
   .footer-logo-image-single {
     width: 14px;
     max-height: 7px;
@@ -285,9 +312,10 @@ export default {
   width: 70px;
   height: auto;
   max-height: 28px;
-  filter: drop-shadow(0 2px 8px rgba(92,158,240,0.12));
+  filter: drop-shadow(0 2px 8px rgb(92 158 240 / 12%));
   transition: transform 0.3s cubic-bezier(.4,2,.6,1);
 }
+
 .footer-logo-image:hover {
   transform: scale(1.08) rotate(-2deg);
 }
@@ -295,8 +323,9 @@ export default {
 .footer-social-links {
   display: flex;
   gap: 1.2rem;
-  margin: 0.2rem 0 0.1rem 0;
+  margin: 0.2rem 0 0.1rem;
 }
+
 .footer-social-icon-link {
   display: flex;
   align-items: center;
@@ -304,23 +333,25 @@ export default {
   width: 2.3rem;
   height: 2.3rem;
   border-radius: 50%;
-  background: rgba(92,158,240,0.08);
-  box-shadow: 0 2px 8px rgba(44, 100, 200, 0.08);
+  background: rgb(92 158 240 / 8%);
+  box-shadow: 0 2px 8px rgb(44 100 200 / 8%);
   color: #5C9EF0;
   font-size: 1.3rem;
   transition: transform 0.25s, box-shadow 0.25s, background 0.25s, color 0.25s;
-  border: 1.5px solid rgba(92,158,240,0.13);
+  border: 1.5px solid rgb(92 158 240 / 13%);
 }
+
 .footer-social-icon-link:hover {
   transform: scale(1.18) rotate(-8deg);
   background: #5C9EF0;
   color: #fff;
-  box-shadow: 0 4px 16px rgba(44, 100, 200, 0.18);
+  box-shadow: 0 4px 16px rgb(44 100 200 / 18%);
 }
+
 .footer-social-icon {
   width: 1.2rem;
   height: 1.2rem;
-  fill: currentColor;
+  fill: currentcolor;
   display: block;
 }
 
@@ -329,8 +360,9 @@ export default {
   gap: 1.2rem;
   list-style: none;
   padding: 0;
-  margin: 0.2rem 0 0 0;
+  margin: 0.2rem 0 0;
 }
+
 .footer-utility-link {
   text-decoration: none;
   color: #5C9EF0;
@@ -339,6 +371,7 @@ export default {
   letter-spacing: 0.01em;
   transition: color 0.2s;
 }
+
 .footer-utility-link:hover {
   color: #007bff;
   text-decoration: underline;
@@ -347,23 +380,25 @@ export default {
 .footer-copyright {
   color: #444;
   font-size: 0.85rem;
-  margin: 0.1rem 0 0 0;
+  margin: 0.1rem 0 0;
   letter-spacing: 0.01em;
   text-align: center;
 }
 
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .footer-modern__container {
     flex-direction: column;
     gap: 2rem;
     padding: 0 1rem;
     align-items: stretch;
   }
+
   .footer-modern__left, .footer-modern__right {
     padding: 1.2rem 0;
     min-width: 0;
     max-width: 100vw;
   }
+
   .footer-modern__right {
     flex-direction: column;
     align-items: flex-start;
@@ -373,17 +408,20 @@ export default {
     border-radius: 1rem;
   }
 }
-@media (max-width: 600px) {
+
+@media (width <= 600px) {
   .footer-modern__container {
     flex-direction: column;
     gap: 1.2rem;
     padding: 0 0.2rem;
   }
+
   .footer-modern__left, .footer-modern__right {
     padding: 0.7rem 0.2rem;
     min-width: 0;
     max-width: 100vw;
   }
+
   .footer-modern__right {
     flex-direction: column;
     align-items: flex-start;
@@ -392,13 +430,16 @@ export default {
     margin: 0;
     border-radius: 0.7rem;
   }
+
   .cta-footer__text h2 {
     font-size: 1.1rem;
   }
+
   .cta-footer__text {
     font-size: 0.95rem;
   }
 }
+
 /* Stylish CTA Button */
 .stylish-cta {
   background: linear-gradient(90deg, #5C9EF0 0%, #3b5998 100%);
@@ -408,7 +449,7 @@ export default {
   font-weight: 700;
   font-size: 0.93rem;
   padding: 0.38rem 1.3rem;
-  box-shadow: 0 2px 12px 0 rgba(44, 100, 200, 0.13);
+  box-shadow: 0 2px 12px 0 rgb(44 100 200 / 13%);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -419,16 +460,19 @@ export default {
   z-index: 1;
   letter-spacing: 0.01em;
 }
+
 .stylish-cta:hover, .stylish-cta:focus {
   background: linear-gradient(90deg, #3b5998 0%, #5C9EF0 100%);
-  box-shadow: 0 4px 18px 0 rgba(44, 100, 200, 0.18);
+  box-shadow: 0 4px 18px 0 rgb(44 100 200 / 18%);
   transform: scale(1.045);
 }
+
 .stylish-cta:active {
   background: linear-gradient(90deg, #4a69bd 0%, #5C9EF0 100%);
-  box-shadow: 0 2px 8px 0 rgba(44, 100, 200, 0.10);
+  box-shadow: 0 2px 8px 0 rgb(44 100 200 / 10%);
   transform: scale(0.98);
 }
+
 .stylish-cta i {
   font-size: 1.1em;
   margin-right: 0.2em;
