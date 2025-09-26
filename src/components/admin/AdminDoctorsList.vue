@@ -444,10 +444,10 @@ export default {
           // Map the API response to match your component's expected data structure
           doctors.value = response.data.map(doctor => ({
             id: doctor._id || doctor.id,
-            full_name: `Dr. ${doctor.firstName || ''} ${doctor.lastName || ''}`.trim(),
+            full_name: `${doctor.full_name || ''}`.trim(),
             email: doctor.email || '',
             specialty: doctor.specialty || 'General Practitioner',
-            qualification: doctor.qualification || 'MD',
+            qualification: doctor.qualification || '',
             approved: doctor.isApproved || doctor.approved || false,
             suspended: doctor.isSuspended || doctor.suspended || false,
             profile_image: doctor.profileImage || doctor.profile_image || null,

@@ -432,7 +432,7 @@ export default {
             phone: patient.mobile || 'N/A',
             is_active: patient.is_active === 1,
             // Add default values for any additional fields your UI might expect
-            gender: 'other',
+            gender: patient.gender || 'other',
             date_of_birth: '',
             address: 'Address not provided',
             profile_image: null,
