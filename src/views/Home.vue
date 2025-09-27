@@ -40,10 +40,13 @@
                     :style="{ animationDelay: `${index * 0.2}s` }"
                   > 
                     <div class="absolute top-2 sm:top-3 right-2 sm:right-3 flex items-center gap-2 z-10">
-                      <div v-if="doctor.average_rating" class="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
-                        <span class="text-yellow-500 text-xs font-semibold">{{ doctor.average_rating.toFixed(1) }}</span>
-                        <i class="fas fa-star text-yellow-400 ml-1 text-xs"></i>
+                      <div class="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
+                        <div class="flex items-center gap-0.5">
+                          <i v-for="star in 5" :key="star" class="fas fa-star text-xs" :class="star <= Math.round(doctor.average_rating || 0) ? 'text-yellow-400' : 'text-gray-300'"></i>
+                        </div>
+                        <span v-if="doctor.average_rating" class="text-yellow-500 text-xs font-semibold ml-1">{{ doctor.average_rating.toFixed(1) }}</span>
                       </div>
+
                       <button @click="openDoctorProfileModal(doctor)" class="bg-gray-100 hover:bg-gray-200 rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 transition-colors touch-friendly" title="View Profile">
                         <span class="text-lg sm:text-xl">👁️</span>
                       </button>
