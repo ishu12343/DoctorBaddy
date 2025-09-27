@@ -38,10 +38,17 @@
                     :key="doctor.id" 
                     class="relative bg-white rounded-xl p-3 sm:p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-gray-800"
                     :style="{ animationDelay: `${index * 0.2}s` }"
-                  >
-                    <button @click="openDoctorProfileModal(doctor)" class="absolute top-2 sm:top-3 right-2 sm:right-3 bg-gray-100 hover:bg-gray-200 rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 transition-colors z-10 touch-friendly" title="View Profile">
-                      <span class="text-lg sm:text-xl">👁️</span>
-                    </button>
+                  > 
+                    <div class="absolute top-2 sm:top-3 right-2 sm:right-3 flex items-center gap-2 z-10">
+                      <div v-if="doctor.average_rating" class="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
+                        <span class="text-yellow-500 text-xs font-semibold">{{ doctor.average_rating.toFixed(1) }}</span>
+                        <i class="fas fa-star text-yellow-400 ml-1 text-xs"></i>
+                      </div>
+                      <button @click="openDoctorProfileModal(doctor)" class="bg-gray-100 hover:bg-gray-200 rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 transition-colors touch-friendly" title="View Profile">
+                        <span class="text-lg sm:text-xl">👁️</span>
+                      </button>
+                    </div>
+
 
                     <div class="flex items-start gap-3 sm:gap-4">
                       <!-- Avatar -->
@@ -49,10 +56,6 @@
                         <img v-if="doctor.profile_photo" :src="doctor.profile_photo" :alt="doctor.full_name" class="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover" />
                         <div v-else class="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gray-200 flex items-center justify-center">
                             <span class="text-lg sm:text-xl font-bold text-gray-500">{{ getInitials(doctor.full_name) }}</span>
-                        </div>
-                        <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-yellow-400 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-lg shadow-md flex items-center gap-1">
-                            <span class="text-xs">⭐</span>
-                            <span class="font-bold text-xs sm:text-sm">{{ doctor.average_rating > 0 ? doctor.average_rating.toFixed(1) : 'New' }}</span>
                         </div>
                       </div>
                       <!-- Info -->
