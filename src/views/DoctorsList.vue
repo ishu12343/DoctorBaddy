@@ -451,33 +451,39 @@
              <!-- Details & Rating -->
              <div class="p-6">
                <div class="space-y-4">
-                   <div class="flex items-center text-sm">
-                       <i class="fas fa-briefcase w-6 text-center text-gray-500 mr-3"></i>
-                       <span class="font-semibold text-gray-600 mr-2">Experience:</span>
-                       <span class="text-gray-800">{{ selectedDoctorProfile.experience }}+ Years</span>
-                   </div>
-                   <div class="flex items-center text-sm">
-                       <i class="fas fa-language w-6 text-center text-gray-500 mr-3"></i>
-                       <span class="font-semibold text-gray-600 mr-2">Languages:</span>
-                       <span class="text-gray-800">{{ Array.isArray(selectedDoctorProfile.languages) ? selectedDoctorProfile.languages.join(', ') : selectedDoctorProfile.languages || 'Not specified' }}</span>
-                   </div>
-                   <div class="flex items-center text-sm">
-                       <i class="fas fa-hospital w-6 text-center text-gray-500 mr-3"></i>
-                       <span class="font-semibold text-gray-600 mr-2">Clinic/City:</span>
-                       <span class="text-gray-800">{{ selectedDoctorProfile.clinic_name || 'Not specified' }}{{ selectedDoctorProfile.city ? ', ' + selectedDoctorProfile.city : '' }}</span>
-                   </div>
-                   <div class="flex items-center text-sm">
-                       <i class="far fa-clock w-6 text-center text-gray-500 mr-3"></i>
-                       <span class="font-semibold text-gray-600 mr-2">Availability:</span>
-                       <span class="text-gray-800">{{ formatAvailability(selectedDoctorProfile) }}</span>
-                   </div>
-                   <div class="flex items-center text-sm">
-                       <i class="fas fa-star w-6 text-center text-gray-500 mr-3"></i>
-                       <span class="font-semibold text-gray-600 mr-2">Rating:</span>
-                       <div class="flex items-center gap-2">
-                           <div class="flex items-center gap-0.5"><i v-for="star in 5" :key="star" class="fas fa-star" :class="star <= Math.round(selectedDoctorProfile.average_rating || 0) ? 'text-yellow-400' : 'text-gray-300'"></i></div>
-                           <span class="font-bold text-gray-800">{{ selectedDoctorProfile.average_rating > 0 ? selectedDoctorProfile.average_rating.toFixed(1) : 'New' }}</span>
-                           <span class="text-gray-500">({{ selectedDoctorProfile.total_reviews || 0 }} reviews)</span>
+                   <div class="grid grid-cols-[auto,1fr] items-start gap-x-3 gap-y-4 text-sm">
+                       <i class="fas fa-briefcase w-5 text-center text-gray-400 mt-1"></i>
+                       <div>
+                           <p class="font-semibold text-gray-600">Experience</p>
+                           <p class="text-gray-800">{{ selectedDoctorProfile.experience }}+ Years</p>
+                       </div>
+
+                       <i class="fas fa-language w-5 text-center text-gray-400 mt-1"></i>
+                       <div>
+                           <p class="font-semibold text-gray-600">Languages</p>
+                           <p class="text-gray-800">{{ Array.isArray(selectedDoctorProfile.languages) ? selectedDoctorProfile.languages.join(', ') : selectedDoctorProfile.languages || 'Not specified' }}</p>
+                       </div>
+
+                       <i class="fas fa-hospital w-5 text-center text-gray-400 mt-1"></i>
+                       <div>
+                           <p class="font-semibold text-gray-600">Clinic/City</p>
+                           <p class="text-gray-800">{{ selectedDoctorProfile.clinic_name || 'Not specified' }}{{ selectedDoctorProfile.city ? ', ' + selectedDoctorProfile.city : '' }}</p>
+                       </div>
+
+                       <i class="far fa-clock w-5 text-center text-gray-400 mt-1"></i>
+                       <div class="min-w-0">
+                           <p class="font-semibold text-gray-600">Availability</p>
+                           <p class="text-gray-800 break-words">{{ formatAvailability(selectedDoctorProfile) }}</p>
+                       </div>
+
+                       <i class="fas fa-star w-5 text-center text-gray-400 mt-1"></i>
+                       <div>
+                           <p class="font-semibold text-gray-600">Rating</p>
+                           <div class="flex items-center gap-2">
+                               <div class="flex items-center gap-0.5"><i v-for="star in 5" :key="star" class="fas fa-star" :class="star <= Math.round(selectedDoctorProfile.average_rating || 0) ? 'text-yellow-400' : 'text-gray-300'"></i></div>
+                               <span class="font-bold text-gray-800">{{ selectedDoctorProfile.average_rating > 0 ? selectedDoctorProfile.average_rating.toFixed(1) : 'New' }}</span>
+                               <span class="text-gray-500">({{ selectedDoctorProfile.total_reviews || 0 }} reviews)</span>
+                           </div>
                        </div>
                    </div>
                </div>
