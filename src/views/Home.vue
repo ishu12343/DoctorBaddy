@@ -84,7 +84,7 @@
                   <div class="flex items-center gap-2 text-white">
                     <span class="text-blue-200 text-base sm:text-lg">👥</span>
                     <div>
-                      <div class="font-bold text-sm sm:text-base">2.5k+</div>
+                      <div class="font-bold text-sm sm:text-base">{{ animatedStats.patients }}</div>
                       <div class="text-xs sm:text-sm opacity-75">Patients Served</div>
                     </div>
                   </div>
@@ -140,7 +140,7 @@
                 </div>
                 <div class="text-center">
                   <i class="fas fa-user-friends text-md text-2xl sm:text-4xl mb-3 sm:mb-4"></i>
-                    <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.consultations }}+</div>
+                    <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{{ animatedStats.doctors }}+</div>
                   <div class="text-xs sm:text-sm text-blue-100">Consultations</div>
                 </div>
               </div>
@@ -1583,6 +1583,20 @@ export default {
         this.loadingDoctors = false;
       }
     },
+    async fetchPatientStats() {
+      try {
+        const response = await axios.get(`${config.baseURL}/api/patient/patient-list`);
+        if (response.data && response.data.success) {
+          this.finalStats.patients = response.data.count;
+          // We can call animateStats() here if we want to re-trigger the animation
+          // when this data comes in after the doctor data.
+          // For now, we assume it's set before the initial animation.
+        }
+      } catch (error) {
+        console.error('Error fetching patient stats:', error);
+        // Keep the default hardcoded value on error
+      }
+    },
     showLearnMoreSections() {
       this.showLearnMore = true;
       this.$nextTick(() => {
@@ -1681,6 +1695,7 @@ export default {
     this.startHeroPhraseRotation();
     this.startSubtitleRotation();
     this.fetchTopRatedDoctors();
+    this.fetchPatientStats().then(() => this.animateStats());
     this.setupObservers();
     this.setupCarouselSyncing();
   },
