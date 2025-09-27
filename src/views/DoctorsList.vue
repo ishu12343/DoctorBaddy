@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col bg-gray-50">
     <AppHeader />
     
-    <main class="flex-grow py-6 sm:py-8">
+    <main class="flex-grow py-8 sm:py-8">
       <!-- Hero Section -->
       <div class="bg-gradient-to-r from-medical-primary to-medical-secondary text-white py-8 sm:py-12 mb-8">
         <div class="container mx-auto px-4 sm:px-6">
@@ -215,89 +215,144 @@
               <div 
                 v-for="doctor in paginatedDoctors" 
                 :key="doctor.id"
-                class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
+                class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg hover:border-medical-primary/20 transition-all duration-300 transform hover:-translate-y-1"
               >
-                <div class="p-4 sm:p-6">
-                  <div class="flex flex-col sm:flex-row">
+                <div class="p-4">
+                  <!-- Top Row: Photo, Name, Rating, View Button -->
+                  <div class="flex items-center gap-4 mb-4">
                     <!-- Doctor Avatar -->
-                    <div class="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
-                      <div class="relative">
-                        <img 
-                          v-if="doctor.profile_photo" 
-                          :src="doctor.profile_photo" 
-                          :alt="doctor.full_name"
-                          class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover border-2 border-white shadow-sm"
-                          onerror="this.onerror=null; this.src='https://via.placeholder.com/100?text=DR'"
-                        />
-                        <div v-else class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center shadow-sm">
-                          <span class="text-2xl font-bold text-blue-600">{{ getInitials(doctor.full_name) }}</span>
-                        </div>
-                        <div v-if="doctor.available" class="absolute -bottom-1 -right-1 bg-green-500 rounded-full w-3 h-3 border-2 border-white"></div>
+                    <div class="flex-shrink-0 relative">
+                      <img 
+                        v-if="doctor.profile_photo" 
+                        :src="doctor.profile_photo" 
+                        :alt="doctor.full_name"
+                        class="w-16 h-16 rounded-full object-cover border-3 border-white shadow-lg ring-2 ring-gray-100"
+                        onerror="this.onerror=null; this.src='https://via.placeholder.com/64?text=DR'"
+                      />
+                      <div v-else class="w-16 h-16 rounded-full bg-gradient-to-br from-medical-primary to-medical-secondary flex items-center justify-center shadow-lg ring-2 ring-gray-100">
+                        <span class="text-xl font-bold text-white">{{ getInitials(doctor.full_name) }}</span>
+                      </div>
+                      <!-- Online Status Indicator -->
+                      <div v-if="doctor.available" class="absolute -bottom-0.5 -right-0.5 bg-green-500 rounded-full w-4 h-4 border-2 border-white shadow-sm flex items-center justify-center">
+                        <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                       </div>
                     </div>
                     
-                    <!-- Doctor Info -->
+                    <!-- Doctor Name and Info -->
                     <div class="flex-1 min-w-0">
-                      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between">
-                        <div class="mb-2 sm:mb-0">
-                          <h3 class="text-lg font-bold text-gray-900 truncate">{{ doctor.full_name }}</h3>
-                          <p class="text-sm text-medical-secondary font-medium">{{ doctor.specialty || 'General Practitioner' }}</p>
-                        </div>
-                        <div class="flex items-center mb-2 sm:mb-0">
-                          <div v-if="doctor.average_rating" class="flex items-center bg-yellow-50 px-2.5 py-1 rounded-full">
-                            <span class="text-yellow-600 text-sm font-semibold">{{ doctor.average_rating.toFixed(1) }}</span>
-                            <i class="fas fa-star text-yellow-400 ml-1 text-xs"></i>
-                            <span class="text-xs text-gray-500 ml-1">({{ doctor.review_count || 0 }})</span>
+                      <!-- Doctor Name and View Button Side by Side -->
+                      <div class="flex items-center gap-2 mb-1">
+                        <h3 class="text-base sm:text-lg font-bold text-gray-900 truncate leading-tight flex-1">{{ doctor.full_name }}</h3>
+                        <button 
+                          @click="viewDoctorProfile(doctor)" 
+                          class="flex-shrink-0 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 border border-blue-200 text-medical-primary px-1.5 py-1 rounded-md text-xs font-semibold transition-all duration-200 hover:shadow-sm transform hover:scale-105 flex items-center"
+                        >
+                          <i class="fas fa-eye text-xs"></i>
+                        </button>
+                      </div>
+                      <!-- Specialty -->
+                      <div class="mb-1">
+                        <p class="text-xs sm:text-sm text-medical-secondary font-semibold truncate">{{ doctor.specialty || 'General Practitioner' }}</p>
+                      </div>
+                      <!-- Rating Row -->
+                      <div class="flex flex-col sm:flex-row sm:items-center mt-1 gap-1">
+                        <!-- Rating and Total Reviews -->
+                        <div class="flex items-center flex-wrap">
+                          <div v-if="doctor.average_rating" class="flex items-center bg-gradient-to-r from-yellow-50 to-orange-50 px-2 py-1 rounded-lg border border-yellow-200">
+                            <div class="flex items-center mr-1">
+                              <i v-for="star in Math.min(5, Math.round(doctor.average_rating))" :key="star" class="fas fa-star text-yellow-500 text-xs"></i>
+                              <i v-for="star in (5 - Math.min(5, Math.round(doctor.average_rating)))" :key="star + 'empty'" class="far fa-star text-yellow-300 text-xs"></i>
+                            </div>
+                            <span class="text-yellow-700 text-xs font-bold ml-0.5">{{ doctor.average_rating.toFixed(1) }}</span>
+                            <span class="text-yellow-600 text-xs ml-1">({{ doctor.review_count || doctor.total_reviews || 0 }} reviews)</span>
+                          </div>
+                          <div v-else class="flex items-center bg-gray-50 px-2 py-1 rounded-lg border border-gray-200">
+                            <div class="flex items-center mr-1">
+                              <i v-for="star in 5" :key="star" class="far fa-star text-gray-300 text-xs"></i>
+                            </div>
+                            <span class="text-gray-500 text-xs font-medium">New</span>
                           </div>
                         </div>
-                      </div>
-                      
-                      <div class="mt-3 text-sm text-gray-600 space-y-1.5">
-                        <div class="flex items-center">
-                          <i class="fas fa-briefcase text-gray-400 w-4 mr-2 text-center"></i>
-                          <span>{{ doctor.experience || '5' }}+ years experience</span>
-                        </div>
-                        <div v-if="doctor.qualification" class="flex items-center">
-                          <i class="fas fa-graduation-cap text-gray-400 w-4 mr-2 text-center"></i>
-                          <span class="truncate">{{ doctor.qualification }}</span>
-                        </div>
-                        <div v-if="doctor.hospital" class="flex items-center">
-                          <i class="fas fa-hospital text-gray-400 w-4 mr-2 text-center"></i>
-                          <span class="truncate">{{ doctor.hospital }}</span>
-                        </div>
-                        <div v-if="doctor.languages && doctor.languages.length" class="flex items-center flex-wrap gap-1 mt-1">
-                          <i class="fas fa-language text-gray-400 w-4 mr-2"></i>
-                          <span v-for="(lang, index) in doctor.languages.slice(0, 3)" :key="index" 
-                                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {{ lang }}
-                          </span>
-                          <span v-if="doctor.languages.length > 3" class="text-xs text-gray-500 ml-1">
-                            +{{ doctor.languages.length - 3 }} more
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <div class="mt-4 pt-3 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                        <div class="flex items-center text-sm text-gray-600">
-                          <i class="far fa-clock text-medical-primary mr-1.5"></i>
-                          <span>{{ doctor.available ? 'Available Today' : 'Next Available: ' + (doctor.next_available || 'Check calendar') }}</span>
-                        </div>
-                        <div class="flex space-x-2 w-full sm:w-auto">
-                          <button 
-                            @click="viewDoctorProfile(doctor)" 
-                            class="flex-1 sm:flex-none px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                          >
-                            <i class="fas fa-eye mr-1.5"></i> View Profile
-                          </button>
-                          <button 
-                            @click="bookAppointment(doctor)" 
-                            class="flex-1 sm:flex-none px-4 py-2 bg-gradient-to-r from-medical-primary to-medical-secondary text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
-                          >
-                            <i class="fas fa-calendar-plus mr-1.5"></i> Book Now
-                          </button>
+                        <!-- Available Days/Time -->
+                        <div v-if="doctor.available_days && doctor.available_from && doctor.available_to" class="flex items-center text-xs text-gray-600 bg-blue-50 rounded px-2 py-1 mt-1 sm:mt-0 sm:ml-2">
+                          <i class="far fa-clock text-medical-primary mr-1"></i>
+                          <span class="truncate">{{ doctor.available_days }} </span>
                         </div>
                       </div>
                     </div>
+                  </div>
+                  
+                  <!-- Doctor Details -->
+                  <div class="space-y-2 mb-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
+                      <!-- Experience -->
+                      <div class="flex items-center">
+                        <div class="w-6 h-6 bg-blue-50 rounded-lg flex items-center justify-center mr-2 flex-shrink-0">
+                          <i class="fas fa-briefcase text-blue-600 text-xs"></i>
+                        </div>
+                        <span class="truncate">{{ doctor.experience || '5' }}+ years exp</span>
+                      </div>
+                      
+                      <!-- Hospital/Clinic -->
+                      <div v-if="doctor.hospital" class="flex items-center">
+                        <div class="w-6 h-6 bg-green-50 rounded-lg flex items-center justify-center mr-2 flex-shrink-0">
+                          <i class="fas fa-hospital text-green-600 text-xs"></i>
+                        </div>
+                        <span class="truncate">{{ doctor.hospital }}</span>
+                      </div>
+                      
+                      <!-- Qualification -->
+                      <div v-if="doctor.qualification" class="flex items-center sm:col-span-2">
+                        <div class="w-6 h-6 bg-purple-50 rounded-lg flex items-center justify-center mr-2 flex-shrink-0">
+                          <i class="fas fa-graduation-cap text-purple-600 text-xs"></i>
+                        </div>
+                        <span class="truncate">{{ doctor.qualification }}</span>
+                      </div>
+                    </div>
+                    
+                    <!-- Languages -->
+                    <div v-if="doctor.languages && doctor.languages.length" class="flex items-center flex-wrap gap-1">
+                      <div class="w-6 h-6 bg-orange-50 rounded-lg flex items-center justify-center mr-2 flex-shrink-0">
+                        <i class="fas fa-language text-orange-600 text-xs"></i>
+                      </div>
+                      <div class="flex flex-wrap gap-1">
+                        <span v-for="(lang, index) in doctor.languages.slice(0, 3)" :key="index" 
+                              class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-medium bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200">
+                          {{ lang }}
+                        </span>
+                        <span v-if="doctor.languages.length > 3" 
+                              class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-600">
+                          +{{ doctor.languages.length - 3 }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Bottom Section: Availability & Book Button -->
+                  <div class="border-t border-gray-100 pt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <!-- Availability Status -->
+                    <div class="flex items-center text-sm">
+                      <div class="w-6 h-6 rounded-lg flex items-center justify-center mr-2 flex-shrink-0"
+                           :class="doctor.available ? 'bg-green-50' : 'bg-orange-50'">
+                        <i class="fas fa-clock text-xs" 
+                           :class="doctor.available ? 'text-green-600' : 'text-orange-600'"></i>
+                      </div>
+                      <span :class="doctor.available ? 'text-green-700 font-medium' : 'text-orange-700'">
+                        {{ doctor.available ? 'Available Now' : 'Availability: ' + (doctor.next_available || 'Time') }}
+                      </span>
+                        <span v-if="doctor.available_from && doctor.available_to" class="ml-2 px-2 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold whitespace-nowrap">
+                          {{ doctor.available_from }} - {{ doctor.available_to }}
+                        </span>
+                    </div>
+                    
+                    <!-- Book Appointment Button -->
+                    <button 
+                      @click="bookAppointment(doctor)" 
+                      class="w-full sm:w-auto bg-gradient-to-r from-medical-primary to-medical-secondary hover:from-medical-secondary hover:to-medical-primary text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
+                    >
+                      <i class="fas fa-calendar-plus text-sm"></i>
+                      <span>Book Appointment</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -751,7 +806,7 @@ export default {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -775,4 +830,143 @@ export default {
 .doctor-card:nth-child(8) { animation-delay: 0.4s; }
 .doctor-card:nth-child(9) { animation-delay: 0.45s; }
 .doctor-card:nth-child(10) { animation-delay: 0.5s; }
+
+/* Modern card hover effects */
+.bg-white:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Smooth transitions for buttons */
+button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Gradient hover effects for buttons */
+.bg-gradient-to-r:hover {
+  background-size: 110% 110%;
+}
+
+/* Mobile-first responsive adjustments */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Ensure cards don't get too narrow on mobile */
+  .bg-white {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  
+  /* Better button spacing on mobile */
+  button {
+    min-height: 44px; /* Apple's recommended touch target size */
+  }
+}
+
+/* Extra small screens - custom breakpoint */
+@media (max-width: 475px) {
+  /* Hide text on very small screens to save space */
+  .hidden.xs\:inline {
+    display: none;
+  }
+  
+  /* Make small view button even more compact on xs screens */
+  .bg-gradient-to-r.from-blue-50 {
+    padding: 0.25rem 0.375rem; /* More compact padding */
+    min-width: 24px; /* Ensure minimum touch target */
+    min-height: 24px;
+  }
+  
+  /* Adjust star rating spacing */
+  .fa-star {
+    margin-right: 1px;
+  }
+  
+  /* Ensure proper spacing between view button and name */
+  .flex.items-start.gap-2 {
+    gap: 0.375rem;
+  }
+}
+
+/* Show text on screens 475px and above */
+@media (min-width: 475px) {
+  .xs\:inline {
+    display: inline;
+  }
+  
+  /* Ensure proper touch target size on larger screens */
+  .bg-gradient-to-r.from-blue-50 {
+    min-width: 32px;
+    min-height: 32px;
+  }
+}
+
+/* General button improvements for small view button */
+.bg-gradient-to-r.from-blue-50 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem; /* rounded-md */
+  font-weight: 600;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.bg-gradient-to-r.from-blue-50:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure doctor name doesn't get cut off */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Pulse animation for online status */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Enhance focus states for accessibility */
+button:focus,
+input:focus,
+select:focus {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+/* Modern rating stars */
+.fa-star {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Card entrance animation */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply animation to cards */
+.bg-white {
+  animation: slideInUp 0.6s ease-out forwards;
+}
 </style>
