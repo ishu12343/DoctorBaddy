@@ -12,15 +12,9 @@
                         <!-- Hero Visual Content -->
                         <div class="animate-slide-up mt-6 lg:mt-0">
               <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-2xl">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+                <div class="flex flex-wrap items-center justify-between mb-4 sm:mb-6 gap-x-4 gap-y-2">
                   <h3 class="text-lg sm:text-xl font-semibold text-white">Top Rated Doctors</h3>
-                  <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
-                    <span class="flex items-center gap-1 text-green-300 text-sm">
-                      <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-                      Live Now
-                    </span>
-                    <button @click="showAllDoctorsList" class="btn btn-primary btn-small w-full sm:w-auto">Find All Doctors</button>
-                  </div>
+                  <button @click="showAllDoctorsList" class="btn btn-primary btn-small flex-grow sm:flex-grow-0">Find All Doctors</button>
                 </div>
                 
                 <!-- Doctor Cards -->
@@ -39,9 +33,15 @@
                     class="relative bg-white rounded-xl p-3 sm:p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-gray-800"
                     :style="{ animationDelay: `${index * 0.2}s` }"
                   > 
-                    <button @click="openDoctorProfileModal(doctor)" class="absolute top-2 sm:top-3 right-2 sm:right-3 bg-gray-100 hover:bg-gray-200 rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 transition-colors z-10 touch-friendly" title="View Profile">
-                      <span class="text-lg sm:text-xl">👁️</span>
-                    </button>
+                    <div class="absolute top-2 sm:top-3 right-2 sm:right-3 flex flex-col items-center gap-1 z-10">
+                      <button @click="openDoctorProfileModal(doctor)" class="bg-gray-100 hover:bg-gray-200 rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 transition-colors touch-friendly" title="View Profile">
+                        <span class="text-lg sm:text-xl">👁️</span>
+                      </button>
+                      <div class="flex items-center gap-0.5">
+                        <i v-for="star in 5" :key="star" class="fas fa-star text-xs" :class="star <= Math.round(doctor.average_rating || 0) ? 'text-yellow-400' : 'text-gray-300'"></i>
+                        <span v-if="doctor.average_rating" class="text-gray-500 text-xs font-medium ml-1">({{ doctor.average_rating.toFixed(1) }})</span>
+                      </div>
+                    </div>
 
 
                     <div class="flex items-start gap-3 sm:gap-4">
@@ -57,15 +57,9 @@
                         <h4 class="font-bold text-gray-900 truncate text-sm sm:text-base">{{ doctor.full_name || doctor.name }}</h4>
                         <p class="text-xs sm:text-sm text-medical-secondary font-medium mb-1.5">{{ doctor.specialty }}</p>
                         <div class="text-xs text-gray-500 mt-1 sm:mt-1.5 space-y-1.5">
-                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-                              <div class="flex items-center gap-2 pr-4">
+                            <div class="flex items-center gap-2">
                                 <span class="w-3 text-center text-gray-400">💼</span>
                                 <span>{{ doctor.experience }} years exp.</span>
-                              </div>
-                              <div class="flex items-center gap-0.5">
-                                <i v-for="star in 5" :key="star" class="fas fa-star text-xs" :class="star <= Math.round(doctor.average_rating || 0) ? 'text-yellow-400' : 'text-gray-300'"></i>
-                                <span v-if="doctor.average_rating" class="text-gray-500 text-xs font-medium ml-1">({{ doctor.average_rating.toFixed(1) }})</span>
-                              </div>
                             </div>
                             <div class="flex items-center gap-2" v-if="doctor.languages && doctor.languages.length">
                                 <span class="w-3 text-center text-gray-400">🌐</span>
@@ -263,7 +257,7 @@
                               <p class="text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
                             </div>
                             <div v-if="doctor.average_rating" class="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
-                              <span class="text-yellow-500 text-sm font-semibold">{{ doctor.average_rating.toFixed(1) }}</span>
+                              <span class="text-yellow-500 text-sm font-semibold">({{ doctor.average_rating.toFixed(1) }})</span>
                               <i class="fas fa-star text-yellow-400 ml-1 text-xs"></i>
                             </div>
                           </div>
