@@ -1571,6 +1571,9 @@ export default {
             this.topRatedDoctors = response.data.doctors
                 .sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0))
                 .slice(0, 3);
+            // Set the total number of doctors for the stats
+            this.finalStats.doctors = response.data.doctors.length;
+            this.animateStats(); // Re-animate stats with the new count
         }
       } catch (error) {
         console.error('Error fetching top rated doctors:', error);
@@ -1675,7 +1678,6 @@ export default {
   },
 
   mounted() {
-    this.animateStats();
     this.startHeroPhraseRotation();
     this.startSubtitleRotation();
     this.fetchTopRatedDoctors();
