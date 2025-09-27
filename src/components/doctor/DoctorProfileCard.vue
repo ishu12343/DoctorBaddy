@@ -1,29 +1,3 @@
-<style scoped>
-@media (width <= 900px) {
-  .profile-card-container {
-    flex-direction: column !important;
-    padding: 1rem !important;
-    gap: 1.5rem !important;
-  }
-}
-
-@media (width <= 600px) {
-  .profile-card-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .profile-card {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 1rem;
-  }
-}
-</style>
 <template>
   <div class="profile-container">
     <!-- Header Section -->
@@ -50,6 +24,53 @@
           <div class="form-section">
             <h3 class="section-title">Personal Information</h3>
             <div class="form-grid">
+              <!-- Profile Photo Section -->
+              <div class="form-group" v-if="isEditing">
+                <label class="form-label">Profile Photo</label>
+                <div class="file-upload-container">
+                  <!-- Photo Preview -->
+                  <div v-if="photoPreview || (doctor.profile_photo && !photoFile)" class="photo-preview-container">
+                    <img :src="photoPreview || getProfilePhotoUrl()" alt="Profile Photo" class="photo-preview" />
+                    <div class="photo-overlay">
+                      <button type="button" @click="removePhoto" class="remove-photo-btn">
+                        <svg class="remove-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                      </button>
+                      <label for="photo-upload" class="change-photo-btn">
+                        <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <!-- Upload Button (when no photo) -->
+                  <div v-else>
+                    <input type="file" @change="handlePhotoUpload" class="file-input" id="photo-upload" accept="image/*" />
+                    <label for="photo-upload" class="file-upload-btn">
+                      <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                      </svg>
+                      Choose Photo (Max 10MB)
+                    </label>
+                  </div>
+                  
+                  <!-- Hidden file input for changing photo -->
+                  <input type="file" @change="handlePhotoUpload" class="file-input" id="photo-upload" accept="image/*" />
+                  
+                  <!-- Upload Status -->
+                  <div v-if="photoFile" class="file-selected">
+                    <span class="file-name">{{ photoFile.name }} ({{ formatFileSize(photoFile.size) }})</span>
+                  </div>
+                  
+                  <div class="upload-info">
+                    <small class="upload-hint">Supports all image formats (JPG, PNG, GIF, WebP, etc.) • Maximum size: 10MB</small>
+                  </div>
+                </div>
+              </div>
+              
               <!-- Full Name -->
               <div class="form-group">
                 <label class="form-label">Full Name <span class="required">*</span></label>
@@ -101,26 +122,26 @@
               
               <!-- DOB -->
               <div class="form-group">
-                <label class="form-label">Date of Birth <span class="required">*</span></label>
+                <label class="form-label">Date of Birth</label>
                 <template v-if="isEditing">
-                  <input v-model="doctor.dob" type="date" class="form-input" required />
+                  <input v-model="doctor.dob" type="date" class="form-input" />
                 </template>
                 <template v-else>
-                  <div class="form-display">{{ doctor.dob }}</div>
+                  <div class="form-display">{{ doctor.dob || 'Not specified' }}</div>
                 </template>
               </div>
               
               <!-- Blood Group -->
               <div class="form-group">
-                <label class="form-label">Blood Group <span class="required">*</span></label>
+                <label class="form-label">Blood Group</label>
                 <template v-if="isEditing">
-                  <select v-model="doctor.blood_group" class="form-input" required>
+                  <select v-model="doctor.blood_group" class="form-input">
                     <option disabled value="">Select Blood Group</option>
                     <option v-for="group in bloodGroups" :key="group">{{ group }}</option>
                   </select>
                 </template>
                 <template v-else>
-                  <div class="form-display">{{ doctor.blood_group }}</div>
+                  <div class="form-display">{{ doctor.blood_group || 'Not specified' }}</div>
                 </template>
               </div>
             </div>
@@ -174,7 +195,7 @@
                 </template>
               </div>
               
-              <!-- License No -->
+              <!-- License Number -->
               <div class="form-group">
                 <label class="form-label">License Number <span class="required">*</span></label>
                 <template v-if="isEditing">
@@ -198,226 +219,11 @@
             </div>
           </div>
 
-          <!-- Clinic Information Section -->
-          <div class="form-section">
-            <h3 class="section-title">Clinic Information</h3>
-            <div class="form-grid">
-              <!-- Clinic Name -->
-              <div class="form-group">
-                <label class="form-label">Clinic/Hospital Name <span class="required">*</span></label>
-                <template v-if="isEditing">
-                  <input v-model="doctor.clinic_name" type="text" class="form-input" required placeholder="Clinic or hospital name" />
-                </template>
-                <template v-else>
-                  <div class="form-display">{{ doctor.clinic_name }}</div>
-                </template>
-              </div>
-              
-              <!-- Clinic Address -->
-              <div class="form-group">
-                <label class="form-label">Clinic Address <span class="required">*</span></label>
-                <template v-if="isEditing">
-                  <input v-model="doctor.clinic_address" type="text" class="form-input" required placeholder="Complete clinic address" />
-                </template>
-                <template v-else>
-                  <div class="form-display">{{ doctor.clinic_address }}</div>
-                </template>
-              </div>
-              
-              <!-- City -->
-              <div class="form-group">
-                <label class="form-label">City <span class="required">*</span></label>
-                <template v-if="isEditing">
-                  <input v-model="doctor.city" type="text" class="form-input" required placeholder="City name" />
-                </template>
-                <template v-else>
-                  <div class="form-display">{{ doctor.city }}</div>
-                </template>
-              </div>
-              
-              <!-- State -->
-              <div class="form-group">
-                <label class="form-label">State <span class="required">*</span></label>
-                <template v-if="isEditing">
-                  <input v-model="doctor.state" type="text" class="form-input" required placeholder="State name" />
-                </template>
-                <template v-else>
-                  <div class="form-display">{{ doctor.state }}</div>
-                </template>
-              </div>
-              
-              <!-- Zip Code -->
-              <div class="form-group">
-                <label class="form-label">Zip Code <span class="required">*</span></label>
-                <template v-if="isEditing">
-                  <input v-model="doctor.zip" type="text" class="form-input" required placeholder="Postal code" />
-                </template>
-                <template v-else>
-                  <div class="form-display">{{ doctor.zip }}</div>
-                </template>
-              </div>
-              
-              <!-- Location Description -->
-              <div class="form-group">
-                <label class="form-label">Location Description</label>
-                <template v-if="isEditing">
-                  <input v-model="doctor.location" type="text" class="form-input" placeholder="Additional location details" />
-                </template>
-                <template v-else>
-                  <div class="form-display">{{ doctor.location || 'Not specified' }}</div>
-                </template>
-              </div>
-            </div>
-          </div>
-
-          <!-- Availability & Settings Section -->
-          <div class="form-section">
-            <h3 class="section-title">Availability & Settings</h3>
-            <div class="form-grid">
-              <!-- Language -->
-              <div class="form-group">
-                <label class="form-label">Languages <span class="required">*</span></label>
-                <template v-if="isEditing">
-                  <div class="checkbox-group">
-                    <div v-for="lang in indianLanguages" :key="lang" class="checkbox-item">
-                      <input 
-                        type="checkbox" 
-                        :id="`lang-${lang}`" 
-                        :value="lang" 
-                        v-model="doctor.selectedLanguages"
-                        class="checkbox-input"
-                      />
-                      <label :for="`lang-${lang}`" class="checkbox-label">{{ lang }}</label>
-                    </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <div class="form-display">
-                    <div class="tags-container">
-                      <span v-for="lang in doctor.selectedLanguages" :key="lang" class="tag">{{ lang }}</span>
-                    </div>
-                  </div>
-                </template>
-              </div>
-              
-              <!-- Available Days -->
-              <div class="form-group">
-                <label class="form-label">Available Days <span class="required">*</span></label>
-                <template v-if="isEditing">
-                  <div class="checkbox-group">
-                    <div v-for="day in daysOfWeek" :key="day" class="checkbox-item">
-                      <input 
-                        type="checkbox" 
-                        :id="`day-${day}`" 
-                        :value="day" 
-                        v-model="doctor.selectedDays"
-                        class="checkbox-input"
-                      />
-                      <label :for="`day-${day}`" class="checkbox-label">{{ day }}</label>
-                    </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <div class="form-display">
-                    <div class="tags-container">
-                      <span v-for="day in doctor.selectedDays" :key="day" class="tag">{{ day }}</span>
-                    </div>
-                  </div>
-                </template>
-              </div>
-              
-              <!-- Available Timings -->
-              <div class="form-group">
-                <label class="form-label">Available From <span class="required">*</span></label>
-                <template v-if="isEditing">
-                  <input v-model="doctor.available_from" type="time" class="form-input" required />
-                </template>
-                <template v-else>
-                  <div class="form-display">{{ doctor.available_from || 'Not specified' }}</div>
-                </template>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">Available To <span class="required">*</span></label>
-                <template v-if="isEditing">
-                  <input v-model="doctor.available_to" type="time" class="form-input" required />
-                </template>
-                <template v-else>
-                  <div class="form-display">{{ doctor.available_to || 'Not specified' }}</div>
-                </template>
-              </div>
-              
-              <!-- Status -->
-              <div class="form-group">
-                <label class="form-label">Account Status</label>
-                <div class="status-display" :class="getStatusClass()">
-                  <div class="status-indicator"></div>
-                  {{ getDisplayStatus() }}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- File Upload Section (Only in Edit Mode) -->
-          <div class="form-section" v-if="isEditing">
-            <h3 class="section-title">Documents</h3>
-            <div class="form-grid">
-              <!-- Upload Photo -->
-              <div class="form-group">
-                <label class="form-label">Profile Photo</label>
-                <div class="file-upload-container">
-                  <input type="file" @change="handlePhotoUpload" class="file-input" id="photo-upload" accept="image/*" />
-                  <label for="photo-upload" class="file-upload-btn">
-                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                    Choose Photo
-                  </label>
-                  <div v-if="photoFile" class="file-selected">
-                    <span class="file-name">{{ photoFile.name }}</span>
-                    <button type="button" @click="clearPhoto" class="clear-file-btn">×</button>
-                  </div>
-                  <div v-if="!photoFile && doctor.profile_photo" class="current-file">
-                    <span class="current-file-label">Current: {{ doctor.profile_photo }}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Upload Document -->
-              <div class="form-group">
-                <label class="form-label">Upload License/ID</label>
-                <div class="file-upload-container">
-                  <input type="file" @change="handleDocUpload" class="file-input" id="doc-upload" accept=".pdf,.jpg,.jpeg,.png" />
-                  <label for="doc-upload" class="file-upload-btn">
-                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Choose Document
-                  </label>
-                  <div v-if="docFile" class="file-selected">
-                    <span class="file-name">{{ docFile.name }}</span>
-                    <button type="button" @click="clearDoc" class="clear-file-btn">×</button>
-                  </div>
-                  <div v-if="!docFile && doctor.documents" class="current-file">
-                    <span class="current-file-label">Current: {{ doctor.documents }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Current Files Display (When Not Editing) -->
-          <div class="form-section" v-if="!isEditing && (doctor.profile_photo || doctor.documents)">
-            <h3 class="section-title">Uploaded Documents</h3>
-            <div class="form-grid">
-              <div class="form-group" v-if="doctor.profile_photo">
-                <label class="form-label">Profile Photo</label>
-                <div class="form-display">{{ doctor.profile_photo }}</div>
-              </div>
-              <div class="form-group" v-if="doctor.documents">
-                <label class="form-label">License/ID Document</label>
-                <div class="form-display">{{ doctor.documents }}</div>
-              </div>
+          <!-- Current Photo Display (When Not Editing) -->
+          <div class="form-section" v-if="!isEditing && doctor.profile_photo">
+            <h3 class="section-title">Profile Photo</h3>
+            <div class="profile-photo-display">
+              <img :src="getProfilePhotoUrl()" alt="Profile Photo" class="profile-photo-view" />
             </div>
           </div>
 
@@ -448,7 +254,9 @@
 
 <script>
 import { BASE_URL } from '@/config/api';
+
 export default {
+  name: 'DoctorProfileCard',
   props: {
     onStatusUpdate: {
       type: Function,
@@ -460,117 +268,82 @@ export default {
       doctor: null,
       originalDoctor: null,
       bloodGroups: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
-      daysOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-      indianLanguages: [
-        'Hindi', 'Gujarati', 'Marathi', 'Punjabi', 'Tamil', 'Telugu', 'Kannada', 'Malayalam',
-        'Bengali', 'Odia', 'Assamese', 'Urdu'
-      ],
       photoFile: null,
-      docFile: null,
+      photoPreview: null,
       isEditing: false
     };
   },
   async mounted() {
-    const token = localStorage.getItem('token');
-    try {
-      const res = await fetch(`${BASE_URL}/api/doctor/profile`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('Failed to fetch profile');
-      const data = await res.json();
-      if (data) {
-        let dob = data.dob || '';
-        const dobRegex = /^\d{4}-\d{2}-\d{2}$/;
-        if (dob && !dobRegex.test(dob)) {
-          const date = new Date(dob);
-          dob = date.toISOString().slice(0, 10);
-        }
-        const doctorObj = {
-          full_name: data.full_name || '',
-          email: data.email || '',
-          mobile: data.mobile || '',
-          gender: data.gender || '',
-          dob: dob,
-          blood_group: data.blood_group || '',
-          specialty: data.specialty || '',
-          qualification: data.degree || '',
-          experience: data.experience || '',
-          registration_number: data.registration_number || '',
-          license_number: data.license_number || '', // Use actual API data
-          clinic_name: data.clinic_name || '',
-          clinic_address: data.clinic_address || '',
-          city: data.city || '',
-          zip: data.zip_code || '',
-          state: data.state || '',
-          selectedLanguages: [], // Initialize as array
-          selectedDays: [], // Initialize as array
-          available_from: data.available_from || '',
-          available_to: data.available_to || '',
-          status: data.status || '',
-          council: data.council || '',
-          location: data.location || '',
-          approved: data.approved || false,
-          suspended: data.suspended || false,
-        };
-        
-        // Handle languages - convert from comma-separated string to array
-        if (data.languages) {
-          doctorObj.selectedLanguages = data.languages.split(',').map(lang => lang.trim()).filter(lang => lang);
-        }
-        
-        // Handle available days - convert from string to array
-        if (data.available_days) {
-          // If it's a comma-separated string, split it
-          if (typeof data.available_days === 'string') {
-            doctorObj.selectedDays = data.available_days.split(',').map(day => day.trim()).filter(day => day);
-          } else if (Array.isArray(data.available_days)) {
-            doctorObj.selectedDays = data.available_days;
-          } else {
-            doctorObj.selectedDays = [data.available_days];
-          }
-        }
-        this.doctor = doctorObj;
-        this.originalDoctor = { ...doctorObj };
-        
-        // Notify parent of status update if callback provided
-        if (this.onStatusUpdate) {
-          this.onStatusUpdate();
-        }
-      }
-    } catch (err) {
-      alert('Error fetching profile: ' + err.message);
-    }
+    await this.loadProfile();
   },
   methods: {
+    async loadProfile() {
+      const token = localStorage.getItem('token');
+      try {
+        const res = await fetch(`${BASE_URL}/api/doctor/profile`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (!res.ok) {
+          throw new Error('Failed to fetch profile');
+        }
+        
+        const data = await res.json();
+        if (data) {
+          let dob = data.dob || '';
+          const dobRegex = /^\d{4}-\d{2}-\d{2}$/;
+          if (dob && !dobRegex.test(dob)) {
+            const date = new Date(dob);
+            dob = date.toISOString().slice(0, 10);
+          }
+          
+          this.doctor = {
+            full_name: data.full_name || '',
+            email: data.email || '',
+            mobile: data.mobile || '',
+            gender: data.gender || '',
+            dob: dob,
+            blood_group: data.blood_group || '',
+            specialty: data.specialty || '',
+            qualification: data.degree || '',
+            experience: data.experience || '',
+            registration_number: data.registration_number || '',
+            license_number: data.license_number || '',
+            council: data.council || '',
+            profile_photo: data.profile_photo || '',
+            approved: data.approved || false,
+            suspended: data.suspended || false,
+          };
+          
+          this.originalDoctor = { ...this.doctor };
+          
+          // Notify parent of status update if callback provided
+          if (this.onStatusUpdate) {
+            this.onStatusUpdate();
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+        const message = 'Error fetching profile: ' + err.message;
+        if (this.$toast) {
+          this.$toast.error(message);
+        } else {
+          alert(message);
+        }
+      }
+    },
+
     handlePhotoUpload(event) {
       const file = event.target.files[0];
       if (file) {
-        // Validate file type
-        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-        if (!allowedTypes.includes(file.type)) {
-          alert('Please select a valid image file (JPEG, PNG, or GIF)');
-          event.target.value = '';
-          return;
-        }
-        
-        // Validate file size (max 5MB)
-        const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-        if (file.size > maxSize) {
-          alert('File size must be less than 5MB');
-          event.target.value = '';
-          return;
-        }
-        
-        this.photoFile = file;
-      }
-    },
-    handleDocUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        // Validate file type
-        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-        if (!allowedTypes.includes(file.type)) {
-          alert('Please select a valid document file (PDF, JPEG, or PNG)');
+        // Validate file type - accept all image types
+        if (!file.type.startsWith('image/')) {
+          const message = 'Please select a valid image file';
+          if (this.$toast) {
+            this.$toast.error(message);
+          } else {
+            alert(message);
+          }
           event.target.value = '';
           return;
         }
@@ -578,47 +351,117 @@ export default {
         // Validate file size (max 10MB)
         const maxSize = 10 * 1024 * 1024; // 10MB in bytes
         if (file.size > maxSize) {
-          alert('File size must be less than 10MB');
+          const message = 'File size must be less than 10MB';
+          if (this.$toast) {
+            this.$toast.error(message);
+          } else {
+            alert(message);
+          }
           event.target.value = '';
           return;
         }
         
-        this.docFile = file;
+        this.photoFile = file;
+        this.createPhotoPreview(file);
+        
+        // Show success message
+        const successMessage = `Photo selected: ${file.name} (${this.formatFileSize(file.size)})`;
+        if (this.$toast) {
+          this.$toast.success(successMessage);
+        }
       }
     },
-    clearPhoto() {
+
+    createPhotoPreview(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.photoPreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+
+    removePhoto() {
       this.photoFile = null;
+      this.photoPreview = null;
+      this.doctor.profile_photo = '';
       const photoInput = document.getElementById('photo-upload');
       if (photoInput) photoInput.value = '';
     },
-    clearDoc() {
-      this.docFile = null;
-      const docInput = document.getElementById('doc-upload');
-      if (docInput) docInput.value = '';
+
+    clearPhoto() {
+      this.photoFile = null;
+      this.photoPreview = null;
+      const photoInput = document.getElementById('photo-upload');
+      if (photoInput) photoInput.value = '';
     },
+
+    getProfilePhotoUrl() {
+      if (this.doctor && this.doctor.profile_photo) {
+        // If it's a base64 string, return as is
+        if (this.doctor.profile_photo.startsWith('data:image/')) {
+          return this.doctor.profile_photo;
+        }
+        // If it's just base64 data without the data URI prefix, add it
+        if (this.doctor.profile_photo.length > 100 && !this.doctor.profile_photo.startsWith('http')) {
+          // Assume it's base64 data and add the data URI prefix
+          return `data:image/jpeg;base64,${this.doctor.profile_photo}`;
+        }
+        // If it's a URL, return as is
+        if (this.doctor.profile_photo.startsWith('http')) {
+          return this.doctor.profile_photo;
+        }
+      }
+      // Default profile image
+      try {
+        return new URL('/src/assets/images/profile.jpg', import.meta.url).href;
+      } catch (e) {
+        // Fallback for older browsers
+        return '/src/assets/images/profile.jpg';
+      }
+    },
+
+    formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    },
+
+    // Convert file to base64 string
+    fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    },
+
     async submitForm() {
       try {
-        // Prepare submit data without files first
-        const submitData = {
-          ...this.doctor,
-          languages: this.doctor.selectedLanguages.join(', '),
-          available_days: this.doctor.selectedDays.join(', ')
-        };
+        // Prepare submit data
+        const submitData = { ...this.doctor };
         
-        // Remove the array properties as they're not expected by the API
-        delete submitData.selectedLanguages;
-        delete submitData.selectedDays;
-        
-        // Handle files - store just filename or a simple string reference instead of base64
+        // Handle photo upload
         if (this.photoFile) {
-          submitData.profile_photo = `${this.photoFile.name}_${Date.now()}`;
+          try {
+            const base64Photo = await this.fileToBase64(this.photoFile);
+            submitData.profile_photo = base64Photo;
+            console.log('Photo converted to base64, size:', base64Photo.length);
+          } catch (error) {
+            console.error('Error converting photo to base64:', error);
+            const errorMessage = 'Failed to process image. Please try a different image.';
+            if (this.$toast) {
+              this.$toast.error(errorMessage);
+            } else {
+              alert(errorMessage);
+            }
+            return;
+          }
         }
         
-        if (this.docFile) {
-          submitData.documents = `${this.docFile.name}_${Date.now()}`;
-        }
-        
-        console.log('Submitting data:', submitData);
+        console.log('Submitting data with keys:', Object.keys(submitData));
         
         const response = await fetch(`${BASE_URL}/api/doctor/profile/update`, {
           method: 'PUT',
@@ -630,72 +473,63 @@ export default {
         });
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || errorData.details || 'Failed to save profile');
+          let errorData = {};
+          const responseText = await response.text();
+          try {
+            errorData = JSON.parse(responseText);
+          } catch (e) {
+            console.error('Could not parse error response:', responseText);
+            errorData = { error: 'Unknown server error', details: responseText };
+          }
+          
+          const errorMessage = errorData.error || errorData.details || `Server error: ${response.status}`;
+          console.error('Server response:', errorData);
+          throw new Error(errorMessage);
         }
         
-        alert('Profile updated successfully!');
+        const successMessage = 'Profile updated successfully!';
+        if (this.$toast) {
+          this.$toast.success(successMessage);
+        } else {
+          alert(successMessage);
+        }
         
         this.isEditing = false;
+        
+        // Update the doctor object with the new photo data
+        if (this.photoFile && submitData.profile_photo) {
+          this.doctor.profile_photo = submitData.profile_photo;
+        }
+        
         this.originalDoctor = { ...this.doctor };
         
         // Reset file inputs
         this.photoFile = null;
-        this.docFile = null;
+        this.photoPreview = null;
         
         // Clear file input elements
         const photoInput = document.getElementById('photo-upload');
-        const docInput = document.getElementById('doc-upload');
         if (photoInput) photoInput.value = '';
-        if (docInput) docInput.value = '';
         
         // Emit event to parent component
         this.$emit('profileUpdated');
         
       } catch (error) {
         console.error('Submit error:', error);
-        alert('Error: ' + error.message);
+        const errorMessage = error.message || 'Profile update failed. Please try again.';
+        if (this.$toast) {
+          this.$toast.error(errorMessage);
+        } else {
+          alert('Error: ' + errorMessage);
+        }
       }
     },
-    
-    // Convert file to base64 string
-    fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-      });
-    },
+
     cancelEdit() {
       this.doctor = { ...this.originalDoctor };
       this.isEditing = false;
       this.photoFile = null;
-      this.docFile = null;
-    },
-    getDisplayStatus() {
-      if (!this.doctor) return 'Unknown';
-      
-      if (this.doctor.suspended) {
-        return 'Suspended by Admin';
-      } else if (!this.doctor.approved) {
-        return 'Pending Admin Approval';
-      } else if (this.doctor.approved && !this.doctor.suspended) {
-        return 'Active - Approved';
-      }
-      return this.doctor.status || 'Unknown';
-    },
-    getStatusClass() {
-      if (!this.doctor) return '';
-      
-      if (this.doctor.suspended) {
-        return 'text-red-600 bg-red-50 border-red-200';
-      } else if (!this.doctor.approved) {
-        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      } else if (this.doctor.approved && !this.doctor.suspended) {
-        return 'text-green-600 bg-green-50 border-green-200';
-      }
-      return '';
+      this.photoPreview = null;
     }
   }
 };
@@ -735,7 +569,6 @@ export default {
   background: linear-gradient(135deg, #667eea, #764ba2);
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
   margin: 0;
   line-height: 1.2;
 }
@@ -789,31 +622,9 @@ export default {
   padding: 2rem;
 }
 
-.form-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-.form-container::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 4px;
-}
-
-.form-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border-radius: 4px;
-}
-
-.form-container::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #5a67d8, #6b46c1);
-}
-
 /* Form Sections */
 .form-section {
   margin-bottom: 3rem;
-}
-
-.form-section:last-child {
-  margin-bottom: 1rem;
 }
 
 .section-title {
@@ -908,129 +719,6 @@ export default {
   align-items: center;
 }
 
-/* Status Display */
-.status-display {
-  padding: 0.875rem 1rem;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-height: 3rem;
-}
-
-.status-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* Checkbox Groups */
-.checkbox-group {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.75rem;
-  padding: 1rem;
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.checkbox-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.checkbox-input {
-  width: 1.125rem;
-  height: 1.125rem;
-  border: 2px solid #cbd5e1;
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
-  position: relative;
-  accent-color: #667eea;
-}
-
-.checkbox-input:checked {
-  background: #667eea;
-  border-color: #667eea;
-}
-
-.checkbox-label {
-  font-size: 0.875rem;
-  color: #374151;
-  cursor: pointer;
-  user-select: none;
-  font-weight: 500;
-}
-
-.checkbox-input:checked + .checkbox-label {
-  color: #667eea;
-  font-weight: 600;
-}
-
-/* Tags Display */
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  min-height: 3rem;
-  align-items: center;
-}
-
-.tag {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  box-shadow: 0 2px 8px rgb(102 126 234 / 20%);
-}
-
-.tag:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgb(102 126 234 / 30%);
-}
-
-.status-display.text-red-600 {
-  background: #fef2f2;
-  color: #dc2626;
-  border: 2px solid #fecaca;
-}
-
-.status-display.text-red-600 .status-indicator {
-  background: #dc2626;
-}
-
-.status-display.text-yellow-600 {
-  background: #fffbeb;
-  color: #d97706;
-  border: 2px solid #fed7aa;
-}
-
-.status-display.text-yellow-600 .status-indicator {
-  background: #d97706;
-}
-
-.status-display.text-green-600 {
-  background: #f0fdf4;
-  color: #16a34a;
-  border: 2px solid #bbf7d0;
-}
-
-.status-display.text-green-600 .status-indicator {
-  background: #16a34a;
-}
-
 /* File Upload */
 .file-upload-container {
   position: relative;
@@ -1071,6 +759,89 @@ export default {
   height: 1.25rem;
 }
 
+/* Photo Preview */
+.photo-preview-container {
+  position: relative;
+  display: inline-block;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.photo-preview {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+}
+
+.photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.photo-preview-container:hover .photo-overlay {
+  opacity: 1;
+}
+
+.remove-photo-btn,
+.change-photo-btn {
+  background: rgba(255, 255, 255, 0.9);
+  color: #374151;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-photo-btn:hover {
+  background: #ef4444;
+  color: white;
+}
+
+.change-photo-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.remove-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Profile Photo Display (Non-editing mode) */
+.profile-photo-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.profile-photo-view {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 3px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* File Selected */
 .file-selected {
   display: flex;
   align-items: center;
@@ -1092,40 +863,15 @@ export default {
   white-space: nowrap;
 }
 
-.clear-file-btn {
-  background: #ef4444;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 1.5rem;
-  height: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  margin-left: 0.5rem;
-  transition: all 0.2s ease;
-}
-
-.clear-file-btn:hover {
-  background: #dc2626;
-  transform: scale(1.1);
-}
-
-.current-file {
+/* Upload Info */
+.upload-info {
   margin-top: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background: #f9fafb;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 0.875rem;
 }
 
-.current-file-label {
+.upload-hint {
   color: #6b7280;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-style: italic;
 }
 
 /* Form Actions */
@@ -1246,6 +992,16 @@ export default {
     width: 100%;
     justify-content: center;
   }
+  
+  .photo-preview {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .profile-photo-view {
+    width: 120px;
+    height: 120px;
+  }
 }
 
 @media (width <= 480px) {
@@ -1269,24 +1025,19 @@ export default {
   .header-content h1.profile-title {
     font-size: 1.75rem;
   }
-}
-
-/* Animation for smooth transitions */
-.form-input,
-.form-display,
-.file-upload-btn {
-  animation: fadeInUp 0.3s ease-out;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+  
+  .photo-preview {
+    width: 120px;
+    height: 120px;
   }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .profile-photo-view {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .photo-preview-container {
+    align-self: center;
   }
 }
 </style>
