@@ -39,18 +39,9 @@
                     class="relative bg-white rounded-xl p-3 sm:p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-gray-800"
                     :style="{ animationDelay: `${index * 0.2}s` }"
                   > 
-                    <div class="absolute top-2 sm:top-3 right-2 sm:right-3 flex items-center gap-2 z-10">
-                      <div class="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
-                        <div class="flex items-center gap-0.5">
-                          <i v-for="star in 5" :key="star" class="fas fa-star text-xs" :class="star <= Math.round(doctor.average_rating || 0) ? 'text-yellow-400' : 'text-gray-300'"></i>
-                        </div>
-                        <span v-if="doctor.average_rating" class="text-yellow-500 text-xs font-semibold ml-1">{{ doctor.average_rating.toFixed(1) }}</span>
-                      </div>
-
-                      <button @click="openDoctorProfileModal(doctor)" class="bg-gray-100 hover:bg-gray-200 rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 transition-colors touch-friendly" title="View Profile">
-                        <span class="text-lg sm:text-xl">👁️</span>
-                      </button>
-                    </div>
+                    <button @click="openDoctorProfileModal(doctor)" class="absolute top-2 sm:top-3 right-2 sm:right-3 bg-gray-100 hover:bg-gray-200 rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 transition-colors z-10 touch-friendly" title="View Profile">
+                      <span class="text-lg sm:text-xl">👁️</span>
+                    </button>
 
 
                     <div class="flex items-start gap-3 sm:gap-4">
@@ -64,11 +55,17 @@
                       <!-- Info -->
                       <div class="flex-1 min-w-0">
                         <h4 class="font-bold text-gray-900 truncate text-sm sm:text-base">{{ doctor.full_name || doctor.name }}</h4>
-                        <p class="text-xs sm:text-sm text-medical-secondary font-medium">{{ doctor.specialty }}</p>
-                        <div class="text-xs text-gray-500 mt-1 sm:mt-2 space-y-1">
-                            <div class="flex items-center gap-2">
+                        <p class="text-xs sm:text-sm text-medical-secondary font-medium mb-1.5">{{ doctor.specialty }}</p>
+                        <div class="text-xs text-gray-500 mt-1 sm:mt-1.5 space-y-1.5">
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                              <div class="flex items-center gap-2 pr-4">
                                 <span class="w-3 text-center text-gray-400">💼</span>
                                 <span>{{ doctor.experience }} years exp.</span>
+                              </div>
+                              <div class="flex items-center gap-0.5">
+                                <i v-for="star in 5" :key="star" class="fas fa-star text-xs" :class="star <= Math.round(doctor.average_rating || 0) ? 'text-yellow-400' : 'text-gray-300'"></i>
+                                <span v-if="doctor.average_rating" class="text-gray-500 text-xs font-medium ml-1">({{ doctor.average_rating.toFixed(1) }})</span>
+                              </div>
                             </div>
                             <div class="flex items-center gap-2" v-if="doctor.languages && doctor.languages.length">
                                 <span class="w-3 text-center text-gray-400">🌐</span>
