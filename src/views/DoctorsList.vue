@@ -4,7 +4,7 @@
     
     <main class="flex-grow py-8 sm:py-8">
       <!-- Hero Section -->
-      <div class="bg-gradient-to-r from-medical-primary to-medical-secondary text-white py-8 sm:py-12 mb-8">
+      <div class="bg-gradient-to-r from-medical-primary to-medical-secondary text-white py-8 sm:py-12 mb-2">
         <div class="container mx-auto px-4 sm:px-6">
           <div class="max-w-4xl mx-auto text-center">
             <h1 class="text-2xl sm:text-4xl font-bold mb-3">Find the Right Doctor for You</h1>
@@ -17,7 +17,7 @@
 
       <div class="container mx-auto px-4 sm:px-6">
         <!-- Search and Filter Bar -->
-        <div class="bg-white rounded-xl shadow-sm p-4 mb-8">
+        <div class="bg-white rounded-xl shadow-sm p-4 mb-3">
           <div class="flex flex-col md:flex-row gap-4">
             <!-- Search Input -->
             <div class="flex-1">
@@ -26,9 +26,17 @@
                   v-model="searchQuery"
                   type="text"
                   placeholder="Search by name, specialty, or condition..."
-                  class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-500"
+                  class="w-full px-4 py-3 pl-10 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-500"
                 >
                 <i class="fas fa-search absolute left-3 top-3.5 text-gray-500"></i>
+                <button
+                  v-if="searchQuery"
+                  @click="searchQuery = ''"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label="Reset search"
+                >
+                  <i class="fas fa-times-circle"></i>
+                </button>
               </div>
             </div>
             
@@ -275,7 +283,7 @@
                         </div>
                         <!-- Available Days/Time -->
                         <div v-if="doctor.available_days && doctor.available_from && doctor.available_to" class="flex items-center text-xs text-gray-600 bg-blue-50 rounded px-2 py-1 mt-1 sm:mt-0 sm:ml-2">
-                          <i class="far fa-clock text-medical-primary mr-1"></i>
+                          <i class="far fa-calendar text-medical-primary mr-1"></i>
                           <span class="truncate">{{ doctor.available_days }} </span>
                         </div>
                       </div>
@@ -410,79 +418,79 @@
     </main>
     
     <!-- Doctor Profile Modal -->
-    <div v-if="selectedDoctorProfile" class="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50" @click.self="closeDoctorProfileModal">
-      <div class="bg-gray-50 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-xl animate-fade-in" style="min-height: 300px;">
-        <!-- Loading Spinner -->
-        <div v-if="loadingDoctorProfile" class="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-2xl z-20">
-          <i class="fas fa-spinner fa-spin text-4xl text-medical-primary"></i>
-        </div>
+     <div v-if="selectedDoctorProfile" class="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50" @click.self="closeDoctorProfileModal">
+       <div class="bg-gray-50 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-xl animate-fade-in" style="min-height: 300px;">
+         <!-- Loading Spinner -->
+         <div v-if="loadingDoctorProfile" class="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-2xl z-20">
+           <i class="fas fa-spinner fa-spin text-4xl text-medical-primary"></i>
+         </div>
         
-        <template v-else-if="selectedDoctorProfile.id">
-          <!-- Close Button -->
-          <button @click="closeDoctorProfileModal" class="absolute top-3 right-3 bg-white/50 hover:bg-white/80 rounded-full p-2 z-30 text-gray-800">
-            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-          </button>
+         <template v-else-if="selectedDoctorProfile.id">
+           <!-- Close Button -->
+           <button @click="closeDoctorProfileModal" class="absolute top-3 right-3 bg-white/50 hover:bg-white/80 rounded-full p-2 z-30 text-gray-800">
+             <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+           </button>
 
-          <!-- Modal Content -->
-          <div>
-            <!-- Header with Gradient -->
-            <div class="bg-gradient-to-br from-medical-primary to-medical-secondary p-6 rounded-t-2xl text-white relative">
-              <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-                <img v-if="selectedDoctorProfile.profile_photo" :src="selectedDoctorProfile.profile_photo" :alt="selectedDoctorProfile.full_name" class="w-24 h-24 rounded-full object-cover border-4 border-white/50 shadow-lg" />
-                <div v-else class="w-24 h-24 rounded-full bg-white/30 flex items-center justify-center border-4 border-white/50 shadow-lg">
-                  <span class="text-3xl font-bold text-white">{{ getInitials(selectedDoctorProfile.full_name) }}</span>
-                </div>
-                <div class="pt-2 text-center sm:text-left">
-                  <h2 class="text-2xl font-bold">{{ selectedDoctorProfile.full_name }}</h2>
-                  <p class="text-md font-semibold opacity-90">{{ selectedDoctorProfile.specialty }}</p>
-                  <p class="text-sm opacity-80">{{ selectedDoctorProfile.degree }}</p>
-                </div>
-              </div>
-            </div>
+           <!-- Modal Content -->
+           <div>
+             <!-- Header with Gradient -->
+             <div class="bg-gradient-to-br from-medical-primary to-medical-secondary p-6 rounded-t-2xl text-white relative">
+               <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                 <img v-if="selectedDoctorProfile.profile_photo" :src="selectedDoctorProfile.profile_photo" :alt="selectedDoctorProfile.full_name" class="w-24 h-24 rounded-full object-cover border-4 border-white/50 shadow-lg" />
+                 <div v-else class="w-24 h-24 rounded-full bg-white/30 flex items-center justify-center border-4 border-white/50 shadow-lg">
+                   <span class="text-3xl font-bold text-white">{{ getInitials(selectedDoctorProfile.full_name) }}</span>
+                 </div>
+                 <div class="pt-2 text-center sm:text-left">
+                   <h2 class="text-2xl font-bold">{{ selectedDoctorProfile.full_name }}</h2>
+                   <p class="text-md font-semibold opacity-90">{{ selectedDoctorProfile.specialty }}</p>
+                   <p class="text-sm opacity-80">{{ selectedDoctorProfile.degree }}</p>
+                 </div>
+               </div>
+             </div>
 
-            <!-- Details & Rating -->
-            <div class="p-6">
-              <div class="space-y-4">
-                  <div class="flex items-center text-sm">
-                      <i class="fas fa-briefcase w-6 text-center text-gray-500 mr-3"></i>
-                      <span class="font-semibold text-gray-600 mr-2">Experience:</span>
-                      <span class="text-gray-800">{{ selectedDoctorProfile.experience }}+ Years</span>
-                  </div>
-                  <div class="flex items-center text-sm">
-                      <i class="fas fa-language w-6 text-center text-gray-500 mr-3"></i>
-                      <span class="font-semibold text-gray-600 mr-2">Languages:</span>
-                      <span class="text-gray-800">{{ Array.isArray(selectedDoctorProfile.languages) ? selectedDoctorProfile.languages.join(', ') : selectedDoctorProfile.languages || 'Not specified' }}</span>
-                  </div>
-                  <div class="flex items-center text-sm">
-                      <i class="fas fa-hospital w-6 text-center text-gray-500 mr-3"></i>
-                      <span class="font-semibold text-gray-600 mr-2">Clinic/City:</span>
-                      <span class="text-gray-800">{{ selectedDoctorProfile.clinic_name || 'Not specified' }}{{ selectedDoctorProfile.city ? ', ' + selectedDoctorProfile.city : '' }}</span>
-                  </div>
-                  <div class="flex items-center text-sm">
-                      <i class="far fa-clock w-6 text-center text-gray-500 mr-3"></i>
-                      <span class="font-semibold text-gray-600 mr-2">Availability:</span>
-                      <span class="text-gray-800">{{ formatAvailability(selectedDoctorProfile) }}</span>
-                  </div>
-                  <div class="flex items-center text-sm">
-                      <i class="fas fa-star w-6 text-center text-gray-500 mr-3"></i>
-                      <span class="font-semibold text-gray-600 mr-2">Rating:</span>
-                      <div class="flex items-center gap-2">
-                          <div class="flex items-center gap-0.5"><i v-for="star in 5" :key="star" class="fas fa-star" :class="star <= Math.round(selectedDoctorProfile.average_rating || 0) ? 'text-yellow-400' : 'text-gray-300'"></i></div>
-                          <span class="font-bold text-gray-800">{{ selectedDoctorProfile.average_rating > 0 ? selectedDoctorProfile.average_rating.toFixed(1) : 'New' }}</span>
-                          <span class="text-gray-500">({{ selectedDoctorProfile.total_reviews || 0 }} reviews)</span>
-                      </div>
-                  </div>
-              </div>
-            </div>
+             <!-- Details & Rating -->
+             <div class="p-6">
+               <div class="space-y-4">
+                   <div class="flex items-center text-sm">
+                       <i class="fas fa-briefcase w-6 text-center text-gray-500 mr-3"></i>
+                       <span class="font-semibold text-gray-600 mr-2">Experience:</span>
+                       <span class="text-gray-800">{{ selectedDoctorProfile.experience }}+ Years</span>
+                   </div>
+                   <div class="flex items-center text-sm">
+                       <i class="fas fa-language w-6 text-center text-gray-500 mr-3"></i>
+                       <span class="font-semibold text-gray-600 mr-2">Languages:</span>
+                       <span class="text-gray-800">{{ Array.isArray(selectedDoctorProfile.languages) ? selectedDoctorProfile.languages.join(', ') : selectedDoctorProfile.languages || 'Not specified' }}</span>
+                   </div>
+                   <div class="flex items-center text-sm">
+                       <i class="fas fa-hospital w-6 text-center text-gray-500 mr-3"></i>
+                       <span class="font-semibold text-gray-600 mr-2">Clinic/City:</span>
+                       <span class="text-gray-800">{{ selectedDoctorProfile.clinic_name || 'Not specified' }}{{ selectedDoctorProfile.city ? ', ' + selectedDoctorProfile.city : '' }}</span>
+                   </div>
+                   <div class="flex items-center text-sm">
+                       <i class="far fa-clock w-6 text-center text-gray-500 mr-3"></i>
+                       <span class="font-semibold text-gray-600 mr-2">Availability:</span>
+                       <span class="text-gray-800">{{ formatAvailability(selectedDoctorProfile) }}</span>
+                   </div>
+                   <div class="flex items-center text-sm">
+                       <i class="fas fa-star w-6 text-center text-gray-500 mr-3"></i>
+                       <span class="font-semibold text-gray-600 mr-2">Rating:</span>
+                       <div class="flex items-center gap-2">
+                           <div class="flex items-center gap-0.5"><i v-for="star in 5" :key="star" class="fas fa-star" :class="star <= Math.round(selectedDoctorProfile.average_rating || 0) ? 'text-yellow-400' : 'text-gray-300'"></i></div>
+                           <span class="font-bold text-gray-800">{{ selectedDoctorProfile.average_rating > 0 ? selectedDoctorProfile.average_rating.toFixed(1) : 'New' }}</span>
+                           <span class="text-gray-500">({{ selectedDoctorProfile.total_reviews || 0 }} reviews)</span>
+                       </div>
+                   </div>
+               </div>
+             </div>
 
-            <!-- Footer with CTA -->
-            <div class="bg-gray-100 p-4 rounded-b-2xl border-t">
-              <button @click="bookAppointment(selectedDoctorProfile)" class="btn btn-primary w-full">Book Appointment</button>
-            </div>
-          </div>
-        </template>
-      </div>
-    </div>
+             <!-- Footer with CTA -->
+             <div class="bg-gray-100 p-4 rounded-b-2xl border-t">
+               <button @click="bookAppointment(selectedDoctorProfile)" class="btn btn-primary w-full">Book Appointment</button>
+             </div>
+           </div>
+         </template>
+       </div>
+     </div>
     
     <AppFooter />
     
