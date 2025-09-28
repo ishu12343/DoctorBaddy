@@ -2,14 +2,24 @@
   <header class="bg-medical-primary text-white fixed top-0 left-0 right-0 w-full z-50 shadow-lg">
     <div class="container mx-auto px-4">
       <div class="flex items-center justify-between h-16 lg:h-20">
-        <!-- Logo -->
-        <div class="flex items-center text-white hover:text-gray-200 transition-colors">
-          <img src="@/assets/logo/logo1.png" alt="DoctorBuddy Logo" class="h-8 lg:h-10 w-auto" />
-          <span class="text-lg lg:text-xl font-bold">DoctorBuddy</span>
+        <!-- Left: Profile Photo & Doctor Name -->
+        <div class="flex items-center gap-3">
+          <div class="user-avatar doctor-avatar-lg shadow-lg">
+            <img
+              v-if="doctorInfo?.profile_photo"
+              :src="doctorInfo.profile_photo"
+              alt="Profile Photo"
+              class="h-10 w-10 rounded-full object-cover border-2 border-white"
+            />
+            <i v-else class="fas fa-user-circle text-3xl"></i>
+          </div>
+          <div class="flex flex-col items-start justify-center">
+            <span class="font-semibold text-base text-white leading-tight">{{ doctorInfo?.full_name || 'Dr. User' }}</span>
+          </div>
         </div>
 
-        <!-- Desktop Navigation -->
-        <nav class="hidden lg:flex items-center gap-8">
+  <!-- Desktop Navigation -->
+  <nav class="hidden lg:flex items-center gap-8">
           <button 
             @click="$emit('navigate', 'dashboard')"
             class="nav-item group"
@@ -46,69 +56,16 @@
             <span>Profile</span>
           </button>
           
-          <!-- User Profile Dropdown -->
-          <div class="relative">
-            <button 
-              @click="toggleUserDropdown"
-              @mouseenter="showUserDropdown" 
-              class="btn btn-primary btn-small flex items-center gap-4 relative z-20 min-w-[220px] py-2 px-3"
-              :aria-expanded="showDropdown"
-              aria-haspopup="true"
-            >
-              <div class="user-avatar doctor-avatar-lg shadow-lg">
-                <img
-                  v-if="doctorInfo?.profile_photo"
-                  :src="doctorInfo.profile_photo"
-                  alt="Profile Photo"
-                  class="h-12 w-12 rounded-full object-cover border-2 border-white"
-                />
-                <i v-else class="fas fa-user-circle text-3xl"></i>
-              </div>
-              <div class="flex flex-col items-start justify-center min-w-[120px]">
-                <span class="font-semibold text-base text-white leading-tight">{{ doctorInfo?.full_name || 'Dr. User' }}</span>
-                <div class="flex items-center gap-2 mt-1 text-xs text-gray-200">
-                  <span v-if="doctorInfo?.rating" class="flex items-center">
-                    <i class="fas fa-star text-yellow-400 mr-1"></i>{{ doctorInfo.rating }}
-                  </span>
-                  <span v-if="doctorInfo?.specialty" class="ml-2">{{ doctorInfo.specialty }}</span>
-                </div>
-              </div>
-              <i class="fas fa-chevron-down transition-transform duration-200 ml-3" :class="{'transform rotate-180': showDropdown}"></i>
-            </button>
-            <transition
-              enter-active-class="transition duration-100 ease-out"
-              enter-from-class="transform scale-95 opacity-0"
-              enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-75 ease-in"
-              leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0"
-            >
-              <div 
-                v-if="showDropdown" 
-                ref="userDropdown"
-                class="absolute top-full right-0 mt-2 bg-medical-secondary rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in"
-              >
-                <button @click="$emit('navigate', 'profile')" class="dropdown-item">
-                  <i class="fas fa-user mr-2"></i>
-                  View Profile
-                </button>
-                <div class="dropdown-divider"></div>
-                <button @click="$emit('logout')" class="dropdown-item text-red-400 hover:text-red-300">
-                  <i class="fas fa-sign-out-alt mr-2"></i>
-                  Sign Out
-                </button>
-              </div>
-            </transition>
-          </div>
+          <!-- Right: Home Icon removed -->
         </nav>
 
         <!-- Mobile Menu Button -->
         <button 
           @click="toggleMobileMenu" 
-          class="lg:hidden px-4 py-2 bg-medical-secondary text-white font-bold rounded-lg hover:bg-medical-secondary/90 transition-colors"
+          class="lg:hidden px-3 py-2 bg-white text-medical-primary rounded-full shadow border border-medical-secondary focus:outline-none focus:ring-2 focus:ring-medical-secondary"
           aria-label="Toggle mobile menu"
         >
-          {{ mobileMenuOpen ? '✕' : '☰' }}
+          <i :class="mobileMenuOpen ? 'fas fa-times' : 'fas fa-bars'" class="text-xl"></i>
         </button>
       </div>
 
@@ -118,6 +75,7 @@
         class="lg:hidden pb-4 border-t border-medical-secondary mt-4 pt-4 animate-fade-in"
       >
         <div class="flex flex-col space-y-3">
+          <!-- Top Row: Profile Photo, Doctor Name removed -->
           <button 
             @click="navigateAndClose('dashboard')"
             class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
@@ -170,10 +128,14 @@
                 <div class="flex flex-col items-start justify-center min-w-[100px]">
                   <span class="font-semibold text-base text-white leading-tight">{{ doctorInfo?.full_name || 'Dr. User' }}</span>
                   <div class="flex items-center gap-2 mt-1 text-xs text-gray-200">
-                    <span v-if="doctorInfo?.rating" class="flex items-center">
-                      <i class="fas fa-star text-yellow-400 mr-1"></i>{{ doctorInfo.rating }}
-                    </span>
                     <span v-if="doctorInfo?.specialty" class="ml-2">{{ doctorInfo.specialty }}</span>
+                    <span v-if="doctorInfo?.average_rating !== undefined" class="flex items-center gap-1">
+                      <span class="flex items-center">
+                        <i v-for="star in 5" :key="star" class="fas fa-star" :class="star <= Math.round(doctorInfo.average_rating) ? 'text-yellow-400' : 'text-gray-300'" style="font-size: 1em;"></i>
+                      </span>
+                      <span class="font-bold text-white">({{ (Number(doctorInfo.average_rating) || 0).toFixed(1) }})</span>
+                      <span v-if="doctorInfo.total_reviews !== undefined" class="text-gray-300">({{ doctorInfo.total_reviews }} reviews)</span>
+                    </span>
                   </div>
                 </div>
               </div>
