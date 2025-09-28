@@ -51,15 +51,29 @@
             <button 
               @click="toggleUserDropdown"
               @mouseenter="showUserDropdown" 
-              class="btn btn-primary btn-small flex items-center gap-2 relative z-20"
+              class="btn btn-primary btn-small flex items-center gap-4 relative z-20 min-w-[220px] py-2 px-3"
               :aria-expanded="showDropdown"
               aria-haspopup="true"
             >
-              <div class="user-avatar">
-                <i class="fas fa-user-circle text-xl"></i>
+              <div class="user-avatar doctor-avatar-lg shadow-lg">
+                <img
+                  v-if="doctorInfo?.profile_photo"
+                  :src="doctorInfo.profile_photo"
+                  alt="Profile Photo"
+                  class="h-12 w-12 rounded-full object-cover border-2 border-white"
+                />
+                <i v-else class="fas fa-user-circle text-3xl"></i>
               </div>
-              {{ doctorInfo?.full_name || 'Dr. User' }}
-              <i class="fas fa-chevron-down transition-transform duration-200" :class="{'transform rotate-180': showDropdown}"></i>
+              <div class="flex flex-col items-start justify-center min-w-[120px]">
+                <span class="font-semibold text-base text-white leading-tight">{{ doctorInfo?.full_name || 'Dr. User' }}</span>
+                <div class="flex items-center gap-2 mt-1 text-xs text-gray-200">
+                  <span v-if="doctorInfo?.rating" class="flex items-center">
+                    <i class="fas fa-star text-yellow-400 mr-1"></i>{{ doctorInfo.rating }}
+                  </span>
+                  <span v-if="doctorInfo?.specialty" class="ml-2">{{ doctorInfo.specialty }}</span>
+                </div>
+              </div>
+              <i class="fas fa-chevron-down transition-transform duration-200 ml-3" :class="{'transform rotate-180': showDropdown}"></i>
             </button>
             <transition
               enter-active-class="transition duration-100 ease-out"
@@ -143,11 +157,26 @@
           <!-- Mobile User Section -->
           <div class="pt-3 border-t border-medical-secondary/30">
             <div class="px-4 py-2 text-sm text-gray-300">
-              <div class="flex items-center gap-2 mb-2">
-                <i class="fas fa-user-circle text-lg"></i>
-                <span class="font-medium">{{ doctorInfo?.full_name || 'Dr. User' }}</span>
+              <div class="flex items-center gap-3 mb-2">
+                <div class="user-avatar doctor-avatar-lg shadow-lg">
+                  <img
+                    v-if="doctorInfo?.profile_photo"
+                    :src="doctorInfo.profile_photo"
+                    alt="Profile Photo"
+                    class="h-11 w-11 rounded-full object-cover border-2 border-white"
+                  />
+                  <i v-else class="fas fa-user-circle text-2xl"></i>
+                </div>
+                <div class="flex flex-col items-start justify-center min-w-[100px]">
+                  <span class="font-semibold text-base text-white leading-tight">{{ doctorInfo?.full_name || 'Dr. User' }}</span>
+                  <div class="flex items-center gap-2 mt-1 text-xs text-gray-200">
+                    <span v-if="doctorInfo?.rating" class="flex items-center">
+                      <i class="fas fa-star text-yellow-400 mr-1"></i>{{ doctorInfo.rating }}
+                    </span>
+                    <span v-if="doctorInfo?.specialty" class="ml-2">{{ doctorInfo.specialty }}</span>
+                  </div>
+                </div>
               </div>
-              <p class="text-xs text-gray-400">{{ doctorInfo?.specialty || 'Medical Specialist' }}</p>
             </div>
             <button 
               @click="logout"
@@ -319,6 +348,18 @@ export default {
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.2);
+}
+.doctor-avatar-lg {
+  width: 3rem;
+  height: 3rem;
+  min-width: 3rem;
+  min-height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255,255,255,0.18);
+  box-shadow: 0 2px 8px 0 rgb(54 209 196 / 12%);
 }
 
 /* Button styles */
