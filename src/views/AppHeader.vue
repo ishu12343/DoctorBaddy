@@ -20,7 +20,7 @@
           </router-link>
           
           <!-- Login Dropdown -->
-          <div class="relative">
+          <!-- <div class="relative">
             <button 
               @click="toggleLoginDropdown"
               @mouseenter="showLoginDropdown" 
@@ -49,7 +49,7 @@
                 <router-link to="/admin-login" class="dropdown-item" @click="hideLoginDropdown">Admin Login</router-link>
               </div>
             </transition>
-          </div>
+          </div> -->
 
           <!-- Signup Dropdown -->
           <div class="relative">
@@ -84,7 +84,36 @@
           </div>
 
         </nav>
-
+                  <div class="relative">
+            <button 
+              @click="toggleLoginDropdown"
+              @mouseenter="showLoginDropdown" 
+              class="btn btn-primary btn-small flex items-center gap-2 relative z-20"
+              :aria-expanded="showDropdown"
+              aria-haspopup="true"
+            >
+              LOG IN
+              <i class="fas fa-chevron-down transition-transform duration-200" :class="{'transform rotate-180': showDropdown}"></i>
+            </button>
+            <transition
+              enter-active-class="transition duration-100 ease-out"
+              enter-from-class="transform scale-95 opacity-0"
+              enter-to-class="transform scale-100 opacity-100"
+              leave-active-class="transition duration-75 ease-in"
+              leave-from-class="transform scale-100 opacity-100"
+              leave-to-class="transform scale-95 opacity-0"
+            >
+              <div 
+                v-if="showDropdown" 
+                ref="loginDropdown"
+                class="absolute top-full right-0 mt-2 bg-medical-secondary rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in"
+              >
+                <router-link to="/patient-login" class="dropdown-item" @click="hideLoginDropdown">Patient Login</router-link>
+                <router-link to="/doctor-login" class="dropdown-item" @click="hideLoginDropdown">Doctor Login</router-link>
+                <router-link to="/admin-login" class="dropdown-item" @click="hideLoginDropdown">Admin Login</router-link>
+              </div>
+            </transition>
+          </div>
         <!-- Mobile Menu Button -->
         <button 
           @click="toggleMobileMenu" 
