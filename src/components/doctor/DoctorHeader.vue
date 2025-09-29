@@ -1,32 +1,20 @@
 <template>
   <header class="bg-medical-primary text-white fixed top-0 left-0 right-0 w-full z-50 shadow-lg">
     <div class="container mx-auto px-4">
-      <div class="flex items-center justify-between h-16 lg:h-20">
-        <!-- Left: Profile Photo & Doctor Name -->
-        <div class="flex items-center gap-3 relative" @click="toggleUserDropdown" style="cursor:pointer;">
-          <div class="user-avatar doctor-avatar-lg shadow-lg">
-            <img
-              v-if="doctorInfo?.profile_photo"
-              :src="doctorInfo.profile_photo"
-              alt="Profile Photo"
-              class="h-10 w-10 rounded-full object-cover border-2 border-white"
-            />
-            <i v-else class="fas fa-user-circle text-3xl"></i>
-          </div>
-          <div class="flex flex-col items-start justify-center">
-            <span class="font-semibold text-base text-white leading-tight">{{ doctorInfo?.full_name || 'Dr. User' }}</span>
-          </div>
-          <!-- Dropdown for Sign Out -->
-          <div v-if="showDropdown" ref="userDropdown" class="absolute left-0 top-full mt-2 bg-white text-medical-primary rounded-lg shadow-lg z-50 min-w-[140px] animate-fade-in">
-            <button @click.stop="logout" class="dropdown-item flex items-center gap-2 px-4 py-2 w-full bg-gradient-to-r from-red-500 to-red-400 text-white font-semibold hover:from-red-600 hover:to-red-500 hover:text-white rounded-md shadow-md">
-              <i class="fas fa-sign-out-alt"></i>
-              <span>Sign Out</span>
-            </button>
-          </div>
-        </div>
 
-  <!-- Desktop Navigation -->
-  <nav class="hidden lg:flex items-center gap-8">
+      <div class="flex items-center justify-between h-16 lg:h-20">
+        <!-- Left: Menu Button (Mobile & Desktop) -->
+        <div class="flex items-center lg:hidden">
+          <button 
+            @click="toggleMobileMenu" 
+            class="px-3 py-2 bg-white text-medical-primary rounded-full shadow border border-medical-secondary focus:outline-none focus:ring-2 focus:ring-medical-secondary"
+            aria-label="Toggle mobile menu"
+          >
+            <i :class="mobileMenuOpen ? 'fas fa-times' : 'fas fa-bars'" class="text-xl"></i>
+          </button>
+        </div>
+        <!-- Desktop Navigation (center) -->
+        <nav class="hidden lg:flex items-center gap-8 flex-1 justify-center">
           <button 
             @click="$emit('navigate', 'dashboard')"
             class="nav-item group"
@@ -35,7 +23,6 @@
             <i class="fas fa-tachometer-alt text-medical-secondary group-hover:text-white transition-colors"></i>
             <span>Dashboard</span>
           </button>
-          
           <button 
             @click="$emit('navigate', 'appointments')"
             class="nav-item group"
@@ -44,7 +31,6 @@
             <i class="fas fa-calendar-alt text-medical-secondary group-hover:text-white transition-colors"></i>
             <span>Appointments</span>
           </button>
-          
           <button 
             @click="$emit('navigate', 'patients')"
             class="nav-item group"
@@ -53,7 +39,6 @@
             <i class="fas fa-users text-medical-secondary group-hover:text-white transition-colors"></i>
             <span>Patients</span>
           </button>
-          
           <button 
             @click="$emit('navigate', 'profile')"
             class="nav-item group"
@@ -62,18 +47,36 @@
             <i class="fas fa-user-md text-medical-secondary group-hover:text-white transition-colors"></i>
             <span>Profile</span>
           </button>
-          
-          <!-- Right: Home Icon removed -->
         </nav>
-
-        <!-- Mobile Menu Button -->
-        <button 
-          @click="toggleMobileMenu" 
-          class="lg:hidden px-3 py-2 bg-white text-medical-primary rounded-full shadow border border-medical-secondary focus:outline-none focus:ring-2 focus:ring-medical-secondary"
-          aria-label="Toggle mobile menu"
-        >
-          <i :class="mobileMenuOpen ? 'fas fa-times' : 'fas fa-bars'" class="text-xl"></i>
-        </button>
+        <!-- Right: Doctor Name, Profile Photo, Sign Out -->
+        <div class="flex items-center gap-3 relative ml-auto px-3 py-2 rounded-lg doctor-header-right" @click="toggleUserDropdown">
+          <div class="flex flex-col items-start justify-center">
+            <span class="font-semibold text-base" style="color: #fff;">{{ doctorInfo?.full_name || 'Dr. User' }}</span>
+            <span v-if="doctorInfo?.specialty" class="text-xs font-medium mt-1" style="color: #e0e0e0; margin-left: 6.1rem;">{{ doctorInfo.specialty }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="user-avatar doctor-avatar-lg shadow-lg" style="border: 2px solid #fff;">
+              <img
+                v-if="doctorInfo?.profile_photo"
+                :src="doctorInfo.profile_photo"
+                alt="Profile Photo"
+                class="h-10 w-10 rounded-full object-cover"
+              />
+              <i v-else class="fas fa-user-circle text-3xl" style="color: #fff;"></i>
+            </div>
+          </div>
+          <!-- Dropdown for Sign Out -->
+          <div v-if="showDropdown" ref="userDropdown" class="absolute right-0 top-full mt-2 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg shadow-lg z-50 min-w-[140px] animate-fade-in">
+            <button @click="navigateAndClose('profile')" class="dropdown-item flex items-center gap-2 px-4 py-2 w-full bg-gradient-to-r from-blue-600 to-blue-500 to-red-400 text-white font-semibold hover:from-red-600 hover:to-red-500 hover:text-white rounded-md shadow-md">
+              <i class="fas fa-user-circle"></i>
+              <span> Profile</span>
+            </button>
+            <button @click.stop="logout" class="dropdown-item flex items-center gap-2 px-4 py-2 w-full bg-gradient-to-r from-blue-600 to-blue-500 to-red-400 text-white font-semibold hover:from-red-600 hover:to-red-500 hover:text-white rounded-md shadow-md">
+              <i class="fas fa-sign-out-alt"></i>
+              <span> Sign Out</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Mobile Navigation -->
