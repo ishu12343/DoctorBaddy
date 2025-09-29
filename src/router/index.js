@@ -52,5 +52,25 @@ const router = createRouter({
   routes
 })
 
+// Navigation guard to block access to protected routes if not authenticated
+router.beforeEach((to, from, next) => {
+  const publicPages = [
+    '/doctor-login', '/patient-login', '/doctor-signup', '/patient-signup', '/', '/contact', '/services', '/admin-login', '/admin-signup', '/health-tips', '/testimonials', '/doctors'
+  ];
+  const authRequired = !publicPages.includes(to.path);
+  const token = localStorage.getItem('token');
+  if (authRequired && !token) {
+    // If not authenticated, redirect to login (choose doctor/patient based on last userType)
+    const userType = localStorage.getItem('userType');
+    if (userType === 'doctor') {
+      next({ path: '/doctor-login', replace: true });
+    } else {
+      next({ path: '/patient-login', replace: true });
+    }
+  } else {
+    next();
+  }
+});
+
 export default router
 

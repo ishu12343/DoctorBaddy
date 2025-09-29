@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4">
       <div class="flex items-center justify-between h-16 lg:h-20">
         <!-- Left: Profile Photo & Doctor Name -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 relative" @click="toggleUserDropdown" style="cursor:pointer;">
           <div class="user-avatar doctor-avatar-lg shadow-lg">
             <img
               v-if="doctorInfo?.profile_photo"
@@ -15,6 +15,13 @@
           </div>
           <div class="flex flex-col items-start justify-center">
             <span class="font-semibold text-base text-white leading-tight">{{ doctorInfo?.full_name || 'Dr. User' }}</span>
+          </div>
+          <!-- Dropdown for Sign Out -->
+          <div v-if="showDropdown" ref="userDropdown" class="absolute left-0 top-full mt-2 bg-white text-medical-primary rounded-lg shadow-lg z-50 min-w-[140px] animate-fade-in">
+            <button @click.stop="logout" class="dropdown-item flex items-center gap-2 px-4 py-2 w-full bg-gradient-to-r from-red-500 to-red-400 text-white font-semibold hover:from-red-600 hover:to-red-500 hover:text-white rounded-md shadow-md">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Sign Out</span>
+            </button>
           </div>
         </div>
 
@@ -287,7 +294,7 @@ export default {
   transition: background-color 0.2s;
   cursor: pointer;
   border: none;
-  background: transparent;
+  background-color: blue;
   text-decoration: none;
 }
 

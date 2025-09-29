@@ -267,8 +267,9 @@ export default {
     const logout = () => {
       // Clear authentication data
       localStorage.removeItem('adminToken');
-      // Redirect to login page
-      router.push('/admin-login');
+      localStorage.removeItem('userType');
+      // Redirect to login page and block back navigation
+      router.replace('/admin-login');
     };
     
     // Fetch dashboard data

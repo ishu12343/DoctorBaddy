@@ -1235,7 +1235,9 @@ export default {
         console.error('Logout API error:', err);
       }
       localStorage.removeItem('token');
-      this.$router.replace('/');
+      localStorage.removeItem('userType');
+      // Redirect to login and block back navigation
+      this.$router.replace('/patient-login');
     },
     
     toggleUserDropdown() {
