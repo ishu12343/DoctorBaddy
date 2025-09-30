@@ -19,81 +19,84 @@
             <span>Contact</span>
           </router-link>
           
-          <!-- Login Dropdown -->
-          <!-- <div class="relative">
-            <button 
-              @click="toggleLoginDropdown"
-              @mouseenter="showLoginDropdown" 
-              class="btn btn-primary btn-small flex items-center gap-2 relative z-20"
-              :aria-expanded="showDropdown"
-              aria-haspopup="true"
-            >
-              LOG IN
-              <i class="fas fa-chevron-down transition-transform duration-200" :class="{'transform rotate-180': showDropdown}"></i>
-            </button>
-            <transition
-              enter-active-class="transition duration-100 ease-out"
-              enter-from-class="transform scale-95 opacity-0"
-              enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-75 ease-in"
-              leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0"
-            >
-              <div 
-                v-if="showDropdown" 
-                ref="loginDropdown"
-                class="absolute top-full right-0 mt-2 bg-medical-secondary rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in"
+          <!-- Signup Section -->Auth Buttons Container -->
+          <div class="flex items-center gap-4">
+            <!-- Login Dropdown -->
+            <div class="relative">
+              <button 
+                @click="toggleLoginDropdown"
+                @mouseenter="showLoginDropdown" 
+                class="px-4 py-2 bg-medical-secondary hover:bg-medical-secondary/90 text-white rounded-lg font-medium flex items-center gap-2 relative z-20 transition-colors duration-200 shadow-md hover:shadow-lg"
+                :aria-expanded="showDropdown"
+                aria-haspopup="true"
               >
-                <router-link to="/patient-login" class="dropdown-item" @click="hideLoginDropdown">Patient Login</router-link>
-                <router-link to="/doctor-login" class="dropdown-item" @click="hideLoginDropdown">Doctor Login</router-link>
-                <router-link to="/admin-login" class="dropdown-item" @click="hideLoginDropdown">Admin Login</router-link>
-              </div>
-            </transition>
-          </div> -->
+                LOG IN
+                <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{'transform rotate-180': showDropdown}"></i>
+              </button>
+              <transition
+                enter-active-class="transition duration-100 ease-out"
+                enter-from-class="transform scale-95 opacity-0"
+                enter-to-class="transform scale-100 opacity-100"
+                leave-active-class="transition duration-75 ease-in"
+                leave-from-class="transform scale-100 opacity-100"
+                leave-to-class="transform scale-95 opacity-0"
+              >
+                <div 
+                  v-if="showDropdown" 
+                  ref="loginDropdown"
+                  class="absolute top-full right-0 mt-2 bg-medical-secondary hover:bg-medical-secondary/90 text-white rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in border border-gray-100"
+                >
+                  <router-link to="/patient-login" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideLoginDropdown">Patient Login</router-link>
+                  <router-link to="/doctor-login" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideLoginDropdown">Doctor Login</router-link>
+                  <router-link to="/admin-login" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideLoginDropdown">Admin Login</router-link>
+                </div>
+              </transition>
+            </div>
 
-          <!-- Signup Dropdown -->
+            <!-- Signup Dropdown -->
+            <div class="relative">
+              <button 
+                @click="toggleSignupDropdown"
+                @mouseenter="showSignupDropdown" 
+                class="px-4 py-2 bg-medical-secondary hover:bg-medical-secondary/90 text-white rounded-lg font-medium flex items-center gap-2 relative z-20 transition-colors duration-200 shadow-md hover:shadow-lg"
+                :aria-expanded="showDropdown2"
+                aria-haspopup="true"
+              >
+                SIGN UP
+                <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{'transform rotate-180': showDropdown2}"></i>
+              </button>
+              <transition
+                enter-active-class="transition duration-100 ease-out"
+                enter-from-class="transform scale-95 opacity-0"
+                enter-to-class="transform scale-100 opacity-100"
+                leave-active-class="transition duration-75 ease-in"
+                leave-from-class="transform scale-100 opacity-100"
+                leave-to-class="transform scale-95 opacity-0"
+              >
+                <div 
+                  v-if="showDropdown2" 
+                  ref="signupDropdown"
+                  class="absolute top-full right-0 mt-2 bg-medical-secondary hover:bg-medical-secondary/90 text-white rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in border border-gray-100"
+                >
+                  <router-link to="/patient-signup" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideSignupDropdown">Patient Sign Up</router-link>
+                  <router-link to="/doctor-signup" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideSignupDropdown">Doctor Sign Up</router-link>
+                  <router-link to="/admin-signup" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideSignupDropdown">Admin Sign Up</router-link>
+                </div>
+              </transition>
+            </div>
+          </div>
+        </nav>
+        <!-- Mobile Menu and Login Buttons -->
+        <div class="flex items-center gap-2 lg:hidden">
+          <!-- Mobile Login Button -->
           <div class="relative">
             <button 
-              @click="toggleSignupDropdown"
-              @mouseenter="showSignupDropdown" 
-              class="btn btn-primary btn-small flex items-center gap-2 relative z-20"
-              :aria-expanded="showDropdown2"
-              aria-haspopup="true"
-            >
-              SIGN UP
-              <i class="fas fa-chevron-down transition-transform duration-200" :class="{'transform rotate-180': showDropdown2}"></i>
-            </button>
-            <transition
-              enter-active-class="transition duration-100 ease-out"
-              enter-from-class="transform scale-95 opacity-0"
-              enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-75 ease-in"
-              leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0"
-            >
-              <div 
-                v-if="showDropdown2" 
-                ref="signupDropdown"
-                class="absolute top-full right-0 mt-2 bg-medical-secondary rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in"
-              >
-                <router-link to="/patient-signup" class="dropdown-item" @click="hideSignupDropdown">Patient Sign Up</router-link>
-                <router-link to="/doctor-signup" class="dropdown-item" @click="hideSignupDropdown">Doctor Sign Up</router-link>
-                <router-link to="/admin-signup" class="dropdown-item" @click="hideSignupDropdown">Admin Sign Up</router-link>
-              </div>
-            </transition>
-          </div>
-
-        </nav>
-                  <div class="relative">
-            <button 
               @click="toggleLoginDropdown"
-              @mouseenter="showLoginDropdown" 
-              class="btn btn-primary btn-small flex items-center gap-2 relative z-20"
+              class="px-4 py-2 text-sm font-medium text-white bg-white/10 border border-white/30 rounded-lg hover:bg-white/20 transition-colors flex items-center gap-2"
               :aria-expanded="showDropdown"
-              aria-haspopup="true"
             >
-              LOG IN
-              <i class="fas fa-chevron-down transition-transform duration-200" :class="{'transform rotate-180': showDropdown}"></i>
+              LOGIN
+              <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{'transform rotate-180': showDropdown}"></i>
             </button>
             <transition
               enter-active-class="transition duration-100 ease-out"
@@ -106,22 +109,24 @@
               <div 
                 v-if="showDropdown" 
                 ref="loginDropdown"
-                class="absolute top-full right-0 mt-2 bg-medical-secondary rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in"
+                class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl overflow-hidden z-50 animate-fade-in border border-gray-100"
               >
-                <router-link to="/patient-login" class="dropdown-item" @click="hideLoginDropdown">Patient Login</router-link>
-                <router-link to="/doctor-login" class="dropdown-item" @click="hideLoginDropdown">Doctor Login</router-link>
-                <router-link to="/admin-login" class="dropdown-item" @click="hideLoginDropdown">Admin Login</router-link>
+                <router-link to="/patient-login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" @click="closeMobileMenu">Patient Login</router-link>
+                <router-link to="/doctor-login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" @click="closeMobileMenu">Doctor Login</router-link>
+                <router-link to="/admin-login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" @click="closeMobileMenu">Admin Login</router-link>
               </div>
             </transition>
           </div>
-        <!-- Mobile Menu Button -->
-        <button 
-          @click="toggleMobileMenu" 
-          class="lg:hidden px-4 py-2 bg-medical-secondary text-white font-bold rounded-lg hover:bg-medical-secondary/90 transition-colors"
-          aria-label="Toggle mobile menu"
-        >
-          {{ mobileMenuOpen ? '✕' : '☰' }}
-        </button>
+
+          <!-- Mobile Menu Button -->
+          <button 
+            @click="toggleMobileMenu" 
+            class="p-2 text-white rounded-lg hover:bg-white/10 transition-colors"
+            aria-label="Toggle mobile menu"
+          >
+            {{ mobileMenuOpen ? '✕' : '☰' }}
+          </button>
+        </div>
       </div>
 
       <!-- Mobile Navigation -->
@@ -148,33 +153,6 @@
             <span>Contact</span>
           </router-link>
 
-          <!-- Mobile Login Section -->
-          <div class="pt-3 border-t border-medical-secondary/30">
-            <p class="text-sm text-gray-300 px-4 mb-3">Login</p>
-            <div class="space-y-2">
-              <router-link 
-                to="/patient-login" 
-                @click="closeMobileMenu"
-                class="block px-4 py-2 text-white hover:bg-medical-secondary rounded-lg transition-colors"
-              >
-                Patient Login
-              </router-link>
-              <router-link 
-                to="/doctor-login" 
-                @click="closeMobileMenu"
-                class="block px-4 py-2 text-white hover:bg-medical-secondary rounded-lg transition-colors"
-              >
-                Doctor Login
-              </router-link>
-              <router-link 
-                to="/admin-login" 
-                @click="closeMobileMenu"
-                class="block px-4 py-2 text-white hover:bg-medical-secondary rounded-lg transition-colors"
-              >
-                Admin Login
-              </router-link>
-            </div>
-          </div>
 
           <!-- Mobile Signup Section -->
           <div class="pt-3 border-t border-medical-secondary/30">

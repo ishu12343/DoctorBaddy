@@ -595,13 +595,17 @@
                 Join thousands of patients who trust DoctorBuddy for their healthcare needs.
               </p>
             </div>
-            <div class="flex flex-col sm:flex-row gap-4">
-              <button @click="$router.push('/patient-login')" class="btn btn-secondary group">
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center items-center mt-4 sm:mt-0">
+              <button @click="$router.push('/patient-login')"
+                class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-medical-primary text-white font-bold text-lg shadow-lg hover:from-blue-600 hover:to-medical-secondary transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 mb-2 sm:mb-0"
+              >
                 <i class="fas fa-user-plus mr-2"></i>
                 Sign Up as Patient
                 <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform duration-200"></i>
               </button>
-              <button @click="$router.push('/doctor-login')" class="btn btn-outline text-white border-white hover:bg-white hover:text-medical-primary group">
+              <button @click="$router.push('/doctor-login')"
+                class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-medical-secondary to-blue-500 text-white font-bold text-lg shadow-lg hover:from-medical-primary hover:to-blue-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-medical-secondary"
+              >
                 <i class="fas fa-stethoscope mr-2"></i>
                 Join as Doctor
                 <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform duration-200"></i>
