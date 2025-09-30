@@ -19,7 +19,7 @@
             <span>Contact</span>
           </router-link>
           
-          <!-- Signup Section -->Auth Buttons Container -->
+          <!-- Signup Section -->
           <div class="flex items-center gap-4">
             <!-- Login Dropdown -->
             <div class="relative">
