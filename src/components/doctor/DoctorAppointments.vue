@@ -322,8 +322,8 @@
     </div>
 
     <!-- Reschedule Modal -->
-    <div v-if="showRescheduleModal" class="modal-overlay" @click="closeRescheduleModal">
-      <div class="reschedule-modal" @click.stop>
+    <div v-if="showRescheduleModal" class="modal-overlay" @click="closeRescheduleModal" @touchstart.passive="handleModalTouchStart">
+      <div class="reschedule-modal" @click.stop @touchstart.stop>
         <div class="modal-header">
           <h3>Reschedule Appointment</h3>
           <button class="close-btn" @click="closeRescheduleModal">
@@ -348,7 +348,7 @@
                 v-model="rescheduleForm.date"
                 type="date" 
                 class="form-input"
-                :min="getTomorrowDate()"
+                :min="getTodayDate()"
               />
             </div>
 
@@ -368,6 +368,8 @@
                 <option value="15:30">03:30 PM</option>
                 <option value="16:00">04:00 PM</option>
                 <option value="16:30">04:30 PM</option>
+                <option value="17:00">05:00 PM</option>
+                <option value="17:30">05:30 PM</option>
               </select>
             </div>
 
@@ -501,7 +503,10 @@ export default {
       showChatModal: false,
       selectedChatPatient: null,
       chatMessages: [],
-      newMessage: ''
+      newMessage: '',
+      
+      // Touch handling
+      touchStartY: 0
     }
   },
   computed: {
@@ -723,6 +728,7 @@ export default {
     closeRescheduleModal() {
       this.showRescheduleModal = false;
       this.selectedAppointment = null;
+      this.submittingReschedule = false;
       this.rescheduleForm = {
         date: '',
         time: '',
@@ -734,32 +740,69 @@ export default {
       this.submittingReschedule = true;
       const token = localStorage.getItem('token');
       
+      // Validate form data
+      if (!this.rescheduleForm.date || !this.rescheduleForm.time) {
+        this.$toast?.error('Please select both date and time.');
+        this.submittingReschedule = false;
+        return;
+      }
+      
       try {
+        const requestData = {
+          new_date: this.rescheduleForm.date,
+          new_time: this.rescheduleForm.time,
+          reason: this.rescheduleForm.reason || ''
+        };
+        
+        console.log('Rescheduling appointment with data:', requestData);
+        
         const response = await axios.post(
           `${BASE_URL}/api/doctor/appointments/${this.selectedAppointment.id}/reschedule`,
-          {
-            new_date: this.rescheduleForm.date,
-            new_time: this.rescheduleForm.time,
-            reason: this.rescheduleForm.reason
-          },
+          requestData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
+        
+        console.log('Reschedule response:', response.data);
         
         if (response.data.success) {
           // Update the appointment locally
           const appointment = this.appointments.find(apt => apt.id === this.selectedAppointment.id);
           if (appointment) {
-            appointment.appointment_datetime = `${this.rescheduleForm.date} ${this.rescheduleForm.time}`;
+            appointment.appointment_datetime = `${this.rescheduleForm.date} ${this.rescheduleForm.time}:00`;
+            appointment.status = 'CONFIRMED';
           }
           this.filterAppointments();
           this.closeRescheduleModal();
           
-          // Show success message
-          this.$toast?.success('Appointment rescheduled successfully!');
+          // Show success message with details
+          const formattedDate = new Date(`${this.rescheduleForm.date} ${this.rescheduleForm.time}`).toLocaleString();
+          this.$toast?.success(`Appointment rescheduled to ${formattedDate}`);
+          
+          // Refresh appointments to ensure data consistency
+          await this.loadAppointments();
+        } else {
+          const errorMessage = response.data.error || 'Failed to reschedule appointment';
+          this.$toast?.error(errorMessage);
         }
       } catch (error) {
         console.error('Error rescheduling appointment:', error);
-        this.$toast?.error('Failed to reschedule appointment. Please try again.');
+        console.log('Error response data:', error.response?.data);
+        
+        let errorMessage = 'Failed to reschedule appointment. Please try again.';
+        
+        if (error.response?.data) {
+          if (error.response.data.error) {
+            errorMessage = error.response.data.error;
+          } else if (error.response.data.details) {
+            errorMessage = `Database error: ${error.response.data.details}`;
+          } else if (error.response.data.message) {
+            errorMessage = error.response.data.message;
+          }
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        this.$toast?.error(errorMessage);
       } finally {
         this.submittingReschedule = false;
       }
@@ -797,6 +840,19 @@ export default {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       return tomorrow.toISOString().split('T')[0];
+    },
+
+    getTodayDate() {
+      const today = new Date();
+      return today.toISOString().split('T')[0];
+    },
+
+    handleModalTouchStart(event) {
+      // Prevent modal from closing on touch scroll
+      if (event.target.classList.contains('modal-overlay')) {
+        // Only close if the touch is directly on the overlay, not on scroll
+        this.touchStartY = event.touches[0].clientY;
+      }
     },
     
     // Chat methods
@@ -1529,6 +1585,9 @@ export default {
   justify-content: center;
   z-index: 1000;
   backdrop-filter: blur(5px);
+  padding: 1rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .reschedule-modal {
@@ -1536,6 +1595,8 @@ export default {
   border-radius: 20px;
   width: 90%;
   max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 25px 50px rgb(0 0 0 / 20%);
   transform: scale(0.9);
   animation: modalOpen 0.3s ease forwards;
@@ -1632,6 +1693,8 @@ export default {
   font-size: 1rem;
   transition: all 0.3s ease;
   background: #f9fafb;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .form-input:focus,
@@ -1641,6 +1704,14 @@ export default {
   border-color: #667eea;
   background: white;
   box-shadow: 0 0 0 3px rgb(102 126 234 / 10%);
+}
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
 }
 
 .form-textarea {
@@ -1753,17 +1824,52 @@ export default {
     min-width: 120px;
   }
 
+  .reschedule-modal {
+    width: 95%;
+    max-height: 95vh;
+    margin: 1rem;
+    border-radius: 16px;
+  }
+
+  .modal-header {
+    padding: 1.5rem 1.5rem 1rem;
+  }
+
+  .modal-header h3 {
+    font-size: 1.25rem;
+  }
+
   .modal-content {
-    padding: 1rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .patient-summary {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .reschedule-form {
+    gap: 1rem;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 0.75rem;
+    font-size: 1rem;
   }
 
   .modal-actions {
     flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
   }
 
   .submit-btn,
   .cancel-btn {
     width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
   }
 }
 
@@ -1793,6 +1899,59 @@ export default {
 
   .appointment-card {
     padding: 1.5rem;
+  }
+
+  .reschedule-modal {
+    width: 98%;
+    max-height: 98vh;
+    margin: 0.5rem;
+    border-radius: 12px;
+  }
+
+  .modal-header {
+    padding: 1rem;
+  }
+
+  .modal-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .modal-content {
+    padding: 1rem;
+  }
+
+  .patient-summary {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .patient-summary h4 {
+    font-size: 1rem;
+  }
+
+  .patient-summary p {
+    font-size: 0.85rem;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 0.625rem;
+    font-size: 0.9rem;
+  }
+
+  .form-textarea {
+    min-height: 70px;
+  }
+
+  .submit-btn,
+  .cancel-btn {
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
   }
 }
 
