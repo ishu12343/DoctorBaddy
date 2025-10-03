@@ -30,6 +30,53 @@
               <h3 class="section-title">Personal Information</h3>
             </div>
             <div class="form-grid">
+              <!-- Profile Photo Section -->
+              <div class="form-group" v-if="isEditing">
+                <label class="form-label">Profile Photo</label>
+                <div class="file-upload-container">
+                  <!-- Photo Preview -->
+                  <div v-if="photoPreview || (form.photo_path && !photoFile)" class="photo-preview-container">
+                    <img :src="photoPreview || getProfilePhotoUrl()" alt="Profile Photo" class="photo-preview" />
+                    <div class="photo-overlay">
+                      <button type="button" @click="removePhoto" class="remove-photo-btn">
+                        <svg class="remove-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                      </button>
+                      <label for="photo-upload" class="change-photo-btn">
+                        <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <!-- Upload Button (when no photo) -->
+                  <div v-else>
+                    <input type="file" @change="handlePhotoUpload" class="file-input" id="photo-upload" accept="image/*" />
+                    <label for="photo-upload" class="file-upload-btn">
+                      <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                      </svg>
+                      Choose Photo (Max 10MB)
+                    </label>
+                  </div>
+                  
+                  <!-- Hidden file input for changing photo -->
+                  <input type="file" @change="handlePhotoUpload" class="file-input" id="photo-upload" accept="image/*" />
+                  
+                  <!-- Upload Status -->
+                  <div v-if="photoFile" class="file-selected">
+                    <span class="file-name">{{ photoFile.name }} ({{ formatFileSize(photoFile.size) }})</span>
+                  </div>
+                  
+                  <div class="upload-info">
+                    <small class="upload-hint">Supports all image formats (JPG, PNG, GIF, WebP, etc.) • Maximum size: 10MB</small>
+                  </div>
+                </div>
+              </div>
+              
               <!-- Full Name -->
               <div class="form-group">
                 <label class="form-label">Full Name <span class="required">*</span></label>
@@ -333,6 +380,8 @@ export default {
       form: null,
       originalForm: null,
       documentFile: null,
+      photoFile: null,
+      photoPreview: null,
       bloodGroups: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
       isEditing: false
     }
@@ -397,6 +446,152 @@ export default {
       this.documentFile = event.target.files[0]
     },
     
+    handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        // Validate file type - accept all image types
+        if (!file.type.startsWith('image/')) {
+          const message = 'Please select a valid image file';
+          if (this.$toast) {
+            this.$toast.error(message);
+          } else {
+            alert(message);
+          }
+          event.target.value = '';
+          return;
+        }
+        
+        // Validate file size (max 10MB)
+        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        if (file.size > maxSize) {
+          const message = 'File size must be less than 10MB';
+          if (this.$toast) {
+            this.$toast.error(message);
+          } else {
+            alert(message);
+          }
+          event.target.value = '';
+          return;
+        }
+        
+        this.photoFile = file;
+        this.createPhotoPreview(file);
+        
+        // Show success message
+        const successMessage = `Photo selected: ${file.name} (${this.formatFileSize(file.size)})`;
+        if (this.$toast) {
+          this.$toast.success(successMessage);
+        }
+      }
+    },
+    
+    createPhotoPreview(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.photoPreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+    
+    removePhoto() {
+      this.photoFile = null
+      this.photoPreview = null
+      this.form.photo_path = null
+      
+      // Clear the file input
+      const fileInput = document.getElementById('photo-upload')
+      if (fileInput) {
+        fileInput.value = ''
+      }
+    },
+    
+    getProfilePhotoUrl() {
+      if (this.form && this.form.photo_path) {
+        // If it's a base64 string, return as is
+        if (this.form.photo_path.startsWith('data:image/')) {
+          return this.form.photo_path;
+        }
+        // If it's just base64 data without the data URI prefix, add it
+        if (this.form.photo_path.length > 100 && !this.form.photo_path.startsWith('http')) {
+          // Assume it's base64 data and add the data URI prefix
+          return `data:image/jpeg;base64,${this.form.photo_path}`;
+        }
+        // If it's a URL, return as is
+        if (this.form.photo_path.startsWith('http')) {
+          return this.form.photo_path;
+        }
+      }
+      // Default profile image
+      try {
+        return new URL('/src/assets/images/profile.jpg', import.meta.url).href;
+      } catch (e) {
+        // Fallback for older browsers
+        return '/src/assets/images/profile.jpg';
+      }
+    },
+    
+    formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes'
+      const k = 1024
+      const sizes = ['Bytes', 'KB', 'MB', 'GB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    },
+    
+    // Compress and convert image to base64
+    compressImage(file, maxWidth = 800, quality = 0.8) {
+      return new Promise((resolve, reject) => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        
+        img.onload = () => {
+          // Calculate new dimensions
+          let { width, height } = img;
+          
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+          
+          // Set canvas size
+          canvas.width = width;
+          canvas.height = height;
+          
+          // Draw and compress image
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convert to base64 with compression
+          const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+          resolve(compressedBase64);
+        };
+        
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+    },
+
+    // Convert file to base64 string with compression
+    async fileToBase64(file) {
+      try {
+        // For images, compress first
+        if (file.type.startsWith('image/')) {
+          return await this.compressImage(file);
+        }
+        
+        // For non-images, use direct conversion
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+        });
+      } catch (error) {
+        console.error('Error processing file:', error);
+        throw error;
+      }
+    },
+    
     async saveProfile() {
       const token = localStorage.getItem('token')
       
@@ -409,26 +604,58 @@ export default {
         return
       }
       
-      const formData = new FormData()
-      for (const key in this.form) {
-        formData.append(key, this.form[key] || '')
+      // Prepare submit data
+      const submitData = { ...this.form };
+      
+      // Handle photo upload
+      if (this.photoFile) {
+        try {
+          const base64Photo = await this.fileToBase64(this.photoFile);
+          submitData.photo_path = base64Photo;
+        } catch (err) {
+          console.error('Error converting photo to base64:', err);
+          this.$toast?.error?.('Failed to process photo. Please try again.');
+          return;
+        }
       }
       
-      if (this.documentFile) {
-        formData.append('document', this.documentFile)
-      }
+      console.log('Submitting data with keys:', Object.keys(submitData));
       
       try {
-        await axios.put(`${BASE_URL}/api/patient/updateprofile`, formData, {
+        const response = await fetch(`${BASE_URL}/api/patient/updateprofile`, {
+          method: 'PUT',
           headers: {
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-        })
+          body: JSON.stringify(submitData)
+        });
+
+        if (!response.ok) {
+          let errorData = {};
+          const responseText = await response.text();
+          try {
+            errorData = JSON.parse(responseText);
+          } catch (e) {
+            console.error('Could not parse error response:', responseText);
+            errorData = { error: 'Unknown server error', details: responseText };
+          }
+          
+          const errorMessage = errorData.error || errorData.details || `Server error: ${response.status}`;
+          console.error('Server response:', errorData);
+          throw new Error(errorMessage);
+        }
         
-        this.$toast?.success?.('Profile updated successfully')
+        const result = await response.json();
+        
+        // Use the result message from server or fallback to default
+        const successMessage = result?.message || 'Profile updated successfully';
+        this.$toast?.success?.(successMessage)
         this.isEditing = false
         this.originalForm = { ...this.form }
         this.documentFile = null
+        this.photoFile = null
+        this.photoPreview = null
         
       } catch (err) {
         console.error('Profile update failed:', err)
@@ -443,6 +670,8 @@ export default {
       this.form = { ...this.originalForm }
       this.isEditing = false
       this.documentFile = null
+      this.photoFile = null
+      this.photoPreview = null
       this.$emit('update:editing', false);
     },
     
@@ -845,5 +1074,160 @@ export default {
 
 .form-input:focus {
   box-shadow: 0 0 0 4px rgb(79 70 229 / 10%), 0 4px 20px rgb(79 70 229 / 15%);
+}
+
+/* Photo Upload Styles */
+.file-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.photo-preview-container {
+  position: relative;
+  display: inline-block;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.photo-preview {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+}
+
+.photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.photo-preview-container:hover .photo-overlay {
+  opacity: 1;
+}
+
+.remove-photo-btn,
+.change-photo-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #374151;
+}
+
+.remove-photo-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  transform: scale(1.1);
+}
+
+.change-photo-btn:hover {
+  background: #e0f2fe;
+  color: #0369a1;
+  transform: scale(1.1);
+}
+
+.remove-icon,
+.upload-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.file-upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border: 3px dashed #cbd5e1;
+  border-radius: 16px;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #64748b;
+  font-weight: 600;
+  gap: 1rem;
+  min-height: 150px;
+}
+
+.file-upload-btn:hover {
+  border-color: #4f46e5;
+  background: #f0f9ff;
+  color: #4f46e5;
+  transform: translateY(-2px);
+}
+
+.file-upload-btn .upload-icon {
+  width: 3rem;
+  height: 3rem;
+  color: #94a3b8;
+}
+
+.file-upload-btn:hover .upload-icon {
+  color: #4f46e5;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-selected {
+  background: #f0f9ff;
+  border: 1px solid #e0f2fe;
+  border-radius: 12px;
+  padding: 1rem;
+  color: #0369a1;
+  font-weight: 500;
+}
+
+.file-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.upload-info {
+  text-align: center;
+}
+
+.upload-hint {
+  color: #64748b;
+  font-style: italic;
+}
+
+/* Responsive Photo Upload */
+@media (width <= 768px) {
+  .photo-preview {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .file-upload-btn {
+    min-height: 120px;
+    padding: 1.5rem;
+  }
+  
+  .file-upload-btn .upload-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 </style>

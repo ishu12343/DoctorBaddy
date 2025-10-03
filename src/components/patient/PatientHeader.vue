@@ -1,24 +1,28 @@
 <template>
   <header class="bg-medical-primary text-white fixed top-0 left-0 right-0 w-full z-50 shadow-lg">
     <div class="container mx-auto px-4">
-      <div class="flex items-center justify-between h-16 lg:h-20">
-        <!-- Logo -->
-        <div class="flex items-center text-white hover:text-gray-200 transition-colors">
-          <img src="@/assets/logo/logo1.png" alt="DoctorBuddy Logo" class="h-8 lg:h-10 w-auto" />
-          <span class="text-lg lg:text-xl font-bold">DoctorBuddy</span>
-        </div>
 
-        <!-- Desktop Navigation -->
-        <nav class="hidden lg:flex items-center gap-8">
+      <div class="flex items-center justify-between h-16 lg:h-20">
+        <!-- Left: Menu Button (Mobile & Desktop) -->
+        <div class="flex items-center lg:hidden">
+          <button 
+            @click="toggleMobileMenu" 
+            class="px-3 py-2 bg-white text-medical-primary rounded-full shadow border border-medical-secondary focus:outline-none focus:ring-2 focus:ring-medical-secondary"
+            aria-label="Toggle mobile menu"
+          >
+            <i :class="mobileMenuOpen ? 'fas fa-times' : 'fas fa-bars'" class="text-xl"></i>
+          </button>
+        </div>
+        <!-- Desktop Navigation (center) -->
+        <nav class="hidden lg:flex items-center gap-8 flex-1 justify-center">
           <button 
             @click="$emit('navigate', 'dashboard')"
             class="nav-item group"
             :class="{ 'active': currentPage === 'dashboard' }"
           >
-            <i class="fas fa-home text-medical-secondary group-hover:text-white transition-colors"></i>
+            <i class="fas fa-tachometer-alt text-medical-secondary group-hover:text-white transition-colors"></i>
             <span>Dashboard</span>
           </button>
-          
           <button 
             @click="$emit('navigate', 'appointments')"
             class="nav-item group"
@@ -27,7 +31,14 @@
             <i class="fas fa-calendar-alt text-medical-secondary group-hover:text-white transition-colors"></i>
             <span>Appointments</span>
           </button>
-          
+          <button 
+            @click="$emit('navigate', 'doctors')"
+            class="nav-item group"
+            :class="{ 'active': currentPage === 'doctors' }"
+          >
+            <i class="fas fa-user-md text-medical-secondary group-hover:text-white transition-colors"></i>
+            <span>Find Doctors</span>
+          </button>
           <button 
             @click="$emit('navigate', 'profile')"
             class="nav-item group"
@@ -36,109 +47,113 @@
             <i class="fas fa-user text-medical-secondary group-hover:text-white transition-colors"></i>
             <span>Profile</span>
           </button>
-          
-          <!-- User Profile Dropdown -->
-          <div class="relative">
-            <button 
-              @click="toggleUserDropdown"
-              @mouseenter="showUserDropdown" 
-              class="btn btn-primary btn-small flex items-center gap-2 relative z-20"
-              :aria-expanded="showDropdown"
-              aria-haspopup="true"
-            >
-              <div class="user-avatar">
-                <i class="fas fa-user-circle text-xl"></i>
-              </div>
-              {{ patientInfo?.full_name || 'Patient' }}
-              <i class="fas fa-chevron-down transition-transform duration-200" :class="{'transform rotate-180': showDropdown}"></i>
-            </button>
-            <transition
-              enter-active-class="transition duration-100 ease-out"
-              enter-from-class="transform scale-95 opacity-0"
-              enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-75 ease-in"
-              leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0"
-            >
-              <div 
-                v-if="showDropdown" 
-                ref="userDropdown"
-                class="absolute top-full right-0 mt-2 bg-medical-secondary rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in"
-              >
-                <button @click="$emit('navigate', 'profile')" class="dropdown-item">
-                  <i class="fas fa-user mr-2"></i>
-                  View Profile
-                </button>
-                <div class="dropdown-divider"></div>
-                <button @click="$emit('logout')" class="dropdown-item text-red-400 hover:text-red-300">
-                  <i class="fas fa-sign-out-alt mr-2"></i>
-                  Sign Out
-                </button>
-              </div>
-            </transition>
-          </div>
         </nav>
-
-        <!-- Mobile Menu Button -->
-        <button 
-          @click="toggleMobileMenu" 
-          class="lg:hidden px-4 py-2 bg-medical-secondary text-white font-bold rounded-lg hover:bg-medical-secondary/90 transition-colors"
-          aria-label="Toggle mobile menu"
-        >
-          {{ mobileMenuOpen ? '✕' : '☰' }}
-        </button>
+        <!-- Right: Patient Name, Profile Photo, Sign Out -->
+        <div class="flex items-center gap-3 relative ml-auto px-3 py-2 rounded-lg patient-header-right" @click="toggleUserDropdown">
+          <div class="flex flex-col items-start justify-center">
+            <span class="font-semibold text-base" style="color: #fff;">{{ patientInfo?.full_name || 'Patient' }}</span>
+            <span v-if="patientInfo?.blood_group" class="text-xs font-medium mt-1" style="color: #e0e0e0; margin-left: 6.1rem;">{{ patientInfo.blood_group }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="user-avatar patient-avatar-lg shadow-lg" style="border: 2px solid #fff;">
+              <img
+                v-if="patientInfo?.photo_path"
+                :src="patientInfo.photo_path"
+                alt="Profile Photo"
+                class="h-10 w-10 rounded-full object-cover"
+              />
+              <i v-else class="fas fa-user-circle text-3xl" style="color: #fff;"></i>
+            </div>
+          </div>
+          <!-- Dropdown for Sign Out -->
+          <div v-if="showDropdown" ref="userDropdown" class="absolute right-0 top-full mt-2 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg shadow-lg z-50 min-w-[140px] animate-fade-in">
+            <button @click="navigateAndClose('profile')" class="dropdown-item flex items-center gap-2 px-4 py-2 w-full bg-gradient-to-r from-blue-600 to-blue-500 to-red-400 text-white font-semibold hover:from-red-600 hover:to-red-500 hover:text-white rounded-md shadow-md">
+              <i class="fas fa-user-circle"></i>
+              <span> Profile</span>
+            </button>
+            <button @click.stop="logout" class="dropdown-item flex items-center gap-2 px-4 py-2 w-full bg-gradient-to-r from-blue-600 to-blue-500 to-red-400 text-white font-semibold hover:from-red-600 hover:to-red-500 hover:text-white rounded-md shadow-md">
+              <i class="fas fa-sign-out-alt"></i>
+              <span> Sign Out</span>
+            </button>
+          </div>
+        </div>
       </div>
 
-      <!-- Mobile Menu -->
-      <transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="transform -translate-y-4 opacity-0"
-        enter-to-class="transform translate-y-0 opacity-100"
-        leave-active-class="transition duration-150 ease-in"
-        leave-from-class="transform translate-y-0 opacity-100"
-        leave-to-class="transform -translate-y-4 opacity-0"
+      <!-- Mobile Navigation -->
+      <nav 
+        v-if="mobileMenuOpen" 
+        class="lg:hidden pb-4 border-t border-medical-secondary mt-4 pt-4 animate-fade-in"
       >
-        <nav v-if="mobileMenuOpen" class="lg:hidden bg-medical-secondary border-t border-gray-600 py-4">
-          <div class="flex flex-col gap-2">
+        <div class="flex flex-col space-y-3">
+          <!-- Top Row: Profile Photo, Patient Name removed -->
+          <button 
+            @click="navigateAndClose('dashboard')"
+            class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
+            :class="{ 'bg-medical-secondary': currentPage === 'dashboard' }"
+          >
+            <i class="fas fa-tachometer-alt text-medical-secondary"></i>
+            <span>Dashboard</span>
+          </button>
+          
+          <button 
+            @click="navigateAndClose('appointments')"
+            class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
+            :class="{ 'bg-medical-secondary': currentPage === 'appointments' }"
+          >
+            <i class="fas fa-calendar-alt text-medical-secondary"></i>
+            <span>Appointments</span>
+          </button>
+          
+          <button 
+            @click="navigateAndClose('doctors')"
+            class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
+            :class="{ 'bg-medical-secondary': currentPage === 'doctors' }"
+          >
+            <i class="fas fa-user-md text-medical-secondary"></i>
+            <span>Find Doctors</span>
+          </button>
+          
+          <button 
+            @click="navigateAndClose('profile')"
+            class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
+            :class="{ 'bg-medical-secondary': currentPage === 'profile' }"
+          >
+            <i class="fas fa-user text-medical-secondary"></i>
+            <span>Profile</span>
+          </button>
+
+          <!-- Mobile User Section -->
+          <div class="pt-3 border-t border-medical-secondary/30">
+            <div class="px-4 py-2 text-sm text-gray-300">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="user-avatar patient-avatar-lg shadow-lg">
+                  <img
+                    v-if="patientInfo?.photo_path"
+                    :src="patientInfo.photo_path"
+                    alt="Profile Photo"
+                    class="h-11 w-11 rounded-full object-cover border-2 border-white"
+                  />
+                  <i v-else class="fas fa-user-circle text-2xl"></i>
+                </div>
+                <div class="flex flex-col items-start justify-center min-w-[100px]">
+                  <span class="font-semibold text-base text-white leading-tight">{{ patientInfo?.full_name || 'Patient' }}</span>
+                  <div class="flex items-center gap-2 mt-1 text-xs text-gray-200">
+                    <span v-if="patientInfo?.blood_group" class="ml-2">{{ patientInfo.blood_group }}</span>
+                    <span v-if="patientInfo?.city" class="text-gray-300">{{ patientInfo.city }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <button 
-              @click="navigateAndCloseMobile('dashboard')"
-              class="mobile-nav-item"
-              :class="{ 'active': currentPage === 'dashboard' }"
-            >
-              <i class="fas fa-home"></i>
-              <span>Dashboard</span>
-            </button>
-            
-            <button 
-              @click="navigateAndCloseMobile('appointments')"
-              class="mobile-nav-item"
-              :class="{ 'active': currentPage === 'appointments' }"
-            >
-              <i class="fas fa-calendar-alt"></i>
-              <span>Appointments</span>
-            </button>
-            
-            <button 
-              @click="navigateAndCloseMobile('profile')"
-              class="mobile-nav-item"
-              :class="{ 'active': currentPage === 'profile' }"
-            >
-              <i class="fas fa-user"></i>
-              <span>Profile</span>
-            </button>
-            
-            <div class="mobile-nav-divider"></div>
-            
-            <button 
-              @click="$emit('logout')"
-              class="mobile-nav-item text-red-400"
+              @click="logout"
+              class="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors mt-2"
             >
               <i class="fas fa-sign-out-alt"></i>
               <span>Sign Out</span>
             </button>
           </div>
-        </nav>
-      </transition>
+        </div>
+      </nav>
     </div>
   </header>
 </template>
@@ -147,216 +162,205 @@
 export default {
   name: 'PatientHeader',
   props: {
-    patientInfo: {
-      type: Object,
-      default: () => ({})
-    },
     currentPage: {
       type: String,
       default: 'dashboard'
+    },
+    patientInfo: {
+      type: Object,
+      default: () => ({})
     }
   },
   emits: ['navigate', 'logout'],
   data() {
     return {
       showDropdown: false,
-      mobileMenuOpen: false
+      mobileMenuOpen: false,
+      isMobile: false,
+      clickListener: null,
     }
-  },
-  mounted() {
-    // Close dropdown when clicking outside
-    document.addEventListener('click', this.handleClickOutside);
-  },
-  beforeUnmount() {
-    document.removeEventListener('click', this.handleClickOutside);
   },
   methods: {
-    toggleUserDropdown() {
-      this.showDropdown = !this.showDropdown;
+    toggleUserDropdown(e) {
+      e.stopPropagation();
+      if (this.isMobile) {
+        this.showDropdown = !this.showDropdown;
+      } else {
+        this.showDropdown = !this.showDropdown;
+      }
     },
     showUserDropdown() {
-      this.showDropdown = true;
+      if (!this.isMobile) {
+        this.showDropdown = true;
+      }
+    },
+    hideUserDropdown() {
+      this.showDropdown = false;
     },
     toggleMobileMenu() {
-      this.mobileMenuOpen = !this.mobileMenuOpen;
+      this.mobileMenuOpen = !this.mobileMenuOpen
     },
-    navigateAndCloseMobile(page) {
+    closeMobileMenu() {
+      this.mobileMenuOpen = false
+    },
+    navigateAndClose(page) {
       this.$emit('navigate', page);
-      this.mobileMenuOpen = false;
+      this.closeMobileMenu();
     },
-    handleClickOutside(event) {
-      if (this.$refs.userDropdown && !this.$refs.userDropdown.contains(event.target) && !event.target.closest('.btn-primary')) {
-        this.showDropdown = false;
+    logout() {
+      this.$emit('logout');
+      this.closeMobileMenu();
+    },
+    checkIfMobile() {
+      this.isMobile = window.innerWidth < 1024; // lg breakpoint
+    },
+  },
+  mounted() {
+    // Add click outside listener for dropdowns
+    this.clickListener = (e) => {
+      // Close mobile menu when clicking outside
+      if (!this.$el.contains(e.target)) {
+        this.mobileMenuOpen = false;
       }
+      
+      // Close dropdowns when clicking outside
+      if (this.showDropdown && !this.$refs.userDropdown?.contains(e.target)) {
+        this.hideUserDropdown();
+      }
+    };
+    
+    document.addEventListener('click', this.clickListener);
+    
+    // Check if mobile device
+    this.checkIfMobile();
+    window.addEventListener('resize', this.checkIfMobile);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.checkIfMobile);
+    if (this.clickListener) {
+      document.removeEventListener('click', this.clickListener);
     }
-  }
+  },
 }
 </script>
 
 <style scoped>
-/* Header Navigation Styles */
+/* Navigation styles */
 .nav-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: white;
+  transition: color 0.2s;
   font-weight: 500;
-  color: #e2e8f0;
-  background: transparent;
-  border: none;
   cursor: pointer;
+  border: none;
+  background: transparent;
 }
 
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  color: #e5e7eb;
 }
 
 .nav-item.active {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
+  color: #fde047;
 }
 
-.nav-item i {
-  font-size: 1.1rem;
+.nav-item.active i {
+  color: #fde047;
 }
 
-.nav-item span {
-  font-size: 0.875rem;
+/* Dropdown animations */
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out;
 }
 
-/* Dropdown Styles */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dropdown items */
 .dropdown-item {
-  display: flex;
-  align-items: center;
+  display: block;
   width: 100%;
-  padding: 0.75rem 1rem;
   text-align: left;
-  background: none;
-  border: none;
+  padding: 0.75rem 1rem;
   color: white;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
+  transition: background-color 0.2s;
   cursor: pointer;
+  border: none;
+  background-color: blue;
+  text-decoration: none;
 }
 
 .dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background-color: rgba(59, 130, 246, 0.8);
 }
 
 .dropdown-divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 0.5rem 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 0.25rem 0;
 }
 
-/* Mobile Navigation */
-.mobile-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background: transparent;
-  border: none;
-  color: #e2e8f0;
-  text-align: left;
-  transition: all 0.2s ease;
-  border-radius: 0.5rem;
-  margin: 0 0.5rem;
-  cursor: pointer;
-}
-
-.mobile-nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.mobile-nav-item.active {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-}
-
-.mobile-nav-item i {
-  font-size: 1.1rem;
-  width: 1.2rem;
-  text-align: center;
-}
-
-.mobile-nav-divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 0.5rem 1rem;
-}
-
-/* Button Styles */
-.btn {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: #667eea;
-  color: white;
-}
-
-.btn-primary:hover {
-  background: #5a67d8;
-}
-
-.btn-small {
-  padding: 0.375rem 0.75rem;
-  font-size: 0.875rem;
-}
-
+/* User avatar */
 .user-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.patient-avatar-lg {
+  width: 3rem;
+  height: 3rem;
+  min-width: 3rem;
+  min-height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255,255,255,0.18);
+  box-shadow: 0 2px 8px 0 rgb(54 209 196 / 12%);
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
+/* Button styles */
+.btn-primary {
+  background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
+  box-shadow: 0 4px 14px 0 rgb(221 36 118 / 15%);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border: none;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px 0 rgb(54 209 196 / 18%);
+}
+
+.btn-small {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (width <= 576px) {
   .nav-item span {
-    display: none;
+    font-size: 0.9rem;
   }
   
-  .nav-item {
-    padding: 0.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  .mobile-nav-item {
-    padding: 1rem;
-    font-size: 1rem;
-  }
-}
-
-/* Animation Classes */
-.animate-fade-in {
-  animation: fadeIn 0.2s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-0.5rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .btn-primary {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
   }
 }
 </style>

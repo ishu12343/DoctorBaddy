@@ -466,8 +466,428 @@
           </div>
         </template>
 
+        <!-- Doctors Page -->
+        <template v-else-if="showDoctors">
+          <div class="doctors-container">
+            <div class="doctors-header">
+              <h2 class="page-title">Find & Book Doctors</h2>
+              <p class="page-subtitle">Search and book appointments with qualified healthcare professionals</p>
+              
+              <!-- Search and Filter Section -->
+              <div class="search-filters">
+                <div class="search-input-wrapper">
+                  <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                  <input 
+                    v-model="searchQuery"
+                    type="text" 
+                    placeholder="Search doctors by name or specialty..."
+                    class="search-input"
+                    @input="searchDoctors"
+                  />
+                </div>
+
+                <select v-model="selectedSpecialty" @change="filterBySpecialty" class="filter-select">
+                  <option value="">All Specialties</option>
+                  <option v-for="specialty in uniqueSpecialties" :key="specialty" :value="specialty">
+                    {{ specialty }}
+                  </option>
+                </select>
+
+                <select v-model="selectedCity" @change="filterByCity" class="filter-select">
+                  <option value="">All Cities</option>
+                  <option v-for="city in uniqueCities" :key="city" :value="city">
+                    {{ city }}
+                  </option>
+                </select>
+
+                <button @click="fetchDoctors" class="refresh-btn" :disabled="loadingDoctors">
+                  <svg :class="{'spinning': loadingDoctors}" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 3a5 5 0 104.546 2.914.5.5 0 00-.908-.417A4 4 0 118 4v1z"/>
+                    <path d="M8 4.466V.534a.25.25 0 01.41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 018 4.466z"/>
+                  </svg>
+                  Refresh
+                </button>
+
+                <button v-if="searchQuery || selectedSpecialty || selectedCity" @click="clearFilters" class="clear-filters-btn">
+                  Clear Filters
+                </button>
+              </div>
+
+              <!-- Loading State -->
+              <div v-if="loadingDoctors" class="loading-container">
+                <div class="spinner"></div>
+                <p>Loading doctors...</p>
+              </div>
+
+              <!-- Error State -->
+              <div v-else-if="doctorError" class="error-container">
+                <div class="error-message">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  <h3>Unable to load doctors</h3>
+                  <p>{{ doctorError }}</p>
+                  <button @click="fetchDoctors" class="retry-btn">Try Again</button>
+                </div>
+              </div>
+
+              <!-- Doctors Grid -->
+              <div v-else-if="filteredDoctors.length > 0" class="doctors-grid">
+                <div 
+                  v-for="doctor in filteredDoctors" 
+                  :key="doctor.id" 
+                  class="doctor-card"
+                  @click="selectDoctor(doctor)"
+                >
+                  <!-- Card Header with Status -->
+                  <div class="card-header">
+                    <div class="doctor-status">
+                      <div :class="['status-indicator', getAvailabilityStatus(doctor)]"></div>
+                      <span :class="['status-text', getAvailabilityStatus(doctor)]">{{ getAvailabilityStatusText(doctor) }}</span>
+                    </div>
+                    <div class="card-favorite">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <!-- Doctor Profile Section -->
+                  <div class="doctor-profile">
+                    <div class="doctor-avatar">
+                      <div class="avatar-background"></div>
+                      <img 
+                        v-if="doctor.profile_photo" 
+                        :src="doctor.profile_photo" 
+                        :alt="doctor.full_name"
+                        class="doctor-profile-image"
+                      />
+                      <div v-else class="doctor-initials">
+                        {{ getInitials(doctor.full_name) }}
+                      </div>
+                      <div class="online-indicator"></div>
+                    </div>
+                    
+                    <div class="doctor-details">
+                      <h3 class="doctor-name">{{ doctor.full_name.startsWith('Dr.') ? doctor.full_name : 'Dr. ' + doctor.full_name }}</h3>
+                      <div class="doctor-specialty">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        {{ doctor.specialty || doctor.specialization || 'General Medicine' }}
+                      </div>
+                      
+                      <!-- Clinic Name -->
+                      <div v-if="doctor.clinic_name" class="doctor-clinic">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/>
+                        </svg>
+                        {{ doctor.clinic_name }}
+                      </div>
+                      
+                      <!-- Languages -->
+                      <div v-if="doctor.languages" class="doctor-languages">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <circle cx="12" cy="12" r="10"/>
+                          <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                        </svg>
+                        {{ doctor.languages }}
+                      </div>
+                      
+                      <div class="doctor-rating">
+                        <div class="stars">
+                          <div class="stars-fill" :style="`width: ${(doctor.average_rating / 5) * 100}%`">
+                            <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                          </div>
+                          <div class="stars-empty">
+                            <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                          </div>
+                        </div>
+                        <span class="rating-text">{{ doctor.average_rating || 'No ratings' }}</span>
+                        <span class="review-count" v-if="doctor.total_reviews > 0">({{ doctor.total_reviews }})</span>
+                        <span class="review-count" v-else>(No reviews)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Quick Stats -->
+                  <div class="quick-stats">
+                    <div class="stat-item">
+                      <div class="stat-icon experience">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                          <polyline points="22,4 12,14.01 9,11.01"/>
+                        </svg>
+                      </div>
+                      <div class="stat-info">
+                        <div class="stat-value">{{ doctor.experience || 5 }}+</div>
+                        <div class="stat-label">Years</div>
+                      </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                      <div class="stat-icon patients">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                          <circle cx="9" cy="7" r="4"/>
+                          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                        </svg>
+                      </div>
+                      <div class="stat-info">
+                        <div class="stat-value">{{ doctor.patients_treated || '500' }}+</div>
+                        <div class="stat-label">Patients</div>
+                      </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                      <div class="stat-icon location">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                          <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                      </div>
+                      <div class="stat-info">
+                        <div class="stat-value">{{ doctor.city || 'N/A' }}</div>
+                        <div class="stat-label">Location</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card Actions -->
+                  <div class="card-actions">
+                    <button 
+                      @click.stop="bookAppointment(doctor)" 
+                      class="btn-primary"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                      Book Appointment
+                    </button>
+                    <button 
+                      @click.stop="contactDoctor(doctor)" 
+                      class="btn-secondary"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                      </svg>
+                      Contact
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div v-else class="empty-state">
+                <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <h3>No doctors found</h3>
+                <p>Try adjusting your search criteria or check back later.</p>
+                <button @click="clearFilters" class="clear-filters-btn">Clear Filters</button>
+              </div>
+            </div>
+          </div>
+        </template>
+
         <!-- Dashboard Home - Show only when home is selected -->
         <template v-else-if="showHome">
+          <div class="dashboard-overview">
+            <!-- Welcome Section -->
+            <div class="welcome-container">
+              <div class="welcome-card">
+                <div class="welcome-header">
+                  <div class="welcome-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-12.5c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 class="welcome-title">Welcome back, {{ patientInfo?.full_name || 'Patient' }}!</h2>
+                    <p class="welcome-subtitle">Manage your health appointments and find the best healthcare professionals</p>
+                  </div>
+                </div>
+                
+                <div class="quick-actions">
+                  <button @click="handleNavigation('doctors')" class="quick-action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Find Doctors
+                  </button>
+                  <button @click="handleNavigation('appointments')" class="quick-action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    My Appointments
+                  </button>
+                  <button @click="handleNavigation('profile')" class="quick-action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    My Profile
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Activity Section - Modern Single Line Design -->
+            <div class="recent-activity-section">
+              <div class="section-header">
+                <h3 class="section-title">
+                  <div class="title-with-pulse">
+                    <svg class="activity-pulse-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    Recent Activities
+                    <div class="live-indicator">
+                      <span class="pulse-dot"></span>
+                      <span class="live-text">Live</span>
+                    </div>
+                  </div>
+                  <span class="activity-counter" v-if="appointments && appointments.length > 0">{{ appointments.length }}</span>
+                </h3>
+                <div class="section-actions">
+                  <button class="refresh-btn" @click="fetchAppointments" title="Refresh">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M8 3a5 5 0 104.546 2.914.5.5 0 00-.908-.417A4 4 0 118 4v1z"/>
+                      <path d="M8 4.466V.534a.25.25 0 01.41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 018 4.466z"/>
+                    </svg>
+                  </button>
+                  <button class="view-all-btn" @click="handleNavigation('appointments')" title="View All">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                      <path fill-rule="evenodd" d="M1.5 8a.5.5 0 01.5-.5h11.793l-3.147-3.146a.5.5 0 01.708-.708l4 4a.5.5 0 010 .708l-4 4a.5.5 0 01-.708-.708L13.293 8.5H2a.5.5 0 01-.5-.5z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Modern Horizontal Activity Stream -->
+              <div class="activity-stream" v-if="appointments && appointments.length > 0">
+                <div class="activity-timeline">
+                  <div v-for="(appointment, index) in appointments.slice(0, 4)" :key="appointment.id" 
+                       class="activity-card"
+                       :class="[appointment.status.toLowerCase(), { 'latest': index === 0 }]"
+                       :style="{ animationDelay: `${index * 0.1}s` }">
+                    
+                    <div class="activity-card-header">
+                      <div class="activity-icon" :class="appointment.status.toLowerCase()">
+                        <svg viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <div class="activity-status-badge" :class="appointment.status.toLowerCase()">
+                        <span class="status-text">{{ appointment.status }}</span>
+                      </div>
+                    </div>
+                    
+                    <div class="activity-card-content">
+                      <h5 class="activity-title">Dr. {{ appointment.doctor_name }}</h5>
+                      <p class="activity-description">{{ appointment.reason || 'General Consultation' }}</p>
+                      <div class="activity-meta">
+                        <span class="activity-time">{{ formatDate(appointment.appointment_datetime) }}</span>
+                        <div class="activity-type-indicator appointment">
+                          Appointment
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Connection Line to Next Activity -->
+                    <div v-if="index < Math.min(appointments.length - 1, 3)" class="activity-connector">
+                      <div class="connector-line"></div>
+                      <div class="connector-arrow">
+                        <svg viewBox="0 0 16 16" fill="currentColor">
+                          <path fill-rule="evenodd" d="M4 8a.5.5 0 01.5-.5h5.793L8.146 5.354a.5.5 0 11.708-.708l3 3a.5.5 0 010 .708l-3 3a.5.5 0 01-.708-.708L10.293 8.5H4.5A.5.5 0 014 8z"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Enhanced No Activities State -->
+              <div v-else class="no-activities-modern">
+                <div class="no-activities-content">
+                  <div class="empty-state-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 6v6l4 2"/>
+                    </svg>
+                  </div>
+                  <div class="empty-state-text">
+                    <h4>No recent activities</h4>
+                    <p>Your appointment activities will appear here</p>
+                  </div>
+                  <button class="create-activity-btn" @click="handleNavigation('doctors')">
+                    <svg viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                    </svg>
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions-section">
+              <h2 class="section-title">Quick Actions</h2>
+              <div class="quick-actions-grid">
+                <button class="quick-action-card" @click="handleNavigation('doctors')">
+                  <div class="action-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                  </div>
+                  <span>Find Doctors</span>
+                </button>
+                
+                <button class="quick-action-card" @click="handleNavigation('appointments')">
+                  <div class="action-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                  </div>
+                  <span>My Appointments</span>
+                </button>
+                
+                <button class="quick-action-card" @click="handleNavigation('profile')">
+                  <div class="action-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                  </div>
+                  <span>My Profile</span>
+                </button>
+                
+                <button class="quick-action-card">
+                  <div class="action-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                  </div>
+                  <span>Medical Records</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- Default view fallback -->
+        <template v-else>
           <div class="doctors-container">
             <div class="doctors-header">
               <h2 class="page-title">Find & Book Doctors</h2>
@@ -1122,6 +1542,7 @@ export default {
       showProfile: false,
       showHome: true, // Start with dashboard view
       showAppointments: false,
+      showDoctors: false,
       showUserDropdown: false,
       isProfileEditing: false, // Track profile editing state
       patientInfo: null, // Store patient information
@@ -1194,6 +1615,7 @@ export default {
     currentPageName() {
       if (this.showProfile) return 'profile';
       if (this.showAppointments) return 'appointments';
+      if (this.showDoctors) return 'doctors';
       return 'dashboard';
     },
     filteredAppointments() {
@@ -1212,6 +1634,8 @@ export default {
     this.fetchPatientInfo();
     // Load doctors for the dashboard
     this.loadDoctors();
+    // Always load appointments for recent activities display
+    this.loadRecentActivities();
     // Start auto-refresh for appointments when viewing appointments
     this.startAppointmentRefresh();
   },
@@ -1262,6 +1686,10 @@ export default {
           this.showAppointments = true;
           this.fetchAppointments();
           break;
+        case 'doctors':
+          this.showDoctors = true;
+          this.fetchDoctors();
+          break;
         case 'profile':
           this.showProfile = true;
           break;
@@ -1294,6 +1722,7 @@ export default {
       this.showHome = false;
       this.showProfile = false;
       this.showAppointments = false;
+      this.showDoctors = false;
     },
     
     // Fetch patient info
@@ -1465,12 +1894,60 @@ export default {
         
         if (response.data.success) {
           this.appointments = response.data.appointments;
+          // Save to localStorage for persistence
+          localStorage.setItem('patientRecentActivities', JSON.stringify(response.data.appointments));
         }
       } catch (error) {
         console.error('Error fetching appointments:', error);
-        alert('Failed to load appointments. Please try again.');
+        // Load from localStorage if API fails
+        const savedActivities = localStorage.getItem('patientRecentActivities');
+        if (savedActivities) {
+          try {
+            this.appointments = JSON.parse(savedActivities);
+          } catch (parseError) {
+            console.error('Error parsing saved activities:', parseError);
+            this.appointments = [];
+          }
+        } else {
+          this.appointments = [];
+        }
+        alert('Failed to load appointments. Showing cached data if available.');
       } finally {
         this.loadingAppointments = false;
+      }
+    },
+    
+    // Load recent activities from localStorage or fetch fresh data
+    async loadRecentActivities() {
+      // First, try to load from localStorage for immediate display
+      const savedActivities = localStorage.getItem('patientRecentActivities');
+      if (savedActivities) {
+        try {
+          this.appointments = JSON.parse(savedActivities);
+        } catch (error) {
+          console.error('Error parsing saved activities:', error);
+        }
+      }
+      
+      // Then fetch fresh data in the background
+      const previousCount = this.appointments.length;
+      await this.fetchAppointments();
+      
+      // Check if there are new activities
+      if (this.appointments.length > previousCount) {
+        this.showNewActivityIndicator();
+      }
+    },
+    
+    // Show subtle indicator for new activities
+    showNewActivityIndicator() {
+      // Add a subtle animation or notification class
+      const activitySection = document.querySelector('.recent-activity-section');
+      if (activitySection) {
+        activitySection.classList.add('new-activity-pulse');
+        setTimeout(() => {
+          activitySection.classList.remove('new-activity-pulse');
+        }, 3000);
       }
     },
     
@@ -1566,12 +2043,28 @@ export default {
       });
     },
     
+    formatDate(datetime) {
+      const date = new Date(datetime);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    },
+    
     // Auto-refresh methods for appointments
     startAppointmentRefresh() {
-      // Refresh appointments every 30 seconds when appointments view is active
+      // Refresh appointments every 30 seconds for both appointments view and dashboard recent activities
       this.refreshInterval = setInterval(() => {
-        if (this.showAppointments && !this.loadingAppointments) {
-          this.fetchAppointments();
+        if (!this.loadingAppointments) {
+          // Refresh for appointments page
+          if (this.showAppointments) {
+            this.fetchAppointments();
+          }
+          // Also refresh for dashboard recent activities (silent refresh)
+          else if (this.showHome) {
+            this.loadRecentActivities();
+          }
         }
       }, 30000); // 30 seconds
     },
@@ -5024,6 +5517,480 @@ export default {
   color: #374151;
   margin: 0.5rem 0;
   text-align: center;
+}
+
+/* Recent Activity Section Styles */
+.recent-activity-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.recent-activity-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: float 6s ease-in-out infinite;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title-with-pulse {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.activity-pulse-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #60f5a1;
+  animation: pulse 2s infinite;
+}
+
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #60f5a1;
+}
+
+.pulse-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #60f5a1;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.activity-counter {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.section-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.refresh-btn, .view-all-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.refresh-btn:hover, .view-all-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.refresh-btn svg, .view-all-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.activity-timeline {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.activity-timeline::-webkit-scrollbar {
+  display: none;
+}
+
+.activity-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 1.25rem;
+  min-width: 280px;
+  color: #374151;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  transition: all 0.3s ease;
+  animation: slideInUp 0.6s ease-out forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.activity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.activity-card.latest {
+  border: 2px solid #60f5a1;
+  box-shadow: 0 0 20px rgba(96, 245, 161, 0.3);
+}
+
+.activity-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.activity-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.activity-icon.confirmed {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.activity-icon.pending {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.activity-icon.completed {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.activity-icon.cancelled {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.activity-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.activity-status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.activity-status-badge.confirmed {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.activity-status-badge.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.activity-status-badge.completed {
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.activity-status-badge.cancelled {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.activity-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.activity-description {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.activity-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.activity-time {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.activity-type-indicator {
+  padding: 0.125rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.activity-type-indicator.appointment {
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.activity-connector {
+  position: absolute;
+  right: -1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+.connector-line {
+  width: 2rem;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4));
+}
+
+.connector-arrow {
+  color: rgba(255, 255, 255, 0.8);
+  margin-left: -0.25rem;
+}
+
+.connector-arrow svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.no-activities-modern {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.no-activities-content {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.empty-state-icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  opacity: 0.7;
+}
+
+.empty-state-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.empty-state-text h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-text p {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+}
+
+.create-activity-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+}
+
+.create-activity-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.create-activity-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Quick Actions Section */
+.quick-actions-section {
+  margin-bottom: 2rem;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.quick-action-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-action-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.quick-action-card:hover::before {
+  left: 100%;
+}
+
+.quick-action-card:hover {
+  border-color: #6366f1;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+}
+
+.action-icon {
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.quick-action-card:hover .action-icon {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+.action-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.quick-action-card span {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Animations */
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes newActivityPulse {
+  0% { box-shadow: 0 0 0 0 rgba(96, 245, 161, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(96, 245, 161, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(96, 245, 161, 0); }
+}
+
+.new-activity-pulse {
+  animation: newActivityPulse 1s ease-out 3;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .recent-activity-section {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .activity-timeline {
+    gap: 0.75rem;
+  }
+  
+  .activity-card {
+    min-width: 250px;
+    padding: 1rem;
+  }
+  
+  .quick-actions-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  .quick-action-card {
+    padding: 1rem;
+  }
+  
+  .action-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
 }
 
 .rate-btn {
