@@ -8,17 +8,35 @@
             type="text"
             v-model="searchQuery"
             placeholder="Search doctors..."
-            class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent text-sm sm:text-base"
+            class="w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent text-sm sm:text-base"
           >
           <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          <button
+            v-if="searchQuery"
+            @click="clearSearch"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100 touch-action-manipulation"
+            type="button"
+            title="Clear search"
+          >
+            <i class="fas fa-times text-xs sm:text-sm"></i>
+          </button>
         </div>
-        <button 
-          @click="showFilters = !showFilters"
-          class="w-full sm:w-auto px-4 py-2 border rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 text-sm sm:text-base"
-        >
-          <i class="fas fa-filter"></i>
-          <span class="whitespace-nowrap">{{ showFilters ? 'Hide' : 'Show' }} Filters</span>
-        </button>
+        <div class="flex gap-2 w-full sm:w-auto">
+          <button 
+            @click="showFilters = !showFilters"
+            class="flex-1 sm:flex-none px-4 py-2 border rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 text-sm sm:text-base min-h-[2.5rem] touch-action-manipulation"
+          >
+            <i class="fas fa-filter text-xs sm:text-sm"></i>
+            <span class="whitespace-nowrap">{{ showFilters ? 'Hide' : '' }} Advance Filters</span>
+          </button>
+          <button 
+            @click="quickResetFilters"
+            class="px-3 py-2 border rounded-lg flex items-center justify-center hover:bg-red-50 hover:border-red-300 hover:text-red-600 text-gray-500 text-sm sm:text-base min-h-[2.5rem] touch-action-manipulation transition-colors duration-200"
+            title="Reset all filters"
+          >
+            <i class="fas fa-undo text-xs sm:text-sm"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -32,7 +50,7 @@
       leave-to-class="opacity-0 scale-95"
     >
       <div v-if="showFilters" class="bg-white p-4 rounded-lg shadow-md mb-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
             <select v-model="filters.status" class="w-full p-2 border rounded text-sm sm:text-base">
@@ -50,14 +68,6 @@
                 {{ spec }}
               </option>
             </select>
-          </div>
-          <div class="flex items-end sm:col-span-2 md:col-span-1">
-            <button 
-              @click="applyFilters"
-              class="w-full px-4 py-2 bg-medical-primary text-white rounded-lg hover:bg-medical-primary/90 transition-colors text-sm sm:text-base"
-            >
-              Apply Filters
-            </button>
           </div>
         </div>
       </div>
@@ -858,8 +868,25 @@ export default {
       }
     };
     
-    const applyFilters = () => {
+    const clearSearch = () => {
+      searchQuery.value = '';
+      currentPage.value = 1; // Reset to first page when search is cleared
+    };
+    
+    const quickResetFilters = () => {
+      // Reset all filter values to empty/default state
+      filters.value.status = '';
+      filters.value.specialty = '';
+      searchQuery.value = '';
       currentPage.value = 1; // Reset to first page when filters change
+      
+      // Show success notification
+      if (store && store.dispatch) {
+        store.dispatch('showNotification', {
+          type: 'success',
+          message: 'All filters cleared successfully.'
+        });
+      }
     };
     
     const getStatusText = (doctor) => {
@@ -877,6 +904,11 @@ export default {
         selectAll.value = false;
       }
     });
+    
+    // Watch for filter changes to reset pagination
+    watch([() => filters.value.status, () => filters.value.specialty, searchQuery], () => {
+      currentPage.value = 1;
+    }, { deep: true });
     
     // Lifecycle hooks
     onMounted(() => {
@@ -912,7 +944,8 @@ export default {
       toggleSelectAll,
       bulkAction,
       sortBy,
-      applyFilters,
+      clearSearch,
+      quickResetFilters,
       getStatusText,
       handleApprove: approveDoctor,
       handleSuspend: suspendDoctor,
@@ -953,7 +986,29 @@ button {
   font-size: 1rem;
 }
 
-/* Better spacing for mobile cards */
+/* Search input clear button styles */
+.doctors-list .relative button[title="Clear search"] {
+  min-height: 1.5rem;
+  min-width: 1.5rem;
+  padding: 0.25rem;
+}
+
+.doctors-list .relative button[title="Clear search"]:hover {
+  background-color: rgba(243, 244, 246, 1);
+}
+
+/* Quick reset button styles */
+.doctors-list button[title="Reset all filters"] {
+  min-width: 2.75rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.doctors-list button[title="Reset all filters"]:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+}
+
+/* Enhanced mobile responsiveness for filters */
 @media (max-width: 639px) {
   .doctors-list {
     padding: 0 0.25rem;
@@ -968,11 +1023,111 @@ button {
   }
   
   .doctors-list button {
-    padding: 0.5rem;
+    padding: 0.75rem;
+    min-height: 3rem;
   }
   
   .fa, .fas {
     font-size: 0.875rem;
+  }
+  
+  /* Search clear button mobile styles */
+  .doctors-list .relative button[title="Clear search"] {
+    min-height: 2rem;
+    min-width: 2rem;
+    padding: 0.375rem;
+    right: 0.5rem;
+  }
+  
+  /* Quick reset button mobile styles */
+  .doctors-list button[title="Reset all filters"] {
+    min-width: 3rem;
+    min-height: 3rem;
+    padding: 0.75rem;
+  }
+  
+  /* Filter buttons container mobile layout */
+  .doctors-list .flex.gap-2 {
+    gap: 0.75rem;
+  }
+  
+  /* Filter panel mobile optimization */
+  .doctors-list .bg-white.p-4 {
+    padding: 1rem;
+    margin: 0 -0.25rem 1.5rem -0.25rem;
+  }
+  
+  /* Filter grid mobile stacking */
+  .doctors-list .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  /* Ensure filters use full width on mobile */
+  .doctors-list .grid > div {
+    width: 100%;
+  }
+  
+  /* Select elements mobile friendly */
+  .doctors-list select {
+    padding: 0.75rem;
+    font-size: 1rem;
+    min-height: 3rem;
+  }
+  
+
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .doctors-list {
+    padding: 0 0.125rem;
+  }
+  
+  .doctors-list h2 {
+    font-size: 1rem;
+  }
+  
+  .doctors-list button {
+    padding: 0.625rem;
+    min-height: 2.75rem;
+  }
+  
+  /* Filter labels mobile friendly */
+  .doctors-list label {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  
+  /* Search clear button extra small screens */
+  .doctors-list .relative button[title="Clear search"] {
+    min-height: 1.75rem;
+    min-width: 1.75rem;
+    padding: 0.25rem;
+    right: 0.375rem;
+  }
+  
+  .doctors-list .relative button[title="Clear search"] .fa,
+  .doctors-list .relative button[title="Clear search"] .fas {
+    font-size: 0.75rem;
+  }
+  
+  /* Quick reset button extra small screens */
+  .doctors-list button[title="Reset all filters"] {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0.625rem;
+  }
+  
+  .doctors-list button[title="Reset all filters"] .fa,
+  .doctors-list button[title="Reset all filters"] .fas {
+    font-size: 0.75rem;
+  }
+  
+  /* Filter buttons container extra small layout */
+  .doctors-list .flex.gap-2 {
+    gap: 0.5rem;
   }
 }
 </style>
