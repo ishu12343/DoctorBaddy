@@ -545,7 +545,7 @@ export default {
         const response = await axios.get(`${BASE_URL}/admin/doctors`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
           }
         });
         
@@ -586,7 +586,7 @@ export default {
         const response = await axios.get(`${BASE_URL}/admin/doctors/view?id=${id}`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
           }
         });
         
@@ -662,7 +662,7 @@ export default {
           {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
+              'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
             }
           }
         );
@@ -710,7 +710,7 @@ export default {
           {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
+              'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
             }
           }
         );
