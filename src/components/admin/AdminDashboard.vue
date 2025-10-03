@@ -14,7 +14,7 @@
           <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
             <div class="text-sm text-gray-600">
-              Welcome back, <span class="font-semibold text-medical-primary">{{ adminInfo?.username || 'Admin' }}</span>
+              Welcome back, <span class="font-semibold text-medical-primary">{{ adminInfo?.full_name || 'Admin' }}</span>
             </div>
           </div>
           

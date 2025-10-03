@@ -50,9 +50,9 @@
         </nav>
         <!-- Right: Admin Name, Profile Photo, Sign Out -->
         <div class="flex items-center gap-3 relative ml-auto px-3 py-2 rounded-lg admin-header-right" @click="toggleUserDropdown">
-          <div class="flex flex-col items-start justify-center">
-            <span class="font-semibold text-base" style="color: #fff;">{{ adminInfo?.full_name || adminInfo?.username || 'Admin' }}</span>
-            <span class="text-xs font-medium mt-1" style="color: #e0e0e0; margin-left: 6.1rem;">Administrator</span>
+          <div class="flex flex-col items-end justify-center">
+            <span class="font-semibold text-base text-white">{{ adminInfo?.full_name || adminInfo?.username || 'Admin' }}</span>
+            <span class="text-xs font-medium mt-1 text-gray-200">Administrator</span>
           </div>
           <div class="flex items-center gap-2">
             <div class="user-avatar admin-avatar-lg shadow-lg" style="border: 2px solid #fff;">
