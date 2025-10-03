@@ -171,6 +171,8 @@
         v-for="(patient, index) in paginatedPatients" 
         :key="`${patient.patient_id}_${patient.appointment_id}_${index}`" 
         class="patient-card"
+        :class="{ 'highlighted': highlightedPatientId === patient.patient_id }"
+        :data-patient-id="patient.patient_id"
         @click="openPatientDetails(patient)"
       >
         <!-- Patient Avatar -->
@@ -469,7 +471,10 @@ export default {
       
       // Modal
       showPatientModal: false,
-      selectedPatient: null
+      selectedPatient: null,
+      
+      // Highlighting
+      highlightedPatientId: null
     }
   },
   computed: {
@@ -526,6 +531,31 @@ export default {
   
   async mounted() {
     await this.fetchPatients();
+    
+    // Check if we need to highlight a specific patient from dashboard navigation
+    const patientContext = sessionStorage.getItem('patientContext');
+    if (patientContext) {
+      try {
+        const context = JSON.parse(patientContext);
+        console.log('Patient context for highlighting:', context);
+        
+        if (context.patientId) {
+          this.highlightedPatientId = parseInt(context.patientId);
+          
+          // Scroll to highlighted patient after data loads
+          this.$nextTick(() => {
+            setTimeout(() => {
+              this.scrollToHighlightedPatient(context);
+            }, 500);
+          });
+        }
+        
+        // Clean up context
+        sessionStorage.removeItem('patientContext');
+      } catch (error) {
+        console.error('Error parsing patient context:', error);
+      }
+    }
   },
   
   methods: {
@@ -730,6 +760,32 @@ export default {
         window.open(`tel:${patient.mobile}`);
       } else {
         alert(`Contact ${patient.full_name} at ${patient.email}`);
+      }
+    },
+    
+    scrollToHighlightedPatient(context) {
+      if (this.highlightedPatientId) {
+        const element = document.querySelector(`[data-patient-id="${this.highlightedPatientId}"]`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Add highlight effect
+          element.classList.add('highlighted-patient');
+          
+          // Show toast with patient details
+          if (this.$toast && context.patientName) {
+            this.$toast.success(
+              `Found patient: ${context.patientName}`,
+              3000
+            );
+          }
+          
+          setTimeout(() => {
+            element.classList.remove('highlighted-patient');
+            this.highlightedPatientId = null;
+          }, 3000);
+        } else {
+          console.warn('Patient element not found for highlighting');
+        }
       }
     }
   },
@@ -1117,6 +1173,26 @@ export default {
   transform: translateY(-4px);
   box-shadow: 0 8px 30px rgb(0 0 0 / 15%);
   border-color: #667eea;
+}
+
+.patient-card.highlighted {
+  border: 2px solid #3b82f6;
+  box-shadow: 0 8px 30px rgb(59 130 246 / 20%);
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.highlighted-patient {
+  animation: patientHighlightPulse 2s ease-in-out;
+}
+
+@keyframes patientHighlightPulse {
+  0%, 100% { 
+    box-shadow: 0 8px 30px rgb(59 130 246 / 20%);
+  }
+  50% { 
+    box-shadow: 0 12px 40px rgb(59 130 246 / 40%);
+    transform: translateY(-2px);
+  }
 }
 
 .patient-avatar {

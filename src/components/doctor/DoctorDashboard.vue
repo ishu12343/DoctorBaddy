@@ -1,4 +1,15 @@
 <style scoped>
+/* New Activity Pulse Animation */
+@keyframes newActivityPulse {
+  0% { box-shadow: 0 0 0 0 rgba(96, 245, 161, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(96, 245, 161, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(96, 245, 161, 0); }
+}
+
+.new-activity-pulse {
+  animation: newActivityPulse 1s ease-out 3;
+}
+
 @media (width <= 900px) {
   .dashboard-container {
     flex-direction: column !important;
@@ -176,9 +187,11 @@
               <div class="activity-stream" v-if="recentActivities.length > 0">
                 <div class="activity-timeline">
                   <div v-for="(activity, index) in recentActivities" :key="activity.id" 
-                       class="activity-card"
-                       :class="[activity.status, { 'latest': index === 0 }]"
-                       :style="{ animationDelay: `${index * 0.1}s` }">
+                       class="activity-card clickable-activity"
+                       :class="[activity.status?.toLowerCase(), { 'latest': index === 0 }]"
+                       :style="{ animationDelay: `${index * 0.1}s` }"
+                       @click="navigateToActivity(activity)"
+                       :title="`Click to view ${activity.type} ${activity.status ? '(' + activity.status + ')' : ''} details`">
                     
                     <div class="activity-card-header">
                       <div class="activity-icon" :class="activity.status">
@@ -382,29 +395,8 @@ export default {
         rating: 0,
         reviewCount: 0
       },
-      recentActivities: [
-        {
-          id: 1,
-          type: 'appointment',
-          title: 'Appointment Completed',
-          description: 'John Smith - Routine Checkup',
-          time: '2 hours ago'
-        },
-        {
-          id: 2,
-          type: 'patient',
-          title: 'New Patient Registered',
-          description: 'Sarah Johnson joined your practice',
-          time: '4 hours ago'
-        },
-        {
-          id: 3,
-          type: 'appointment',
-          title: 'Appointment Scheduled',
-          description: 'Mike Davis - Follow-up consultation',
-          time: '6 hours ago'
-        }
-      ]
+      recentActivities: [],  // Will be loaded from backend
+      activityRefreshInterval: null
     };
   },
   async mounted() {
@@ -412,11 +404,21 @@ export default {
     this.showStatusToast();
     this.loadDashboardData();
     
+    // Always load recent activities for persistent display
+    await this.loadPersistentRecentActivities();
+    
+    // Start auto-refresh for activities
+    this.startActivityRefresh();
+    
     // Check if active toast was already shown in this session
     const activeToastShown = sessionStorage.getItem('activeToastShown');
     if (activeToastShown === 'true') {
       this.hasShownActiveToast = true;
     }
+  },
+  beforeUnmount() {
+    // Clean up activity refresh interval
+    this.stopActivityRefresh();
   },
   methods: {
     handleNavigation(page) {
@@ -609,11 +611,13 @@ export default {
         });
         
         if (response.data.success) {
-          // Format activities for display and limit to 3 most recent
-          this.recentActivities = response.data.activities
-            .slice(0, 3) // Limit to only 3 most recent activities
+          // Format activities for display and limit to 4 most recent
+          const formattedActivities = response.data.activities
+            .slice(0, 4) // Limit to only 4 most recent activities
             .map(activity => ({
               id: activity.id,
+              appointmentId: activity.appointment_id, // Real appointment ID for navigation
+              patientId: activity.patient_id,         // Real patient ID for navigation
               type: activity.type,
               title: activity.title,
               description: activity.description,
@@ -623,13 +627,181 @@ export default {
               appointment_datetime: activity.appointment_datetime,
               reason: activity.reason
             }));
+          
+          this.recentActivities = formattedActivities;
+          // Save to localStorage for persistence
+          localStorage.setItem('doctorRecentActivities', JSON.stringify(formattedActivities));
         } else {
           console.error('Failed to load recent activities:', response.data.error);
-          // Keep default mock data if API fails
+          // Load from localStorage if API fails
+          this.loadActivitiesFromCache();
         }
       } catch (error) {
         console.error('Error loading recent activities:', error);
-        // Keep default mock data if API fails
+        // Load from localStorage if API fails
+        this.loadActivitiesFromCache();
+      }
+    },
+    
+    // Load recent activities from localStorage or fetch fresh data
+    async loadPersistentRecentActivities() {
+      // First, try to load from localStorage for immediate display
+      this.loadActivitiesFromCache();
+      
+      // Then fetch fresh data in the background
+      const previousCount = this.recentActivities.length;
+      await this.loadRecentActivities();
+      
+      // Check if there are new activities
+      if (this.recentActivities.length > previousCount) {
+        this.showNewActivityIndicator();
+      }
+    },
+    
+    // Load activities from localStorage cache
+    loadActivitiesFromCache() {
+      const savedActivities = localStorage.getItem('doctorRecentActivities');
+      if (savedActivities) {
+        try {
+          this.recentActivities = JSON.parse(savedActivities);
+        } catch (error) {
+          console.error('Error parsing saved activities:', error);
+          // Keep default mock data if parsing fails
+        }
+      }
+    },
+    
+    // Show subtle indicator for new activities
+    showNewActivityIndicator() {
+      const activitySection = document.querySelector('.recent-activity-section');
+      if (activitySection) {
+        activitySection.classList.add('new-activity-pulse');
+        setTimeout(() => {
+          activitySection.classList.remove('new-activity-pulse');
+        }, 3000);
+      }
+    },
+    
+    // Start auto-refresh for activities
+    startActivityRefresh() {
+      // Refresh activities every 30 seconds
+      this.activityRefreshInterval = setInterval(() => {
+        if (this.showDashboard) {
+          this.loadPersistentRecentActivities();
+        }
+      }, 30000); // 30 seconds
+    },
+    
+    // Stop auto-refresh for activities
+    stopActivityRefresh() {
+      if (this.activityRefreshInterval) {
+        clearInterval(this.activityRefreshInterval);
+        this.activityRefreshInterval = null;
+      }
+    },
+    
+    // Navigate to specific activity page based on activity type
+    navigateToActivity(activity) {
+      try {
+        console.log('Navigating to activity:', activity);
+        
+        switch (activity.type) {
+          case 'appointment': {
+            // Navigate to appointments/home page and handle status filtering
+            this.goHome();
+            
+            // Store context for the appointments page - direct navigation with real IDs
+            const appointmentContext = {
+              highlightId: activity.appointmentId || activity.id,
+              appointmentId: activity.appointmentId,
+              patientName: activity.patient_name || activity.patientName,
+              status: activity.status,
+              type: activity.type,
+              directNavigation: true,
+              timestamp: Date.now()
+            };
+            
+            sessionStorage.setItem('appointmentContext', JSON.stringify(appointmentContext));
+            
+            console.log('Navigating to appointment:', appointmentContext);
+            
+            // Show success toast
+            if (this.$toast) {
+              this.$toast.success(
+                `Navigating to ${activity.patient_name || 'appointment'} details`,
+                3000
+              );
+            }
+            break;
+          }
+          
+          case 'patient': {
+            // Navigate to patients page
+            this.showPatients = true;
+            this.showDashboard = false;
+            this.showProfile = false;
+            this.showHome = false;
+            
+            // Store patient context for highlighting
+            const patientContext = {
+              patientId: activity.patientId || activity.id,
+              patientName: activity.patient_name || activity.patientName,
+              highlightPatient: true
+            };
+            
+            sessionStorage.setItem('patientContext', JSON.stringify(patientContext));
+            
+            // Show success toast
+            if (this.$toast) {
+              this.$toast.success(
+                `Viewing ${activity.patient_name || 'patient'} details`,
+                3000
+              );
+            }
+            break;
+          }
+          
+          case 'profile':
+            // Navigate to profile page
+            this.goProfile();
+            
+            // Show success toast
+            if (this.$toast) {
+              this.$toast.success('Opening profile settings', 2000);
+            }
+            break;
+          
+          case 'review':
+          case 'rating':
+            // Navigate to home page where reviews might be displayed
+            this.goHome();
+            // Could scroll to reviews section if available
+            setTimeout(() => {
+              const reviewsSection = document.querySelector('.reviews-section');
+              if (reviewsSection) {
+                reviewsSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }, 500);
+            break;
+          
+          default:
+            // For unknown activity types, navigate to home
+            this.goHome();
+            break;
+        }
+        
+        // Show toast notification about navigation
+        if (this.$refs.toast) {
+          this.$refs.toast.showToast(
+            `Navigating to ${activity.type} details...`,
+            'info',
+            3000
+          );
+        }
+      } catch (error) {
+        console.error('Error navigating to activity:', error);
+        // Fallback to home page
+        this.goHome();
       }
     },
     
@@ -1388,6 +1560,66 @@ export default {
   transform: translateY(-4px);
   box-shadow: 0 12px 32px rgb(0 0 0 / 15%);
   border-color: #3b82f6;
+}
+
+/* Clickable Activity Card Styles */
+.clickable-activity {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.clickable-activity::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid #6366f1;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.clickable-activity:hover::after {
+  opacity: 1;
+}
+
+.clickable-activity:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.2);
+  border-color: #6366f1;
+}
+
+.clickable-activity:active {
+  transform: translateY(-4px) scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Status-specific styling for activities */
+.clickable-activity.pending {
+  border-left-color: #f59e0b;
+}
+
+.clickable-activity.confirmed {
+  border-left-color: #10b981;
+}
+
+.clickable-activity.completed {
+  border-left-color: #6b7280;
+}
+
+.clickable-activity.cancelled {
+  border-left-color: #ef4444;
+}
+
+.clickable-activity:hover {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-left-width: 6px;
 }
 
 .activity-card.latest {

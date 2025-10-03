@@ -307,8 +307,10 @@
                   'pending': appointment.status === 'PENDING',
                   'confirmed': appointment.status === 'CONFIRMED',
                   'cancelled': appointment.status === 'CANCELLED',
-                  'completed': appointment.status === 'COMPLETED'
+                  'completed': appointment.status === 'COMPLETED',
+                  'highlighted': highlightedAppointmentId === appointment.id
                 }"
+                :data-appointment-id="appointment.id"
               >
                 <div class="appointment-header">
                   <div class="appointment-doctor">
@@ -778,9 +780,11 @@
               <div class="activity-stream" v-if="appointments && appointments.length > 0">
                 <div class="activity-timeline">
                   <div v-for="(appointment, index) in appointments.slice(0, 4)" :key="appointment.id" 
-                       class="activity-card"
+                       class="activity-card clickable-activity"
                        :class="[appointment.status.toLowerCase(), { 'latest': index === 0 }]"
-                       :style="{ animationDelay: `${index * 0.1}s` }">
+                       :style="{ animationDelay: `${index * 0.1}s` }"
+                       @click="navigateToAppointment(appointment)"
+                       :title="`Click to view appointment with Dr. ${appointment.doctor_name}`">
                     
                     <div class="activity-card-header">
                       <div class="activity-icon" :class="appointment.status.toLowerCase()">
@@ -1584,6 +1588,9 @@ export default {
         reason: ''
       },
       
+      // Highlighting  
+      highlightedAppointmentId: null,
+      
       // Chat modal
       showChatModal: false,
       selectedChatDoctor: null,
@@ -1682,10 +1689,25 @@ export default {
         case 'dashboard':
           this.showHome = true;
           break;
-        case 'appointments':
+        case 'appointments': {
           this.showAppointments = true;
           this.fetchAppointments();
+          
+          // Check if we need to highlight a specific appointment - direct navigation only
+          const highlightId = sessionStorage.getItem('highlightAppointmentId');
+          if (highlightId) {
+            this.highlightedAppointmentId = parseInt(highlightId);
+            sessionStorage.removeItem('highlightAppointmentId');
+            
+            // Scroll to highlighted appointment after data loads
+            this.$nextTick(() => {
+              setTimeout(() => {
+                this.scrollToHighlightedAppointment();
+              }, 500);
+            });
+          }
           break;
+        }
         case 'doctors':
           this.showDoctors = true;
           this.fetchDoctors();
@@ -1951,6 +1973,46 @@ export default {
       }
     },
     
+    // Navigate to appointment details
+    navigateToAppointment(appointment) {
+      try {
+        console.log('Navigating to appointment:', appointment);
+        
+        // Create appointment context for direct navigation with real IDs
+        const appointmentContext = {
+          highlightId: appointment.id,
+          appointmentId: appointment.id,
+          doctorName: appointment.doctor_name,
+          doctorId: appointment.doctor_id,
+          status: appointment.status,
+          type: 'appointment',
+          directNavigation: true,
+          timestamp: Date.now()
+        };
+        
+        // Store context for the appointments page
+        sessionStorage.setItem('highlightAppointmentId', appointment.id.toString());
+        sessionStorage.setItem('appointmentContext', JSON.stringify(appointmentContext));
+        
+        console.log('Patient navigating to appointment:', appointmentContext);
+        
+        // Navigate to appointments page
+        this.handleNavigation('appointments');
+        
+        // Show toast notification about navigation
+        if (this.$toast) {
+          this.$toast.success(
+            `Navigating to appointment with Dr. ${appointment.doctor_name}`,
+            3000
+          );
+        }
+      } catch (error) {
+        console.error('Error navigating to appointment:', error);
+        // Fallback to appointments page
+        this.handleNavigation('appointments');
+      }
+    },
+    
     async cancelAppointment(appointmentId) {
       if (!confirm('Are you sure you want to cancel this appointment?')) return;
       
@@ -2169,6 +2231,21 @@ export default {
     scrollToBottom() {
       if (this.$refs.chatMessages) {
         this.$refs.chatMessages.scrollTop = this.$refs.chatMessages.scrollHeight;
+      }
+    },
+    
+    scrollToHighlightedAppointment() {
+      if (this.highlightedAppointmentId) {
+        const element = document.querySelector(`[data-appointment-id="${this.highlightedAppointmentId}"]`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Add a highlight effect
+          element.classList.add('highlighted-appointment');
+          setTimeout(() => {
+            element.classList.remove('highlighted-appointment');
+            this.highlightedAppointmentId = null;
+          }, 3000);
+        }
       }
     },
     
@@ -4581,6 +4658,26 @@ export default {
   position: relative;
 }
 
+.appointment-card.highlighted {
+  border: 2px solid #3b82f6;
+  box-shadow: 0 8px 30px rgb(59 130 246 / 20%);
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.highlighted-appointment {
+  animation: highlightPulse 2s ease-in-out;
+}
+
+@keyframes highlightPulse {
+  0%, 100% { 
+    box-shadow: 0 8px 30px rgb(59 130 246 / 20%);
+  }
+  50% { 
+    box-shadow: 0 12px 40px rgb(59 130 246 / 40%);
+    transform: translateY(-2px);
+  }
+}
+
 .appointment-card::before {
   content: '';
   position: absolute;
@@ -5643,6 +5740,43 @@ export default {
 .activity-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Clickable Activity Card Styles */
+.clickable-activity {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.clickable-activity::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid rgba(255, 255, 255, 0.8);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.clickable-activity:hover::after {
+  opacity: 1;
+}
+
+.clickable-activity:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.clickable-activity:active {
+  transform: translateY(-5px) scale(0.98);
+  transition: transform 0.1s ease;
 }
 
 .activity-card.latest {

@@ -102,8 +102,10 @@
           'pending': appointment.status === 'PENDING',
           'confirmed': appointment.status === 'CONFIRMED',
           'completed': appointment.status === 'COMPLETED',
-          'cancelled': appointment.status === 'CANCELLED'
+          'cancelled': appointment.status === 'CANCELLED',
+          'highlighted': highlightedAppointmentId === appointment.id
         }"
+        :data-appointment-id="appointment.id"
       >
         <div class="appointment-header">
           <div class="patient-info">
@@ -506,7 +508,10 @@ export default {
       newMessage: '',
       
       // Touch handling
-      touchStartY: 0
+      touchStartY: 0,
+      
+      // Highlighting
+      highlightedAppointmentId: null
     }
   },
   computed: {
@@ -526,6 +531,41 @@ export default {
   },
   mounted() {
     this.loadAppointments();
+    
+    // Check if we need to handle appointment context from dashboard
+    const appointmentContext = sessionStorage.getItem('appointmentContext');
+    if (appointmentContext) {
+      try {
+        const context = JSON.parse(appointmentContext);
+        console.log('Appointment context:', context);
+        
+        // Set up highlighting for direct navigation with real appointment IDs
+        if (context.highlightId || context.appointmentId) {
+          this.highlightedAppointmentId = parseInt(context.appointmentId || context.highlightId);
+          console.log('Will highlight appointment ID:', this.highlightedAppointmentId);
+        }
+        
+        // Direct navigation - no filtering, just highlight and scroll
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.scrollToHighlightedAppointment();
+            
+            // Show toast with appointment details
+            if (this.$toast && context.patientName) {
+              this.$toast.success(
+                `Found appointment with ${context.patientName}`,
+                3000
+              );
+            }
+          }, 500);
+        });
+        
+        // Clean up
+        sessionStorage.removeItem('appointmentContext');
+      } catch (error) {
+        console.error('Error parsing appointment context:', error);
+      }
+    }
   },
   methods: {
     async loadAppointments() {
@@ -929,6 +969,21 @@ export default {
         hour: '2-digit',
         minute: '2-digit'
       });
+    },
+    
+    scrollToHighlightedAppointment() {
+      if (this.highlightedAppointmentId) {
+        const element = document.querySelector(`[data-appointment-id="${this.highlightedAppointmentId}"]`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Add a highlight effect
+          element.classList.add('highlighted-appointment');
+          setTimeout(() => {
+            element.classList.remove('highlighted-appointment');
+            this.highlightedAppointmentId = null;
+          }, 3000);
+        }
+      }
     }
   }
 };
@@ -1232,6 +1287,26 @@ export default {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+}
+
+.appointment-card.highlighted {
+  border: 2px solid #3b82f6;
+  box-shadow: 0 12px 35px rgb(59 130 246 / 20%);
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.highlighted-appointment {
+  animation: highlightPulse 2s ease-in-out;
+}
+
+@keyframes highlightPulse {
+  0%, 100% { 
+    box-shadow: 0 12px 35px rgb(59 130 246 / 20%);
+  }
+  50% { 
+    box-shadow: 0 16px 45px rgb(59 130 246 / 40%);
+    transform: translateY(-2px);
+  }
 }
 
 .appointment-card::before {
