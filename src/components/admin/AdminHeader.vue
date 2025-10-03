@@ -1,15 +1,20 @@
 <template>
   <header class="bg-medical-primary text-white fixed top-0 left-0 right-0 w-full z-50 shadow-lg">
     <div class="container mx-auto px-4">
-      <div class="flex items-center justify-between h-16 lg:h-20">
-        <!-- Logo -->
-        <div class="flex items-center text-white hover:text-gray-200 transition-colors">
-          <img src="@/assets/logo/logo1.png" alt="DoctorBuddy Admin" class="h-8 lg:h-10 w-auto" />
-          <span class="text-lg lg:text-xl font-bold ml-2">DoctorBuddy Admin</span>
-        </div>
 
-        <!-- Desktop Navigation -->
-        <nav class="hidden lg:flex items-center gap-6">
+      <div class="flex items-center justify-between h-16 lg:h-20">
+        <!-- Left: Menu Button (Mobile & Desktop) -->
+        <div class="flex items-center lg:hidden">
+          <button 
+            @click="toggleMobileMenu" 
+            class="px-3 py-2 bg-white text-medical-primary rounded-full shadow border border-medical-secondary focus:outline-none focus:ring-2 focus:ring-medical-secondary"
+            aria-label="Toggle mobile menu"
+          >
+            <i :class="mobileMenuOpen ? 'fas fa-times' : 'fas fa-bars'" class="text-xl"></i>
+          </button>
+        </div>
+        <!-- Desktop Navigation (center) -->
+        <nav class="hidden lg:flex items-center gap-8 flex-1 justify-center">
           <button 
             @click="$emit('navigate', 'dashboard')"
             class="nav-item group"
@@ -18,7 +23,6 @@
             <i class="fas fa-tachometer-alt text-medical-secondary group-hover:text-white transition-colors"></i>
             <span>Dashboard</span>
           </button>
-          
           <button 
             @click="$emit('navigate', 'doctors')"
             class="nav-item group"
@@ -27,7 +31,6 @@
             <i class="fas fa-user-md text-medical-secondary group-hover:text-white transition-colors"></i>
             <span>Doctors</span>
           </button>
-          
           <button 
             @click="$emit('navigate', 'patients')"
             class="nav-item group"
@@ -36,61 +39,44 @@
             <i class="fas fa-users text-medical-secondary group-hover:text-white transition-colors"></i>
             <span>Patients</span>
           </button>
-          
-          <!-- User Profile Dropdown -->
-          <div class="relative">
-            <button 
-              @click="toggleUserDropdown"
-              @mouseenter="showUserDropdown" 
-              class="btn btn-primary btn-small flex items-center gap-2 relative z-20"
-              :aria-expanded="showDropdown"
-              aria-haspopup="true"
-            >
-              <div class="user-avatar">
-                <i class="fas fa-user-shield text-xl"></i>
-              </div>
-              {{ adminInfo?.username || 'Admin' }}
-              <i class="fas fa-chevron-down transition-transform duration-200" :class="{'transform rotate-180': showDropdown}"></i>
-            </button>
-            <transition
-              enter-active-class="transition duration-100 ease-out"
-              enter-from-class="transform scale-95 opacity-0"
-              enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-75 ease-in"
-              leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0"
-            >
-              <div 
-                v-if="showDropdown" 
-                ref="userDropdown"
-                class="absolute top-full right-0 mt-2 bg-medical-secondary rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in"
-              >
-                <div class="px-4 py-3 border-b border-medical-primary">
-                  <p class="text-sm font-medium text-white">{{ adminInfo?.username || 'Admin' }}</p>
-                  <p class="text-xs text-gray-300">Administrator</p>
-                </div>
-                <button @click="$emit('navigate', 'profile')" class="dropdown-item">
-                  <i class="fas fa-user-cog mr-2"></i>
-                  Admin Settings
-                </button>
-                <div class="dropdown-divider"></div>
-                <button @click="$emit('logout')" class="dropdown-item text-red-400 hover:text-red-300">
-                  <i class="fas fa-sign-out-alt mr-2"></i>
-                  Sign Out
-                </button>
-              </div>
-            </transition>
-          </div>
+          <button 
+            @click="$emit('navigate', 'profile')"
+            class="nav-item group"
+            :class="{ 'active': currentPage === 'profile' }"
+          >
+            <i class="fas fa-user-shield text-medical-secondary group-hover:text-white transition-colors"></i>
+            <span>Profile</span>
+          </button>
         </nav>
-
-        <!-- Mobile Menu Button -->
-        <button 
-          @click="toggleMobileMenu" 
-          class="lg:hidden px-4 py-2 bg-medical-secondary text-white font-bold rounded-lg hover:bg-medical-secondary/90 transition-colors"
-          aria-label="Toggle mobile menu"
-        >
-          {{ mobileMenuOpen ? '✕' : '☰' }}
-        </button>
+        <!-- Right: Admin Name, Profile Photo, Sign Out -->
+        <div class="flex items-center gap-3 relative ml-auto px-3 py-2 rounded-lg admin-header-right" @click="toggleUserDropdown">
+          <div class="flex flex-col items-start justify-center">
+            <span class="font-semibold text-base" style="color: #fff;">{{ adminInfo?.full_name || adminInfo?.username || 'Admin' }}</span>
+            <span class="text-xs font-medium mt-1" style="color: #e0e0e0; margin-left: 6.1rem;">Administrator</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="user-avatar admin-avatar-lg shadow-lg" style="border: 2px solid #fff;">
+              <img
+                v-if="adminInfo?.profile_photo"
+                :src="adminInfo.profile_photo"
+                alt="Profile Photo"
+                class="h-10 w-10 rounded-full object-cover"
+              />
+              <i v-else class="fas fa-user-shield text-3xl" style="color: #fff;"></i>
+            </div>
+          </div>
+          <!-- Dropdown for Sign Out -->
+          <div v-if="showDropdown" ref="userDropdown" class="absolute right-0 top-full mt-2 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg shadow-lg z-50 min-w-[140px] animate-fade-in">
+            <button @click="navigateAndClose('profile')" class="dropdown-item flex items-center gap-2 px-4 py-2 w-full bg-gradient-to-r from-blue-600 to-blue-500 to-red-400 text-white font-semibold hover:from-red-600 hover:to-red-500 hover:text-white rounded-md shadow-md">
+              <i class="fas fa-user-shield"></i>
+              <span> Profile</span>
+            </button>
+            <button @click.stop="logout" class="dropdown-item flex items-center gap-2 px-4 py-2 w-full bg-gradient-to-r from-blue-600 to-blue-500 to-red-400 text-white font-semibold hover:from-red-600 hover:to-red-500 hover:text-white rounded-md shadow-md">
+              <i class="fas fa-sign-out-alt"></i>
+              <span> Sign Out</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Mobile Navigation -->
@@ -99,6 +85,7 @@
         class="lg:hidden pb-4 border-t border-medical-secondary mt-4 pt-4 animate-fade-in"
       >
         <div class="flex flex-col space-y-3">
+          <!-- Top Row: Profile Photo, Admin Name removed -->
           <button 
             @click="navigateAndClose('dashboard')"
             class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
@@ -125,15 +112,36 @@
             <i class="fas fa-users text-medical-secondary"></i>
             <span>Patients</span>
           </button>
+          
+          <button 
+            @click="navigateAndClose('profile')"
+            class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
+            :class="{ 'bg-medical-secondary': currentPage === 'profile' }"
+          >
+            <i class="fas fa-user-shield text-medical-secondary"></i>
+            <span>Profile</span>
+          </button>
 
           <!-- Mobile User Section -->
           <div class="pt-3 border-t border-medical-secondary/30">
             <div class="px-4 py-2 text-sm text-gray-300">
-              <div class="flex items-center gap-2 mb-1">
-                <i class="fas fa-user-shield text-lg"></i>
-                <span class="font-medium">{{ adminInfo?.username || 'Admin' }}</span>
+              <div class="flex items-center gap-3 mb-2">
+                <div class="user-avatar admin-avatar-lg shadow-lg">
+                  <img
+                    v-if="adminInfo?.profile_photo"
+                    :src="adminInfo.profile_photo"
+                    alt="Profile Photo"
+                    class="h-11 w-11 rounded-full object-cover border-2 border-white"
+                  />
+                  <i v-else class="fas fa-user-shield text-2xl"></i>
+                </div>
+                <div class="flex flex-col items-start justify-center min-w-[100px]">
+                  <span class="font-semibold text-base text-white leading-tight">{{ adminInfo?.full_name || adminInfo?.username || 'Admin' }}</span>
+                  <div class="flex items-center gap-2 mt-1 text-xs text-gray-200">
+                    <span class="ml-2">Administrator</span>
+                  </div>
+                </div>
               </div>
-              <p class="text-xs text-gray-400">Administrator</p>
             </div>
             <button 
               @click="logout"
@@ -174,7 +182,11 @@ export default {
   methods: {
     toggleUserDropdown(e) {
       e.stopPropagation();
-      this.showDropdown = !this.showDropdown;
+      if (this.isMobile) {
+        this.showDropdown = !this.showDropdown;
+      } else {
+        this.showDropdown = !this.showDropdown;
+      }
     },
     showUserDropdown() {
       if (!this.isMobile) {
@@ -185,48 +197,49 @@ export default {
       this.showDropdown = false;
     },
     toggleMobileMenu() {
-      this.mobileMenuOpen = !this.mobileMenuOpen;
+      this.mobileMenuOpen = !this.mobileMenuOpen
     },
     closeMobileMenu() {
-      this.mobileMenuOpen = false;
+      this.mobileMenuOpen = false
     },
     navigateAndClose(page) {
       this.$emit('navigate', page);
       this.closeMobileMenu();
     },
     logout() {
-      this.closeMobileMenu();
       this.$emit('logout');
+      this.closeMobileMenu();
     },
     checkIfMobile() {
-      this.isMobile = window.innerWidth < 1024;
+      this.isMobile = window.innerWidth < 1024; // lg breakpoint
     },
-    handleClickOutside(event) {
-      if (this.$refs.userDropdown && !this.$el.contains(event.target) && !this.$refs.userDropdown.contains(event.target)) {
-        this.hideUserDropdown();
-      }
-    }
   },
   mounted() {
-    this.checkIfMobile();
-    window.addEventListener('resize', this.checkIfMobile);
-    window.addEventListener('click', this.handleClickOutside);
-    
-    // Close dropdown when clicking outside
+    // Add click outside listener for dropdowns
     this.clickListener = (e) => {
-      if (this.showDropdown && !this.$el.contains(e.target)) {
+      // Close mobile menu when clicking outside
+      if (!this.$el.contains(e.target)) {
+        this.mobileMenuOpen = false;
+      }
+      
+      // Close dropdowns when clicking outside
+      if (this.showDropdown && !this.$refs.userDropdown?.contains(e.target)) {
         this.hideUserDropdown();
       }
     };
+    
     document.addEventListener('click', this.clickListener);
+    
+    // Check if mobile device
+    this.checkIfMobile();
+    window.addEventListener('resize', this.checkIfMobile);
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.checkIfMobile);
-    window.removeEventListener('click', this.handleClickOutside);
     if (this.clickListener) {
       document.removeEventListener('click', this.clickListener);
     }
-  }
+  },
 }
 </script>
 
@@ -236,57 +249,58 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  color: white;
+  transition: color 0.2s;
   font-weight: 500;
-  color: #d1d5db;
-  transition: color 0.2s ease-in-out;
+  cursor: pointer;
+  border: none;
+  background: transparent;
 }
 
 .nav-item:hover {
-  color: #ffffff;
+  color: #e5e7eb;
 }
 
 .nav-item.active {
-  color: #ffffff;
-  background-color: rgba(92, 158, 240, 0.3);
-  border-radius: 0.5rem;
-}
-
-.nav-item i {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
+  color: #fde047;
 }
 
 .nav-item.active i {
-  color: #ffffff;
+  color: #fde047;
 }
 
-/* Dropdown styles */
+/* Dropdown animations */
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dropdown items */
 .dropdown-item {
+  display: block;
   width: 100%;
   text-align: left;
-  padding: 0.625rem 1rem;
-  font-size: 0.875rem;
-  color: #e5e7eb;
-  transition: background-color 0.2s ease-in-out;
-  display: flex;
-  align-items: center;
+  padding: 0.75rem 1rem;
+  color: white;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  border: none;
+  background-color: blue;
+  text-decoration: none;
 }
 
 .dropdown-item:hover {
-  background-color: rgba(30, 41, 59, 0.5);
-}
-
-.dropdown-item i {
-  width: 1.25rem;
-  text-align: center;
-  margin-right: 0.5rem;
-  color: #5C9EF0;
+  background-color: rgba(59, 130, 246, 0.8);
 }
 
 .dropdown-divider {
-  border-top: 1px solid rgba(30, 41, 59, 0.5);
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
   margin: 0.25rem 0;
 }
 
@@ -294,37 +308,58 @@ export default {
 .user-avatar {
   width: 2rem;
   height: 2rem;
-  border-radius: 9999px;
-  background-color: rgba(92, 158, 240, 0.3);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #5C9EF0;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.admin-avatar-lg {
+  width: 3rem;
+  height: 3rem;
+  min-width: 3rem;
+  min-height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255,255,255,0.18);
+  box-shadow: 0 2px 8px 0 rgb(54 209 196 / 12%);
 }
 
-/* Animations */
-.animate-fade-in {
-  animation: fadeIn 0.2s ease-out;
+/* Button styles */
+.btn-primary {
+  background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
+  box-shadow: 0 4px 14px 0 rgb(221 36 118 / 15%);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border: none;
+  outline: none;
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+.btn-primary:hover {
+  background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px 0 rgb(54 209 196 / 18%);
+}
+
+.btn-small {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
 }
 
 /* Responsive adjustments */
-@media (max-width: 1023px) {
-  .nav-item {
-    padding-left: 1rem; /* px-4 */
-    padding-right: 1rem; /* px-4 */
-    padding-top: 0.75rem; /* py-3 */
-    padding-bottom: 0.75rem; /* py-3 */
-    font-size: 1rem; /* text-base */
+@media (width <= 576px) {
+  .nav-item span {
+    font-size: 0.9rem;
   }
   
-  .nav-item i {
-    width: 1.5rem; /* w-6 */
-    text-align: center;
+  .btn-primary {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
   }
 }
 </style>

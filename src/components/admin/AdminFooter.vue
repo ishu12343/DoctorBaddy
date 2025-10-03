@@ -2,7 +2,7 @@
   <footer class="footer-singleline">
     <div class="footer-singleline__container">
       <div class="footer-logo">
-        <img src="@/assets/logo/logo1.png" alt="DoctorBuddy Admin" class="footer-logo-image-single" />
+        <img src="@/assets/images/Footer1.svg" alt="DoctorBuddy Admin" class="footer-logo-image-single" />
       </div>
       
       <nav class="footer-social-links-single">
@@ -21,9 +21,9 @@
         &copy; <span>{{ year }}</span> DoctorBuddy - Admin Portal
       </span>
       
-      <button class="footer-cta-btn-single stylish-cta pulse-animation" @click="navigate('settings')">
-        <i class="fas fa-cog"></i>
-        Settings
+      <button class="footer-cta-btn-single stylish-cta pulse-animation" @click="navigate('profile')">
+        <i class="fas fa-user-shield"></i>
+        Admin Profile
       </button>
     </div>
   </footer>

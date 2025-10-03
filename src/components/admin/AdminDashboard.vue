@@ -155,6 +155,12 @@
           @navigate="handleNavigation"
         />
         
+        <!-- Profile View -->
+        <AdminProfileCard 
+          v-else-if="currentView === 'profile'" 
+          @profile-updated="handleProfileUpdate"
+        />
+        
         <!-- Placeholder for other views -->
         <div v-else class="flex flex-col items-center justify-center py-12">
           <div class="bg-white p-8 rounded-lg shadow-md text-center max-w-md w-full">
@@ -184,10 +190,13 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+import { BASE_URL } from '@/config/api';
 import AdminHeader from './AdminHeader.vue';
 import AdminFooter from './AdminFooter.vue';
 import DoctorsList from './AdminDoctorsList.vue';
 import PatientsList from './AdminPatientsList.vue';
+import AdminProfileCard from './AdminProfileCard.vue';
 
 export default {
   name: 'AdminDashboard',
@@ -195,7 +204,8 @@ export default {
     AdminHeader,
     AdminFooter,
     DoctorsList,
-    PatientsList
+    PatientsList,
+    AdminProfileCard
   },
   setup() {
     const router = useRouter();
@@ -204,8 +214,10 @@ export default {
     // Admin info
     const adminInfo = ref({
       username: 'Admin',
+      full_name: 'Administrator',
       role: 'Administrator',
       email: 'admin@doctorbaddy.com',
+      profile_photo: null,
       lastLogin: new Date().toLocaleString()
     });
     
@@ -272,6 +284,33 @@ export default {
       router.replace('/admin-login');
     };
     
+    // Load admin profile
+    const loadAdminProfile = async () => {
+      try {
+        const token = localStorage.getItem('adminToken');
+        if (!token) return;
+
+        const response = await axios.get(`${BASE_URL}/admin/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        adminInfo.value = { ...response.data };
+        console.log('Admin profile loaded:', adminInfo.value);
+      } catch (error) {
+        console.error('Error loading admin profile:', error);
+        // Keep default admin info if profile loading fails
+      }
+    };
+
+    // Handle profile update
+    const handleProfileUpdate = (updatedProfile) => {
+      adminInfo.value = { ...updatedProfile };
+      console.log('Admin profile updated:', adminInfo.value);
+    };
+
     // Fetch dashboard data
     const fetchDashboardData = async () => {
       try {
@@ -293,6 +332,7 @@ export default {
     
     // Lifecycle hook
     onMounted(() => {
+      loadAdminProfile();
       fetchDashboardData();
     });
     
@@ -306,7 +346,8 @@ export default {
       // Methods
       handleNavigation,
       getViewTitle,
-      logout
+      logout,
+      handleProfileUpdate
     };
   }
 };
@@ -317,20 +358,32 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .main-content {
   flex: 1;
   padding-top: 80px; /* Height of the header */
   padding-bottom: 60px; /* Height of the footer */
-  background-color: #f5f7fa;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: calc(100vh - 140px);
 }
 
 .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 1rem;
+}
+
+/* New Activity Pulse Animation */
+@keyframes newActivityPulse {
+  0% { box-shadow: 0 0 0 0 rgba(96, 245, 161, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(96, 245, 161, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(96, 245, 161, 0); }
+}
+
+.new-activity-pulse {
+  animation: newActivityPulse 1s ease-out 3;
 }
 
 /* Responsive adjustments */
@@ -349,6 +402,31 @@ export default {
   
   .container {
     padding: 0.75rem;
+  }
+}
+
+@media (width <= 900px) {
+  .dashboard-container {
+    flex-direction: column !important;
+    padding: 1rem !important;
+    gap: 1.5rem !important;
+  }
+}
+
+@media (width <= 600px) {
+  .dashboard-container {
+    padding: 0.5rem 0.2rem !important;
+    margin: 0 !important;
+    width: 100vw;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .dashboard-card {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
   }
 }
 
