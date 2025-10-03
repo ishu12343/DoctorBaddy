@@ -707,13 +707,19 @@ export default {
     };
     
     const deletePatient = async (id) => {
-      if (!confirm('Are you sure you want to delete this patient? This action cannot be undone.')) {
+      if (!confirm('Are you sure you want to delete this patient? This action cannot be undone. All related appointments will also be deleted.')) {
         return;
       }
       
       try {
-        // Replace with your actual API call
-        // await api.delete(`/api/admin/patients/${id}`);
+        const response = await axios.delete(`${BASE_URL}/admin/patients/${id}/delete`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+          }
+        });
+        
+        console.log('Delete patient response:', response.data);
         
         // Update local state
         patients.value = patients.value.filter(patient => patient.id !== id);
@@ -722,23 +728,25 @@ export default {
         selectedPatients.value = selectedPatients.value.filter(patientId => patientId !== id);
         
         // Show success message
+        const successMessage = response.data?.message || 'Patient deleted successfully.';
         if (store && store.dispatch) {
           store.dispatch('showNotification', {
             type: 'success',
-            message: 'Patient deleted successfully.'
+            message: successMessage
           });
         } else {
-          console.log('Patient deleted successfully.');
+          alert(successMessage);
         }
       } catch (err) {
         console.error('Error deleting patient:', err);
+        const errorMessage = err.response?.data?.message || 'Failed to delete patient. Please try again.';
         if (store && store.dispatch) {
           store.dispatch('showNotification', {
             type: 'error',
-            message: 'Failed to delete patient. Please try again.'
+            message: errorMessage
           });
         } else {
-          console.error('Failed to delete patient. Please try again.');
+          alert(errorMessage);
         }
       }
     };
@@ -751,7 +759,7 @@ export default {
       }
     };
     
-    const bulkAction = (action) => {
+    const bulkAction = async (action) => {
       if (selectedPatients.value.length === 0) return;
       
       if (action === 'activate') {
@@ -777,7 +785,7 @@ export default {
           selectAll.value = false;
         }
       } else if (action === 'delete') {
-        if (confirm(`Are you sure you want to delete ${selectedPatients.value.length} selected patient(s)? This action cannot be undone.`)) {
+        if (confirm(`Are you sure you want to delete ${selectedPatients.value.length} selected patient(s)? This action cannot be undone. All related appointments will also be deleted.`)) {
           selectedPatients.value.forEach(id => {
             deletePatient(id);
           });

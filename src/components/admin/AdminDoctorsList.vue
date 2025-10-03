@@ -697,7 +697,7 @@ export default {
             message: errorMessage
           });
         } else {
-          console.error(errorMessage);
+          alert(errorMessage);
         }
       }
     };
@@ -759,13 +759,19 @@ export default {
     };
     
     const deleteDoctor = async (id) => {
-      if (!confirm('Are you sure you want to delete this doctor? This action cannot be undone.')) {
+      if (!confirm('Are you sure you want to delete this doctor? This action cannot be undone. All related appointments will also be deleted.')) {
         return;
       }
       
       try {
-        // Replace with your actual API call
-        // await api.delete(`/api/admin/doctors/${id}`);
+        const response = await axios.delete(`${BASE_URL}/admin/doctors/${id}/delete`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+          }
+        });
+        
+        console.log('Delete doctor response:', response.data);
         
         // Update local state
         doctors.value = doctors.value.filter(doc => doc.id !== id);
@@ -774,20 +780,22 @@ export default {
         selectedDoctors.value = selectedDoctors.value.filter(docId => docId !== id);
         
         // Show success message
+        const successMessage = response.data?.message || 'Doctor deleted successfully.';
         if (store && store.dispatch) {
           store.dispatch('showNotification', {
             type: 'success',
-            message: 'Doctor deleted successfully.'
+            message: successMessage
           });
         } else {
-          console.log('Doctor deleted successfully.');
+          alert(successMessage);
         }
       } catch (err) {
         console.error('Error deleting doctor:', err);
+        const errorMessage = err.response?.data?.message || 'Failed to delete doctor. Please try again.';
         if (store && store.dispatch) {
           store.dispatch('showNotification', {
             type: 'error',
-            message: 'Failed to delete doctor. Please try again.'
+            message: errorMessage
           });
         } else {
           console.error('Failed to delete doctor. Please try again.');
@@ -803,7 +811,7 @@ export default {
       }
     };
     
-    const bulkAction = (action) => {
+    const bulkAction = async (action) => {
       if (selectedDoctors.value.length === 0) return;
       
       if (action === 'approve') {
@@ -829,10 +837,12 @@ export default {
           selectAll.value = false;
         }
       } else if (action === 'delete') {
-        if (confirm(`Are you sure you want to delete ${selectedDoctors.value.length} selected doctor(s)? This action cannot be undone.`)) {
-          selectedDoctors.value.forEach(id => {
-            deleteDoctor(id);
-          });
+        if (confirm(`Are you sure you want to delete ${selectedDoctors.value.length} selected doctor(s)? This action cannot be undone. All related appointments will also be deleted.`)) {
+          // Process deletions sequentially to avoid overwhelming the server
+          const doctorsToDelete = [...selectedDoctors.value];
+          for (const id of doctorsToDelete) {
+            await deleteDoctor(id);
+          }
           selectedDoctors.value = [];
           selectAll.value = false;
         }
