@@ -164,7 +164,7 @@ export default {
 
     const loadProfile = async () => {
       try {
-        const token = localStorage.getItem('adminToken');
+        const token = localStorage.getItem('token');
         if (!token) {
           throw new Error('No authentication token found');
         }
@@ -183,7 +183,9 @@ export default {
         console.error('Error loading profile:', error);
         if (error.response?.status === 401) {
           // Token expired or invalid
-          localStorage.removeItem('adminToken');
+          localStorage.removeItem('token');
+          localStorage.removeItem('userType');
+          localStorage.removeItem('admin');
           window.location.href = '/admin-login';
         }
       }
@@ -263,7 +265,7 @@ export default {
       try {
         isLoading.value = true;
         
-        const token = localStorage.getItem('adminToken');
+        const token = localStorage.getItem('token');
         if (!token) {
           throw new Error('No authentication token found');
         }

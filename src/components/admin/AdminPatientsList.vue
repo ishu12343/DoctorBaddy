@@ -7,8 +7,23 @@
           <input
             type="text"
             v-model="searchQuery"
-            placeholder="Search patients..."
-            class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent text-sm sm:text-base"
+            placeholder="Search patie        co        const response = await axios.get(`${BASE_URL}/admin/patients/export`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });sponse = await axios.get(`${BASE_URL}/admin/patients/export`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });"
+            class="w-full pl-10 pr        const response = await axios.get(`${BASE_URL}/admin/patients/${patientId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });2 border rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent text-sm sm:text-base"
           >
           <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
         </div>
@@ -523,7 +538,7 @@ export default {
         const response = await axios.get(`${BASE_URL}/admin/patients`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
         
@@ -566,7 +581,7 @@ export default {
         const response = await axios.get(`${BASE_URL}/admin/patient/view?id=${id}`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
         
@@ -614,7 +629,7 @@ export default {
           {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
           }
         );
@@ -664,7 +679,7 @@ export default {
           {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
           }
         );
@@ -715,7 +730,7 @@ export default {
         const response = await axios.delete(`${BASE_URL}/admin/patients/${id}/delete`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
         

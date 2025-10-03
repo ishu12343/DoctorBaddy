@@ -262,7 +262,7 @@ export default {
         const admin = response.data.admin;
 
         // Store token and admin info
-        localStorage.setItem('adminToken', token);
+        localStorage.setItem('token', token);
         localStorage.setItem('admin', JSON.stringify(admin));
         
         // Store remember me preference

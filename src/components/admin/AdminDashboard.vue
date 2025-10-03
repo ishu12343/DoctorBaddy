@@ -278,8 +278,9 @@ export default {
     // Logout function
     const logout = () => {
       // Clear authentication data
-      localStorage.removeItem('adminToken');
+      localStorage.removeItem('token');
       localStorage.removeItem('userType');
+      localStorage.removeItem('admin');
       // Redirect to login page and block back navigation
       router.replace('/admin-login');
     };
@@ -287,8 +288,12 @@ export default {
     // Load admin profile
     const loadAdminProfile = async () => {
       try {
-        const token = localStorage.getItem('adminToken');
-        if (!token) return;
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.log('No token found, redirecting to login');
+          router.replace('/admin-login');
+          return;
+        }
 
         const response = await axios.get(`${BASE_URL}/admin/profile`, {
           headers: {
@@ -301,6 +306,13 @@ export default {
         console.log('Admin profile loaded:', adminInfo.value);
       } catch (error) {
         console.error('Error loading admin profile:', error);
+        if (error.response?.status === 401) {
+          // Token expired or invalid
+          localStorage.removeItem('token');
+          localStorage.removeItem('userType');
+          localStorage.removeItem('admin');
+          router.replace('/admin-login');
+        }
         // Keep default admin info if profile loading fails
       }
     };
