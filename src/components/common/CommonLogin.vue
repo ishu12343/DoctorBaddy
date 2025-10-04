@@ -17,47 +17,47 @@
     
     <AppHeader />
     
-    <main class="flex-1 pt-16 lg:pt-20 flex items-center justify-center px-4 py-8 relative z-10">
-      <div class="w-full max-w-lg">
+    <main class="flex-1 pt-20 lg:pt-20 flex items-center justify-center px-3 py-2 sm:py-4 relative z-10 min-h-0">
+      <div class="w-full max-w-md mx-auto">
         <!-- Login Card -->
-        <div class="bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/50 overflow-hidden">
+        <div class="bg-white/90 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-xl border border-white/30 dark:border-gray-700/50 overflow-hidden">
           <!-- Role Selection Header -->
-          <div class="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-600 p-8 text-center text-white">
+          <div class="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-600 p-4 sm:p-6 text-center text-white">
             <!-- Background Pattern -->
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             
             <div class="relative z-10">
-              <div class="w-20 h-20 mx-auto mb-6 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
-                <i :class="getRoleIcon()" class="text-3xl drop-shadow-sm"></i>
+              <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                <i :class="getRoleIcon()" class="text-xl sm:text-2xl drop-shadow-sm"></i>
               </div>
-              <h1 class="text-3xl font-bold mb-2 drop-shadow-sm">{{ getRoleTitle() }} Login</h1>
-              <p class="text-indigo-100 text-sm font-medium opacity-90">{{ getRoleSubtitle() }}</p>
+              <h1 class="text-xl sm:text-2xl font-bold mb-1 sm:mb-2 drop-shadow-sm">{{ getRoleTitle() }} Login</h1>
+              <p class="text-indigo-100 text-xs sm:text-sm font-medium opacity-90 hidden sm:block">{{ getRoleSubtitle() }}</p>
             </div>
           </div>
 
           <!-- Role Selection Tabs -->
-          <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 px-6 py-5">
-            <div class="flex rounded-2xl bg-white dark:bg-gray-800 p-1.5 shadow-inner border border-gray-200 dark:border-gray-700">
+          <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 px-3 sm:px-4 py-3 sm:py-4">
+            <div class="flex rounded-lg sm:rounded-xl bg-white dark:bg-gray-800 p-0.5 sm:p-1 shadow-inner border border-gray-200 dark:border-gray-700">
               <button 
                 v-for="role in availableRoles" 
                 :key="role.key"
                 @click="selectRole(role.key)"
-                class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105"
+                class="flex-1 flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 transform hover:scale-105"
                 :class="selectedRole === role.key 
                   ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25' 
                   : 'text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-700'"
               >
-                <i :class="role.icon" class="text-base"></i>
+                <i :class="role.icon" class="text-sm sm:text-base"></i>
                 <span class="hidden sm:inline">{{ role.label }}</span>
-                <span class="sm:hidden">{{ role.label.charAt(0) }}</span>
+                <span class="sm:hidden text-xs">{{ role.label }}</span>
               </button>
             </div>
           </div>
 
           <!-- Form -->
-          <div class="p-8">
-            <form @submit.prevent="handleLogin" class="space-y-6">
+          <div class="p-3 sm:p-4 lg:p-6">
+            <form @submit.prevent="handleLogin" class="space-y-3 sm:space-y-4">
               <!-- Email Input -->
               <div class="form-group">
                 <label class="form-label text-gray-700 dark:text-gray-300 font-semibold">
@@ -122,19 +122,19 @@
                       class="sr-only"
                     />
                     <div 
-                      class="w-5 h-5 rounded border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center transition-all duration-200 group-hover:border-indigo-500"
+                      class="w-4 h-4 sm:w-5 sm:h-5 rounded border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center transition-all duration-200 group-hover:border-indigo-500"
                       :class="rememberMe ? 'bg-indigo-500 border-indigo-500' : ''"
                     >
                       <i v-if="rememberMe" class="fas fa-check text-white text-xs"></i>
                     </div>
                   </div>
-                  <span class="ml-3 text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors">Remember me</span>
+                  <span class="ml-2 sm:ml-3 text-xs sm:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors">Remember me</span>
                 </label>
 
                 <button
                   type="button"
                   @click="showForgotPassword = true"
-                  class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors relative group focus:outline-none"
+                  class="text-xs sm:text-sm font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors relative group focus:outline-none"
                 >
                   Forgot password?
                   <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
@@ -142,25 +142,25 @@
               </div>
 
               <!-- Error Message -->
-              <div v-if="error" class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl">
+              <div v-if="error" class="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg sm:rounded-xl">
                 <div class="flex items-center">
                   <div class="flex-shrink-0">
-                    <i class="fas fa-exclamation-triangle text-red-500 text-lg"></i>
+                    <i class="fas fa-exclamation-triangle text-red-500 text-sm sm:text-base"></i>
                   </div>
-                  <div class="ml-3">
-                    <p class="text-sm text-red-800 dark:text-red-200 font-medium">{{ error }}</p>
+                  <div class="ml-2 sm:ml-3">
+                    <p class="text-xs sm:text-sm text-red-800 dark:text-red-200 font-medium">{{ error }}</p>
                   </div>
                 </div>
               </div>
 
               <!-- Success Message -->
-              <div v-if="successMessage" class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl">
+              <div v-if="successMessage" class="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg sm:rounded-xl">
                 <div class="flex items-center">
                   <div class="flex-shrink-0">
-                    <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                    <i class="fas fa-check-circle text-green-500 text-sm sm:text-base"></i>
                   </div>
-                  <div class="ml-3">
-                    <p class="text-sm text-green-800 dark:text-green-200 font-medium">{{ successMessage }}</p>
+                  <div class="ml-2 sm:ml-3">
+                    <p class="text-xs sm:text-sm text-green-800 dark:text-green-200 font-medium">{{ successMessage }}</p>
                   </div>
                 </div>
               </div>
@@ -169,7 +169,7 @@
               <button
                 type="submit" 
                 :disabled="isLoading"
-                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 disabled:scale-100 shadow-lg hover:shadow-xl disabled:shadow-md flex items-center justify-center space-x-2 relative overflow-hidden group focus:outline-none focus:ring-4 focus:ring-indigo-300"
+                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold login-button-compact transition-all duration-300 transform hover:scale-105 disabled:scale-100 shadow-lg hover:shadow-xl disabled:shadow-md flex items-center justify-center space-x-2 relative overflow-hidden group focus:outline-none focus:ring-4 focus:ring-indigo-300"
               >
                 <div class="absolute inset-0 bg-white/20 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
                 <i :class="isLoading ? 'fas fa-spinner fa-spin' : 'fas fa-sign-in-alt'" class="text-lg relative z-10"></i>
@@ -177,13 +177,13 @@
               </button>
 
               <!-- Sign Up Link -->
-              <div class="text-center pt-6 border-t border-gray-200 dark:border-gray-700">
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+              <div class="text-center pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                   Don't have an account?
                   <button 
                     type="button"
                     @click="goToSignUp"
-                    class="font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 ml-1 relative group focus:outline-none"
+                    class="font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 ml-1 relative group focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded px-1 text-xs sm:text-sm"
                   >
                     Sign up as {{ getRoleTitle() }}
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
@@ -194,54 +194,54 @@
           </div>
         </div>
 
-        <!-- Features -->
-        <div class="mt-8 grid grid-cols-3 gap-6 px-4">
-          <div class="text-center group cursor-pointer">
-            <div class="w-16 h-16 mx-auto mb-4 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg group-hover:bg-white/30 transition-all duration-300 transform group-hover:scale-110 border border-white/30">
-              <i class="fas fa-shield-alt text-white text-xl"></i>
+        <!-- Features - Compact Version -->
+        <div class="mt-4 sm:mt-6 flex justify-center items-center gap-6 sm:gap-8 px-4">
+          <div class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+            <div class="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
+              <i class="fas fa-shield-alt text-sm"></i>
             </div>
-            <p class="text-sm text-white font-semibold opacity-80 group-hover:opacity-100 transition-opacity">Secure</p>
+            <span class="text-xs font-medium hidden sm:inline">Secure</span>
           </div>
-          <div class="text-center group">
-            <div class="w-14 h-14 mx-auto mb-3 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg group-hover:bg-white/20 transition-all duration-300 transform group-hover:scale-110">
-              <i class="fas fa-clock text-white text-xl"></i>
+          <div class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+            <div class="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
+              <i class="fas fa-clock text-sm"></i>
             </div>
-            <p class="text-sm text-white font-semibold opacity-80 group-hover:opacity-100 transition-opacity">24/7 Access</p>
+            <span class="text-xs font-medium hidden sm:inline">24/7</span>
           </div>
-          <div class="text-center group">
-            <div class="w-14 h-14 mx-auto mb-3 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg group-hover:bg-white/20 transition-all duration-300 transform group-hover:scale-110">
-              <i class="fas fa-mobile-alt text-white text-xl"></i>
+          <div class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+            <div class="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
+              <i class="fas fa-mobile-alt text-sm"></i>
             </div>
-            <p class="text-sm text-white font-semibold opacity-80 group-hover:opacity-100 transition-opacity">{{ getRoleFeature() }}</p>
+            <span class="text-xs font-medium hidden sm:inline">Mobile</span>
           </div>
         </div>
       </div>
     </main>
 
     <!-- Forgot Password Modal -->
-    <div v-if="showForgotPassword" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click.self="closeForgotPasswordModal">
-      <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-lg w-full animate-bounce-in overflow-hidden border border-white/20">
+    <div v-if="showForgotPassword" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto" @click.self="closeForgotPasswordModal">
+      <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl max-w-lg w-full my-4 animate-bounce-in overflow-hidden border border-white/20 dark:border-gray-600/50">
         <!-- Modal Header -->
-        <div class="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-600 p-8 text-center text-white">
+        <div class="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-600 p-4 sm:p-6 text-center text-white">
           <!-- Background Pattern -->
           <div class="absolute inset-0 bg-black/10"></div>
           <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           
           <button 
             @click="closeForgotPasswordModal"
-            class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-2xl bg-white/20 hover:bg-white/30 transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50"
+            class="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg sm:rounded-xl bg-white/20 hover:bg-white/30 transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
           >
-            <i class="fas fa-times text-lg"></i>
+            <i class="fas fa-times text-sm sm:text-base"></i>
           </button>
           
           <div class="relative z-10">
-            <div class="w-20 h-20 mx-auto mb-6 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
-              <i :class="forgotPasswordStep === 1 ? 'fas fa-envelope' : 'fas fa-key'" class="text-3xl drop-shadow-sm"></i>
+            <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg">
+              <i :class="forgotPasswordStep === 1 ? 'fas fa-envelope' : 'fas fa-key'" class="text-lg sm:text-2xl drop-shadow-sm"></i>
             </div>
-            <h3 class="text-2xl font-bold mb-2 drop-shadow-sm">
+            <h3 class="text-lg sm:text-xl font-bold mb-1 sm:mb-2 drop-shadow-sm">
               {{ forgotPasswordStep === 1 ? 'Reset Password' : 'Verify OTP' }}
             </h3>
-            <p class="text-indigo-100 text-sm font-medium opacity-90">
+            <p class="text-indigo-100 text-xs sm:text-sm font-medium opacity-90 px-2 hidden sm:block">
               {{ forgotPasswordStep === 1 
                 ? `Enter your ${selectedRole} email or mobile number` 
                 : 'Enter the OTP and your new password' 
@@ -251,8 +251,8 @@
         </div>
 
         <!-- Step Progress Indicator -->
-        <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 px-8 py-6">
-          <div class="flex items-center justify-center space-x-4">
+        <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 px-3 sm:px-6 py-3 sm:py-4">
+          <div class="flex items-center justify-center space-x-2 sm:space-x-4">
             <div class="flex items-center">
               <div 
                 class="w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold transition-all duration-300 shadow-md"
@@ -263,7 +263,7 @@
                 <i v-if="forgotPasswordStep > 1" class="fas fa-check text-xs"></i>
                 <span v-else>1</span>
               </div>
-              <span class="ml-3 text-sm font-semibold" :class="forgotPasswordStep >= 1 ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400'">Send OTP</span>
+              <span class="ml-2 sm:ml-3 text-xs sm:text-sm font-semibold hidden sm:inline" :class="forgotPasswordStep >= 1 ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400'">Send OTP</span>
             </div>
             <div class="flex-1 h-0.5 bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-500 rounded-full relative overflow-hidden">
               <div 
@@ -280,13 +280,13 @@
               >
                 2
               </div>
-              <span class="ml-3 text-sm font-semibold" :class="forgotPasswordStep >= 2 ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400'">Reset</span>
+              <span class="ml-2 sm:ml-3 text-xs sm:text-sm font-semibold hidden sm:inline" :class="forgotPasswordStep >= 2 ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400'">Reset</span>
             </div>
           </div>
         </div>
 
         <!-- Modal Content -->
-        <div class="p-8">
+        <div class="p-3 sm:p-4 lg:p-6">
           <!-- Step 1: Send OTP -->
           <form v-if="forgotPasswordStep === 1" @submit.prevent="sendOTP" class="space-y-6">
             <div class="form-group">
@@ -922,17 +922,30 @@ export default {
 <style scoped>
 /* Modern Form Styles */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
 }
 
 .form-label {
   display: block;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
+}
+
+@media (min-width: 640px) {
+  .form-label {
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+  }
 }
 
 .dark .form-label {
@@ -942,14 +955,22 @@ export default {
 /* Modern Input Styling */
 .modern-input {
   width: 100%;
-  padding: 1rem 1.25rem;
+  padding: 0.75rem 1rem;
   border: 2px solid #e5e7eb;
-  border-radius: 1rem;
-  font-size: 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 500;
   background-color: #ffffff;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 640px) {
+  .modern-input {
+    padding: 0.875rem 1.125rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+  }
 }
 
 .modern-input:focus {
@@ -990,6 +1011,21 @@ export default {
 
 .animation-delay-4000 {
   animation-delay: 4s;
+}
+
+/* Compact Login Button */
+.login-button-compact {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  border-radius: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .login-button-compact {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+  }
 }
 
 /* Enhanced Button Styles */
@@ -1147,40 +1183,76 @@ button:focus {
 @media (max-width: 640px) {
   .modern-input {
     font-size: 16px; /* Prevents zoom on iOS */
-    padding: 1rem 1rem;
+    padding: 0.75rem 0.875rem;
+    border-radius: 0.75rem;
+  }
+  
+  .modern-input.pl-4 {
+    padding-left: 0.875rem;
+  }
+  
+  .modern-input.pr-4 {
+    padding-right: 0.875rem;
   }
   
   .modern-input.pl-12 {
-    padding-left: 3rem;
+    padding-left: 2.5rem;
+  }
+  
+  .modern-input.pr-12 {
+    padding-right: 2.5rem;
   }
   
   /* Improve button alignment on mobile */
   .modal-buttons {
     flex-direction: column;
+    gap: 0.75rem;
   }
   
   .modal-buttons button {
     width: 100%;
-    margin-bottom: 0.75rem;
-  }
-  
-  .modal-buttons button:last-child {
-    margin-bottom: 0;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9rem;
+    min-height: 44px;
   }
   
   /* Ensure proper touch targets */
   button {
-    min-height: 48px;
-    min-width: 48px;
+    min-height: 44px;
+    min-width: 44px;
   }
   
   /* Improve modal on mobile */
+  .fixed.inset-0 {
+    padding: 0.75rem;
+  }
+  
   .fixed.inset-0 > div {
-    margin: 1rem;
-    max-height: calc(100vh - 2rem);
+    max-height: calc(100vh - 1.5rem);
     overflow-y: auto;
+    margin: 0;
   }
+  
+  /* Form spacing */
+  .space-y-3 > * + * {
+    margin-top: 0.75rem;
   }
+  
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+  
+  /* Compact header */
+  .text-3xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+}
   
   .modern-input.pr-12 {
     padding-right: 3rem;
@@ -1379,5 +1451,180 @@ button:focus {
   .animate-blob {
     animation: none;
   }
+}
+
+/* Additional Mobile Responsive Improvements */
+@media (max-width: 480px) {
+  /* Extra small mobile screens */
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height */
+  }
+  
+  .pt-12 {
+    padding-top: 2rem;
+  }
+  
+  .pt-16 {
+    padding-top: 2.5rem;
+  }
+  
+  /* Card adjustments */
+  .rounded-xl {
+    border-radius: 0.75rem;
+  }
+  
+  .rounded-2xl {
+    border-radius: 1rem;
+  }
+  
+  /* Text sizing */
+  .text-xl {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  
+  /* Button improvements */
+  .py-4 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  /* Form label sizing */
+  .form-label {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Modal specific */
+  .animate-bounce-in {
+    margin: 0.5rem;
+  }
+  
+  /* Compact spacing */
+  .space-y-3 > * + * {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Improved focus styles for accessibility */
+.focus-visible\:outline-none:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.focus-visible\:ring-2:focus-visible {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+/* Enhanced modal overlay */
+.modal-overlay {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Improved input animations */
+.modern-input:focus {
+  animation: input-focus 0.2s ease-out;
+}
+
+@keyframes input-focus {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Better loading states */
+.loading-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: loading-shine 1.5s infinite;
+}
+
+@keyframes loading-shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Improved checkbox animation */
+.custom-checkbox {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.custom-checkbox:checked {
+  transform: scale(1.1);
+}
+
+.custom-checkbox:checked {
+  animation: checkbox-check 0.3s ease-out;
+}
+
+@keyframes checkbox-check {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Compact Design Utilities */
+.compact-card {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+  .compact-card {
+    max-height: 95vh;
+  }
+}
+
+/* Modern scrollbar for modal */
+.compact-card::-webkit-scrollbar {
+  width: 4px;
+}
+
+.compact-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.compact-card::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 2px;
+}
+
+.compact-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
 }
 </style>
