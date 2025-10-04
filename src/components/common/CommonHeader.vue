@@ -28,80 +28,40 @@
         </nav>
 
         <!-- Right: User Name, Profile Photo, Dropdown -->
-        <div class="flex items-center gap-2 md:gap-3 relative ml-auto user-profile-container" ref="userProfileContainer">
-          <!-- User Info - Hidden on very small screens -->
-          <div class="hidden xs:flex flex-col items-end justify-center mr-2">
-            <span class="font-semibold text-sm md:text-base text-white leading-tight">{{ userInfo?.full_name || userInfo?.username || getUserDefaultName() }}</span>
-            <span class="text-xs font-medium text-gray-200 leading-tight">{{ getRoleDisplayName() }}</span>
+        <div class="flex items-center gap-3 relative ml-auto px-3 py-2 rounded-lg user-header-right cursor-pointer" @click="toggleUserDropdown">
+          <div class="flex flex-col items-end justify-center">
+            <span class="font-semibold text-base text-white">{{ userInfo?.full_name || userInfo?.username || getUserDefaultName() }}</span>
+            <span class="text-xs font-medium mt-1 text-gray-200">{{ getRoleDisplayName() }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="user-avatar user-avatar-lg shadow-lg" style="border: 2px solid #fff;">
+              <img
+                v-if="getProfilePhotoUrl()"
+                :src="getProfilePhotoUrl()"
+                alt="Profile Photo"
+                class="h-10 w-10 rounded-full object-cover"
+                @error="handleImageError"
+              />
+              <i v-else :class="getDefaultAvatarIcon()" class="text-3xl" style="color: #fff;"></i>
+            </div>
           </div>
           
-          <!-- Profile Photo with Dropdown Toggle -->
-          <div class="relative">
+          <!-- Dropdown for Profile and Sign Out -->
+          <div v-if="showDropdown" ref="userDropdown" class="dropdown-menu absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl z-50 min-w-[160px] border border-gray-200 animate-fade-in">
             <button 
-              @click="toggleUserDropdown"
-              class="user-header-button flex items-center gap-2 px-2 md:px-3 py-2 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition-all duration-200"
-              :class="{ 'bg-white bg-opacity-20': showDropdown }"
-              aria-label="User menu"
-              :aria-expanded="showDropdown"
+              @click.stop="handleProfileClick" 
+              class="dropdown-item profile-item flex items-center gap-3 px-4 py-3 w-full text-gray-700 font-medium hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 rounded-t-lg border-b border-gray-100"
             >
-              <div class="user-avatar user-avatar-lg shadow-lg border-2 border-white">
-                <img
-                  v-if="userInfo?.profile_photo || userInfo?.photo_path"
-                  :src="userInfo.profile_photo || userInfo.photo_path"
-                  alt="Profile Photo"
-                  class="h-8 w-8 md:h-10 md:w-10 rounded-full object-cover"
-                />
-                <i v-else :class="getDefaultAvatarIcon()" class="text-xl md:text-2xl text-white"></i>
-              </div>
-              <!-- Dropdown Arrow -->
-              <i class="fas fa-chevron-down text-white text-xs transition-transform duration-200" :class="{ 'rotate-180': showDropdown }"></i>
+              <i :class="getProfileIcon()" class="text-blue-500"></i>
+              <span>Profile</span>
             </button>
-            
-            <!-- Enhanced Dropdown Menu -->
-            <transition name="dropdown">
-              <div 
-                v-if="showDropdown" 
-                ref="userDropdown" 
-                class="user-dropdown absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl z-50 min-w-[180px] max-w-[250px] overflow-hidden border border-gray-100"
-                role="menu"
-                aria-orientation="vertical"
-              >
-                <!-- User Info Header in Dropdown (for mobile) -->
-                <div class="xs:hidden px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
-                  <div class="font-semibold text-sm truncate">{{ userInfo?.full_name || userInfo?.username || getUserDefaultName() }}</div>
-                  <div class="text-xs text-blue-100">{{ getRoleDisplayName() }}</div>
-                </div>
-                
-                <!-- Profile Button -->
-                <button 
-                  @click="navigateAndClose('profile')" 
-                  class="dropdown-item-enhanced w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-blue-50 focus:bg-blue-50 focus:outline-none transition-colors duration-200 text-gray-700 font-medium"
-                  role="menuitem"
-                >
-                  <div class="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <i :class="getProfileIcon()" class="text-blue-600 text-sm"></i>
-                  </div>
-                  <span class="flex-1">View Profile</span>
-                  <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                </button>
-                
-                <!-- Divider -->
-                <div class="border-t border-gray-100"></div>
-                
-                <!-- Sign Out Button -->
-                <button 
-                  @click="handleLogout" 
-                  class="dropdown-item-enhanced w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-red-50 focus:bg-red-50 focus:outline-none transition-colors duration-200 text-red-600 font-medium"
-                  role="menuitem"
-                >
-                  <div class="flex-shrink-0 w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-sign-out-alt text-red-600 text-sm"></i>
-                  </div>
-                  <span class="flex-1">Sign Out</span>
-                  <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                </button>
-              </div>
-            </transition>
+            <button 
+              @click.stop="handleLogoutClick" 
+              class="dropdown-item logout-item flex items-center gap-3 px-4 py-3 w-full text-gray-700 font-medium hover:bg-red-50 hover:text-red-600 transition-all duration-200 rounded-b-lg"
+            >
+              <i class="fas fa-sign-out-alt text-red-500"></i>
+              <span>Sign Out</span>
+            </button>
           </div>
         </div>
       </div>
@@ -216,11 +176,6 @@ export default {
     toggleUserDropdown(event) {
       event.stopPropagation();
       this.showDropdown = !this.showDropdown;
-      
-      // Close mobile menu if open
-      if (this.showDropdown && this.mobileMenuOpen) {
-        this.mobileMenuOpen = false;
-      }
     },
     navigateTo(page) {
       this.$emit('navigate', page);
@@ -231,50 +186,53 @@ export default {
       this.$emit('navigate', page);
     },
     handleLogout() {
-      // Close all dropdowns/menus
       this.showDropdown = false;
       this.mobileMenuOpen = false;
-      
-      // Add a small delay to ensure smooth UI transition
-      setTimeout(() => {
-        this.$emit('logout');
-      }, 100);
+      this.$emit('logout');
+    },
+    handleProfileClick(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.showDropdown = false;
+      this.mobileMenuOpen = false;
+      this.$emit('navigate', 'profile');
+    },
+    handleLogoutClick(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.showDropdown = false;
+      this.mobileMenuOpen = false;
+      this.$emit('logout');
+    },
+    getProfilePhotoUrl() {
+      if (!this.userInfo) return null;
+      // Check both possible field names for profile photo
+      return this.userInfo.profile_photo || this.userInfo.photo_path || null;
+    },
+    handleImageError(event) {
+      // Hide broken image and show default avatar
+      event.target.style.display = 'none';
     },
     handleClickOutside(event) {
-      // Handle user dropdown
-      if (this.showDropdown) {
-        const userContainer = this.$refs.userProfileContainer;
-        const userDropdown = this.$refs.userDropdown;
-        
-        if (userContainer && !userContainer.contains(event.target) && 
-            userDropdown && !userDropdown.contains(event.target)) {
+      // Check if click is outside dropdown
+      if (this.showDropdown && this.$refs.userDropdown && !this.$refs.userDropdown.contains(event.target)) {
+        // Also check if click is not on the user header area
+        const userHeaderRight = event.target.closest('.user-header-right');
+        if (!userHeaderRight) {
           this.showDropdown = false;
         }
       }
-      
-      // Handle mobile menu
-      if (this.mobileMenuOpen && this.$el && !this.$el.contains(event.target)) {
-        this.mobileMenuOpen = false;
-      }
-    },
-    handleEscapeKey(event) {
-      if (event.key === 'Escape') {
-        this.showDropdown = false;
+      // Check if click is outside mobile menu
+      if (this.mobileMenuOpen && !this.$el.contains(event.target)) {
         this.mobileMenuOpen = false;
       }
     }
   },
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
-    document.addEventListener('keydown', this.handleEscapeKey);
-    
-    // Add touch event handling for mobile
-    document.addEventListener('touchstart', this.handleClickOutside, { passive: true });
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
-    document.removeEventListener('keydown', this.handleEscapeKey);
-    document.removeEventListener('touchstart', this.handleClickOutside);
   }
 }
 </script>
@@ -292,7 +250,6 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
-  min-height: 44px; /* Touch-friendly minimum */
 }
 
 .nav-item:hover {
@@ -304,105 +261,64 @@ export default {
   border-radius: 0.5rem;
 }
 
-/* Enhanced User Profile Container */
-.user-profile-container {
+.dropdown-menu {
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-size: 0.95rem;
+  min-height: 48px; /* Touch-friendly height */
+  transition: all 0.2s ease;
   position: relative;
 }
 
-.user-header-button {
-  transition: all 0.2s ease;
-  min-height: 44px; /* Touch-friendly */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.dropdown-item:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
 }
 
-.user-header-button:hover {
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  transform: translateY(-1px);
+.profile-item:hover {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  transform: translateX(2px);
 }
 
-.user-header-button:active {
-  transform: translateY(0);
+.logout-item:hover {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  transform: translateX(2px);
+}
+
+.user-header-right {
+  transition: background-color 0.2s ease;
+  border-radius: 0.5rem;
+}
+
+.user-header-right:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .user-avatar {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.2);
-  transition: all 0.2s ease;
 }
 
 .user-avatar-lg {
-  width: 2.5rem;
-  height: 2.5rem;
-}
-
-@media (min-width: 768px) {
-  .user-avatar {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-  
-  .user-avatar-lg {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-/* Enhanced Dropdown Styling */
-.user-dropdown {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transform-origin: top right;
-}
-
-.dropdown-item-enhanced {
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  min-height: 48px; /* Touch-friendly */
-  display: flex;
-  align-items: center;
-}
-
-.dropdown-item-enhanced:active {
-  transform: scale(0.98);
-  transition: transform 0.1s ease;
-}
-
-/* Dropdown Animations */
-.dropdown-enter-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.dropdown-leave-active {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.dropdown-enter-from {
-  opacity: 0;
-  transform: translateY(-8px) scale(0.95);
-}
-
-.dropdown-leave-to {
-  opacity: 0;
-  transform: translateY(-4px) scale(0.98);
-}
-
-.dropdown-enter-to,
-.dropdown-leave-from {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-/* Rotate animation for chevron */
-.rotate-180 {
-  transform: rotate(180deg);
+  width: 3rem;
+  height: 3rem;
 }
 
 /* Animation for mobile menu */
@@ -421,104 +337,84 @@ export default {
   animation: fadeIn 0.3s ease-out;
 }
 
-/* Mobile Responsive Design */
-@media (max-width: 475px) {
-  .user-profile-container {
-    gap: 0.5rem;
-  }
-  
-  .user-header-button {
-    padding: 0.5rem;
-  }
-  
-  .user-dropdown {
-    right: -1rem;
-    min-width: calc(100vw - 2rem);
-    max-width: calc(100vw - 2rem);
-  }
-}
-
-@media (min-width: 476px) and (max-width: 640px) {
-  .user-dropdown {
-    min-width: 200px;
-  }
-}
-
-@media (max-width: 640px) {
+/* Responsive font size adjustments */
+@media (width <= 576px) {
   .nav-item span {
     font-size: 0.9rem;
   }
   
-  .user-header-button {
-    gap: 0.25rem;
+  .user-header-right {
+    padding: 0.5rem;
   }
   
-  /* Make dropdown full width on very small screens */
-  .user-dropdown {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  .user-header-right span {
+    font-size: 0.85rem;
   }
 }
 
-/* Extra small screens (custom breakpoint) */
-@media (max-width: 360px) {
-  .xs\:hidden {
-    display: none !important;
-  }
-}
-
-@media (min-width: 361px) {
-  .xs\:flex {
-    display: flex !important;
-  }
-}
-
-/* Touch-friendly improvements */
+/* Touch-friendly improvements for mobile */
 @media (hover: none) and (pointer: coarse) {
-  .nav-item, 
-  .dropdown-item-enhanced,
-  .user-header-button {
+  .nav-item, .dropdown-item {
     min-height: 48px;
     touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
   }
   
-  /* Remove hover effects on touch devices */
-  .user-header-button:hover {
-    background-color: transparent !important;
-    transform: none !important;
+  .user-header-right {
+    min-height: 48px;
+    padding: 0.75rem;
   }
   
-  .dropdown-item-enhanced:hover {
-    background-color: transparent !important;
+  .dropdown-menu {
+    min-width: 180px;
+    right: -0.5rem;
   }
   
-  /* Add active states for touch */
-  .user-header-button:active {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-  }
-  
-  .dropdown-item-enhanced:active {
-    background-color: rgba(59, 130, 246, 0.1) !important;
+  .dropdown-item {
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
   }
 }
 
-/* High DPI displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .user-avatar img {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
+/* Mobile-specific responsive adjustments */
+@media (width <= 768px) {
+  .dropdown-menu {
+    right: 0.5rem;
+    min-width: 160px;
+  }
+  
+  .user-header-right {
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .user-header-right span {
+    font-size: 0.9rem;
+  }
+  
+  .user-avatar-lg {
+    width: 2.5rem;
+    height: 2.5rem;
   }
 }
 
-/* Focus visible for accessibility */
-.user-header-button:focus-visible {
-  outline: 2px solid #fbbf24;
-  outline-offset: 2px;
-}
-
-.dropdown-item-enhanced:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: -2px;
+@media (width <= 480px) {
+  .dropdown-menu {
+    right: 0.25rem;
+    min-width: 140px;
+  }
+  
+  .dropdown-item {
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .user-header-right {
+    padding: 0.375rem 0.5rem;
+  }
+  
+  .user-header-right span {
+    font-size: 0.8rem;
+  }
 }
 
 /* Medical theme colors */
