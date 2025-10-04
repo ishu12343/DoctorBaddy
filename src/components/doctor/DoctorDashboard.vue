@@ -40,10 +40,10 @@
     <!-- Toast Notifications -->
     <ToastNotification ref="toast" />
     
-    <!-- Doctor Header -->
-    <DoctorHeader 
-      :current-page="getCurrentPageName()"
-      :doctor-info="doctorStatus"
+    <!-- Common Header -->
+    <CommonHeader 
+      user-role="doctor"
+      :user-info="doctorStatus"
       @navigate="handleNavigation"
       @logout="logout"
     />
@@ -354,8 +354,11 @@
       </div>
     </main>
 
-    <!-- Doctor Footer -->
-    <DoctorFooter @navigate="handleNavigation" />
+    <!-- Common Footer -->
+    <CommonFooter 
+      user-role="doctor"
+      @navigate="handleNavigation" 
+    />
   </div>
 </template>
 
@@ -364,8 +367,8 @@ import DoctorProfileCard from './DoctorProfileCard.vue';
 import DoctorAppointments from './DoctorAppointments.vue';
 import PatientsList from './PatientsList.vue';
 import ToastNotification from '../ToastNotification.vue';
-import DoctorHeader from './DoctorHeader.vue';
-import DoctorFooter from './DoctorFooter.vue';
+import CommonHeader from '../common/CommonHeader.vue';
+import CommonFooter from '../common/CommonFooter.vue';
 import { BASE_URL } from '@/config/api';
 
 import axios from 'axios';
@@ -376,8 +379,8 @@ export default {
     DoctorAppointments, 
     PatientsList, 
     ToastNotification,
-    DoctorHeader,
-    DoctorFooter
+    CommonHeader,
+    CommonFooter
   },
   data() {
     return {

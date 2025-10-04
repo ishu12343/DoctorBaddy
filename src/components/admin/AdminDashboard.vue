@@ -1,8 +1,9 @@
 <template>
   <div class="admin-layout">
-    <AdminHeader 
+    <CommonHeader 
       :current-page="currentView" 
-      :admin-info="adminInfo"
+      :user-info="adminInfo"
+      :user-role="'admin'"
       @navigate="handleNavigation"
       @logout="logout"
     />
@@ -183,7 +184,10 @@
         </div>
       </div>
     </main>
-    <AdminFooter @navigate="handleNavigation" />
+    <CommonFooter 
+      :user-role="'admin'"
+      @navigate="handleNavigation" 
+    />
   </div>
 </template>
 
@@ -192,8 +196,8 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { BASE_URL } from '@/config/api';
-import AdminHeader from './AdminHeader.vue';
-import AdminFooter from './AdminFooter.vue';
+import CommonHeader from '../common/CommonHeader.vue';
+import CommonFooter from '../common/CommonFooter.vue';
 import DoctorsList from './AdminDoctorsList.vue';
 import PatientsList from './AdminPatientsList.vue';
 import AdminProfileCard from './AdminProfileCard.vue';
@@ -201,8 +205,8 @@ import AdminProfileCard from './AdminProfileCard.vue';
 export default {
   name: 'AdminDashboard',
   components: {
-    AdminHeader,
-    AdminFooter,
+    CommonHeader,
+    CommonFooter,
     DoctorsList,
     PatientsList,
     AdminProfileCard

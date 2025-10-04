@@ -2,7 +2,7 @@
   <footer class="footer-singleline">
     <div class="footer-singleline__container">
       <div class="footer-logo">
-        <img src="@/assets/images/Footer1.svg" alt="DoctorBuddy logo (blue)" class="footer-logo-image-single" />
+        <img src="@/assets/images/Footer1.svg" alt="DoctorBuddy logo" class="footer-logo-image-single" />
       </div>
       
       <nav class="footer-social-links-single">
@@ -12,18 +12,23 @@
       </nav>
       
       <nav class="footer-utility-links-single" role="navigation" aria-label="Footer Utility Links">
-        <button @click="$emit('navigate', 'dashboard')" class="footer-utility-link-single">Dashboard</button>
-        <button @click="$emit('navigate', 'appointments')" class="footer-utility-link-single">Appointments</button>
-        <button @click="$emit('navigate', 'profile')" class="footer-utility-link-single">Profile</button>
+        <button 
+          v-for="item in menuItems" 
+          :key="item.key"
+          @click="navigateTo(item.key)" 
+          class="footer-utility-link-single"
+        >
+          {{ item.label }}
+        </button>
       </nav>
       
       <span class="footer-copyright-single">
-        &copy; <span>{{ year }}</span> DoctorBuddy - Patient Portal
+        &copy; <span>{{ year }}</span> DoctorBuddy - {{ getRolePortalName() }}
       </span>
       
-      <button class="footer-cta-btn-single stylish-cta pulse-animation" @click="$emit('navigate', 'profile')">
-        <i class="fas fa-user"></i>
-        View Profile
+      <button class="footer-cta-btn-single stylish-cta pulse-animation" @click="navigateTo('profile')">
+        <i :class="getProfileIcon()"></i>
+        <span class="profile-text">View Profile</span>
       </button>
     </div>
   </footer>
@@ -31,7 +36,14 @@
 
 <script>
 export default {
-  name: 'PatientFooter',
+  name: 'CommonFooter',
+  props: {
+    userRole: {
+      type: String,
+      required: true,
+      validator: value => ['admin', 'doctor', 'patient'].includes(value)
+    }
+  },
   emits: ['navigate'],
   data() {
     return {
@@ -47,9 +59,14 @@ export default {
           svg: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.974.974 1.246 2.241 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.974.974-2.241 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.974-.974-1.246-2.241-1.308-3.608C2.175 15.647 2.163 15.267 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608C4.515 2.567 5.782 2.295 7.148 2.233 8.414 2.175 8.794 2.163 12 2.163zm0-2.163C8.741 0 8.332.013 7.052.072 5.771.131 4.659.425 3.678 1.406c-.98.98-1.274 2.092-1.333 3.374C2.013 5.668 2 6.077 2 9.333v5.334c0 3.256.013 3.665.072 4.945.059 1.282.353 2.394 1.333 3.374.98.98 2.092 1.274 3.374 1.333 1.28.059 1.689.072 4.945.072s3.665-.013 4.945-.072c1.282-.059 2.394-.353 3.374-1.333.98-.98 1.274-2.092 1.333-3.374.059-1.28.072-1.689.072-4.945V9.333c0-3.256-.013-3.665-.072-4.945-.059-1.282-.353-2.394-1.333-3.374-.98-.98-2.092-1.274-3.374-1.333C15.668.013 15.259 0 12 0z"/><circle cx="12" cy="12" r="3.5"/><circle cx="18.406" cy="5.594" r="1.44"/></svg>`
         },
         {
-          label: 'Linkedin',
-          url: 'https://www.linkedin.com/company/doctorbuddy/',
-          svg: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.327-.027-3.037-1.849-3.037-1.851 0-2.132 1.445-2.132 2.939v5.667H9.358V9h3.414v1.561h.049c.476-.899 1.637-1.849 3.369-1.849 3.602 0 4.267 2.368 4.267 5.455v6.285zM5.337 7.433c-1.144 0-2.069-.926-2.069-2.069 0-1.144.925-2.069 2.069-2.069 1.144 0 2.069.925 2.069 2.069 0 1.143-.925 2.069-2.069 2.069zm1.777 13.019H3.56V9h3.554v11.452z"/></svg>`
+          label: 'LinkedIn',
+          url: 'https://www.linkedin.com/company/doctorbuddy',
+          svg: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`
+        },
+        {
+          label: 'Twitter',
+          url: 'https://twitter.com/doctorbuddy',
+          svg: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>`
         },
         {
           label: 'Youtube',
@@ -58,6 +75,48 @@ export default {
         }
       ],
       year: new Date().getFullYear()
+    }
+  },
+  computed: {
+    menuItems() {
+      const menus = {
+        admin: [
+          { key: 'dashboard', label: 'Dashboard' },
+          { key: 'doctors', label: 'Doctors' },
+          { key: 'patients', label: 'Patients' }
+        ],
+        doctor: [
+          { key: 'dashboard', label: 'Dashboard' },
+          { key: 'appointments', label: 'Appointments' },
+          { key: 'patients', label: 'Patients' }
+        ],
+        patient: [
+          { key: 'dashboard', label: 'Dashboard' },
+          { key: 'appointments', label: 'Appointments' }
+        ]
+      };
+      return menus[this.userRole] || [];
+    }
+  },
+  methods: {
+    getRolePortalName() {
+      const portals = {
+        admin: 'Admin Portal',
+        doctor: 'Professional Portal',
+        patient: 'Patient Portal'
+      };
+      return portals[this.userRole] || 'Portal';
+    },
+    getProfileIcon() {
+      const icons = {
+        admin: 'fas fa-user-shield',
+        doctor: 'fas fa-user-md',
+        patient: 'fas fa-user'
+      };
+      return icons[this.userRole] || 'fas fa-user';
+    },
+    navigateTo(page) {
+      this.$emit('navigate', page);
     }
   }
 }
@@ -376,6 +435,10 @@ export default {
   
   .footer-cta-btn-single i {
     font-size: 0.6rem;
+  }
+  
+  .profile-text {
+    display: none; /* Hide text on very small screens, keep only icon */
   }
 }
 

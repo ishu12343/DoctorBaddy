@@ -241,9 +241,9 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gray-50">
     <!-- Header -->
-    <PatientHeader 
-      :patient-info="patientInfo" 
-      :current-page="currentPageName"
+    <CommonHeader 
+      user-role="patient"
+      :user-info="patientInfo"
       @navigate="handleNavigation"
       @logout="handleLogout"
     />
@@ -1524,7 +1524,8 @@
     </main>
 
     <!-- Footer -->
-    <PatientFooter 
+    <CommonFooter 
+      user-role="patient"
       @navigate="handleNavigation"
     />
   </div>
@@ -1532,14 +1533,14 @@
 import axios from 'axios';
 import { BASE_URL } from '@/config/api';
 import PatientProfileCard from './PatientProfileCard.vue';
-import PatientHeader from './PatientHeader.vue';
-import PatientFooter from './PatientFooter.vue';
+import CommonHeader from '../common/CommonHeader.vue';
+import CommonFooter from '../common/CommonFooter.vue';
 
 export default {
   components: {
     PatientProfileCard,
-    PatientHeader,
-    PatientFooter
+    CommonHeader,
+    CommonFooter
   },
   data() {
     return {
