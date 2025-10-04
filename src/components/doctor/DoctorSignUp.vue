@@ -185,7 +185,7 @@
 
                 <!-- Login Link -->
                 <div class="mt-6 text-center">
-                  <router-link to="/doctor-login" class="font-medium text-brand-600 hover:text-brand-500">
+                  <router-link to="/login?role=doctor" class="font-medium text-brand-600 hover:text-brand-500">
                     Login here
                   </router-link>
                 </div>

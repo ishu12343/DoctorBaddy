@@ -21,37 +21,14 @@
           
           <!-- Signup Section -->
           <div class="flex items-center gap-4">
-            <!-- Login Dropdown -->
-            <div class="relative">
-              <button 
-                @click="toggleLoginDropdown"
-                @mouseenter="showLoginDropdown" 
-                class="px-4 py-2 bg-medical-secondary hover:bg-medical-secondary/90 text-white rounded-lg font-medium flex items-center gap-2 relative z-20 transition-colors duration-200 shadow-md hover:shadow-lg"
-                :aria-expanded="showDropdown"
-                aria-haspopup="true"
-              >
-                LOG IN
-                <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{'transform rotate-180': showDropdown}"></i>
-              </button>
-              <transition
-                enter-active-class="transition duration-100 ease-out"
-                enter-from-class="transform scale-95 opacity-0"
-                enter-to-class="transform scale-100 opacity-100"
-                leave-active-class="transition duration-75 ease-in"
-                leave-from-class="transform scale-100 opacity-100"
-                leave-to-class="transform scale-95 opacity-0"
-              >
-                <div 
-                  v-if="showDropdown" 
-                  ref="loginDropdown"
-                  class="absolute top-full right-0 mt-2 bg-medical-secondary hover:bg-medical-secondary/90 text-white rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in border border-gray-100"
-                >
-                  <router-link to="/patient-login" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideLoginDropdown">Patient Login</router-link>
-                  <router-link to="/doctor-login" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideLoginDropdown">Doctor Login</router-link>
-                  <router-link to="/admin-login" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideLoginDropdown">Admin Login</router-link>
-                </div>
-              </transition>
-            </div>
+            <!-- Login Button -->
+            <router-link 
+              to="/login" 
+              class="px-4 py-2 bg-medical-secondary hover:bg-medical-secondary/90 text-white rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 shadow-md hover:shadow-lg"
+            >
+              <i class="fas fa-sign-in-alt"></i>
+              LOG IN
+            </router-link>
 
             <!-- Signup Dropdown -->
             <div class="relative">
@@ -89,34 +66,13 @@
         <!-- Mobile Menu and Login Buttons -->
         <div class="flex items-center gap-2 lg:hidden">
           <!-- Mobile Login Button -->
-          <div class="relative">
-            <button 
-              @click="toggleLoginDropdown"
-              class="px-4 py-2 text-sm font-medium text-white bg-white/10 border border-white/30 rounded-lg hover:bg-white/20 transition-colors flex items-center gap-2"
-              :aria-expanded="showDropdown"
-            >
-              LOGIN
-              <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{'transform rotate-180': showDropdown}"></i>
-            </button>
-            <transition
-              enter-active-class="transition duration-100 ease-out"
-              enter-from-class="transform scale-95 opacity-0"
-              enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-75 ease-in"
-              leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0"
-            >
-              <div 
-                v-if="showDropdown" 
-                ref="loginDropdown"
-                class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl overflow-hidden z-50 animate-fade-in border border-gray-100"
-              >
-                <router-link to="/patient-login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" @click="closeMobileMenu">Patient Login</router-link>
-                <router-link to="/doctor-login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" @click="closeMobileMenu">Doctor Login</router-link>
-                <router-link to="/admin-login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" @click="closeMobileMenu">Admin Login</router-link>
-              </div>
-            </transition>
-          </div>
+          <router-link 
+            to="/login" 
+            class="px-4 py-2 text-sm font-medium text-white bg-white/10 border border-white/30 rounded-lg hover:bg-white/20 transition-colors flex items-center gap-2"
+          >
+            <i class="fas fa-sign-in-alt"></i>
+            LOGIN
+          </router-link>
 
           <!-- Mobile Menu Button -->
           <button 
@@ -192,7 +148,6 @@ export default {
   name: 'AppHeader',
   data() {
     return {
-      showDropdown: false,
       showDropdown2: false,
       mobileMenuOpen: false,
       isMobile: false,
@@ -200,39 +155,13 @@ export default {
     }
   },
   methods: {
-    toggleLoginDropdown(e) {
-      e.stopPropagation();
-      if (this.isMobile) {
-        this.showDropdown = !this.showDropdown;
-        this.showDropdown2 = false; // Close other dropdown if open
-      } else {
-        this.showDropdown = !this.showDropdown;
-        if (this.showDropdown) this.showDropdown2 = false;
-      }
-    },
     toggleSignupDropdown(e) {
       e.stopPropagation();
-      if (this.isMobile) {
-        this.showDropdown2 = !this.showDropdown2;
-        this.showDropdown = false; // Close other dropdown if open
-      } else {
-        this.showDropdown2 = !this.showDropdown2;
-        if (this.showDropdown2) this.showDropdown = false;
-      }
-    },
-    showLoginDropdown() {
-      if (!this.isMobile) {
-        this.showDropdown = true;
-        this.showDropdown2 = false;
-      }
-    },
-    hideLoginDropdown() {
-      this.showDropdown = false;
+      this.showDropdown2 = !this.showDropdown2;
     },
     showSignupDropdown() {
       if (!this.isMobile) {
         this.showDropdown2 = true;
-        this.showDropdown = false;
       }
     },
     hideSignupDropdown() {
@@ -256,11 +185,7 @@ export default {
         this.mobileMenuOpen = false;
       }
       
-      // Close dropdowns when clicking outside
-      if (this.showDropdown && !this.$refs.loginDropdown?.contains(e.target)) {
-        this.hideLoginDropdown();
-      }
-      
+      // Close signup dropdown when clicking outside
       if (this.showDropdown2 && !this.$refs.signupDropdown?.contains(e.target)) {
         this.hideSignupDropdown();
       }
@@ -299,23 +224,40 @@ export default {
 
 /* Ensure dropdown items are clickable */
 .dropdown-item {
-  @apply block px-4 py-3 text-white hover:bg-medical-primary/80 transition-colors cursor-pointer;
+  display: block;
+  padding: 0.75rem 1rem;
+  color: white;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
   text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(59, 130, 246, 0.8);
 }
 
 /* Improve touch targets for mobile */
 @media (max-width: 1023px) {
   .dropdown-item {
-    @apply py-4 text-base;
+    padding: 1rem;
+    font-size: 1rem;
   }
 }
+
 /* Custom styles for components that need Tailwind extensions */
 .nav-item {
-  @apply flex items-center gap-2 px-4 py-2 text-white hover:text-gray-200 transition-colors duration-200 font-medium;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  text-decoration: none;
 }
 
-.dropdown-item {
-  @apply block px-4 py-3 text-white hover:bg-blue-600 transition-colors duration-200 no-underline;
+.nav-item:hover {
+  color: #e5e7eb;
 }
 
 .btn-primary {

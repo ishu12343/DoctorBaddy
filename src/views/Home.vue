@@ -596,14 +596,14 @@
               </p>
             </div>
             <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center items-center mt-4 sm:mt-0">
-              <button @click="$router.push('/patient-login')"
+              <button @click="$router.push('/login?role=patient')"
                 class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-medical-primary text-white font-bold text-lg shadow-lg hover:from-blue-600 hover:to-medical-secondary transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 mb-2 sm:mb-0"
               >
                 <i class="fas fa-user-plus mr-2"></i>
                 Sign Up as Patient
                 <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform duration-200"></i>
               </button>
-              <button @click="$router.push('/doctor-login')"
+              <button @click="$router.push('/login?role=doctor')"
                 class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-medical-secondary to-blue-500 text-white font-bold text-lg shadow-lg hover:from-medical-primary hover:to-blue-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-medical-secondary"
               >
                 <i class="fas fa-stethoscope mr-2"></i>
@@ -618,8 +618,8 @@
 
     <AppFooter />
     <ChatButton @open-chat="openChat" />
-    <FloatingActionButton @click="$router.push('/patient-login')" />
-    <FloatingActionButton @click="$router.push('/doctor-login')" />
+    <FloatingActionButton @click="$router.push('/login?role=patient')" />
+    <FloatingActionButton @click="$router.push('/login?role=doctor')" />
     
     <!-- Tip Detail Modal -->
     <div v-if="selectedTip" class="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50" @click.self="closeModal">
@@ -1274,7 +1274,7 @@ export default {
         this.$router.push(`/patient-dashboard`); // Or a specific booking page
       } else {
         // User not logged in, redirect to login
-        this.$router.push('/patient-login');
+        this.$router.push('/login?role=patient');
       }
     },
     setupCarouselSyncing() {
@@ -1446,16 +1446,16 @@ export default {
     getStartedWithService(service) {
       // Route to specific service pages or general services page
       const routes = {
-        'Doctor Appointments': '/patient-login',
-        'Video Consultations': '/patient-login',
-        'E-Prescriptions': '/patient-login',
-        'Digital Health Records': '/patient-login',
+        'Doctor Appointments': '/login?role=patient',
+        'Video Consultations': '/login?role=patient',
+        'E-Prescriptions': '/login?role=patient',
+        'Digital Health Records': '/login?role=patient',
         'Specialist Doctors': '/services',
         'Mental Health Support': '/services',
-        '24/7 Availability': '/patient-login',
+        '24/7 Availability': '/login?role=patient',
         'Lab Tests & Diagnostics': '/services',
         'Medicine Ordering': '/services',
-        'Insurance & Payments': '/patient-login'
+        'Insurance & Payments': '/login?role=patient'
       };
       
       this.closeServiceModal();

@@ -185,8 +185,8 @@ export default {
           // Token expired or invalid
           localStorage.removeItem('token');
           localStorage.removeItem('userType');
-          localStorage.removeItem('admin');
-          window.location.href = '/admin-login';
+          localStorage.removeItem('adminInfo');
+          window.location.href = '/login?role=admin';
         }
       }
     };

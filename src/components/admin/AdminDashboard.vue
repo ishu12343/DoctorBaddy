@@ -284,9 +284,9 @@ export default {
       // Clear authentication data
       localStorage.removeItem('token');
       localStorage.removeItem('userType');
-      localStorage.removeItem('admin');
+      localStorage.removeItem('adminInfo');
       // Redirect to login page and block back navigation
-      router.replace('/admin-login');
+      router.replace('/login?role=admin');
     };
     
     // Load admin profile
@@ -314,8 +314,8 @@ export default {
           // Token expired or invalid
           localStorage.removeItem('token');
           localStorage.removeItem('userType');
-          localStorage.removeItem('admin');
-          router.replace('/admin-login');
+          localStorage.removeItem('adminInfo');
+          router.replace('/login?role=admin');
         }
         // Keep default admin info if profile loading fails
       }

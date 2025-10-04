@@ -39,7 +39,7 @@ export default {
     selectRole(role) {
       this.showRoleModal = false;
       if (role === 'doctor') {
-        this.$router.push('/doctor-login');
+        this.$router.push('/login?role=doctor');
       } else if (role === 'patient') {
         this.$router.push('/patient-login');
       }

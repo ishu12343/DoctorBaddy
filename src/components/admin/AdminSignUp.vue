@@ -80,7 +80,7 @@
 
                 <p class="text-center text-sm text-gray-600">
                   Already have an account? 
-                  <router-link to="/admin-login" class="font-medium text-brand-600 hover:text-brand-500">Login here</router-link>
+                  <router-link to="/login?role=admin" class="font-medium text-brand-600 hover:text-brand-500">Login here</router-link>
                 </p>
               </form>
             </div>
@@ -127,8 +127,9 @@ export default {
         const response = await axios.post(`${BASE_URL}/admin/create`, this.form);
         const { token, admin } = response.data;
 
-        // Store token in localStorage
-        localStorage.setItem("admin_token", token);
+        // Store token in localStorage consistently
+        localStorage.setItem("token", token);
+        localStorage.setItem("adminInfo", JSON.stringify(admin));
         localStorage.setItem("userType", "admin");
         
         this.success = true;
