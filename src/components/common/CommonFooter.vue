@@ -1,35 +1,106 @@
 <template>
-  <footer class="footer-singleline">
-    <div class="footer-singleline__container">
-      <div class="footer-logo">
-        <img src="@/assets/images/Footer1.svg" alt="DoctorBuddy logo" class="footer-logo-image-single" />
+  <footer class="modern-footer" role="contentinfo">
+    <!-- Desktop & Tablet Layout -->
+    <div class="footer-desktop hidden-mobile">
+      <div class="footer-container">
+        <!-- Left Section: Logo & Branding -->
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="@/assets/images/Footer1.svg" alt="DoctorBuddy" class="footer-logo-img" />
+            <span class="footer-brand-text">{{ getRolePortalName() }}</span>
+          </div>
+        </div>
+        
+        <!-- Center Section: Quick Navigation -->
+        <nav class="footer-nav" role="navigation" aria-label="Footer Navigation">
+          <button 
+            v-for="item in menuItems" 
+            :key="item.key"
+            @click="navigateTo(item.key)" 
+            class="footer-nav-link"
+            :aria-label="`Navigate to ${item.label}`"
+          >
+            <i :class="getMenuIcon(item.key)" class="nav-icon"></i>
+            <span>{{ item.label }}</span>
+          </button>
+        </nav>
+        
+        <!-- Right Section: Social Links & CTA -->
+        <div class="footer-actions">
+          <nav class="footer-social" aria-label="Social Media Links">
+            <a 
+              v-for="icon in socialIcons" 
+              :key="icon.label" 
+              :href="icon.url" 
+              class="social-link" 
+              :aria-label="`Follow us on ${icon.label}`" 
+              rel="noopener noreferrer" 
+              target="_blank"
+            >
+              <span v-html="icon.svg" class="social-icon"></span>
+            </a>
+          </nav>
+          
+          <button class="footer-cta-btn" @click="navigateTo('profile')" :aria-label="`View ${userRole} profile`">
+            <i :class="getProfileIcon()" class="cta-icon"></i>
+            <span class="cta-text">Profile</span>
+          </button>
+        </div>
       </div>
       
-      <nav class="footer-social-links-single">
-        <a v-for="icon in socialIcons" :key="icon.label" :href="icon.url" class="footer-social-icon-link-single" :aria-label="icon.label" rel="noopener" target="_blank">
-          <span v-html="icon.svg" class="footer-social-icon-single"></span>
-        </a>
-      </nav>
-      
-      <nav class="footer-utility-links-single" role="navigation" aria-label="Footer Utility Links">
-        <button 
-          v-for="item in menuItems" 
-          :key="item.key"
-          @click="navigateTo(item.key)" 
-          class="footer-utility-link-single"
-        >
-          {{ item.label }}
+      <!-- Copyright -->
+      <div class="footer-copyright">
+        <span>&copy; {{ year }} DoctorBuddy. All rights reserved.</span>
+        <span class="separator">•</span>
+        <span>{{ getRolePortalName() }}</span>
+      </div>
+    </div>
+    
+    <!-- Mobile Layout -->
+    <div class="footer-mobile visible-mobile">
+      <div class="mobile-footer-top">
+        <div class="mobile-brand">
+          <img src="@/assets/images/Footer1.svg" alt="DoctorBuddy" class="mobile-logo" />
+          <span class="mobile-brand-text">{{ getRolePortalName() }}</span>
+        </div>
+        
+        <button class="mobile-profile-btn" @click="navigateTo('profile')" :aria-label="`View ${userRole} profile`">
+          <i :class="getProfileIcon()" class="mobile-profile-icon"></i>
         </button>
-      </nav>
+      </div>
       
-      <span class="footer-copyright-single">
-        &copy; <span>{{ year }}</span> DoctorBuddy - {{ getRolePortalName() }}
-      </span>
+      <div class="mobile-footer-content">
+        <nav class="mobile-nav" role="navigation" aria-label="Mobile Footer Navigation">
+          <button 
+            v-for="item in menuItems" 
+            :key="item.key"
+            @click="navigateTo(item.key)" 
+            class="mobile-nav-btn"
+            :aria-label="`Navigate to ${item.label}`"
+          >
+            <i :class="getMenuIcon(item.key)" class="mobile-nav-icon"></i>
+            <span class="mobile-nav-text">{{ item.label }}</span>
+          </button>
+        </nav>
+        
+        <div class="mobile-social">
+          <a 
+            v-for="icon in socialIcons.slice(0, 4)" 
+            :key="icon.label" 
+            :href="icon.url" 
+            class="mobile-social-link" 
+            :aria-label="`Follow us on ${icon.label}`" 
+            rel="noopener noreferrer" 
+            target="_blank"
+          >
+            <span v-html="icon.svg" class="mobile-social-icon"></span>
+          </a>
+        </div>
+      </div>
       
-      <button class="footer-cta-btn-single stylish-cta pulse-animation" @click="navigateTo('profile')">
-        <i :class="getProfileIcon()"></i>
-        <span class="profile-text">View Profile</span>
-      </button>
+      <div class="mobile-copyright">
+        <span>&copy; {{ year }} DoctorBuddy</span>
+      </div>
     </div>
   </footer>
 </template>
@@ -93,6 +164,7 @@ export default {
         patient: [
           { key: 'dashboard', label: 'Dashboard' },
           { key: 'appointments', label: 'Appointments' }
+          
         ]
       };
       return menus[this.userRole] || [];
@@ -115,7 +187,20 @@ export default {
       };
       return icons[this.userRole] || 'fas fa-user';
     },
+    getMenuIcon(menuKey) {
+      const icons = {
+        dashboard: 'fas fa-tachometer-alt',
+        appointments: 'fas fa-calendar-alt',
+        doctors: 'fas fa-user-md',
+        patients: 'fas fa-users',
+        profile: this.getProfileIcon()
+      };
+      return icons[menuKey] || 'fas fa-circle';
+    },
     navigateTo(page) {
+      // Add some visual feedback
+      const event = new Event('footerNavigation');
+      document.dispatchEvent(event);
       this.$emit('navigate', page);
     }
   }
@@ -123,30 +208,214 @@ export default {
 </script>
 
 <style scoped>
-.footer-singleline {
+/* Modern Footer Base Styles */
+.modern-footer {
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  color: #fff;
-  backdrop-filter: blur(4px);
-  padding: 0.4rem 0;
+  color: #ffffff;
   position: relative;
   z-index: 10;
-  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.15);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+  backdrop-filter: blur(10px);
   overflow: hidden;
-  min-height: 48px;
 }
 
-.footer-singleline__container {
+.modern-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  z-index: 1;
+}
+
+/* Desktop Footer */
+.footer-desktop {
+  position: relative;
+  z-index: 2;
+}
+
+.footer-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 1rem 2rem;
+  gap: 2rem;
+  min-height: 60px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.footer-logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.footer-brand-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  letter-spacing: 0.5px;
+}
+
+.footer-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.footer-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.footer-nav-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.footer-nav-link:active {
+  transform: translateY(0);
+}
+
+.nav-icon {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.footer-actions {
+  display: flex;
+  align-items: center;
   gap: 1rem;
-  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: #94a3b8;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.social-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.social-icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.footer-cta-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border: none;
+  border-radius: 25px;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  position: relative;
   overflow: hidden;
+}
+
+.footer-cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.footer-cta-btn:hover::before {
+  left: 100%;
+}
+
+.footer-cta-btn:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.footer-cta-btn:active {
+  transform: translateY(0);
+}
+
+.cta-icon {
+  font-size: 1rem;
+}
+
+.footer-copyright {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: rgba(0, 0, 0, 0.1);
+  font-size: 0.8rem;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.separator {
+  opacity: 0.5;
 }
 
 .footer-logo {
@@ -305,31 +574,221 @@ export default {
   }
 }
 
-/* Responsive styles */
-@media (max-width: 1024px) {
-  .footer-singleline__container {
-    padding: 0.75rem 1rem;
-    gap: 0.75rem;
-    flex-wrap: nowrap;
+/* Mobile Footer */
+.footer-mobile {
+  position: relative;
+  z-index: 2;
+}
+
+.mobile-footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mobile-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: brightness(1.1);
+}
+
+.mobile-brand-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.mobile-profile-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-profile-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.mobile-profile-icon {
+  font-size: 1rem;
+}
+
+.mobile-footer-content {
+  padding: 0.75rem 1rem;
+}
+
+.mobile-nav {
+  display: flex;
+  justify-content: space-around;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.mobile-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-height: 56px;
+}
+
+.mobile-nav-btn:hover,
+.mobile-nav-btn:active {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.mobile-nav-icon {
+  font-size: 1.1rem;
+}
+
+.mobile-nav-text {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.mobile-social {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.mobile-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: #94a3b8;
+  transition: all 0.3s ease;
+}
+
+.mobile-social-link:hover,
+.mobile-social-link:active {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.mobile-social-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.mobile-copyright {
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Breakpoints */
+@media (min-width: 769px) {
+  .footer-mobile {
+    display: none;
+  }
+  .visible-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-desktop {
+    display: none;
+  }
+  .hidden-mobile {
+    display: none !important;
+  }
+  .visible-mobile {
+    display: block !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .footer-container {
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
   }
   
-  .footer-utility-links-single {
-    gap: 0.5rem;
-    font-size: 0.75rem;
+  .footer-nav {
+    gap: 1rem;
   }
   
-  .footer-utility-link-single {
-    padding: 0.2rem 0.4rem;
-  }
-  
-  .footer-copyright-single {
-    font-size: 0.7rem;
-    margin: 0 0.25rem;
-  }
-  
-  .footer-cta-btn-single {
+  .footer-nav-link {
+    padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
-    padding: 0.35rem 0.9rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .footer-container {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .footer-nav {
+    gap: 0.75rem;
+  }
+  
+  .footer-nav-link span {
+    display: none;
+  }
+  
+  .footer-nav-link {
+    padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    justify-content: center;
+  }
+  
+  .footer-brand-text {
+    font-size: 0.875rem;
+  }
+  
+  .footer-cta-btn .cta-text {
+    display: none;
+  }
+  
+  .footer-cta-btn {
+    padding: 0.75rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    justify-content: center;
   }
 }
 
@@ -442,31 +901,102 @@ export default {
   }
 }
 
-/* Touch-friendly improvements */
+/* Touch-friendly and Accessibility Improvements */
 @media (hover: none) and (pointer: coarse) {
-  .footer-social-icon-link-single,
-  .footer-utility-link-single,
-  .footer-cta-btn-single {
+  .footer-nav-link,
+  .social-link,
+  .footer-cta-btn,
+  .mobile-nav-btn,
+  .mobile-social-link,
+  .mobile-profile-btn {
     min-height: 44px;
     min-width: 44px;
     touch-action: manipulation;
   }
   
-  .footer-utility-link-single {
-    padding: 0.5rem 0.75rem;
+  .mobile-nav-btn {
+    min-height: 60px;
   }
   
-  .footer-cta-btn-single {
-    padding: 0.6rem 1.5rem;
-    min-width: auto;
+  .footer-nav-link:hover,
+  .social-link:hover,
+  .footer-cta-btn:hover {
+    transform: none;
   }
 }
 
-/* High DPI screens */
+/* Focus States for Accessibility */
+.footer-nav-link:focus,
+.social-link:focus,
+.footer-cta-btn:focus,
+.mobile-nav-btn:focus,
+.mobile-social-link:focus,
+.mobile-profile-btn:focus {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .modern-footer {
+    background: #000000;
+    border-top: 2px solid #ffffff;
+  }
+  
+  .footer-nav-link,
+  .social-link,
+  .mobile-nav-btn,
+  .mobile-social-link {
+    border: 1px solid #ffffff;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .footer-nav-link,
+  .social-link,
+  .footer-cta-btn,
+  .mobile-nav-btn,
+  .mobile-social-link,
+  .mobile-profile-btn {
+    transition: none;
+  }
+  
+  .modern-footer *:hover {
+    transform: none !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .modern-footer {
+    background: none !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border-top: 1px solid #000000 !important;
+  }
+  
+  .footer-social,
+  .mobile-social,
+  .footer-cta-btn,
+  .mobile-profile-btn {
+    display: none !important;
+  }
+}
+
+/* High DPI Screens */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .footer-logo-image-single {
+  .footer-logo-img,
+  .mobile-logo {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .modern-footer {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   }
 }
 </style>
