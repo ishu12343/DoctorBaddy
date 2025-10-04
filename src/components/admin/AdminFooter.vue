@@ -23,7 +23,7 @@
       
       <button class="footer-cta-btn-single stylish-cta pulse-animation" @click="navigate('profile')">
         <i class="fas fa-user-shield"></i>
-        Admin Profile
+        <span class="profile-text">Admin Profile</span>
       </button>
     </div>
   </footer>
@@ -74,11 +74,11 @@ export default {
   background: linear-gradient(90deg, #1a2746 0%, #223a5e 100%);
   box-shadow: 0 2px 12px 0 rgb(30 40 90 / 10%);
   border-top: 2px solid #2b3a5e;
-  padding: 0;
+  padding: 0.5rem 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 48px;
+  min-height: 44px;
   position: relative;
   z-index: 2;
 }
@@ -91,26 +91,28 @@ export default {
   width: 100%;
   max-width: 1200px;
   padding: 0 1rem;
-  gap: 1rem;
+  gap: 0.75rem;
   box-sizing: border-box;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .footer-logo-image-single {
-  height: 14px;
+  height: 12px;
   width: auto;
   opacity: 0.9;
+  flex-shrink: 0;
 }
 
 .footer-social-links-single {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  flex-shrink: 0;
 }
 
 .footer-social-icon-link-single {
-  width: 1.5rem;
-  height: 1.5rem;
-  font-size: 0.9rem;
+  width: 1.3rem;
+  height: 1.3rem;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -119,6 +121,7 @@ export default {
   border-radius: 50%;
   transition: all 0.2s ease;
   text-decoration: none;
+  flex-shrink: 0;
 }
 
 .footer-social-icon-link-single:hover {
@@ -135,8 +138,10 @@ export default {
 
 .footer-utility-links-single {
   display: flex;
-  gap: 1rem;
-  font-size: 0.8rem;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .footer-utility-link-single {
@@ -147,8 +152,10 @@ export default {
   border: none;
   cursor: pointer;
   font-size: inherit;
-  padding: 0.25rem 0.5rem;
+  padding: 0.2rem 0.4rem;
   border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 1;
 }
 
 .footer-utility-link-single:hover {
@@ -157,10 +164,14 @@ export default {
 }
 
 .footer-copyright-single {
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   color: #b0b8c9;
-  margin: 0 0.5rem;
+  margin: 0;
   white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .footer-cta-btn-single {
@@ -181,14 +192,14 @@ export default {
   background: linear-gradient(90deg, #5C9EF0 0%, #3b5998 100%);
   color: #fff;
   border: none;
-  border-radius: 22px;
+  border-radius: 18px;
   font-weight: 700;
-  font-size: 0.9rem;
-  padding: 0.4rem 1.2rem;
-  box-shadow: 0 2px 12px 0 rgb(44 100 200 / 13%);
+  font-size: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  box-shadow: 0 1px 8px 0 rgb(44 100 200 / 15%);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   transition: all 0.2s ease;
   outline: none;
   cursor: pointer;
@@ -231,14 +242,21 @@ export default {
   .footer-singleline__container {
     padding: 0.75rem 1rem;
     gap: 0.75rem;
+    flex-wrap: nowrap;
   }
   
   .footer-utility-links-single {
-    display: none;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .footer-utility-link-single {
+    padding: 0.2rem 0.4rem;
   }
   
   .footer-copyright-single {
     font-size: 0.7rem;
+    margin: 0 0.25rem;
   }
   
   .footer-cta-btn-single {
@@ -248,41 +266,181 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .footer-singleline__container {
-    justify-content: center;
-    gap: 1rem;
+  .footer-singleline {
+    min-height: 40px;
+    padding: 0.25rem 0;
   }
   
-  .footer-logo,
-  .footer-copyright-single {
-    display: none;
+  .footer-singleline__container {
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+  
+  .footer-logo {
+    order: 1;
+    flex-shrink: 0;
+  }
+  
+  .footer-logo-image-single {
+    height: 14px;
+    opacity: 1;
   }
   
   .footer-social-links-single {
-    gap: 0.75rem;
+    order: 2;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+  
+  .footer-social-icon-link-single {
+    width: 26px;
+    height: 26px;
+    font-size: 0.7rem;
+  }
+  
+  .footer-social-icon-single {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+  
+  .footer-utility-links-single {
+    order: 3;
+    gap: 0.3rem;
+    justify-content: center;
+    flex-wrap: nowrap;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+  
+  .footer-utility-link-single {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  
+  .footer-copyright-single {
+    order: 4;
+    font-size: 0.6rem;
+    text-align: center;
+    margin: 0;
+    opacity: 0.8;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   
   .footer-cta-btn-single {
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    border-radius: 50%;
-    width: 3rem;
-    height: 3rem;
-    padding: 0;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 100;
+    order: 5;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    margin-top: 0;
+    border-radius: 16px;
+    box-shadow: 0 1px 8px rgba(92, 158, 240, 0.2);
+    flex-shrink: 0;
   }
   
-  .footer-cta-btn-single span {
-    display: none;
+  .footer-cta-btn-single .profile-text {
+    display: inline;
   }
   
   .footer-cta-btn-single i {
-    margin: 0;
-    font-size: 1.2rem;
+    font-size: 1rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .footer-singleline {
+    min-height: 36px;
+  }
+  
+  .footer-singleline__container {
+    padding: 0.3rem 0.4rem;
+    gap: 0.25rem;
+  }
+  
+  .footer-logo-image-single {
+    height: 12px;
+  }
+  
+  .footer-social-links-single {
+    gap: 0.25rem;
+  }
+  
+  .footer-social-icon-link-single {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .footer-social-icon-single {
+    width: 0.65rem;
+    height: 0.65rem;
+  }
+  
+  .footer-utility-links-single {
+    gap: 0.2rem;
+    display: none; /* Hide utility links on very small screens to save space */
+  }
+  
+  .footer-utility-link-single {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.2rem;
+  }
+  
+  .footer-copyright-single {
+    font-size: 0.55rem;
+    max-width: 80px;
+  }
+  
+  .footer-cta-btn-single {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 14px;
+  }
+  
+  .footer-cta-btn-single i {
+    font-size: 0.6rem;
+  }
+  
+  .footer-cta-btn-single .profile-text {
+    display: none; /* Hide text on very small screens, keep only icon */
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .footer-social-icon-link-single,
+  .footer-utility-link-single,
+  .footer-cta-btn-single {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+  
+  .footer-utility-link-single {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .footer-cta-btn-single {
+    padding: 0.6rem 1.5rem;
+    min-width: auto;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .footer-logo-image-single {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   }
 }
 </style>
