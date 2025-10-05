@@ -292,7 +292,7 @@
             <div class="form-group">
               <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3">
                 <i class="fas fa-user-circle mr-2 text-indigo-500"></i>
-                Email or Mobile Number
+                {{ selectedRole === 'admin' ? 'Registered Email Address' : 'Registered Email or Mobile Number' }}
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -300,16 +300,29 @@
                 </div>
                 <input 
                   v-model="resetIdentifier" 
-                  type="text" 
+                  :type="selectedRole === 'admin' ? 'email' : 'text'" 
                   required 
                   class="w-full pl-12 pr-4 py-4 text-base border-2 border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm font-medium"
                   :placeholder="getResetPlaceholder()"
                 />
               </div>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mt-3 flex items-center font-medium">
-                <i class="fas fa-info-circle mr-2 text-indigo-400"></i>
-                Enter either your email address or mobile number
-              </p>
+              
+              <!-- Information Alert -->
+              <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-2xl">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0">
+                    <i class="fas fa-info-circle text-blue-500 text-lg mr-3 mt-0.5"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-sm font-bold text-blue-800 dark:text-blue-200 mb-1">Important Notice</h4>
+                    <p class="text-sm text-blue-700 dark:text-blue-300">
+                      {{ selectedRole === 'admin' 
+                        ? 'Only registered admin email addresses can receive OTP. Please use the email address from your admin account.' 
+                        : 'Only registered email addresses or mobile numbers can receive OTP. Please use the same email/mobile you used during registration.' }}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- Error Message -->
@@ -758,11 +771,11 @@ export default {
     
     getResetPlaceholder() {
       const placeholders = {
-        patient: 'patient@example.com or +1234567890',
-        doctor: 'doctor@hospital.com or +1234567890',
-        admin: 'admin@system.com'
+        patient: 'Your registered email or mobile number',
+        doctor: 'Your registered email or mobile number',
+        admin: 'Your registered admin email address'
       };
-      return placeholders[this.selectedRole] || 'email@example.com or phone';
+      return placeholders[this.selectedRole] || 'Your registered email or mobile';
     },
 
     closeForgotPasswordModal() {
