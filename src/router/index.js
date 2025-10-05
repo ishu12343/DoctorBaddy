@@ -11,7 +11,7 @@ import AdminSignUp from '@/components/admin/AdminSignUp.vue'
 import AdminDashboard from '@/components/admin/AdminDashboard.vue'
 import TipsPage from '@/views/TipsPage.vue'
 import Testimonials from '@/views/Testimonials.vue'
-import DoctorsList from '@/views/DoctorsList.vue'
+import DoctorsList from '@/views/HomeDoctorsList.vue'
 
 const routes = [
   // Unified Login Routes

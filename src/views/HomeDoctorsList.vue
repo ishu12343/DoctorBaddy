@@ -47,9 +47,8 @@
                   v-model="currentSpecialty"
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-primary focus:border-transparent appearance-none bg-white text-gray-800"
                 >
-                  <option value="All" class="text-gray-800">All Specialties</option>
                   <option v-for="specialty in availableSpecialties" :key="specialty" :value="specialty" class="text-gray-800">
-                    {{ specialty }}
+                    {{ specialty === 'All' ? 'All Specialties' : specialty }}
                   </option>
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-600">
