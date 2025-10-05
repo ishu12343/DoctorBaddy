@@ -58,34 +58,39 @@
           <!-- Form -->
           <div class="p-3 sm:p-4 lg:p-6">
             <form @submit.prevent="handleLogin" class="space-y-3 sm:space-y-4">
-              <!-- Email Input -->
+              <!-- Email/Mobile Input -->
               <div class="form-group">
-                <label class="form-label text-gray-700 dark:text-gray-300 font-semibold">
+                <label class="form-label text-gray-700 dark:text-gray-300 font-semibold text-sm sm:text-base">
                   <i class="fas fa-envelope mr-2 text-indigo-500"></i>
-                  Email Address
+                  Email or Mobile
                 </label>
                 <div class="relative">
                   <input 
                     v-model="email" 
-                    type="email" 
+                    type="text" 
                     required 
-                    class="modern-input pl-4 pr-4"
+                    class="modern-input pl-3 sm:pl-4 pr-10 sm:pr-12 text-sm sm:text-base"
                     :class="{ 'border-red-400 focus:border-red-500 focus:ring-red-200': emailError }"
                     :placeholder="getEmailPlaceholder()"
+                    inputmode="email"
+                    autocomplete="username"
                   />
-                  <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                    <i class="fas fa-envelope text-gray-400 text-sm"></i>
+                  <div class="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center pointer-events-none">
+                    <i :class="getInputIcon(email)" class="text-gray-400 text-sm transition-colors duration-200"></i>
                   </div>
                 </div>
-                <p v-if="emailError" class="text-sm text-red-500 mt-2 flex items-center">
+                <p v-if="emailError" class="text-xs sm:text-sm text-red-500 mt-1 sm:mt-2 flex items-center">
                   <i class="fas fa-exclamation-circle mr-1"></i>
                   {{ emailError }}
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 opacity-75">
+                  Enter your registered email address or 10-digit mobile number
                 </p>
               </div>
 
               <!-- Password Input -->
               <div class="form-group">
-                <label class="form-label text-gray-700 dark:text-gray-300 font-semibold">
+                <label class="form-label text-gray-700 dark:text-gray-300 font-semibold text-sm sm:text-base">
                   <i class="fas fa-lock mr-2 text-indigo-500"></i>
                   Password
                 </label>
@@ -94,19 +99,21 @@
                     v-model="password" 
                     :type="showPassword ? 'text' : 'password'" 
                     required 
-                    class="modern-input pl-4 pr-12"
+                    class="modern-input pl-3 sm:pl-4 pr-10 sm:pr-12 text-sm sm:text-base"
                     :class="{ 'border-red-400 focus:border-red-500 focus:ring-red-200': passwordError }"
                     placeholder="Enter your password"
+                    autocomplete="current-password"
                   />
                   <button
                     type="button"
                     @click="showPassword = !showPassword"
-                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-indigo-500 transition-colors focus:outline-none"
+                    class="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-indigo-500 transition-colors focus:outline-none touch-manipulation min-w-[44px] min-h-[44px]"
+                    :aria-label="showPassword ? 'Hide password' : 'Show password'"
                   >
-                    <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="text-sm"></i>
+                    <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="text-sm sm:text-base"></i>
                   </button>
                 </div>
-                <p v-if="passwordError" class="text-sm text-red-500 mt-2 flex items-center">
+                <p v-if="passwordError" class="text-xs sm:text-sm text-red-500 mt-1 sm:mt-2 flex items-center">
                   <i class="fas fa-exclamation-circle mr-1"></i>
                   {{ passwordError }}
                 </p>
@@ -609,11 +616,27 @@ export default {
     
     getEmailPlaceholder() {
       const placeholders = {
-        patient: 'patient@example.com',
-        doctor: 'doctor@hospital.com',
-        admin: 'admin@system.com'
+        patient: 'patient@example.com or 9876543210',
+        doctor: 'doctor@hospital.com or 9876543210',
+        admin: 'admin@system.com or 9876543210'
       };
-      return placeholders[this.selectedRole] || 'email@example.com';
+      return placeholders[this.selectedRole] || 'email@example.com or mobile';
+    },
+
+    getInputIcon(value) {
+      if (!value) return 'fas fa-envelope';
+      
+      // Check if it looks like an email
+      if (value.includes('@')) {
+        return 'fas fa-envelope';
+      }
+      
+      // Check if it looks like a mobile number
+      if (/^[0-9]+$/.test(value.replace(/\s/g, ''))) {
+        return 'fas fa-mobile-alt';
+      }
+      
+      return 'fas fa-envelope';
     },
     
     clearMessages() {
@@ -634,13 +657,18 @@ export default {
       this.clearMessages();
       let isValid = true;
       
-      // Email validation
+      // Email/Mobile validation
       if (!this.email) {
-        this.emailError = 'Email is required';
+        this.emailError = 'Email or mobile number is required';
         isValid = false;
-      } else if (!/\S+@\S+\.\S+/.test(this.email)) {
-        this.emailError = 'Please enter a valid email address';
-        isValid = false;
+      } else {
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const mobilePattern = /^[0-9]{10}$/;
+        
+        if (!emailPattern.test(this.email) && !mobilePattern.test(this.email.replace(/\s/g, ''))) {
+          this.emailError = 'Please enter a valid email address or 10-digit mobile number';
+          isValid = false;
+        }
       }
       
       // Password validation
@@ -684,7 +712,8 @@ export default {
     
     async performLogin() {
       const loginData = {
-        email: this.email,
+        identifier: this.email,
+        email: this.email, // Keep for backward compatibility with admin endpoint
         password: this.password
       };
       
