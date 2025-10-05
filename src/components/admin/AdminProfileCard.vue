@@ -93,6 +93,17 @@
                 </template>
               </div>
               
+              <!-- Mobile -->
+              <div class="form-group">
+                <label class="form-label">Mobile Number</label>
+                <template v-if="isEditing">
+                  <input v-model="admin.mobile" type="tel" class="form-input" pattern="[0-9]{10}" placeholder="10-digit mobile number" />
+                </template>
+                <template v-else>
+                  <div class="form-display">{{ admin.mobile || 'Not provided' }}</div>
+                </template>
+              </div>
+              
               <!-- Role -->
               <div class="form-group">
                 <label class="form-label">Role</label>
@@ -272,7 +283,8 @@ export default {
 
         const updateData = {
           full_name: admin.value.full_name,
-          email: admin.value.email
+          email: admin.value.email,
+          mobile: admin.value.mobile
         };
 
         // Handle profile photo
@@ -705,20 +717,33 @@ export default {
   to { transform: rotate(360deg); }
 }
 
-/* Responsive Design */
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 1024px) {
+  .profile-container {
+    padding: 0 0.75rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .profile-container {
-    padding: 0 1rem;
+    padding: 0 0.5rem;
   }
 
   .profile-header {
     flex-direction: column;
     align-items: stretch;
     text-align: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
   .profile-title {
     font-size: 1.75rem;
+    margin-bottom: 0.25rem;
   }
 
   .profile-subtitle {
@@ -730,44 +755,147 @@ export default {
   }
 
   .form-container {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
 
   .form-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.25rem;
+  }
+  
+  .section-title {
+    font-size: 1.125rem;
+    margin-bottom: 1.25rem;
   }
 
   .form-actions {
     flex-direction: column-reverse;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
   }
 
   .form-actions button {
     width: 100%;
+    padding: 0.875rem 1.5rem;
+  }
+  
+  .photo-preview-container {
+    width: 130px;
+    height: 130px;
   }
 }
 
 @media (max-width: 480px) {
   .profile-container {
-    padding: 0 0.5rem;
+    padding: 0 0.25rem;
   }
 
   .form-container {
     padding: 1rem;
   }
+  
+  .profile-card {
+    border-radius: 0.75rem;
+    margin: 0 0.25rem;
+  }
 
   .profile-title {
     font-size: 1.5rem;
   }
+  
+  .profile-subtitle {
+    font-size: 0.9rem;
+  }
 
   .edit-btn {
-    padding: 0.625rem 1.25rem;
+    padding: 0.625rem 1.125rem;
     font-size: 0.875rem;
+  }
+  
+  .form-section {
+    margin-bottom: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-grid {
+    gap: 1rem;
+  }
+  
+  .form-label {
+    font-size: 0.875rem;
+    margin-bottom: 0.375rem;
+  }
+  
+  .form-input {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9rem;
+  }
+  
+  .form-display {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9rem;
   }
 
   .photo-preview-container {
-    width: 120px;
-    height: 120px;
+    width: 110px;
+    height: 110px;
+  }
+  
+  .file-upload-btn {
+    padding: 1.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .form-actions {
+    padding-top: 1.25rem;
+    gap: 0.5rem;
+  }
+  
+  .form-actions button {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .profile-container {
+    padding: 0;
+  }
+  
+  .profile-card {
+    border-radius: 0.5rem;
+    margin: 0;
+  }
+
+  .form-container {
+    padding: 0.75rem;
+  }
+  
+  .profile-title {
+    font-size: 1.375rem;
+  }
+  
+  .edit-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .form-input, .form-display {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  .photo-preview-container {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .file-upload-btn {
+    padding: 1.25rem;
   }
 }
 </style>

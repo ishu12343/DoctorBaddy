@@ -292,7 +292,7 @@
             <div class="form-group">
               <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3">
                 <i class="fas fa-user-circle mr-2 text-indigo-500"></i>
-                {{ selectedRole === 'admin' ? 'Registered Email Address' : 'Registered Email or Mobile Number' }}
+                Registered Email or Mobile Number
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -300,7 +300,7 @@
                 </div>
                 <input 
                   v-model="resetIdentifier" 
-                  :type="selectedRole === 'admin' ? 'email' : 'text'" 
+                  type="text" 
                   required 
                   class="w-full pl-12 pr-4 py-4 text-base border-2 border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm font-medium"
                   :placeholder="getResetPlaceholder()"
@@ -317,7 +317,7 @@
                     <h4 class="text-sm font-bold text-blue-800 dark:text-blue-200 mb-1">Important Notice</h4>
                     <p class="text-sm text-blue-700 dark:text-blue-300">
                       {{ selectedRole === 'admin' 
-                        ? 'Only registered admin email addresses can receive OTP. Please use the email address from your admin account.' 
+                        ? 'Only registered admin accounts can receive OTP. Please use your registered email address or mobile number from your admin account.' 
                         : 'Only registered email addresses or mobile numbers can receive OTP. Please use the same email/mobile you used during registration.' }}
                     </p>
                   </div>
@@ -773,7 +773,7 @@ export default {
       const placeholders = {
         patient: 'Your registered email or mobile number',
         doctor: 'Your registered email or mobile number',
-        admin: 'Your registered admin email address'
+        admin: 'Your registered email or mobile number'
       };
       return placeholders[this.selectedRole] || 'Your registered email or mobile';
     },

@@ -1,26 +1,89 @@
 <style scoped>
-@media (width <= 900px) {
-  .signup-container {
-    flex-direction: column !important;
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 1024px) {
+  .container {
     padding: 1rem !important;
-    gap: 1.5rem !important;
   }
 }
 
-@media (width <= 600px) {
-  .signup-container {
-    padding: 0.5rem 0.2rem !important;
-    margin: 0 !important;
-    width: 100vw;
-    min-width: 0;
-    box-sizing: border-box;
+@media (max-width: 768px) {
+  .container {
+    padding: 0.75rem !important;
   }
+  
+  .max-w-md {
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  
+  .bg-white {
+    margin: 0 0.5rem !important;
+    border-radius: 1rem !important;
+  }
+  
+  .p-6 {
+    padding: 1.5rem !important;
+  }
+  
+  .lg\:p-8 {
+    padding: 1.5rem !important;
+  }
+}
 
-  .signup-form {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 1rem;
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem !important;
+  }
+  
+  .bg-white {
+    margin: 0 0.25rem !important;
+    border-radius: 0.75rem !important;
+  }
+  
+  .p-6, .lg\:p-8 {
+    padding: 1rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .w-16 {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  .form-input {
+    padding: 0.625rem 0.875rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .btn-primary {
+    padding: 0.75rem 1.25rem !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding: 0.25rem !important;
+  }
+  
+  .bg-white {
+    margin: 0 !important;
+    border-radius: 0.5rem !important;
+  }
+  
+  .p-6, .lg\:p-8 {
+    padding: 0.75rem !important;
   }
 }
 </style>
@@ -59,6 +122,11 @@
                 <div class="form-group">
                   <label for="email" class="form-label">Email</label>
                   <input type="email" id="email" v-model="form.email" required class="form-input" />
+                </div>
+
+                <div class="form-group">
+                  <label for="mobile" class="form-label">Mobile Number</label>
+                  <input type="tel" id="mobile" v-model="form.mobile" pattern="[0-9]{10}" placeholder="10-digit mobile number" class="form-input" />
                 </div>
 
                 <div class="form-group">
@@ -110,6 +178,7 @@ export default {
       form: {
         full_name: "",
         email: "",
+        mobile: "",
         password: "",
         role: "ADMIN",
       },
@@ -118,10 +187,23 @@ export default {
     };
   },
   methods: {
+    validateMobile(mobile) {
+      if (!mobile) return true; // Mobile is optional
+      const mobilePattern = /^[0-9]{10}$/;
+      return mobilePattern.test(mobile);
+    },
+    
     async handleSignup() {
       this.isLoading = true;
       this.error = "";
       this.success = false;
+
+      // Validate mobile number if provided
+      if (this.form.mobile && !this.validateMobile(this.form.mobile)) {
+        this.error = "Please enter a valid 10-digit mobile number";
+        this.isLoading = false;
+        return;
+      }
 
       try {
         const response = await axios.post(`${BASE_URL}/admin/create`, this.form);

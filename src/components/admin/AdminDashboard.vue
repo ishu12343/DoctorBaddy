@@ -466,4 +466,228 @@ th, td {
 th {
   background-color: #f8fafc;
 }
+
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 1024px) {
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .grid {
+    gap: 1rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem 0 !important;
+  }
+  
+  .container {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  /* Dashboard header */
+  .flex.items-center.justify-between {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .text-sm {
+    font-size: 0.875rem !important;
+  }
+  
+  /* Stats grid - stack on mobile */
+  .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.75rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Stats cards */
+  .bg-white.p-6 {
+    padding: 1rem !important;
+  }
+  
+  .p-3.rounded-full {
+    padding: 0.625rem !important;
+  }
+  
+  .text-xl {
+    font-size: 1rem !important;
+  }
+  
+  .text-2xl.font-bold {
+    font-size: 1.375rem !important;
+  }
+  
+  .ml-4 {
+    margin-left: 0.75rem !important;
+  }
+  
+  .mb-8 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Table responsiveness */
+  table {
+    font-size: 0.875rem;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    border: 1px solid #e2e8f0;
+  }
+  
+  thead, tbody, tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  th, td {
+    padding: 0.5rem 0.75rem;
+    word-wrap: break-word;
+  }
+  
+  /* Buttons */
+  .btn, button {
+    font-size: 0.875rem !important;
+    padding: 0.5rem 0.875rem !important;
+  }
+  
+  /* Modal adjustments */
+  .fixed.inset-0 {
+    padding: 1rem !important;
+  }
+  
+  .bg-white.rounded-lg {
+    border-radius: 0.75rem !important;
+    margin: 0 !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  /* Single column stats on very small screens */
+  .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+  }
+  
+  /* Smaller stats cards */
+  .bg-white.p-6 {
+    padding: 0.75rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.375rem !important;
+  }
+  
+  .text-2xl.font-bold {
+    font-size: 1.25rem !important;
+  }
+  
+  /* Header adjustments */
+  .flex.items-center.justify-between {
+    margin-bottom: 1rem !important;
+  }
+  
+  h1 {
+    font-size: 1.375rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  /* Table for very small screens */
+  table {
+    font-size: 0.8rem;
+  }
+  
+  th, td {
+    padding: 0.375rem 0.5rem;
+    min-width: 80px;
+  }
+  
+  /* Action buttons */
+  .btn, button {
+    font-size: 0.8rem !important;
+    padding: 0.375rem 0.75rem !important;
+    min-width: unset !important;
+  }
+  
+  /* Hide less important columns on mobile */
+  .mobile-hide {
+    display: none !important;
+  }
+  
+  /* Stack action buttons vertically */
+  .action-buttons {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+  }
+  
+  .action-buttons .btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
+  
+  .bg-white.p-6 {
+    padding: 0.5rem !important;
+    border-radius: 0.5rem !important;
+  }
+  
+  .p-3.rounded-full {
+    padding: 0.5rem !important;
+  }
+  
+  .ml-4 {
+    margin-left: 0.5rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .text-2xl.font-bold {
+    font-size: 1.125rem !important;
+  }
+  
+  /* Very compact table */
+  table {
+    font-size: 0.75rem;
+  }
+  
+  th, td {
+    padding: 0.25rem 0.375rem;
+    min-width: 60px;
+  }
+  
+  .btn, button {
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+}
 </style>
