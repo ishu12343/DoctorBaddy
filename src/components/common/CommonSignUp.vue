@@ -55,9 +55,9 @@
                   ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25' 
                   : 'text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-700'"
               >
-                <i :class="role.icon" class="text-sm sm:text-base relative z-10"></i>
-                <span class="hidden sm:inline relative z-10">{{ role.label }}</span>
-                <span class="sm:hidden text-xs relative z-10">{{ role.short }}</span>
+                <i :class="role.icon" class="text-sm sm:text-base"></i>
+                <span class="hidden sm:inline">{{ role.label }}</span>
+                <span class="sm:hidden text-xs">{{ role.label }}</span>
               </button>
             </div>
           </div>
@@ -1304,63 +1304,89 @@ export default {
 </script>
 
 <style scoped>
-/* Modern Animations */
+/* Modern Form Styles */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+}
+
+.form-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 640px) {
+  .form-label {
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+.dark .form-label {
+  color: #e5e7eb;
+}
+
+/* Modern Input Styling */
+.modern-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background-color: #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 640px) {
+  .modern-input {
+    padding: 0.875rem 1.125rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+  }
+}
+
+.modern-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.modern-input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+/* Animated Background Blobs */
 @keyframes blob {
   0% {
     transform: translate(0px, 0px) scale(1);
   }
   33% {
-    transform: translate(30px, -50px) scale(1.2);
+    transform: translate(30px, -50px) scale(1.1);
   }
   66% {
-    transform: translate(-20px, 20px) scale(0.8);
+    transform: translate(-20px, 20px) scale(0.9);
   }
   100% {
     transform: translate(0px, 0px) scale(1);
   }
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%) skewX(-12deg);
-  }
-  100% {
-    transform: translateX(200%) skewX(-12deg);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
-  }
-}
-
 .animate-blob {
-  animation: blob 8s infinite;
-}
-
-.animate-shimmer {
-  animation: shimmer 3s infinite;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-glow {
-  animation: glow 2s ease-in-out infinite alternate;
+  animation: blob 7s infinite;
 }
 
 .animation-delay-2000 {
@@ -1371,76 +1397,37 @@ export default {
   animation-delay: 4s;
 }
 
-/* Background Grid */
-.bg-grid-white\/\[0\.02\] {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-}
-
-.bg-grid-16 {
-  background-size: 16px 16px;
-}
-
-/* Form styling */
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #374151;
-  font-size: 0.875rem;
-}
-
-.dark .form-label {
-  color: #d1d5db;
-}
-
-.form-input {
-  width: 100%;
-  /* padding: 0.75rem; */
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  transition: all 0.15s ease-in-out;
-  background-color: #ffffff;
-  color: #111827;
-}
-
-.dark .form-input {
-  background-color: #1f2937;
-  border-color: #4b5563;
-  color: white;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-.dark .form-input:focus {
-  border-color: #818cf8;
-  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.1);
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 2rem;
-  border: 1px solid;
+/* Compact Login Button */
+.login-button-compact {
+  padding: 0.75rem 1.5rem;
   font-size: 0.9rem;
-  font-weight: 600;
-  border-radius: 1rem;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  border-radius: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .login-button-compact {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+  }
+}
+
+/* Enhanced Button Styles */
+.gradient-button {
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 1rem;
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.btn::before {
+.gradient-button::before {
   content: '';
   position: absolute;
   top: 0;
@@ -1451,249 +1438,618 @@ export default {
   transition: left 0.5s;
 }
 
-.btn:hover::before {
+/* Modal Buttons Styling */
+.modal-buttons button {
+  min-height: 3.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-buttons button i {
+  font-size: 1.125rem;
+}
+
+/* Improved Focus States */
+.modern-input:focus,
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Modal Animation */
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Touch Optimization */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Enhanced Focus States for Mobile */
+@media (max-width: 768px) {
+  .modern-input:focus,
+  button:focus {
+    transform: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+  
+  /* Larger touch targets on mobile */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Dark Mode Enhancements */
+.dark .modern-input {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark .modern-input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark .modern-input::placeholder {
+  color: #6b7280;
+}
+
+.gradient-button:hover::before {
   left: 100%;
 }
 
-.btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.3);
-}
-
-.btn-primary:focus {
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3), 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.btn-secondary:focus {
-  box-shadow: 0 0 0 4px rgba(107, 114, 128, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.btn-outline {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.btn-outline:hover {
-  background: rgba(255, 255, 255, 0.2);
+.gradient-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
+/* Glass Card Effect */
+.glass-card {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glass-card {
+  background: rgba(31, 41, 55, 0.9);
+  border: 1px solid rgba(75, 85, 99, 0.2);
+}
+
+.dark .modern-input {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark .modern-input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.dark .modern-input::placeholder {
+  color: #6b7280;
+}
+
+/* Custom Button Styles */
 .btn-primary {
-  border-color: transparent;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  font-size: 1rem;
   color: white;
-  background: linear-gradient(to right, #6366f1, #8b5cf6);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  font-weight: 700;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(to right, #4f46e5, #7c3aed);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
 }
 
 .btn-secondary {
-  border: 1px solid #6b7280;
+  background: #f3f4f6;
   color: #374151;
-  background-color: white;
+  border: 2px solid #e5e7eb;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.dark .btn-secondary {
-  border-color: #4b5563;
-  color: #d1d5db;
-  background-color: #374151;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-secondary:hover {
-  background-color: #f3f4f6;
-  border-color: #4b5563;
+  background: #e5e7eb;
+  border-color: #d1d5db;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dark .btn-secondary {
+  background: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
 }
 
 .dark .btn-secondary:hover {
-  background-color: #4b5563;
+  background: #4b5563;
   border-color: #6b7280;
 }
 
-.btn-primary:disabled {
-  background: #9ca3af;
-  color: #ffffff;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-  opacity: 0.6;
-}
-
-.dark .btn-primary:disabled {
-  background: #6b7280;
-  color: #d1d5db;
-}
-
-/* Mobile Responsiveness */
+/* Mobile Responsive Design */
 @media (max-width: 640px) {
-  .form-input {
+  .modern-input {
     font-size: 16px; /* Prevents zoom on iOS */
-    padding: 0.875rem 1rem;
-  }
-  
-  .form-input.pl-10 {
-    padding-left: 2.5rem;
-  }
-  
-  .form-input.pr-10 {
-    padding-right: 2.5rem;
-  }
-  
-  .grid-cols-3 {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-  
-  .md\:grid-cols-2 {
-    grid-template-columns: 1fr;
-  }
-  
-  .btn {
-    padding: 1rem 1.5rem;
-    font-size: 0.9rem;
-    font-weight: 700;
-    min-height: 52px;
+    padding: 0.75rem 0.875rem;
     border-radius: 0.75rem;
   }
   
-  .btn-primary {
-    font-size: 1rem;
-    letter-spacing: 0.025em;
+  .modern-input.pl-4 {
+    padding-left: 0.875rem;
   }
   
-  .btn-secondary {
-    font-size: 0.9rem;
-    letter-spacing: 0.025em;
+  .modern-input.pr-4 {
+    padding-right: 0.875rem;
   }
   
-  /* Ensure icons are properly positioned on mobile */
-  .absolute.inset-y-0.left-0.pl-3 {
-    padding-left: 0.75rem;
+  .modern-input.pl-12 {
+    padding-left: 2.5rem;
   }
   
-  .absolute.inset-y-0.right-0.pr-3 {
-    padding-right: 0.75rem;
+  .modern-input.pr-12 {
+    padding-right: 2.5rem;
   }
   
-  /* Better button spacing on mobile */
-  .flex.flex-col.sm\:flex-row {
-    gap: 1rem;
-  }
-}
-
-/* Touch Targets */
-button, input, select, textarea {
-  min-height: 44px;
-}
-
-@media (max-width: 640px) {
-  button, input, select, textarea {
-    min-height: 48px;
-  }
-  
-  .btn {
-    min-height: 52px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    padding: 1rem 1.5rem;
-  }
-  
-  .btn i {
-    font-size: 1rem;
-  }
-}
-
-/* Enhanced Mobile Experience */
-@media (max-width: 768px) {
-  .btn {
-    padding: 1rem 1.5rem;
-    font-size: 0.9rem;
-    font-weight: 700;
-    min-height: 50px;
-  }
-  
-  .form-input {
-    padding: 0.875rem;
-  }
-  
-  .animate-float {
-    animation-duration: 4s;
-  }
-  
-  /* Better button text visibility on mobile */
-  .btn-primary {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-  
-  .btn-secondary {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .form-input {
-    border: 2px solid rgba(255, 255, 255, 0.6);
-  }
-  
-  .form-input:focus {
-    border-color: rgba(139, 92, 246, 0.8);
-  }
-  
-  .btn-primary {
-    background: linear-gradient(135deg, #4c1d95 0%, #7c2d12 100%);
-  }
-}
-
-/* Extra small screens */
-@media (max-width: 480px) {
-  .btn {
-    padding: 1rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 700;
-    min-height: 50px;
-    width: 100%;
-  }
-  
-  .flex.flex-col.sm\:flex-row {
+  /* Improve button alignment on mobile */
+  .modal-buttons {
     flex-direction: column;
+    gap: 0.75rem;
   }
   
-  .flex-1 {
-    flex: none;
+  .modal-buttons button {
     width: 100%;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9rem;
+    min-height: 44px;
   }
   
-  .order-1, .order-2 {
-    order: unset;
+  /* Ensure proper touch targets */
+  button {
+    min-height: 44px;
+    min-width: 44px;
   }
+  
+  /* Improve modal on mobile */
+  .fixed.inset-0 {
+    padding: 0.75rem;
+  }
+  
+  .fixed.inset-0 > div {
+    max-height: calc(100vh - 1.5rem);
+    overflow-y: auto;
+    margin: 0;
+  }
+  
+  /* Form spacing */
+  .space-y-3 > * + * {
+    margin-top: 0.75rem;
+  }
+  
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+  
+  /* Compact header */
+  .text-3xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+}
+  
+  .modern-input.pr-12 {
+    padding-right: 3rem;
+  }
+  
+  .modern-input.text-center {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .form-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Modal adjustments for mobile */
+  .animate-bounce-in {
+    margin: 1rem;
+  }
+  
+  /* Button adjustments for mobile */
+  .btn-primary, .btn-secondary {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    min-height: 48px; /* Touch-friendly */
+  }
+
+/* Enhanced animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.shimmer-effect {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background-size: 200px 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Glassmorphism effects */
+.glass-effect {
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-effect {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Improved focus states */
+.modern-input:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading states */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.loading-pulse {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Improved checkbox styling */
+.custom-checkbox {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.375rem;
+  background: white;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.custom-checkbox:checked {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: #6366f1;
+}
+
+.custom-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+/* Brand colors */
+.bg-brand-500 {
+  background-color: #3b82f6;
+}
+
+.bg-brand-600 {
+  background-color: #2563eb;
+}
+
+.text-brand-600 {
+  color: #2563eb;
+}
+
+.text-brand-700 {
+  color: #1d4ed8;
+}
+
+.border-brand-500 {
+  border-color: #3b82f6;
+}
+
+.focus\:ring-brand-500:focus {
+  --tw-ring-color: rgb(59 130 246);
+}
+
+/* Medical theme colors */
+.from-medical-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.to-medical-secondary {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+/* Animation */
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s ease-out;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .role-tab {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Modal Animation */
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(-100px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .animate-blob,
-  .animate-shimmer,
-  .animate-float,
-  .animate-glow,
-  .btn::before {
+  .animate-bounce-in {
     animation: none;
   }
-  
-  .form-input,
-  .btn {
-    transition: none;
+  .animate-blob {
+    animation: none;
   }
+}
+
+/* Additional Mobile Responsive Improvements */
+@media (max-width: 480px) {
+  /* Extra small mobile screens */
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height */
+  }
+  
+  .pt-12 {
+    padding-top: 2rem;
+  }
+  
+  .pt-16 {
+    padding-top: 2.5rem;
+  }
+  
+  /* Card adjustments */
+  .rounded-xl {
+    border-radius: 0.75rem;
+  }
+  
+  .rounded-2xl {
+    border-radius: 1rem;
+  }
+  
+  /* Text sizing */
+  .text-xl {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  
+  /* Button improvements */
+  .py-4 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  /* Form label sizing */
+  .form-label {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Modal specific */
+  .animate-bounce-in {
+    margin: 0.5rem;
+  }
+  
+  /* Compact spacing */
+  .space-y-3 > * + * {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Improved focus styles for accessibility */
+.focus-visible\:outline-none:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.focus-visible\:ring-2:focus-visible {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+/* Enhanced modal overlay */
+.modal-overlay {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Improved input animations */
+.modern-input:focus {
+  animation: input-focus 0.2s ease-out;
+}
+
+@keyframes input-focus {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Better loading states */
+.loading-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: loading-shine 1.5s infinite;
+}
+
+@keyframes loading-shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Improved checkbox animation */
+.custom-checkbox {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.custom-checkbox:checked {
+  transform: scale(1.1);
+}
+
+.custom-checkbox:checked {
+  animation: checkbox-check 0.3s ease-out;
+}
+
+@keyframes checkbox-check {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Compact Design Utilities */
+.compact-card {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+  .compact-card {
+    max-height: 95vh;
+  }
+}
+
+/* Modern scrollbar for modal */
+.compact-card::-webkit-scrollbar {
+  width: 4px;
+}
+
+.compact-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.compact-card::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 2px;
+}
+
+.compact-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
 }
 </style>
