@@ -19,59 +19,45 @@
             <span>Contact</span>
           </router-link>
           
-          <!-- Signup Section -->
+          <!-- Login and Signup Section -->
           <div class="flex items-center gap-4">
             <!-- Login Button -->
             <router-link 
               to="/login" 
-              class="px-4 py-2 bg-medical-secondary hover:bg-medical-secondary/90 text-white rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 shadow-md hover:shadow-lg"
+              class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium flex items-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg border border-white/20 hover:border-white/30"
             >
               <i class="fas fa-sign-in-alt"></i>
               LOG IN
             </router-link>
 
-            <!-- Signup Dropdown -->
-            <div class="relative">
-              <button 
-                @click="toggleSignupDropdown"
-                @mouseenter="showSignupDropdown" 
-                class="px-4 py-2 bg-medical-secondary hover:bg-medical-secondary/90 text-white rounded-lg font-medium flex items-center gap-2 relative z-20 transition-colors duration-200 shadow-md hover:shadow-lg"
-                :aria-expanded="showDropdown2"
-                aria-haspopup="true"
-              >
-                SIGN UP
-                <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{'transform rotate-180': showDropdown2}"></i>
-              </button>
-              <transition
-                enter-active-class="transition duration-100 ease-out"
-                enter-from-class="transform scale-95 opacity-0"
-                enter-to-class="transform scale-100 opacity-100"
-                leave-active-class="transition duration-75 ease-in"
-                leave-from-class="transform scale-100 opacity-100"
-                leave-to-class="transform scale-95 opacity-0"
-              >
-                <div 
-                  v-if="showDropdown2" 
-                  ref="signupDropdown"
-                  class="absolute top-full right-0 mt-2 bg-medical-secondary hover:bg-medical-secondary/90 text-white rounded-lg shadow-xl min-w-48 overflow-hidden z-50 animate-fade-in border border-gray-100"
-                >
-                  <router-link to="/patient-signup" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideSignupDropdown">Patient Sign Up</router-link>
-                  <router-link to="/doctor-signup" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideSignupDropdown">Doctor Sign Up</router-link>
-                  <router-link to="/admin-signup" class="dropdown-item text-gray-700 hover:bg-gray-50" @click="hideSignupDropdown">Admin Sign Up</router-link>
-                </div>
-              </transition>
-            </div>
+            <!-- Sign Up Button -->
+            <router-link 
+              to="/signup" 
+              class="px-4 py-2 bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white rounded-lg font-medium flex items-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+            >
+              <i class="fas fa-user-plus"></i>
+              SIGN UP
+            </router-link>
           </div>
         </nav>
-        <!-- Mobile Menu and Login Buttons -->
+        <!-- Mobile Menu and Auth Buttons -->
         <div class="flex items-center gap-2 lg:hidden">
           <!-- Mobile Login Button -->
           <router-link 
             to="/login" 
-            class="px-4 py-2 text-sm font-medium text-white bg-white/10 border border-white/30 rounded-lg hover:bg-white/20 transition-colors flex items-center gap-2"
+            class="px-3 py-1.5 text-xs font-medium text-white bg-white/10 border border-white/30 rounded-lg hover:bg-white/20 transition-colors flex items-center gap-1"
           >
-            <i class="fas fa-sign-in-alt"></i>
+            <i class="fas fa-sign-in-alt text-xs"></i>
             LOGIN
+          </router-link>
+
+          <!-- Mobile Sign Up Button -->
+          <router-link 
+            to="/signup" 
+            class="px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-orange-500 to-pink-500 rounded-lg hover:from-orange-600 hover:to-pink-600 transition-colors flex items-center gap-1"
+          >
+            <i class="fas fa-user-plus text-xs"></i>
+            SIGN UP
           </router-link>
 
           <!-- Mobile Menu Button -->
@@ -110,30 +96,24 @@
           </router-link>
 
 
-          <!-- Mobile Signup Section -->
+          <!-- Mobile Auth Section -->
           <div class="pt-3 border-t border-medical-secondary/30">
-            <p class="text-sm text-gray-300 px-4 mb-3">Sign Up</p>
             <div class="space-y-2">
               <router-link 
-                to="/patient-signup" 
+                to="/login" 
                 @click="closeMobileMenu"
-                class="block px-4 py-2 text-white hover:bg-medical-secondary rounded-lg transition-colors"
+                class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
               >
-                Patient Sign Up
+                <i class="fas fa-sign-in-alt text-medical-secondary"></i>
+                <span>Login</span>
               </router-link>
               <router-link 
-                to="/doctor-signup" 
+                to="/signup" 
                 @click="closeMobileMenu"
-                class="block px-4 py-2 text-white hover:bg-medical-secondary rounded-lg transition-colors"
+                class="flex items-center gap-3 px-4 py-3 text-white bg-gradient-to-r from-orange-500/20 to-pink-500/20 border border-orange-400/30 hover:from-orange-500/30 hover:to-pink-500/30 rounded-lg transition-colors"
               >
-                Doctor Sign Up
-              </router-link>
-              <router-link 
-                to="/admin-signup" 
-                @click="closeMobileMenu"
-                class="block px-4 py-2 text-white hover:bg-medical-secondary rounded-lg transition-colors"
-              >
-                Admin Sign Up
+                <i class="fas fa-user-plus text-orange-400"></i>
+                <span>Sign Up</span>
               </router-link>
             </div>
           </div>
@@ -148,46 +128,24 @@ export default {
   name: 'AppHeader',
   data() {
     return {
-      showDropdown2: false,
       mobileMenuOpen: false,
-      isMobile: false,
       clickListener: null,
     }
   },
   methods: {
-    toggleSignupDropdown(e) {
-      e.stopPropagation();
-      this.showDropdown2 = !this.showDropdown2;
-    },
-    showSignupDropdown() {
-      if (!this.isMobile) {
-        this.showDropdown2 = true;
-      }
-    },
-    hideSignupDropdown() {
-      this.showDropdown2 = false;
-    },
     toggleMobileMenu() {
       this.mobileMenuOpen = !this.mobileMenuOpen
     },
     closeMobileMenu() {
       this.mobileMenuOpen = false
     },
-    checkIfMobile() {
-      this.isMobile = window.innerWidth < 1024; // lg breakpoint
-    },
   },
   mounted() {
-    // Add click outside listener for dropdowns
+    // Add click outside listener for mobile menu
     this.clickListener = (e) => {
       // Close mobile menu when clicking outside
       if (!this.$el.contains(e.target)) {
         this.mobileMenuOpen = false;
-      }
-      
-      // Close signup dropdown when clicking outside
-      if (this.showDropdown2 && !this.$refs.signupDropdown?.contains(e.target)) {
-        this.hideSignupDropdown();
       }
     };
     
@@ -197,13 +155,8 @@ export default {
     this.$router.afterEach(() => {
       this.mobileMenuOpen = false;
     });
-    
-    // Check if mobile device
-    this.checkIfMobile();
-    window.addEventListener('resize', this.checkIfMobile);
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.checkIfMobile);
     if (this.clickListener) {
       document.removeEventListener('click', this.clickListener);
     }

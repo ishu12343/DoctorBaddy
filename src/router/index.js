@@ -3,11 +3,9 @@ import Home from '../views/Home.vue'
 import ContactPage from '../views/Contact.vue'
 import OurServices from '../views/OurServices.vue'
 import CommonLogin from '../components/common/CommonLogin.vue'
-import DoctorSignUp from '../components/doctor/DoctorSignUp.vue'
-import PatientSignUp from '../components/patient/PatientSignUp.vue'
+import CommonSignUp from '../components/common/CommonSignUp.vue'
 import PatientDashboard from '@/components/patient/PatientDashboard.vue'
 import DoctorDashboard from '@/components/doctor/DoctorDashboard.vue'
-import AdminSignUp from '@/components/admin/AdminSignUp.vue'
 import AdminDashboard from '@/components/admin/AdminDashboard.vue'
 import TipsPage from '@/views/TipsPage.vue'
 import Testimonials from '@/views/Testimonials.vue'
@@ -23,10 +21,14 @@ const routes = [
   { path: '/doctor-login', redirect: '/login?role=doctor' },
   { path: '/admin-login', redirect: '/login?role=admin' },
   
-  // Signup Routes
-  { path: '/patient-signup', name: 'PatientSignUp', component: PatientSignUp },
-  { path: '/doctor-signup', name: 'DoctorSignUp', component: DoctorSignUp },
-  { path: '/admin-signup', name: 'AdminSignUp', component: AdminSignUp },
+  // Unified Signup Routes
+  { path: '/signup', name: 'SignUp', component: CommonSignUp },
+  { path: '/signup/:role', name: 'RoleSignUp', component: CommonSignUp, props: true },
+  
+  // Legacy signup redirects for backward compatibility
+  { path: '/patient-signup', redirect: '/signup?role=patient' },
+  { path: '/doctor-signup', redirect: '/signup?role=doctor' },
+  { path: '/admin-signup', redirect: '/signup?role=admin' },
   
   // Main Pages
   { path: '/', component: Home },

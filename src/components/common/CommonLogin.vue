@@ -798,16 +798,7 @@ export default {
     },
 
     goToSignUp() {
-      const signupRoutes = {
-        patient: '/patient-signup',
-        doctor: '/doctor-signup',
-        admin: '/admin-signup'
-      };
-      
-      const route = signupRoutes[this.selectedRole];
-      if (route) {
-        this.$router.push(route);
-      }
+      this.$router.push(`/signup?role=${this.selectedRole}`);
     },
 
     // ===== FORGOT PASSWORD METHODS =====
