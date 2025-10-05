@@ -1,119 +1,104 @@
 <template>
   <header class="bg-medical-primary text-white fixed top-0 left-0 right-0 w-full z-50 shadow-lg">
-    <div class="container mx-auto px-4">
-      <div class="flex items-center justify-between h-16 lg:h-20">
-        <!-- Logo -->
-        <router-link to="/" class="flex items-center text-white hover:text-gray-200 transition-colors">
-          <img src="@/assets/logo/logo1.png" alt="DoctorBuddy Logo" class="h-8 lg:h-10 w-auto" />
-          <span class="text-lg lg:text-xl font-bold">DoctorBuddy</span>
-        </router-link>
+    <div class="container mx-auto px-3 sm:px-4">
+      <div class="flex items-center justify-between h-14 sm:h-16 lg:h-20">
+        <!-- Left: Menu Button -->
+        <div class="flex items-center">
+          <button 
+            @click="toggleMobileMenu" 
+            class="p-2 text-white rounded-lg hover:bg-white/10 transition-colors touch-manipulation"
+            aria-label="Toggle menu"
+          >
+            <i :class="mobileMenuOpen ? 'fas fa-times text-lg' : 'fas fa-bars text-lg'"></i>
+          </button>
+        </div>
 
-        <!-- Desktop Navigation -->
-        <nav class="hidden lg:flex items-center gap-8">
-          <router-link to="/services" class="nav-item group">
-            <i class="fas fa-stethoscope text-medical-secondary group-hover:text-white transition-colors"></i>
-            <span>Our Services</span>
+        <!-- Center: Logo -->
+        <div class="flex-1 flex justify-center">
+          <router-link to="/" class="flex items-center text-white hover:text-gray-200 transition-colors">
+            <img src="@/assets/logo/logo1.png" alt="DoctorBuddy Logo" class="h-6 sm:h-8 lg:h-10 w-auto" />
+            <span class="text-base sm:text-lg lg:text-xl font-bold ml-2">DoctorBuddy</span>
           </router-link>
-          <router-link to="/contact" class="nav-item group">
-            <i class="fas fa-envelope-open-text text-medical-secondary group-hover:text-white transition-colors"></i>
-            <span>Contact</span>
-          </router-link>
-          
-          <!-- Login and Signup Section -->
-          <div class="flex items-center gap-4">
-            <!-- Login Button -->
-            <router-link 
-              to="/login" 
-              class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium flex items-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg border border-white/20 hover:border-white/30"
-            >
-              <i class="fas fa-sign-in-alt"></i>
-              LOG IN
-            </router-link>
+        </div>
 
-            <!-- Sign Up Button -->
-            <router-link 
-              to="/signup" 
-              class="px-4 py-2 bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white rounded-lg font-medium flex items-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-            >
-              <i class="fas fa-user-plus"></i>
-              SIGN UP
-            </router-link>
-          </div>
-        </nav>
-        <!-- Mobile Menu and Auth Buttons -->
-        <div class="flex items-center gap-2 lg:hidden">
+        <!-- Right: Auth Buttons -->
+        <div class="flex items-center gap-1 sm:gap-2">
           <!-- Mobile Login Button -->
           <router-link 
             to="/login" 
-            class="px-3 py-1.5 text-xs font-medium text-white bg-white/10 border border-white/30 rounded-lg hover:bg-white/20 transition-colors flex items-center gap-1"
+            class="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-white/10 border border-white/30 rounded-md sm:rounded-lg hover:bg-white/20 transition-colors flex items-center gap-1 touch-manipulation min-w-0"
           >
-            <i class="fas fa-sign-in-alt text-xs"></i>
-            LOGIN
+            <i class="fas fa-sign-in-alt text-xs sm:text-sm"></i>
+            <span class="hidden xs:inline">LOGIN</span>
           </router-link>
 
           <!-- Mobile Sign Up Button -->
           <router-link 
             to="/signup" 
-            class="px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-orange-500 to-pink-500 rounded-lg hover:from-orange-600 hover:to-pink-600 transition-colors flex items-center gap-1"
+            class="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-pink-500 rounded-md sm:rounded-lg hover:from-orange-600 hover:to-pink-600 transition-colors flex items-center gap-1 touch-manipulation min-w-0"
           >
-            <i class="fas fa-user-plus text-xs"></i>
-            SIGN UP
+            <i class="fas fa-user-plus text-xs sm:text-sm"></i>
+            <span class="hidden xs:inline">SIGN UP</span>
           </router-link>
-
-          <!-- Mobile Menu Button -->
-          <button 
-            @click="toggleMobileMenu" 
-            class="p-2 text-white rounded-lg hover:bg-white/10 transition-colors"
-            aria-label="Toggle mobile menu"
-          >
-            {{ mobileMenuOpen ? '✕' : '☰' }}
-          </button>
         </div>
       </div>
 
-      <!-- Mobile Navigation -->
+      <!-- Mobile/Desktop Navigation Menu -->
       <nav 
         v-if="mobileMenuOpen" 
-        class="lg:hidden pb-4 border-t border-medical-secondary mt-4 pt-4 animate-fade-in"
+        class="absolute top-full left-0 right-0 bg-medical-primary border-t border-medical-secondary/30 shadow-lg animate-fade-in z-40"
       >
-        <div class="flex flex-col space-y-3">
-          <router-link 
-            to="/services" 
-            @click="closeMobileMenu"
-            class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
-          >
-            <i class="fas fa-stethoscope text-medical-secondary"></i>
-            <span>Our Services</span>
-          </router-link>
-          
-          <router-link 
-            to="/contact" 
-            @click="closeMobileMenu"
-            class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
-          >
-            <i class="fas fa-envelope-open-text text-medical-secondary"></i>
-            <span>Contact</span>
-          </router-link>
+        <div class="container mx-auto px-3 sm:px-4 py-4">
+          <div class="flex flex-col space-y-2">
+            <!-- Navigation Links -->
+            <router-link 
+              to="/" 
+              @click="closeMobileMenu"
+              class="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-lg transition-colors touch-manipulation"
+            >
+              <i class="fas fa-home text-medical-secondary w-5"></i>
+              <span class="font-medium">Home</span>
+            </router-link>
+            
+            <router-link 
+              to="/services" 
+              @click="closeMobileMenu"
+              class="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-lg transition-colors touch-manipulation"
+            >
+              <i class="fas fa-stethoscope text-medical-secondary w-5"></i>
+              <span class="font-medium">Our Services</span>
+            </router-link>
+            
+            <router-link 
+              to="/contact" 
+              @click="closeMobileMenu"
+              class="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-lg transition-colors touch-manipulation"
+            >
+              <i class="fas fa-envelope-open-text text-medical-secondary w-5"></i>
+              <span class="font-medium">Contact</span>
+            </router-link>
 
+            <!-- Divider -->
+            <div class="border-t border-white/20 my-2"></div>
 
-          <!-- Mobile Auth Section -->
-          <div class="pt-3 border-t border-medical-secondary/30">
+            <!-- Auth Section in Menu -->
             <div class="space-y-2">
               <router-link 
                 to="/login" 
                 @click="closeMobileMenu"
-                class="flex items-center gap-3 px-4 py-3 text-white hover:bg-medical-secondary rounded-lg transition-colors"
+                class="flex items-center gap-3 px-4 py-3 text-white bg-white/10 hover:bg-white/20 rounded-lg transition-colors touch-manipulation border border-white/20"
               >
-                <i class="fas fa-sign-in-alt text-medical-secondary"></i>
-                <span>Login</span>
+                <i class="fas fa-sign-in-alt text-medical-secondary w-5"></i>
+                <span class="font-medium">Login</span>
               </router-link>
+              
               <router-link 
                 to="/signup" 
                 @click="closeMobileMenu"
-                class="flex items-center gap-3 px-4 py-3 text-white bg-gradient-to-r from-orange-500/20 to-pink-500/20 border border-orange-400/30 hover:from-orange-500/30 hover:to-pink-500/30 rounded-lg transition-colors"
+                class="flex items-center gap-3 px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 rounded-lg transition-colors touch-manipulation shadow-md"
               >
-                <i class="fas fa-user-plus text-orange-400"></i>
-                <span>Sign Up</span>
+                <i class="fas fa-user-plus text-white w-5"></i>
+                <span class="font-medium">Sign Up</span>
               </router-link>
             </div>
           </div>
@@ -189,6 +174,27 @@ export default {
   background-color: rgba(59, 130, 246, 0.8);
 }
 
+/* Touch-friendly design */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom breakpoint for extra small screens */
+@media (min-width: 475px) {
+  .xs\:inline {
+    display: inline;
+  }
+}
+
+/* Enhanced mobile button styling */
+@media (max-width: 474px) {
+  /* Hide text on very small screens, show only icons */
+  .auth-btn-text {
+    display: none;
+  }
+}
+
 /* Improve touch targets for mobile */
 @media (max-width: 1023px) {
   .dropdown-item {
@@ -213,6 +219,7 @@ export default {
   color: #e5e7eb;
 }
 
+/* Enhanced button styles */
 .btn-primary {
   background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
   box-shadow: 0 4px 14px 0 rgb(221 36 118 / 15%);
@@ -222,6 +229,7 @@ export default {
   outline: none;
   position: relative;
   overflow: hidden;
+  min-height: 44px; /* iOS minimum touch target */
 }
 
 .btn-primary:hover {
@@ -235,15 +243,18 @@ export default {
   text-decoration: none;
 }
 
-/* Responsive font size adjustments */
-@media (width <= 576px) {
-  .nav-item span {
-    font-size: 0.9rem;
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+  /* Smaller header on mobile */
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
   
-  .btn-primary {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.75rem;
+  /* More compact buttons */
+  .auth-button {
+    min-height: 40px;
+    padding: 0.375rem 0.5rem;
   }
 }
 
