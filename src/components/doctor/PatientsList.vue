@@ -411,13 +411,9 @@
                 </div>
               </div>
 
-              <div class="detail-section" v-if="selectedPatient.emergency_contact_name">
+              <div class="detail-section" v-if="selectedPatient.emergency_contact_number">
                 <h4 class="section-title">Emergency Contact</h4>
                 <div class="detail-row">
-                  <span class="detail-label">Name:</span>
-                  <span class="detail-value">{{ selectedPatient.emergency_contact_name }}</span>
-                </div>
-                <div class="detail-row" v-if="selectedPatient.emergency_contact_number">
                   <span class="detail-label">Phone:</span>
                   <span class="detail-value">{{ selectedPatient.emergency_contact_number }}</span>
                 </div>

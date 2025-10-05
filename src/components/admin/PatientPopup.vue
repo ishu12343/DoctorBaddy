@@ -36,7 +36,7 @@
         <p><strong>Address:</strong> {{ patient.address }}</p>
         <p><strong>Blood Group:</strong> {{ patient.blood_group }}</p>
         <p><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
-        <p><strong>Emergency Contact:</strong> {{ patient.emergency_contact }}</p>
+        <p><strong>Emergency Contact:</strong> {{ patient.emergency_contact_number }}</p>
         <p><strong>Gender:</strong> {{ patient.gender }}</p>
         <p><strong>Role:</strong> {{ patient.role }}</p>
         <p><strong>ID:</strong> {{ patient.id }}</p>

@@ -290,22 +290,11 @@
               <h3 class="section-title">Emergency Contact</h3>
             </div>
             <div class="form-grid">
-              <!-- Emergency Contact Name -->
-              <div class="form-group">
-                <label class="form-label">Emergency Contact Name</label>
-                <template v-if="isEditing">
-                  <input v-model="form.emergency_contact_name" type="text" class="form-input" placeholder="Enter contact name" />
-                </template>
-                <template v-else>
-                  <div class="form-display">{{ form.emergency_contact_name || 'Not provided' }}</div>
-                </template>
-              </div>
-
               <!-- Emergency Contact Number -->
               <div class="form-group">
                 <label class="form-label">Emergency Contact Number</label>
                 <template v-if="isEditing">
-                  <input v-model="form.emergency_contact_number" type="tel" class="form-input" placeholder="Enter contact number" />
+                  <input v-model="form.emergency_contact_number" type="tel" class="form-input" placeholder="Enter emergency contact number" />
                 </template>
                 <template v-else>
                   <div class="form-display">{{ form.emergency_contact_number || 'Not provided' }}</div>

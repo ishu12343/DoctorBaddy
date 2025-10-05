@@ -613,7 +613,7 @@ export default {
             last_visit: patientData.last_visit || 'Never',
             registered_date: patientData.registered_date || new Date().toISOString().split('T')[0],
             // Additional fields that might be in the response
-            emergency_contact: patientData.emergency_contact,
+            emergency_contact_number: patientData.emergency_contact_number,
             medical_history: patientData.medical_history || [],
             allergies: patientData.allergies || [],
             medications: patientData.medications || []

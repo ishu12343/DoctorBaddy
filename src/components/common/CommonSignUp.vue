@@ -245,13 +245,13 @@
                       <i class="fas fa-phone-alt text-gray-400"></i>
                     </div>
                     <input 
-                      v-model="patientForm.emergencyContact"
+                      v-model="patientForm.emergencyContactNumber"
                       type="tel"
                       class="form-input pl-10"
-                      placeholder="Emergency contact (Optional)"
+                      placeholder="Emergency contact number (Optional)"
                     />
                   </div>
-                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Emergency contact for medical situations</p>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Emergency contact number for medical situations</p>
                 </div>
               </div>
 
@@ -866,7 +866,7 @@ export default {
         gender: '',
         bloodGroup: '',
         address: '',
-        emergencyContact: '',
+        emergencyContactNumber: '',
         role: 'PATIENT'
       },
       
