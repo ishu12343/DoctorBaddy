@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { API_BASE_URL } from '@/config/api.js';
 import AppHeader from '@/views/AppHeader.vue';
 import ChatButton from '@/components/ChatButton.vue';
 import AppFooter from '@/views/AppFooter.vue';
@@ -81,7 +82,7 @@ export default {
 
       console.log('Sending patient login payload:', requestBody);
 
-      const loginUrl = 'http://127.0.0.1:5000/api/patient/login';
+      const loginUrl = `${API_BASE_URL}api/patient/login`;
 
       try {
         const response = await fetch(loginUrl, {

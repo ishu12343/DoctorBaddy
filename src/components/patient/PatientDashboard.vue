@@ -1001,6 +1001,7 @@
 </template>
 
 <script>
+import { API_BASE_URL } from '@/config/api.js';
 import axios from 'axios';
 import PatientProfileCard from './PatientProfileCard.vue';
 
@@ -1096,7 +1097,7 @@ export default {
       this.showUserDropdown = false; // Close dropdown
       const token = localStorage.getItem('token');
       try {
-        await axios.post('http://127.0.0.1:5000/api/patient/logout', {}, {
+        await axios.post(`${API_BASE_URL}api/patient/logout`, {}, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (err) {
@@ -1145,7 +1146,7 @@ export default {
     async fetchPatientInfo() {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/patient/profile', {
+        const response = await axios.get(`${API_BASE_URL}api/patient/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -1200,7 +1201,7 @@ export default {
         if (this.selectedCity) params.append('city', this.selectedCity);
         if (this.searchQuery) params.append('search', this.searchQuery);
         
-        const response = await axios.get(`http://127.0.0.1:5000/api/patient/doctors?${params}`, {
+        const response = await axios.get(`${API_BASE_URL}api/patient/doctors?${params}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -1272,7 +1273,7 @@ export default {
       const token = localStorage.getItem('token');
       
       try {
-        const response = await axios.post('http://127.0.0.1:5000/api/patient/appointments/book', {
+        const response = await axios.post(`${API_BASE_URL}api/patient/appointments/book`, {
           doctor_id: this.selectedDoctor.id,
           appointment_date: this.bookingForm.date,
           appointment_time: this.bookingForm.time,
@@ -1304,7 +1305,7 @@ export default {
       const token = localStorage.getItem('token');
       
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/patient/appointments', {
+        const response = await axios.get(`${API_BASE_URL}api/patient/appointments`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -1326,7 +1327,7 @@ export default {
       const token = localStorage.getItem('token');
       
       try {
-        const response = await axios.put(`http://127.0.0.1:5000/api/patient/appointments/${appointmentId}/cancel`, {}, {
+        const response = await axios.put(`${API_BASE_URL}api/patient/appointments/${appointmentId}/cancel`, {}, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -1369,7 +1370,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/patient/appointments/${this.selectedAppointment.id}/reschedule`,
+          `${API_BASE_URL}api/patient/appointments/${this.selectedAppointment.id}/reschedule`,
           {
             new_date: this.rescheduleForm.date,
             new_time: this.rescheduleForm.time,
@@ -1721,7 +1722,7 @@ export default {
       try {
         const token = localStorage.getItem('token');
         const response = await axios.post(
-          `http://127.0.0.1:5000/api/patient/appointments/${this.selectedAppointmentForRating.id}/rate`,
+          `${API_BASE_URL}api/patient/appointments/${this.selectedAppointmentForRating.id}/rate`,
           {
             rating: this.selectedRating,
             review: this.reviewText.trim()

@@ -662,6 +662,7 @@
 </template>
 
 <script>
+import { API_BASE_URL } from '@/config/api.js';
 import axios from 'axios';
 import PatientPopup from './PatientPopup.vue';
 import DoctorPopup from './DoctorPopup.vue';
@@ -748,8 +749,8 @@ export default {
         };
 
         const [doctorsRes, patientsRes] = await Promise.all([
-          axios.get('http://localhost:5000/admin/doctors', { headers }),
-          axios.get('http://localhost:5000/admin/patients', { headers }),
+          axios.get(`${API_BASE_URL}admin/doctors`, { headers }),
+          axios.get(`${API_BASE_URL}admin/patients`, { headers }),
         ]);
 
         this.doctors = doctorsRes.data;
@@ -860,7 +861,7 @@ export default {
 
     async approveDoctor(id) {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/admin/doctors/${id}/approve`, {}, {
+      await axios.put(`${API_BASE_URL}admin/doctors/${id}/approve`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       this.fetchData();
@@ -868,7 +869,7 @@ export default {
 
     async rejectDoctor(id) {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/admin/doctors/${id}/reject`, {}, {
+      await axios.put(`${API_BASE_URL}admin/doctors/${id}/reject`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       this.fetchData();
@@ -876,7 +877,7 @@ export default {
 
     async deactivatePatient(id) {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/admin/patients/${id}/deactivate`, {}, {
+      await axios.put(`${API_BASE_URL}admin/patients/${id}/deactivate`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       this.fetchData();
@@ -884,7 +885,7 @@ export default {
 
     async activatePatient(id) {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/admin/patients/${id}/activate`, {}, {
+      await axios.put(`${API_BASE_URL}admin/patients/${id}/activate`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       this.fetchData();
@@ -894,7 +895,7 @@ export default {
       try {
         console.log('View doctor clicked, ID:', id);
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://127.0.0.1:5000/admin/doctors/view?id=${id}`, {
+        const response = await axios.get(`${API_BASE_URL}admin/doctors/view?id=${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -930,7 +931,7 @@ export default {
         console.log('3. Current popup state - showPatientPopup:', this.showPatientPopup);
         console.log('4. Current popup data - patientPopupData:', this.patientPopupData);
 
-        const response = await axios.get(`http://127.0.0.1:5000/admin/patient/view?id=${id}`, {
+        const response = await axios.get(`${API_BASE_URL}admin/patient/view?id=${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -980,7 +981,7 @@ export default {
     async handleApproveDoctor(id) {
       try {
         const token = localStorage.getItem('token');
-        await axios.put(`http://localhost:5000/admin/doctors/${id}/approve`, {}, {
+        await axios.put(`${API_BASE_URL}admin/doctors/${id}/approve`, {}, {
           headers: { Authorization: `Bearer ${token}` },
         });
         this.closeDoctorPopup();
@@ -994,7 +995,7 @@ export default {
     async handleSuspendDoctor(id) {
       try {
         const token = localStorage.getItem('token');
-        await axios.put(`http://localhost:5000/admin/doctors/${id}/suspend`, {}, {
+        await axios.put(`${API_BASE_URL}admin/doctors/${id}/suspend`, {}, {
           headers: { Authorization: `Bearer ${token}` },
         });
         this.closeDoctorPopup();
@@ -1008,7 +1009,7 @@ export default {
     async handleUnsuspendDoctor(id) {
       try {
         const token = localStorage.getItem('token');
-        await axios.put(`http://localhost:5000/admin/doctors/${id}/unsuspend`, {}, {
+        await axios.put(`${API_BASE_URL}admin/doctors/${id}/unsuspend`, {}, {
           headers: { Authorization: `Bearer ${token}` },
         });
         this.closeDoctorPopup();
@@ -1029,7 +1030,7 @@ export default {
       this.showUserDropdown = false;
       const token = localStorage.getItem('token');
       try {
-        await axios.post('http://127.0.0.1:5000/api/admin/logout', {}, {
+        await axios.post(`${API_BASE_URL}api/admin/logout`, {}, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (err) {

@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import { API_BASE_URL } from '@/config/api.js';
 import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
 import axios from "axios";
@@ -119,7 +120,7 @@ export default {
       this.success = false;
 
       try {
-        const response = await axios.post("http://127.0.0.1:5000/admin/create", this.form);
+        const response = await axios.post(`${API_BASE_URL}admin/create`, this.form);
         const { token, admin } = response.data;
 
         // Store token in localStorage

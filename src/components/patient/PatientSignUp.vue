@@ -171,6 +171,7 @@
 </template>
 
 <script>
+import { API_BASE_URL } from '@/config/api.js';
 import AppHeader from '@/views/AppHeader.vue';
 import ChatButton from '@/components/ChatButton.vue';
 import AppFooter from '@/views/AppFooter.vue';
@@ -198,7 +199,7 @@ export default {
     async handleSubmit() {
       this.isLoading = true;
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/patient/register', {
+        const response = await fetch(`${API_BASE_URL}api/patient/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
