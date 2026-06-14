@@ -140,25 +140,30 @@
                     </div>
                   </div>
                   <div class="doctors-carousel">
-                    <div 
-                      v-for="(doctor, index) in topRatedDoctors.slice(0, 3)" 
+                    <div
+                      v-for="(doctor, index) in topRatedDoctors.slice(0, 3)"
                       :key="doctor.id"
                       class="doctor-mini-card"
                       :style="{ animationDelay: `${index * 0.2}s` }">
                       <div class="doctor-mini-avatar">
                         <img :src="doctor.image" :alt="doctor.name" />
-                        <div class="rating-badge">
-                          <i class="fas fa-star"></i>
-                          {{ doctor.rating }}
-                        </div>
                       </div>
                       <div class="doctor-mini-info">
-                        <h4>{{ doctor.name }}</h4>
-                        <p>{{ doctor.specialty }}</p>
+                        <div class="doctor-name-row">
+                          <h4>{{ doctor.name }}</h4>
+                          <div class="rating-badge">
+                            <i class="fas fa-star"></i>
+                            {{ doctor.rating }}/5 ({{ doctor.total_reviews || 0 }})
+                          </div>
+                        </div>
+                        <div class="doctor-details-row">
+                          <p class="specialty">{{ doctor.specialty }}</p>
+                          <div class="experience-info">{{ doctor.experience }}+ yr</div>
+                        </div>
                         <div class="consultation-info">
                           <span class="price">${{ doctor.consultationFee }}</span>
-                          <button class="quick-book-btn">
-                            <i class="fas fa-video"></i>
+                          <button class="quick-book-btn" @click="bookConsultation(doctor)">
+                            <i class="fas fa-calendar"></i>
                           </button>
                         </div>
                       </div>
@@ -809,6 +814,7 @@
 import AppHeader from '@/views/AppHeader.vue';
 import AppFooter from '@/views/AppFooter.vue';
 import ChatButton from '@/components/ChatButton.vue';
+import doctorService from '@/services/doctorService';
 
 export default {
   name: 'DoctorHome',
@@ -892,120 +898,8 @@ export default {
         'Orthopedics',
         'Psychiatry'
       ],
-      allDoctors: [
-        {
-          id: 1,
-          name: 'Dr. Sarah Johnson',
-          specialty: 'Family Medicine',
-          experience: 15,
-          rating: 4.9,
-          consultationFee: 49,
-          isOnline: true,
-          isTopRated: true,
-          isSpecialist: false,
-          totalPatients: 2500,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: 2,
-          name: 'Dr. Michael Chen',
-          specialty: 'Cardiology',
-          experience: 20,
-          rating: 4.8,
-          consultationFee: 75,
-          isOnline: true,
-          isTopRated: true,
-          isSpecialist: true,
-          totalPatients: 3200,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: 3,
-          name: 'Dr. Emily Rodriguez',
-          specialty: 'Dermatology',
-          experience: 12,
-          rating: 4.9,
-          consultationFee: 65,
-          isOnline: false,
-          isTopRated: true,
-          isSpecialist: true,
-          totalPatients: 1800,
-          nextAvailable: '2:00 PM',
-          image: 'https://images.unsplash.com/photo-1594824804732-ca8db5ac6d34?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: 4,
-          name: 'Dr. David Kim',
-          specialty: 'Pediatrics',
-          experience: 18,
-          rating: 4.7,
-          consultationFee: 55,
-          isOnline: true,
-          isTopRated: false,
-          isSpecialist: true,
-          totalPatients: 2100,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: 5,
-          name: 'Dr. Lisa Thompson',
-          specialty: 'Neurology',
-          experience: 22,
-          rating: 4.8,
-          consultationFee: 85,
-          isOnline: true,
-          isTopRated: true,
-          isSpecialist: true,
-          totalPatients: 2800,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: 6,
-          name: 'Dr. Robert Wilson',
-          specialty: 'Orthopedics',
-          experience: 25,
-          rating: 4.6,
-          consultationFee: 80,
-          isOnline: false,
-          isTopRated: false,
-          isSpecialist: true,
-          totalPatients: 3500,
-          nextAvailable: '4:30 PM',
-          image: 'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: 7,
-          name: 'Dr. Maria Garcia',
-          specialty: 'Psychiatry',
-          experience: 16,
-          rating: 4.9,
-          consultationFee: 70,
-          isOnline: true,
-          isTopRated: true,
-          isSpecialist: true,
-          totalPatients: 1900,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1594824804732-ca8db5ac6d34?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: 8,
-          name: 'Dr. James Lee',
-          specialty: 'Family Medicine',
-          experience: 14,
-          rating: 4.7,
-          consultationFee: 45,
-          isOnline: true,
-          isTopRated: false,
-          isSpecialist: false,
-          totalPatients: 2200,
-          nextAvailable: 'Now',
-          image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face'
-        }
-      ],
+      allDoctors: [],
+      loadingDoctors: true,
       specialties: [
         'Cardiology',
         'Dermatology',
@@ -1017,43 +911,72 @@ export default {
       searchIssue: '',
       searchSpecialist: '',
       searchLocation: '',
-      topRatedDoctors: [
-        { 
-          id: 1,
-          name: 'Dr. Sarah Johnson', 
-          specialty: 'Family Medicine', 
-          rating: 4.9,
-          consultationFee: 49,
-          image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face'
-        },
-        { 
-          id: 2,
-          name: 'Dr. Michael Chen', 
-          specialty: 'Cardiology', 
-          rating: 4.8,
-          consultationFee: 75,
-          image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=80&h=80&fit=crop&crop=face'
-        },
-        { 
-          id: 3,
-          name: 'Dr. Emily Rodriguez', 
-          specialty: 'Dermatology', 
-          rating: 4.9,
-          consultationFee: 65,
-          image: 'https://images.unsplash.com/photo-1594824804732-ca8db5ac6d34?w=80&h=80&fit=crop&crop=face'
-        },
-        { 
-          id: 4,
-          name: 'Dr. James Wilson', 
-          specialty: 'Pediatrics', 
-          rating: 4.7,
-          consultationFee: 55,
-          image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=80&h=80&fit=crop&crop=face'
-        }
-      ]
+      topRatedDoctors: []
     }
   },
   methods: {
+    async fetchDoctors() {
+      try {
+        const response = await doctorService.getDoctors();
+        const doctors = response.doctors || [];
+        // Transform API data to match Vue component structure
+        this.allDoctors = doctors.map(doctor => ({
+          id: doctor.id,
+          name: doctor.full_name,
+          specialty: doctor.specialty,
+          experience: parseInt(doctor.experience) || 0,
+          rating: doctor.average_rating,
+          consultationFee: doctor.consultation_fee,
+          isOnline: true, // Default to true since API doesn't provide this
+          isTopRated: doctor.average_rating >= 4.5,
+          isSpecialist: true, // Default to true
+          totalPatients: 0, // API doesn't provide this
+          nextAvailable: 'Now', // Default value
+          image: doctorService.getProfilePhotoUrl(doctor.profile_photo),
+          total_reviews: doctor.total_reviews
+        }));
+        // Sort by rating and take top 3 for topRatedDoctors
+        this.topRatedDoctors = [...this.allDoctors]
+          .sort((a, b) => b.rating - a.rating)
+          .slice(0, 3);
+      } catch (error) {
+        console.error('Failed to fetch doctors:', error);
+        // Fallback to hardcoded data if API fails
+        this.allDoctors = [
+          {
+            id: 1,
+            name: 'Dr. Sarah Johnson',
+            specialty: 'Family Medicine',
+            experience: 15,
+            rating: 4.9,
+            consultationFee: 49,
+            isOnline: true,
+            isTopRated: true,
+            isSpecialist: false,
+            totalPatients: 2500,
+            nextAvailable: 'Now',
+            image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face'
+          },
+          {
+            id: 2,
+            name: 'Dr. Michael Chen',
+            specialty: 'Cardiology',
+            experience: 20,
+            rating: 4.8,
+            consultationFee: 75,
+            isOnline: true,
+            isTopRated: true,
+            isSpecialist: true,
+            totalPatients: 3200,
+            nextAvailable: 'Now',
+            image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face'
+          }
+        ];
+        this.topRatedDoctors = this.allDoctors.slice(0, 3);
+      } finally {
+        this.loadingDoctors = false;
+      }
+    },
     openChat() {
       // Add your chat opening logic here
       alert('Chat feature will open here!');
@@ -1100,8 +1023,8 @@ export default {
     },
     bookConsultation(doctor) {
       console.log('Booking consultation with:', doctor);
-      // Add logic to book consultation
-      alert(`Booking consultation with ${doctor.name} - $${doctor.consultationFee}`);
+      // Redirect to patient login page
+      this.$router.push({ name: 'PatientLogin' });
     },
     showAllDoctors() {
       this.showTestimonials = true;
@@ -1162,6 +1085,8 @@ export default {
     }
   },
   mounted() {
+    // Fetch doctors from API
+    this.fetchDoctors();
     // Auto swap testimonials every 7 seconds
     this.testimonialInterval = setInterval(() => {
       this.showDoctorTestimonials = !this.showDoctorTestimonials;
@@ -2233,18 +2158,64 @@ export default {
   min-width: 0;
 }
 
-.doctor-mini-info h4 {
+.doctor-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.doctor-name-row h4 {
   font-size: 1rem;
   font-weight: 600;
-  margin: 0 0 0.25rem 0;
+  margin: 0;
   color: inherit;
+}
+
+.rating-badge {
+  position: static;
+  background: linear-gradient(45deg, #feca57, #ff9ff3);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  box-shadow: 0 2px 10px rgba(254, 202, 87, 0.4);
 }
 
 .doctor-mini-info p {
   font-size: 0.8rem;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.25rem 0;
   opacity: 0.8;
   color: inherit;
+}
+
+.doctor-details-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.doctor-details-row .specialty {
+  font-size: 0.8rem;
+  margin: 0;
+  opacity: 0.8;
+  color: inherit;
+}
+
+.experience-info {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #667eea;
+  margin-bottom: 0;
+}
+
+.doctor-mini-card:hover .experience-info {
+  color: white;
 }
 
 .consultation-info {
